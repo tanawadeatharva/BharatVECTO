@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.FCHV,
-					ArchitectureID.E2,
+					ArchitectureID.F2,
 					false,
 					false,
 					false)));
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.FCHV,
-					ArchitectureID.E3,
+					ArchitectureID.F3,
 					false,
 					false,
 					false)));
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.FCHV,
-					ArchitectureID.E4,
+					ArchitectureID.F4,
 					false,
 					false,
 					false)));

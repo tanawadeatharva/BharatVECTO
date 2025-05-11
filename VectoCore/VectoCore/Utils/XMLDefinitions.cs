@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_OUTPUT = "urn:tugraz:ivt:VectoAPI:DeclarationOutput";
 
-		public const string DECLARATION_OUTPUT_NAMESPACE_URI_V09 = DECLARATION_OUTPUT + ":v0.9";
+		public const string DECLARATION_OUTPUT_NAMESPACE_URI = DECLARATION_OUTPUT + ":v1.0";
 
 		public const string XSI_TYPE_LOCALNAME = "type";
 

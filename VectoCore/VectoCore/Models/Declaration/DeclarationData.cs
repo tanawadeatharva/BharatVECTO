@@ -247,6 +247,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 					false, ng, ovcHev);
 			}
 
+			if (!segment.Found && allowVocational)
+			{
+                allowVocational = false;
+                segment = DeclarationData.TruckSegments.Lookup(
+                    vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+                    vehicle.CurbMassChassis,
+                    false, ng, ovcHev);
+            }
+
 			if (!segment.Found && throwException) {
 				throw new VectoException(
 					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",

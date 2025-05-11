@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by Markus Quaritsch (Technische Universität Graz) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<!-- 
-Changelog
-
--->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" xmlns:dd="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xmlns:v2.7="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- Changelog
+	2025-05-10: Made Retarder optional everywhere.
+	2025-05-10: Fixed FCHVArchitecture type to accept only valid FCHV architectures. 
+	2025-05-10: Fixed FCHV_IEPC Auxiliaries type (HEVLorryAuxOutputType -> PEVLorryAuxOutputType).
+	2025-05-11: Fixed type of Engine FuelType to include all new types (e.g. H2).
+	2025-05-11: Fixed FCHV_IEPC Primary Bus Aux type (HEVPrimaryBusAuxOutputType -> PEVPrimaryBusAuxOutputType).
+	-->
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" schemaLocation="VectoDeclarationDefinitions.2.7.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<!-- End imports___________________________________________ -->
@@ -364,7 +368,7 @@ Changelog
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType">
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -608,7 +612,7 @@ Changelog
 				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="FuelType" type="v1.0:FuelTypeType" maxOccurs="unbounded"/>
+						<xs:element name="FuelType" type="v2.7:FuelTypeType" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -1221,7 +1225,7 @@ Changelog
 							<xs:documentation>I.1.9.</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:HEVLorryAuxOutputType">
+					<xs:element name="Auxiliaries" type="mrf:PEVLorryAuxOutputType">
 						<xs:annotation>
 							<xs:documentation>I.1.10.</xs:documentation>
 						</xs:annotation>
@@ -1247,7 +1251,7 @@ Changelog
 							<xs:documentation>I.1.9.</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Auxiliaries" type="mrf:HEVPrimaryBusAuxOutputType">
+					<xs:element name="Auxiliaries" type="mrf:PEVPrimaryBusAuxOutputType">
 						<xs:annotation>
 							<xs:documentation>I.1.10.</xs:documentation>
 						</xs:annotation>
@@ -1605,7 +1609,7 @@ Changelog
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType">
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -3893,7 +3897,7 @@ Changelog
 	</xs:group>
 	<xs:group name="FCHVVehicleSequenceGroup">
 		<xs:sequence>
-			<xs:element name="FCHVArchitecture" type="v2.4:ArchitectureIDType">
+			<xs:element name="FCHVArchitecture" type="v2.7:ArchitectureID_FCHV_Fx_IEPC_Type">
 				<xs:annotation>
 					<xs:documentation>I.1.1.15.</xs:documentation>
 				</xs:annotation>
@@ -4240,7 +4244,7 @@ Changelog
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType">
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -4255,7 +4259,7 @@ Changelog
 	<xs:group name="Powertrain-E3-SequenceGroup">
 		<xs:sequence>
 			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType">
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -4275,7 +4279,7 @@ Changelog
 	<xs:group name="Powertrain-IEPC-SequenceGroup">
 		<xs:sequence>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="Retarder" type="mrf:RetarderType">
+			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>

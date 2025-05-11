@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter
 {
@@ -16,9 +17,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		{
 			_mrfFactory = mrfFactory;
 		}
-		protected override XNamespace TNS => "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
+		protected override XNamespace TNS => AbstractManufacturerReport.Namespace;
 
-	}
+
+    }
 
 	public class MRFResultsWriter
 	{

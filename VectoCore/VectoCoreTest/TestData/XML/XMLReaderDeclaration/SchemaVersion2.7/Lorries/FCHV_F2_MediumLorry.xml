@@ -175,6 +175,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>20.0</SOCmin>
+					<SOCmax>80.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<ElectricMachine>
@@ -475,10 +477,13 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_FCHV_LorryDataType">
+				<Data xsi:type="AUX_PEV_LorryDataType">
 					<SteeringPump>
 						<Technology axleNumber="1">Full electric steering gear</Technology>
 					</SteeringPump>
+					<ElectricSystem>
+						<Technology>Standard technology</Technology>
+					</ElectricSystem>
 					<PneumaticSystem>
 						<Technology>Medium Supply 2-stage + elec. driven</Technology>
 					</PneumaticSystem>

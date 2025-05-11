@@ -13,7 +13,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     public abstract class AbstractCIFGroupWriter : IReportOutputGroup
     {
-		//protected XNamespace _mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
 		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 

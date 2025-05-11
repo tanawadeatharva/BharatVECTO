@@ -18,7 +18,7 @@
 		<Date>2017-01-01T00:00:00Z</Date>
 		<SimulationToolLicenseNumber>x</SimulationToolLicenseNumber>
 		<LegislativeCategory>N2</LegislativeCategory>
-		<ChassisConfiguration>Van</ChassisConfiguration>
+		<ChassisConfiguration>Tractor</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>10143</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
@@ -2260,10 +2260,13 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_FCHV_LorryDataType">
+				<Data xsi:type="AUX_PEV_LorryDataType">
 					<SteeringPump>
 						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
+					<ElectricSystem>
+						<Technology>Standard technology</Technology>
+					</ElectricSystem>
 					<PneumaticSystem>
 						<Technology>Medium Supply 2-stage + elec. driven</Technology>
 					</PneumaticSystem>

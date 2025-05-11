@@ -69,34 +69,40 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var result = new List<XElement>();
 			result.AddRange(_mrfFactory.GetPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData));
-			result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
 
-			return result;
+			var vehicleData = inputData.JobInputData.Vehicle;
+            var dualFuel = vehicleData.Components?.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1) ?? false;
+            result.Add(new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel));
+
+            result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
+            if (vehicleData.TankSystem.HasValue)
+            {
+                result.Add(new XElement(_mrf + "TankSystem", vehicleData.TankSystem.Value.ToString()));
+            }
+
+            return result;
 		}
 
 		#endregion
 	}
 
-	internal class FuelCellPrimaryBusVehicleOutputGroup : AbstractReportOutputGroup
+	internal class FCHVPrimaryBusVehicleOutputGroup : AbstractReportOutputGroup
 	{
-		public FuelCellPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		#region Overrides of AbstractMrfXmlGroup
+		public FCHVPrimaryBusVehicleOutputGroup(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var result = new List<XElement>();
-			result.AddRange(GetFuelCellPrimaryBusVehicleOutputGroup(inputData));
-			result.AddRange(_mrfFactory.GetFuelCell_VehicleSequenceGroup().GetElements(inputData));
+			result.AddRange(GetFCHVPrimaryBusVehicleOutputGroup(inputData));
+			result.AddRange(_mrfFactory.GetFCHV_VehicleSequenceGroup().GetElements(inputData));
 
 			return result;
 		}
 
-		#endregion
-
-		private IList<XElement> GetFuelCellPrimaryBusVehicleOutputGroup(IDeclarationInputDataProvider inputData)
+		private IList<XElement> GetFCHVPrimaryBusVehicleOutputGroup(IDeclarationInputDataProvider inputData)
 		{
 			var primaryBus = inputData.JobInputData.Vehicle;
+			
 			var result = new List<XElement>() {
 				new XElement(_mrf + XMLNames.Component_Manufacturer, primaryBus.Manufacturer),
 				new XElement(_mrf + XMLNames.Component_ManufacturerAddress, primaryBus.ManufacturerAddress)
@@ -104,7 +110,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.AddRange(_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(primaryBus));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, primaryBus.ZeroEmissionVehicle));
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_HybridElectricHDV, primaryBus.HybridElectricHDV));
-
 
 			return result;
 		}
