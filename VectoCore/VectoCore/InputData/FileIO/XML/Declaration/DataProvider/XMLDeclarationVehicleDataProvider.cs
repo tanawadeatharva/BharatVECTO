@@ -573,11 +573,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         public Kilogram H2StorageUsableCapacity => ElementExists("H2StorageUsableCapacity") ? GetDouble("H2StorageUsableCapacity").SI<Kilogram>() : null;
 
-		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(GetString("HydrogenStorageTechnology"));
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(
+			ElementExists("HydrogenStorageTechnology") ? GetString("HydrogenStorageTechnology") : null);
 
 		public bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
 
-		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(
+            ElementExists("DynamicChargingTechnology") ? GetString("DynamicChargingTechnology") : null);
 
         public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeCategory)?.ParseEnum<LegislativeClass>();
 

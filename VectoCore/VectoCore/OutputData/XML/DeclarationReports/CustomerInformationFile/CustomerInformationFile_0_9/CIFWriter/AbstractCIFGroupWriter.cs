@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
     public abstract class AbstractCIFGroupWriter : IReportOutputGroup
     {
-		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		protected XNamespace _cif => AbstractCustomerReport.Namespace;
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 
 		protected AbstractCIFGroupWriter(ICustomerInformationFileFactory cifFactory)
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	public abstract class AbstractCifXmlType
 	{
-		protected XNamespace _cif = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9";
+		protected XNamespace _cif => AbstractCustomerReport.Namespace;
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 
 		protected AbstractCifXmlType(ICustomerInformationFileFactory cifFactory)

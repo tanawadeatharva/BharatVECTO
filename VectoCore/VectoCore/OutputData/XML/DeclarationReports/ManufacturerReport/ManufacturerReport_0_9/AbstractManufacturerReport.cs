@@ -21,13 +21,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
 	public abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
-        public static XNamespace XSI = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+        public static XNamespace XSI = XNamespace.Get(XMLDefinitions.XML_SCHEMA_NAMESPACE);
 
 		private static XNamespace BaseNamespace => XNamespace.Get(XMLDefinitions.DECLARATION_OUTPUT);
 
 		public static XNamespace Namespace => XNamespace.Get(XMLDefinitions.DECLARATION_OUTPUT_NAMESPACE_URI);
 
-		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
+		public static XNamespace _di => XNamespace.Get(XMLDefinitions.DI_NAMESPACE);
 
 
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
@@ -101,11 +101,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var retVal = new XDocument(new XElement(BaseNamespace + "VectoOutput",
 					new XAttribute(XNamespace.Xmlns + "xsi", XSI),
 					new XAttribute(XNamespace.Xmlns + "mrf", BaseNamespace),
-					new XAttribute(XNamespace.Xmlns + "mrf1.0", Namespace),
 					new XAttribute("xmlns", Namespace),
-					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation",
-						$"{BaseNamespace.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputManufacturer.xsd"),
-
+					
 					new XElement(BaseNamespace + XMLNames.Report_DataWrap,
 						new XAttribute(XSI + XMLNames.XSIType, $"{OutputDataType}"),
 						GetContents()

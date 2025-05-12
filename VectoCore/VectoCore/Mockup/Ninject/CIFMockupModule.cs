@@ -73,24 +73,24 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetHEV_IEPC_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetHEV_F2_LorryVehicleType()
+		public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
 		{
-			return _cifFactory.GetHEV_F2_LorryVehicleType();
+			return _cifFactory.GetFCHV_F2_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetHEV_F3_LorryVehicleType()
+		public IXmlTypeWriter GetFCHV_F3_LorryVehicleType()
 		{
-			return _cifFactory.GetHEV_F3_LorryVehicleType();
+			return _cifFactory.GetFCHV_F3_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetHEV_F4_LorryVehicleType()
+		public IXmlTypeWriter GetFCHV_F4_LorryVehicleType()
 		{
-			return _cifFactory.GetHEV_F4_LorryVehicleType();
+			return _cifFactory.GetFCHV_F4_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetHEV_IEPC_F_LorryVehicleType()
+		public IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType()
 		{
-			return _cifFactory.GetHEV_IEPC_F_LorryVehicleType();
+			return _cifFactory.GetFCHV_IEPC_LorryVehicleType();
 		}
 
 		public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
@@ -274,6 +274,11 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetREESSGroup();
         }
 
+		public IReportOutputGroup GetFuelCellGroup()
+		{
+            return _cifFactory.GetFuelCellGroup();
+        }
+
         public IReportOutputGroup GetPEV_LorryVehicleTypeGroup()
         {
             return _cifFactory.GetPEV_LorryVehicleTypeGroup();
@@ -339,19 +344,19 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetIEPCTransmissionGroup();
 		}
 
-		public IReportOutputGroup GetFuelCell_LorryVehicleSequenceGroupWriter()
+        public IReportOutputGroup GetFuelCell_LorryVehicleSequenceGroupWriter()
 		{
             return _cifFactory.GetFuelCell_LorryVehicleSequenceGroupWriter();
 		}
 
-		public IReportOutputGroup GetFuelCell_LorryVehicleTypeGroup()
+		public IReportOutputGroup GetFCHV_LorryVehicleTypeGroup()
 		{
-            return _cifFactory.GetFuelCell_LorryVehicleTypeGroup();
+            return _cifFactory.GetFCHV_LorryVehicleTypeGroup();
 		}
 
-		public IReportOutputGroup GetFuelCellLorryVehicleSequenceGroupWriter()
+		public IReportOutputGroup GetFCHVLorryVehicleSequenceGroupWriter()
 		{
-            return _cifFactory.GetFuelCellLorryVehicleSequenceGroupWriter();
+            return _cifFactory.GetFCHVLorryVehicleSequenceGroupWriter();
 		}
 
 		#endregion
