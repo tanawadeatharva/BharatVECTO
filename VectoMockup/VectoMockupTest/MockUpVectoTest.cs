@@ -879,7 +879,30 @@ namespace VectoMockupTest
 				}
             }
 
-			var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
+            if (CifShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLCustomerReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
+                        XmlDocumentType.CustomerReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLCustomerReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
 			if (PrimaryMrfShouldExist) {
 				if (File.Exists(primaryMrfPath)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(primaryMrfPath), XmlDocumentType.ManufacturerReport);
@@ -914,7 +937,7 @@ namespace VectoMockupTest
 				}
             }
 
-			if (VifShouldExist) {
+            if (VifShouldExist) {
 				if (File.Exists(fileWriter.XMLMultistageReportFileName)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMultistageReportFileName),
 						XmlDocumentType.MultistepOutputData);
@@ -929,29 +952,6 @@ namespace VectoMockupTest
 					fail = true;
 					TestContext.WriteLine($"{fileName} should not exist");
 				}
-            }
-
-            if (CifShouldExist)
-            {
-                if (File.Exists(fileWriter.XMLCustomerReportName))
-                {
-                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
-                        XmlDocumentType.CustomerReport);
-                }
-                else
-                {
-                    TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
-                    fail = true;
-                }
-            }
-            else
-            {
-                var fileName = fileWriter.XMLCustomerReportName;
-                if (File.Exists(fileName))
-                {
-                    fail = true;
-                    TestContext.WriteLine($"{fileName} should not exist");
-                }
             }
 
             if (fail) {
