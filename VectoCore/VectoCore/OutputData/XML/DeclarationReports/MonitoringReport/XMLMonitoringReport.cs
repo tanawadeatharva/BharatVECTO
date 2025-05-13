@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -500,14 +501,40 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 
         protected void CreateChildNodes()
         {
-            _additionalDataWriters[GetOutputType()].Invoke();
-            
+            var vehicle = (_modelData.InputData is IMultistepBusInputDataProvider multistage)
+                ? multistage.JobInputData.PrimaryVehicle.Vehicle
+                : _modelData.InputData.JobInputData.Vehicle;
+
+            if (vehicle?.VehicleMonitoringData == null)
+            {
+                _additionalDataWriters[GetOutputType()].Invoke();
+            }
+            else
+            {
+                CopyMonitoringDataFromInput(vehicle);
+            }
+
             Report.Root.Add(
                 new XElement(_tns + XMLNames.ManufacturerRecord,
                     GetManufacturerData()
                 ),
                 _additionalFields
             );
+        }
+
+        private void CopyMonitoringDataFromInput(IVehicleDeclarationInputData vehicle)
+        {
+            var document = XDocument.Parse(vehicle.VehicleMonitoringData);
+
+            foreach (var node in document.Root.Descendants())
+            {
+                node.Name = _tns + node.Name.LocalName;
+            }
+
+            foreach (var node in document.Root.Elements())
+            {
+                _additionalFields.Add(node);
+            }
         }
 
         protected void DetectOutputType()

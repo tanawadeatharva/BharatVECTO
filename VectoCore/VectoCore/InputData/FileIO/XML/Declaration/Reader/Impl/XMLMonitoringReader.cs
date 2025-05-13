@@ -41,6 +41,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
         public static string QUALIFIED_XSD_TYPE_MULTIPLE_FCHV => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "Multiple_FCHV_DataType");
         public static string QUALIFIED_XSD_TYPE_MULTIPLE_SHEV => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "Multiple_SHEV_DataType");
 
-        public string Data => BaseNode.InnerXml;
+        public string Data => BaseNode.OuterXml;
     }
 }
