@@ -37,6 +37,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -64,8 +65,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             ConventionalLorryDataType,
             ConventionalPrimaryBusDataType,
             ConventionalCompletedBusDataType,
-            HEV_Px_IHPCLorryDataType,
-            HEV_Px_IHPCPrimaryBusDataType,
+            HEV_Px_IHPC_LorryDataType,
+            HEV_Px_IHPC_PrimaryBusDataType,
             HEV_S2_LorryDataType,
             HEV_S2_PrimaryBusDataType,
             HEV_S3_LorryDataType,
@@ -114,7 +115,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             TYPE_APPROVAL_NUMBER,
             ELECTRIC_MACHINE,
             ELECTRIC_ENERGY_STORAGE,
-            ELECTRIC_MACHINE_GEN
+            ELECTRIC_MACHINE_GEN,
+            FUEL_CELL
         }
 
         public XMLMonitoringReport(IXMLManufacturerReport manufacturerReport)
@@ -126,8 +128,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                 { OutputType.ConventionalLorryDataType, WriteConventional_Data },
                 { OutputType.ConventionalPrimaryBusDataType, WriteConventional_Data },
                 { OutputType.ConventionalCompletedBusDataType, WriteCompleted_Data },
-                { OutputType.HEV_Px_IHPCLorryDataType, WriteHEV_Px_IHPC_Data },
-                { OutputType.HEV_Px_IHPCPrimaryBusDataType, WriteHEV_Px_IHPC_Data },
+                { OutputType.HEV_Px_IHPC_LorryDataType, WriteHEV_Px_IHPC_Data },
+                { OutputType.HEV_Px_IHPC_PrimaryBusDataType, WriteHEV_Px_IHPC_Data },
                 { OutputType.HEV_S2_LorryDataType, WriteHEV_S2_Data },
                 { OutputType.HEV_S2_PrimaryBusDataType, WriteHEV_S2_Data },
                 { OutputType.HEV_S3_LorryDataType, WriteHEV_S3_Data },
@@ -152,15 +154,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 				{ OutputType.FCHV_F3_PrimaryBusDataType, WriteFCHV_F3_Data },
 				{ OutputType.FCHV_F4_LorryDataType, WriteFCHV_F4_Data },
 				{ OutputType.FCHV_F4_PrimaryBusDataType, WriteFCHV_F4_Data },
-				{ OutputType.FCHV_IEPC_F_LorryDataType, WritePEV_IEPC_Data },
-                { OutputType.FCHV_IEPC_F_PrimaryBusDataType, WritePEV_IEPC_Data },
+				{ OutputType.FCHV_IEPC_F_LorryDataType, WriteFCHV_IEPC_Data },
+                { OutputType.FCHV_IEPC_F_PrimaryBusDataType, WriteFCHV_IEPC_Data },
                 { OutputType.FCHVCompletedBusDataType, WriteCompleted_Data },
                 { OutputType.ExemptedLorryDataType, WriteExempted_Data },
                 { OutputType.ExemptedPrimaryBusDataType, WriteExempted_Data },
                 { OutputType.ExemptedCompletedBusDataType, WriteExempted_Data }
             };
 
-            _additionalFields = new XElement(_tns + XMLNames.MonitoringDataNode, new XAttribute(XMLNames.XMLNS, _tns));
+            _additionalFields = new XElement(_tns + XMLNames.MonitoringDataNode);
         }
 
         public XDocument Report { get; protected set; }
@@ -286,8 +288,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 			WriteBaseVehicleData();
 			WriteNoEngineConventionalComponents();
 			WriteEV_ElectricComponents();
-			WriteAdvancedReducingTechnologies();
-			// todo amogoda: missing FCHV components.
+            WriteFuelCellComponent();
+            WriteAdvancedReducingTechnologies();
 		}
 
 		protected void WriteFCHV_F3_Data()
@@ -295,8 +297,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 			WriteBaseVehicleData();
 			WriteNoEngineNoGearboxConventionalComponents();
 			WriteEV_ElectricComponents();
-			WriteAdvancedReducingTechnologies();
-			// todo amogoda: missing FCHV components.
+            WriteFuelCellComponent();
+            WriteAdvancedReducingTechnologies();
 		}
 
 		protected void WriteFCHV_F4_Data()
@@ -304,8 +306,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 			WriteBaseVehicleData();
 			WriteAxleWheels();
 			WriteEV_ElectricComponents();
-			WriteAdvancedReducingTechnologies();
-			// todo amogoda: missing FCHV components.
+            WriteFuelCellComponent();
+            WriteAdvancedReducingTechnologies();
 		}
 
 		protected void WriteFCHV_IEPC_Data()
@@ -313,8 +315,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 			WriteBaseVehicleData();
 			WriteOptionalAxlegearConventionalComponents();
 			WriteEV_ElectricComponents();
-			WriteAdvancedReducingTechnologies();
-			// todo amogoda: missing FCHV components.
+            WriteFuelCellComponent();
+            WriteAdvancedReducingTechnologies();
 		}
 
 		protected void WriteBaseVehicleData()
@@ -436,6 +438,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             );
         }
 
+        private void WriteFuelCellComponent()
+        {
+            var components = (_modelData.InputData is IMultistepBusInputDataProvider multistage)
+                ? multistage.JobInputData.PrimaryVehicle.Vehicle.Components
+                : _modelData.InputData.JobInputData.Vehicle.Components;
+
+            for (int fc = 0; fc < components.FuelCellSystem.FuelCellModules.Count; fc++)
+            {
+                _additionalFields.Add(
+                    new XElement(_tns + "FuelCell", GetStandardFields($"{PlaceHolder.FUEL_CELL.ToString()}_{fc + 1}"))
+                );
+            }
+        }
+
         protected void WriteHEV_Sx_ElectricComponents()
         {
             WriteEV_ElectricComponents();
@@ -475,13 +491,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                     _tns + XMLNames.MonitoringRootNode,
                     new XAttribute(XMLNames.XMLNS, _tns),
                     new XAttribute(XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, _outputType),
-                    new XAttribute(XMLNames.SchemaVersion, XMLDefinitions.MONITORING_SCHEMA_VERSION),
                     new XAttribute(XNamespace.Xmlns + XMLNames.XSI, XMLDeclarationNamespaces.Xsi.NamespaceName),
                     new XAttribute(XNamespace.Xmlns + XMLNames.DI, XMLDeclarationNamespaces.Di),
-                    new XAttribute(
-                        XMLDeclarationNamespaces.Xsi + XMLNames.SchemaLocation,
-                        $"{XMLDefinitions.MONITORING_NAMESPACE} {AbstractXMLWriter.SchemaLocationBaseUrl}" +
-                        $"{XMLDefinitions.GetSchemaFilename(XmlDocumentType.MonitoringReport)}"),
                     new XAttribute(XNamespace.Xmlns + MRF_OUTPUT_PREFIX, XMLDefinitions.DECLARATION_OUTPUT_NAMESPACE_URI)
                 )
             );
@@ -504,7 +515,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             var mrfData = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data"));
             string dataType = mrfData.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
 
-            if (dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV"))
+            if (dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV") || dataType.Contains("HEV-Sx"))
             {
                 var mrfComponents = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data", "Components"));
                 string componentsType = mrfComponents.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
@@ -561,7 +572,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
 
         protected object[] GetAxleData()
         {
-            var numAxles = _modelData.VehicleData.AxleData?.Count(x => x.AxleType != AxleType.Trailer) ?? 0;
+            var components = (_modelData.InputData is IMultistepBusInputDataProvider multistage)
+                ? multistage.JobInputData.PrimaryVehicle.Vehicle.Components
+                : _modelData.InputData.JobInputData.Vehicle.Components;
+
+            var numAxles = components.AxleWheels?.AxlesDeclaration.Count(x => x.AxleType != AxleType.Trailer) ?? 0;
+
             var axleData = new object[numAxles];
 
             for (var i = 0; i < axleData.Length; i++) {

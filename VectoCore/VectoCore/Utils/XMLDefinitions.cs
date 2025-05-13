@@ -126,11 +126,7 @@ namespace TUGraz.VectoCore.Utils
         public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V10 =
             DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.0";
 
-        public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
-
-		public const string MONITORING_SCHEMA_VERSION = "1.2";
-
-		public const string MONITORING_NAMESPACE_URI = MONITORING_NAMESPACE + ":v" + MONITORING_SCHEMA_VERSION;
+        public const string MONITORING_NAMESPACE_URI = "urn:tugraz:ivt:VectoAPI:MonitoringOutput:v1.2";
 
 		public const string DECLARATION_OUTPUT = "urn:tugraz:ivt:VectoAPI:DeclarationOutput";
 
