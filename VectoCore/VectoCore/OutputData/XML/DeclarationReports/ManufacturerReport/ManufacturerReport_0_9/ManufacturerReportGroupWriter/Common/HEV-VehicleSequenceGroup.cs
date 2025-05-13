@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
-			
+
 			var result = new List<XElement>()
 			{
                 new XElement(_mrf + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
