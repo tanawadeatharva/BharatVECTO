@@ -25,8 +25,8 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6.xsd"/>
 
-	<!-- Changelog 
-	29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus. 
+	<!-- Changelog
+	29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus.
 	10-05-2025: Replaced AUX_Component_FCHV_LorryType with AUX_Component_PEV_Lorry_Type because AUX_Component_FCHV_LorryType was wrong and redundant.
 	-->
 
@@ -4045,9 +4045,9 @@
 							</xs:annotation>
 							<xs:simpleType>
 								<xs:restriction base="xs:string">
-									<xs:enumeration value="lead-acid battery – conventional"/>
-									<xs:enumeration value="lead-acid battery – AGM"/>
-									<xs:enumeration value="lead-acid battery – gel"/>
+									<xs:enumeration value="lead-acid battery - conventional"/>
+									<xs:enumeration value="lead-acid battery - AGM"/>
+									<xs:enumeration value="lead-acid battery - gel"/>
 									<xs:enumeration value="li-ion battery - high power"/>
 									<xs:enumeration value="li-ion battery - high energy"/>
 								</xs:restriction>
