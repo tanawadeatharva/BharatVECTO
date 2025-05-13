@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (consolidatedVehicleData.TankSystem == null) {
 				return null;
 			}
-			return new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem);
+			return new XElement(_mrf + "TankSystem", consolidatedVehicleData.TankSystem);
 		}
 
 		protected virtual XElement GetManufacturers(IMultistepBusInputDataProvider multiStageInputData)

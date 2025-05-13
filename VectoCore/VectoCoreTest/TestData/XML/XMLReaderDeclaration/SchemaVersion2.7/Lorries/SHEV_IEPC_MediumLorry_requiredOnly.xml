@@ -52,7 +52,7 @@
 					<BFColdHot>1.0000</BFColdHot>
 					<CFRegPer>1.0000</CFRegPer>
 					<CFNCV>1.0000</CFNCV>
-					<FuelType>NG</FuelType>
+					<FuelType>Diesel CI</FuelType>
 					<FuelConsumptionMap>
 						<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00"/>
 						<Entry engineSpeed="560.00" torque="1180.00" fuelConsumption="12869.00"/>
@@ -230,6 +230,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>20.0</SOCmin>
+					<SOCmax>80.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<IEPC>

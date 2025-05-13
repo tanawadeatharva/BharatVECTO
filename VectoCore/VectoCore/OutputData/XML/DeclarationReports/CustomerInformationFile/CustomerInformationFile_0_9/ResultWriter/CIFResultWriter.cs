@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#region Overrides of AbstractResultsWriter
 
-		protected override XNamespace TNS => "urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0";
+		protected override XNamespace TNS => AbstractCustomerReport.Namespace;
 		
 		#endregion
 	}

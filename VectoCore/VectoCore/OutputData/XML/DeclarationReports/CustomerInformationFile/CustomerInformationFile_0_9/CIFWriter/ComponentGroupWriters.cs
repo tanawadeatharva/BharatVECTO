@@ -114,6 +114,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class FuelCellGroup : AbstractCIFGroupWriter
+	{
+        public FuelCellGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = GetVehicle(inputData);
+			var power = vehicle.Components.FuelCellSystem.FuelCellModules.Sum(x => VectoMath.Min(x.FuelCell.FCSRatedPower, x.MaxPower) * x.Count);
+
+            return new List<XElement>() {
+                new XElement(_cif + "FuelCellTotalRatedPower", power.ValueAsUnit("kW"))
+            };
+        }
+    }
+
 	public class AxleWheelsGroup : AbstractCIFGroupWriter
 	{
 		public AxleWheelsGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
@@ -177,7 +192,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			var result = new List<XElement>();
+			var result = new XElement(_cif + "ElectricMachineSystem");
+
 			Watt totalRatedPropulsionPower = null;
 			IList<IElectricMotorVoltageLevel> voltageLevels = null;
 			var vehicle = GetVehicle(inputData);
@@ -217,8 +233,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			}
 
 
-			return result;
-		}
+			return new List<XElement>() { result } ;
+        }
 
 		#endregion
 	}
@@ -352,11 +368,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	{
 		public HEV_Px_IHPCompletedBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 	}
-
-	//public class HEV_Px_IHPCompleteHEV_Sx_CompletedBusAuxGroupdBusAuxGroup : ConventionalCompletedBusAuxGroup
-	//{
-	//	public HEV_Px_IHPCompleteHEV_Sx_CompletedBusAuxGroupdBusAuxGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
-	//}
 
 	public class HEV_Sx_CompletedBusAuxGroup : ConventionalCompletedBusAuxGroup
 	{

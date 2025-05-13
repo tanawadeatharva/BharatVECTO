@@ -466,7 +466,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual("2017-01-01T00:00:00Z", vehicle.Date.ToXmlFormat());
             Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
             Assert.AreEqual(LegislativeClass.N2, vehicle.LegislativeClass);
-            Assert.AreEqual(VehicleCategory.Van, vehicle.VehicleCategory);
+            Assert.AreEqual(VehicleCategory.Tractor, vehicle.VehicleCategory);
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(6995.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
@@ -3269,7 +3269,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual("2017-01-01T00:00:00Z", vehicle.Date.ToXmlFormat());
             Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
             Assert.AreEqual(LegislativeClass.N2, vehicle.LegislativeClass);
-            Assert.AreEqual(VehicleCategory.Van, vehicle.VehicleCategory);
+            Assert.AreEqual(VehicleCategory.Tractor, vehicle.VehicleCategory);
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
@@ -3517,7 +3517,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual("2017-01-01T00:00:00Z", vehicle.Date.ToXmlFormat());
             Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
             Assert.AreEqual(LegislativeClass.N2, vehicle.LegislativeClass);
-            Assert.AreEqual(VehicleCategory.Van, vehicle.VehicleCategory);
+            Assert.AreEqual(VehicleCategory.Tractor, vehicle.VehicleCategory);
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);

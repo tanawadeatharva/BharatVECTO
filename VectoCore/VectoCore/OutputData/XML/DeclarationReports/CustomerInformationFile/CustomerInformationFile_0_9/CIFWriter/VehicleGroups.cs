@@ -38,8 +38,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, vehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, vehicleData.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(vehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).Item1.GetClassNumber()),
-				new XElement(_cif + XMLNames.VehicleGroupCO2, string.Empty), //the value of this element will be replaced later, write empty string to let the validation fail if the value is not replaced
+                new XElement(_cif + "TotalPropulsionPower", XMLHelper.ValueAsUnit(DeclarationData.GetReferencePropulsionPower(vehicleData), "kW")),
+                new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(vehicleData).Item1.GetClassNumber()),
+                new XElement(_cif + XMLNames.VehicleGroupCO2, string.Empty), //the value of this element will be replaced later, write empty string to let the validation fail if the value is not replaced
 				//new XElement(_cif + XMLNames.VehicleGroupCO2, DeclarationData.GetVehicleGroupCO2StandardsGroup(vehicleData).ToXMLFormat()),
 
 			};
@@ -59,8 +60,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Vehicle_VehicleCategory, consolidatedVehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_AxleConfiguration, primary.AxleConfiguration.ToXMLFormat()),
 				new XElement(_cif + XMLNames.Vehicle_TPMLM, XMLHelper.ValueAsUnit(consolidatedVehicleData.GrossVehicleMassRating, "kg")),
-				new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).Item1.GetClassNumber()),
-				new XElement(_cif + XMLNames.VehicleGroupCO2, DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
+                new XElement(_cif + "TotalPropulsionPower", XMLHelper.ValueAsUnit(DeclarationData.GetReferencePropulsionPower(primary), "kW")),
+                new XElement(_cif + XMLNames.Report_Vehicle_VehicleGroup, DeclarationData.GetVehicleGroupGroup(consolidatedVehicleData).Item1.GetClassNumber()),
+                new XElement(_cif + XMLNames.VehicleGroupCO2, DeclarationData.GetVehicleGroupCO2StandardsGroup(multiStageInputDataProvider).ToXMLFormat()),
 			};
 			return result;
 		}
@@ -90,7 +92,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				//	? vehicleData.VehicleTypeApprovalNumber 
 				//	: null),
 				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ValueAsUnit("kg")),
-				new XElement(_cif + XMLNames.Vehicle_VocationalVehicle, vehicleGroup.Item2),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
 				new XElement(_cif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicleData.ZeroEmissionVehicle),
 				new XElement(_cif + XMLNames.Vehicle_HybridElectricHDV, vehicleData.HybridElectricHDV)
@@ -236,45 +237,35 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
-				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
+				new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
 			});
-			if (ovCc) {
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
+			
 			return result;
 		}
 
 		#endregion
 	}
 
-	public class FuelCell_LorryVehicleSequenceGroupWriter : AbstractCIFGroupWriter
+	public class FCHV_LorryVehicleSequenceGroupWriter : AbstractCIFGroupWriter
 	{
-		public FuelCell_LorryVehicleSequenceGroupWriter(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
-
-		#region Overrides of AbstractCIFGroupWriter
+		public FCHV_LorryVehicleSequenceGroupWriter(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
-			// todo amogoda: 2.5. check and fix inconsistencies
 			var result = new List<XElement>();
 			var ovCc = inputData.JobInputData.Vehicle.OVC;
-			result.AddRange(_cifFactory.GetFuelCellLorryVehicleSequenceGroupWriter().GetElements(inputData));
-			var vehicleData = inputData.JobInputData.Vehicle;
-			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
+            var vehicleData = inputData.JobInputData.Vehicle;
+
+            result.AddRange(_cifFactory.GetFCHVLorryVehicleSequenceGroupWriter().GetElements(inputData));
 			result.AddRange(new List<XElement>() {
-				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
-				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
-			});
+				new XElement(_cif + "FCHVArchitecture", vehicleData.ArchitectureID.GetLabel()),
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
+                new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
+            });
 			
-			// todo: MaxChargingPower has been removed. Must be re-implemented with proper values.
-			//if (ovCc)
-			//{
-			//	result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", inputData.JobInputData.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			//}
 			return result;
 		}
-
-		#endregion
 	}
 
 
@@ -291,8 +282,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var ovCc = vehicle.OVC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "PEVArchitecture", vehicle.ArchitectureID.GetLabel()),
-				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
-			});
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
+                new XElement(_cif + "DynamicChargingTechnology", vehicle.DynamicChargingTechnology.ToXMLFormat())
+            });
 			return result;
 		}
 
@@ -319,11 +311,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
-				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
+				new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
 			});
-			if (ovCc) {
-				result.Add(new XElement(_cif + "OffVehicleChargingMaxPower", multistep.JobInputData.PrimaryVehicle.Vehicle.MaxChargingPower.ValueAsUnit("kW", 1)));
-			}
+			
 			return result;
 		}
 
@@ -347,8 +338,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			var ovCc = multistep.JobInputData.PrimaryVehicle.Vehicle.OVC;
 			result.AddRange(new List<XElement>() {
 				new XElement(_cif + "PEVArchitecture",  multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
-				new XElement(_cif + "OffVehicleChargingCapability", ovCc)
-			});
+				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
+                new XElement(_cif + "DynamicChargingTechnology", multistep.JobInputData.PrimaryVehicle.Vehicle.DynamicChargingTechnology.ToXMLFormat())
+            });
 			return result;
 		}
 

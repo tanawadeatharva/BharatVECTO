@@ -13,10 +13,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -27,12 +24,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected readonly ICustomerInformationFileFactory _cifFactory;
 		protected readonly IResultsWriterFactory _resultFactory;
 
-		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+        public static XNamespace XSI = XNamespace.Get(XMLDefinitions.XML_SCHEMA_NAMESPACE);
 
-		public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
+		public static XNamespace BaseNamespace => XNamespace.Get(XMLDefinitions.CUSTOMER_OUTPUT);
 
-		public static XNamespace Cif_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
-		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
+		public static XNamespace Namespace => XNamespace.Get(XMLDefinitions.CUSTOMER_OUTPUT_NAMESPACE_URI);
+
+		public static XNamespace _di => XNamespace.Get(XMLDefinitions.DI_NAMESPACE);
 
 
 		protected XElement Vehicle { get; set; }
@@ -45,6 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		public abstract string OutputDataType { get; }
 
 		protected bool _ovc = false;
+
 		protected AbstractCustomerReport(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultFactory)
 		{
 			_cifFactory = cifFactory;
@@ -67,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 			Results = _resultFactory.GetCIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(), 
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted); 
-			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
+			InputDataIntegrity = new XElement(Namespace + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
@@ -82,16 +81,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public void GenerateReport(XElement resultSignature)
 		{
-			var retVal = new XDocument(new XElement(Cif + "VectoCustomerInformation",
-					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-					new XAttribute(XNamespace.Xmlns + "cif", Cif.NamespaceName),
-					new XAttribute(XNamespace.Xmlns + "cif0.9", Cif_0_9.NamespaceName),
-					new XAttribute("xmlns", Cif_0_9),
-					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation",
-						$"{Cif.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputCustomer.xsd"),
-
-					new XElement(Cif + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
+			var retVal = new XDocument(new XElement(BaseNamespace + "VectoCustomerInformation",
+					new XAttribute(XNamespace.Xmlns + "xsi", XSI),
+					new XAttribute(XNamespace.Xmlns + "cif", BaseNamespace.NamespaceName),
+					new XAttribute("xmlns", Namespace),
+					
+					new XElement(BaseNamespace + XMLNames.Report_DataWrap,
+						new XAttribute(XSI + XMLNames.XSIType, $"{OutputDataType}"),
 						GetReportContents(resultSignature)
 					)
 				)
@@ -117,9 +113,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new[] {
 				Vehicle,
 				InputDataIntegrity,
-				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
+				new XElement(Namespace + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
 				Results.GenerateResults(_results),
-				XMLHelper.GetApplicationInfo(Cif_0_9)
+				XMLHelper.GetApplicationInfo(Namespace)
 			};
 		}
 

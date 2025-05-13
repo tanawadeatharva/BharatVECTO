@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetHevSxVehicleParameterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevF2ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetHevSxVehicleParameterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevF3ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetHevSxVehicleParameterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevF4ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetHevIepcFVehicleParameterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevIepcFComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,

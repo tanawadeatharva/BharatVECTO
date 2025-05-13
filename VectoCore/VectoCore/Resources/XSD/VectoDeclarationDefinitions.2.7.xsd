@@ -25,7 +25,10 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6.xsd"/>
 
-	<!-- 29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus. -->
+	<!-- Changelog 
+	29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus. 
+	10-05-2025: Replaced AUX_Component_FCHV_LorryType with AUX_Component_PEV_Lorry_Type because AUX_Component_FCHV_LorryType was wrong and redundant.
+	-->
 
 	<!--                      JOB                           -->
 	<xs:complexType name="VectoDeclarationJobType">
@@ -2688,7 +2691,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="AUX_Component_FCHV_LorryType"/>
+					<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2702,7 +2705,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="AUX_Component_FCHV_LorryType"/>
+					<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2715,7 +2718,7 @@
 					<xs:group ref="Components_FCHV_Fx_FuelCellSequenceGroup"/>
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="AUX_Component_FCHV_LorryType"/>
+					<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
@@ -2727,7 +2730,7 @@
 			<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 			<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType" minOccurs="0"/>
 			<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-			<xs:element name="Auxiliaries" type="AUX_Component_FCHV_LorryType"/>
+			<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 			<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -2746,7 +2749,7 @@
 			<xs:element name="ElectricEnergyStorage" type="ElectricEnergyStorageType"/>
 			<xs:element name="Powertrain" type="Abstract_xEV_Powertrain_Type" minOccurs="2" maxOccurs="2"/>
 			<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-			<xs:element name="Auxiliaries" type="AUX_Component_FCHV_LorryType"/>
+			<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 			<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -3532,62 +3535,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="AUX_Component_FCHV_LorryType">
-		<xs:sequence>
-			<xs:element name="Data" type="AUX_FCHV_LorryDataType"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="AUX_FCHV_LorryDataType">
-		<xs:sequence>
-			<xs:element name="SteeringPump">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Technology" maxOccurs="4">
-							<xs:annotation>
-								<xs:documentation>P182 - enum</xs:documentation>
-							</xs:annotation>
-							<xs:complexType>
-								<xs:simpleContent>
-									<xs:extension base="AuxSPTechnology_FCHV_LorryType">
-										<xs:attribute name="axleNumber" use="required">
-											<xs:simpleType>
-												<xs:restriction base="xs:int">
-													<xs:minInclusive value="1"/>
-													<xs:maxInclusive value="4"/>
-												</xs:restriction>
-											</xs:simpleType>
-										</xs:attribute>
-									</xs:extension>
-								</xs:simpleContent>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="PneumaticSystem">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Technology" type="AuxPSTechnology_PEV_LorryType">
-							<xs:annotation>
-								<xs:documentation>P184 - enum</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="HVAC">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Technology" type="v2.4:AuxHVACTechnologyLorryType">
-							<xs:annotation>
-								<xs:documentation>P185 - enum</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:simpleType name="AuxPSTechnologyLorryType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Small"/>
@@ -3641,12 +3588,6 @@
 			<xs:enumeration value="Large Supply + elec. driven"/>
 			<xs:enumeration value="Large Supply + AMS + elec. driven"/>
 			<xs:enumeration value="Vacuum pump + elec. driven"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="AuxSPTechnology_FCHV_LorryType">
-		<xs:restriction base="v2.4:AuxSPTechnologyLorryType">
-			<xs:enumeration value="Electric driven pump"/>
-			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
 
