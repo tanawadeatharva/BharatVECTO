@@ -52,11 +52,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 						{
-							if (vehicle.OVC) {
-								if (vehicle.MaxChargingPower.IsEqual(0)) {
-									throw new VectoException(
-										"MaxChargingPower has to be greater than 0 if OVC is selected");
+							if (vehicle.OVC)
+							{
+								if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0))
+								{
+									throw new VectoException("MaxChargingPower has to be greater than 0 if OVC is selected");
 								}
+
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							} else {
@@ -68,13 +70,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			}
 
 			#endregion
-
-			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
-			{
-				if (vehicle.OVC && vehicle.MaxChargingPower == null) {
-					throw new VectoException($"{XMLNames.Vehicle_MaxChargingPower} must be set for OVC Vehicles");
-				}
-			}
 		}
 
 		public class SerialHybrid : Hybrid
@@ -102,8 +97,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				int? modeIdx,
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
-				CheckMaxChargingPowerPresent(Vehicle);
-
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				var engineMode = engineModes[modeIdx.Value];
@@ -209,7 +202,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
 				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
-				CheckMaxChargingPowerPresent(Vehicle);
 				var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
 				if (!modeIdx.HasValue) {

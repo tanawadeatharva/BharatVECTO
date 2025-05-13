@@ -2061,12 +2061,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static ChargingEfficiencies CalculateChargingEfficiencyOVCHEV(VectoRunData runData,
 			VehicleOperationLookup.VehicleOperationData vehicleOperation)
 		{
-			var maxChargingPwrVeh = runData.MaxChargingPower;
 			var batteryData = runData.BatteryData;
 			var depotChargingPower =
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
-			var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-				maxChargingPwrVeh);
+
+			var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
 
 			var tmpBattery = new BatterySystem(null, batteryData);
 			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
@@ -2156,11 +2157,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			WattSecond energyDepot, WattSecond energyInMission, WattSecond energyInMotion)
 		{
 			var batteryData = runData.BatteryData;
-			var maxChargingPwrVeh = runData.MaxChargingPower;
             var depotChargingPower =
                 VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
-            var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-                maxChargingPwrVeh);
+
+            var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
+
 			var inMotionChargingPower = GetInMotionChargingPower(runData.Mission.MissionType);
 
             var tmpBattery = new BatterySystem(null, batteryData);

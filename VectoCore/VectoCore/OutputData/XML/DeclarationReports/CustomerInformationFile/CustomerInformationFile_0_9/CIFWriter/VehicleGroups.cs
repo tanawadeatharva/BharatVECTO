@@ -85,11 +85,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + XMLNames.Component_Manufacturer, vehicleData.Manufacturer),
 				new XElement(_cif + XMLNames.Component_ManufacturerAddress, vehicleData.ManufacturerAddress),
 				new XElement(_cif + XMLNames.Component_Model, vehicleData.Model),
-				!vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty() 
+				!vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty()
 					? new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, vehicleData.VehicleTypeApprovalNumber)
 					: null,
-				//new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, !vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty() 
-				//	? vehicleData.VehicleTypeApprovalNumber 
+				//new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, !vehicleData.VehicleTypeApprovalNumber.IsNullOrEmpty()
+				//	? vehicleData.VehicleTypeApprovalNumber
 				//	: null),
 				new XElement(_cif + XMLNames.CorrectedActualMass, vehicleData.CurbMassChassis.ValueAsUnit("kg")),
 				new XElement(_cif + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab),
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
 				new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
 			});
-			
+
 			return result;
 		}
 
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
                 new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
             });
-			
+
 			return result;
 		}
 	}
@@ -314,7 +314,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "OffVehicleChargingCapability", ovCc),
 				new XElement(_cif + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
 			});
-			
+
 			return result;
 		}
 
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			result.Add(GetManufacturers(completedBusData));
 
 
-	
+
 			var consolidatedVehicle = completedBusData.JobInputData.ConsolidateManufacturingStage.Vehicle;
 			var dualFuel = completedBusData.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
 
@@ -385,9 +385,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "WasteHeatRecovery", completedBusData.JobInputData.PrimaryVehicle.Vehicle.Components.EngineInputData.WHRType != WHRType.None),
 				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				new XElement(_cif + XMLNames.Vehicle_RegisteredClass, consolidatedVehicle.RegisteredClass.ToXMLFormat()),
-				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck 
-																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck 
-																+ consolidatedVehicle.NumberPassengersStandingLowerDeck 
+				new XElement(_cif + "TotalNumberOfPassengers", consolidatedVehicle.NumberPassengerSeatsLowerDeck
+																+ consolidatedVehicle.NumberPassengerSeatsUpperDeck
+																+ consolidatedVehicle.NumberPassengersStandingLowerDeck
 																+ consolidatedVehicle.NumberPassengersStandingUpperDeck),
 				!consolidatedVehicle.VehicleTypeApprovalNumber.IsNullOrEmpty() ? new XElement(_cif + XMLNames.VehicleTypeApprovalNumber, consolidatedVehicle.VehicleTypeApprovalNumber) : null
 			});
