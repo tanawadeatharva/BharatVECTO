@@ -246,7 +246,8 @@ namespace VectoMockupTest
 			IList<string> filesToBeCleared = new List<string>() {
 				fileWriter.XMLPrimaryVehicleReportName,
 				fileWriter.XMLFullReportName,
-				fileWriter.XMLCustomerReportName
+				fileWriter.XMLCustomerReportName,
+				fileWriter.XMLMonitoringReportName
 			};
 			foreach (var fileName in filesToBeCleared) {
 				if (File.Exists(fileName)) {
@@ -423,8 +424,9 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
 
-			if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
+            if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
 				Assert.IsFalse(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
 			} else {
 				Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
@@ -500,7 +502,8 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter, CifShouldExist:false, PrimaryReportShouldExist:true);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XmlDocumentType.MultistepOutputData), "VIF invalid" );
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
-		}
+            Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
+        }
 
 		
 
@@ -581,7 +584,7 @@ namespace VectoMockupTest
 			// assertions
 			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
-			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false);
+			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(interimFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -637,7 +640,7 @@ namespace VectoMockupTest
 
 			// assertions
 
-			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false);
+			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(fileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -858,7 +861,8 @@ namespace VectoMockupTest
 			bool CifShouldExist = true, 
 			bool VifShouldExist = false, 
 			bool PrimaryMrfShouldExist = false,
-			bool PrimaryReportShouldExist = false)
+			bool PrimaryReportShouldExist = false,
+			bool MonitoringReportShouldExist = true)
 		{
 			var fail = false;
 			
@@ -895,6 +899,29 @@ namespace VectoMockupTest
             else
             {
                 var fileName = fileWriter.XMLCustomerReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            if (MonitoringReportShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLMonitoringReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMonitoringReportName),
+                        XmlDocumentType.MonitoringReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLMonitoringReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLMonitoringReportName;
                 if (File.Exists(fileName))
                 {
                     fail = true;
