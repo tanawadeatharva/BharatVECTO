@@ -4,7 +4,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0 file:///W:/XS
 	<Results>
 		<Status>success</Status>
 		<!-- 
-Conventional Lorry / Bus - non H2 ICE -->
+Conventional Lorry / Bus - non H2 ICE OK -->
 		<Result xsi:type="mrf:ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -55,7 +55,7 @@ Conventional Lorry / Bus - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Conventional Lorry / Bus - H2 ICE -->
+Conventional Lorry / Bus - H2 ICE OK -->
 		<Result xsi:type="mrf:ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -117,13 +117,13 @@ Conventional Lorry / Bus - H2 ICE -->
 					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges>
-					<ZeroCO2EmissionRange unit="km">345.0</ZeroCO2EmissionRange>
+					<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
 					<HydrogenRange unit="km">345.0</HydrogenRange>
 				</Ranges>
 			</Total>
 		</Result>
 		<!-- 
-Non-OVC Hybrid electric Lorry / Bus - non H2 ICE -->
+Non-OVC Hybrid electric Lorry / Bus - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -174,7 +174,7 @@ Non-OVC Hybrid electric Lorry / Bus - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Non-OVC Hybrid electric Lorry / Bus - H2 ICE -->
+Non-OVC Hybrid electric Lorry / Bus - H2 ICE OK-->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -236,13 +236,13 @@ Non-OVC Hybrid electric Lorry / Bus - H2 ICE -->
 					<CO2 unit="g/p-km">1.23</CO2>
 				</CO2_ZEV_AuxHeater>
 				<Ranges>
-					<ZeroCO2EmissionRange unit="km">456.0</ZeroCO2EmissionRange>
+					<ZeroCO2EmissionsRange unit="km">456.0</ZeroCO2EmissionsRange>
 					<HydrogenRange unit="km">456.0</HydrogenRange>
 				</Ranges>
 			</Total>
 		</Result>
 		<!-- 
-OVC Hybrid electric Lorry / Bus - non H2 ICE -->
+OVC Hybrid electric Lorry / Bus - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -389,7 +389,7 @@ OVC Hybrid electric Lorry / Bus - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-OVC Hybrid electric Lorry / Bus - H2 ICE -->
+OVC Hybrid electric Lorry / Bus - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -550,7 +550,7 @@ OVC Hybrid electric Lorry / Bus - H2 ICE -->
 			</Total>
 		</Result>
 <!-- 
-PEV Lorry / Bus -->
+PEV Lorry / Bus OK -->
 		<Result xsi:type="ResultSuccessPEVType" status="success">
 			<Mission>Mission</Mission>
 			<Distance unit="km">100.0</Distance>
@@ -631,11 +631,6 @@ Non-OVC FuelCell Lorry / Bus -->
 					<MaxAcceleration unit="m/s²">1.00</MaxAcceleration>
 					<FullLoadDrivingtimePercentage>10.0</FullLoadDrivingtimePercentage>
 					<GearshiftCount>56</GearshiftCount>
-					<EngineSpeedDriving>
-						<Min unit="rpm">600</Min>
-						<Average unit="rpm">900</Average>
-						<Max unit="rpm">2200</Max>
-					</EngineSpeedDriving>
 				</VehiclePerformance>
 				<Fuel type="H2">
 					<!-- depending on vehicle type and fuel type not all units are present -->
@@ -694,11 +689,6 @@ OVC FuelCell Lorry / Bus -->
 					<MaxAcceleration unit="m/s²">1.00</MaxAcceleration>
 					<FullLoadDrivingtimePercentage>10.0</FullLoadDrivingtimePercentage>
 					<GearshiftCount>56</GearshiftCount>
-					<EngineSpeedDriving>
-						<Min unit="rpm">600</Min>
-						<Average unit="rpm">900</Average>
-						<Max unit="rpm">2200</Max>
-					</EngineSpeedDriving>
 				</VehiclePerformance>
 				<Fuel type="H2">
 					<!-- depending on vehicle type and fuel type not all units are present -->
@@ -744,11 +734,6 @@ OVC FuelCell Lorry / Bus -->
 					<MaxAcceleration unit="m/s²">1.00</MaxAcceleration>
 					<FullLoadDrivingtimePercentage>10.0</FullLoadDrivingtimePercentage>
 					<GearshiftCount>56</GearshiftCount>
-					<EngineSpeedDriving>
-						<Min unit="rpm">600</Min>
-						<Average unit="rpm">900</Average>
-						<Max unit="rpm">2200</Max>
-					</EngineSpeedDriving>
 				</VehiclePerformance>
 				<Fuel type="H2">
 					<!-- depending on vehicle type and fuel type not all units are present -->

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (inputData == null) {
 				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
 			}
-			Results = _resultFactory.GetMRFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetMRFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null

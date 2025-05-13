@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
 		public VolumePerMeter FuelVolumePerMeter => throw new System.NotImplementedException();
 
-		public Kilogram TotalFuelConsumptionCorrected => throw new System.NotImplementedException();
+		public Kilogram TotalFuelConsumptionCorrected => FC_FINAL;
 
 		public Joule EnergyDemand => throw new System.NotImplementedException();
 

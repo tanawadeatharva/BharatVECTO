@@ -10,8 +10,8 @@
 
 namespace TUGraz.VectoCommon.Resources {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace TUGraz.VectoCommon.Resources {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class XMLNames {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal XMLNames() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCommon.Resources {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AbstractVectoOutputManufacturerType.
         /// </summary>
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AbstractVectoOutputManufacturerType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueLossMap.
         /// </summary>
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_TorqueLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_TorqueLossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to inputSpeed.
         /// </summary>
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_TorqueLossMap_InputSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to inputTorque.
         /// </summary>
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_TorqueLossMap_InputTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLoss.
         /// </summary>
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ADC_TorqueLossMap_TorqueLoss", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CdxA_0.
         /// </summary>
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDrag_CdxA_0", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirDragDataDeclarationType.
         /// </summary>
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDrag_Data_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DeclaredCdxA.
         /// </summary>
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDrag_DeclaredCdxA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DeclaredCdxA.
         /// </summary>
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDrag_DeclaredCdxA1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransferredCdxA.
         /// </summary>
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDrag_TransferredCDxA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransferredCdxA.
         /// </summary>
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AirDragArea_TransferredCdxA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Efficiency.
         /// </summary>
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AngleDrive_Efficiency", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Angledrive_LossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AngleDrive_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueLossMap.
         /// </summary>
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AngleDrive_TorqueLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Attr_Type", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to auxiliarySpeed.
         /// </summary>
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Aux_AuxMap_AuxiliarySpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to mechanicalPower.
         /// </summary>
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Aux_AuxMap_MechanicalPower_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Auxiliary.
         /// </summary>
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AuxMap.
         /// </summary>
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_AuxMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -266,7 +266,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_AuxMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ConstantAuxLoad.
         /// </summary>
@@ -275,7 +275,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_ConstantAuxLoad", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EfficiencyAuxSupply.
         /// </summary>
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_EfficiencyAuxSupply", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EfficiencyToEngine.
         /// </summary>
@@ -293,7 +293,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_EfficiencyToEngine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to id.
         /// </summary>
@@ -302,7 +302,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_ID_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Technology.
         /// </summary>
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_Technology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransmissionRatioToEngine.
         /// </summary>
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Auxiliary_TransmissionRatioToEngine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AuxiliariesDataDeclarationType.
         /// </summary>
@@ -329,7 +329,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxiliaries_Type_Attr_DataDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to supplyPower.
         /// </summary>
@@ -338,7 +338,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Auxr_AuxMapMapping_SupplyPower_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleDataDeclarationType.
         /// </summary>
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axle_Type_Attr_AxleDataDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Efficiency.
         /// </summary>
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axlegear_Efficiency", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LineType.
         /// </summary>
@@ -365,7 +365,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axlegear_LineType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -374,7 +374,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axlegear_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueLossMap.
         /// </summary>
@@ -383,7 +383,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axlegear_TorqueLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -392,7 +392,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Axlegear_TorqueLossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxlegearDataDeclarationType.
         /// </summary>
@@ -401,7 +401,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleGear_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Axles.
         /// </summary>
@@ -410,7 +410,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Axle.
         /// </summary>
@@ -419,7 +419,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to axleNumber.
         /// </summary>
@@ -428,7 +428,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_AxleNumber_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleType.
         /// </summary>
@@ -437,7 +437,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_AxleType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleType.
         /// </summary>
@@ -446,7 +446,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_AxleType_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Dimension.
         /// </summary>
@@ -455,7 +455,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_Dimension", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DynamicTyreRadius.
         /// </summary>
@@ -464,7 +464,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_DynamicTyreRadius", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WheelEndFriction.
         /// </summary>
@@ -473,7 +473,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_Friction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FzISO.
         /// </summary>
@@ -482,7 +482,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_FzISO", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Inertia.
         /// </summary>
@@ -491,7 +491,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_Inertia", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RRCDeclared.
         /// </summary>
@@ -500,7 +500,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_RRCDeclared", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RRCISO.
         /// </summary>
@@ -509,7 +509,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_RRCISO", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Steered.
         /// </summary>
@@ -518,7 +518,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_Steered", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TwinTyres.
         /// </summary>
@@ -527,7 +527,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_TwinTyres", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TwinTyres.
         /// </summary>
@@ -536,7 +536,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_TwinTyres_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Tyre.
         /// </summary>
@@ -545,7 +545,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_Tyre", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WeightShare.
         /// </summary>
@@ -554,7 +554,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_WeightShare", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WheelEnd.
         /// </summary>
@@ -563,7 +563,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Axles_Axle_WheelEnd", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleWheelsDataDeclarationType.
         /// </summary>
@@ -572,7 +572,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("AxleWheels_Type_Attr_AxleWheelsDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SOCmax.
         /// </summary>
@@ -581,7 +581,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Battery_SOCmax", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SOCmin.
         /// </summary>
@@ -590,7 +590,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Battery_SOCmin", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to StringID.
         /// </summary>
@@ -599,7 +599,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Battery_StringID", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to boostingTorque.
         /// </summary>
@@ -608,7 +608,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BoostingLimitation_BoostingTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -617,7 +617,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BoostingLimitation_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to rotationalSpeed.
         /// </summary>
@@ -626,7 +626,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BoostingLimitation_RotationalSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdBlueDosing.
         /// </summary>
@@ -635,7 +635,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AdBlueDosing", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdjustableAuxiliaryHeater.
         /// </summary>
@@ -644,7 +644,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AdjustableAuxiliaryHeater", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdjustableCoolantThermostat.
         /// </summary>
@@ -653,7 +653,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AdjustableCoolantThermostat", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirdragModifiedMultistep.
         /// </summary>
@@ -662,7 +662,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AirdragModifiedMultistep", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirElectricHeater.
         /// </summary>
@@ -671,7 +671,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AirElectricHeater", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirsuspensionControl.
         /// </summary>
@@ -680,7 +680,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AirsuspensionControl", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AlternatorTechnology.
         /// </summary>
@@ -689,7 +689,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AlternatorTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AuxiliaryHeaterPower.
         /// </summary>
@@ -698,7 +698,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_AuxiliaryHeaterPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Brakelights.
         /// </summary>
@@ -707,7 +707,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Brakelights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CompressorRatio.
         /// </summary>
@@ -716,7 +716,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_CompressorRatio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CompressorType.
         /// </summary>
@@ -725,7 +725,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_CompressorType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Dayrunninglights.
         /// </summary>
@@ -734,7 +734,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Dayrunninglights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DeclarationType.
         /// </summary>
@@ -743,7 +743,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_DeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DoorDriveTechnology.
         /// </summary>
@@ -752,7 +752,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_DoorDriveTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DoubleGlazing.
         /// </summary>
@@ -761,7 +761,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_DoubleGlazing", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DriverAC.
         /// </summary>
@@ -770,7 +770,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_DriverAC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineWasteGasHeatExchanger.
         /// </summary>
@@ -779,7 +779,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_EngineWasteGasHeatExchanger", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EntranceHeight.
         /// </summary>
@@ -788,7 +788,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_EntranceHeight", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Headlights.
         /// </summary>
@@ -797,7 +797,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Headlights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeatPump.
         /// </summary>
@@ -806,7 +806,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeatPump", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeatPumpModeDriverCompartment.
         /// </summary>
@@ -815,7 +815,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeatPumpModeDriver", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeatPumpModePassengerCompartment.
         /// </summary>
@@ -824,7 +824,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeatPumpModePassenger", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeatPumpTypeDriverCompartment.
         /// </summary>
@@ -833,7 +833,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeatPumpTypeDriver", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeatPumpTypePassengerCompartment.
         /// </summary>
@@ -842,7 +842,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeatPumpTypePassenger", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HeightIntegratedBody.
         /// </summary>
@@ -851,7 +851,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_HeightIntegratedBody", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Interiorlights.
         /// </summary>
@@ -860,7 +860,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Interiorlights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LowEntry.
         /// </summary>
@@ -869,7 +869,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_LowEntry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LowerDeck.
         /// </summary>
@@ -878,7 +878,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_LowerDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengerSeatsLowerDeck.
         /// </summary>
@@ -887,7 +887,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengerSeatsLowerDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengerSeatsUpperDeck.
         /// </summary>
@@ -896,7 +896,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengerSeatsUpperDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengersLowerDeck.
         /// </summary>
@@ -905,7 +905,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengersLowerDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengersStandingLowerDeck.
         /// </summary>
@@ -914,7 +914,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengersStandingLowerDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengersStandingUpperDeck.
         /// </summary>
@@ -923,7 +923,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengersStandingUpperDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NumberPassengersUpperDeck.
         /// </summary>
@@ -932,7 +932,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_NumberPassengersUpperDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OtherHeatingTechnology.
         /// </summary>
@@ -941,7 +941,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_OtherHeatingTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PassengerAC.
         /// </summary>
@@ -950,7 +950,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_PassengerAC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PassengerCount.
         /// </summary>
@@ -959,7 +959,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_PassengerCount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Positionlights.
         /// </summary>
@@ -968,7 +968,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Positionlights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PrimaryVehicle.
         /// </summary>
@@ -977,7 +977,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_PrimaryVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ResultCards.
         /// </summary>
@@ -986,7 +986,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_ResultCards", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SeparateAirDistributionDucts.
         /// </summary>
@@ -995,7 +995,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_SeparateAirDistributionDucts", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SizeOfAirSupply.
         /// </summary>
@@ -1004,7 +1004,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_SizeOfAirSupply", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartElectrics.
         /// </summary>
@@ -1013,7 +1013,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Smart_Electrics", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartCompressionSystem.
         /// </summary>
@@ -1022,7 +1022,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_SmartCompressionSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartRegenerationSystem.
         /// </summary>
@@ -1031,7 +1031,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_SmartRegenerationSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
@@ -1040,7 +1040,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_Status", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SystemConfiguration.
         /// </summary>
@@ -1049,7 +1049,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_SystemConfiguration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to UpperDeck.
         /// </summary>
@@ -1058,7 +1058,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_UpperDeck", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleDeclarationType.
         /// </summary>
@@ -1067,7 +1067,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_VehicleDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleLength.
         /// </summary>
@@ -1076,7 +1076,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_VehicleLength", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleWidth.
         /// </summary>
@@ -1085,7 +1085,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_VehicleWidth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WaterElectricHeater.
         /// </summary>
@@ -1094,7 +1094,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Bus_WaterElectricHeater", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Clutch.
         /// </summary>
@@ -1103,7 +1103,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_Clutch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricSystem.
         /// </summary>
@@ -1112,7 +1112,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ratio.
         /// </summary>
@@ -1121,7 +1121,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_Alternator_Ratio_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AlternatorTechnology.
         /// </summary>
@@ -1130,7 +1130,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_AlternatorTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Battery.
         /// </summary>
@@ -1139,7 +1139,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_Battery", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BatteryTechnology.
         /// </summary>
@@ -1148,7 +1148,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_BatteryTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Capacitor.
         /// </summary>
@@ -1157,7 +1157,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_Capacitor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CapacitorTechnology.
         /// </summary>
@@ -1166,7 +1166,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_CapacitorTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NominalVoltage.
         /// </summary>
@@ -1175,7 +1175,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_NominalVoltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedCapacitance.
         /// </summary>
@@ -1184,7 +1184,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_RatedCapacitance", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedCapacity.
         /// </summary>
@@ -1193,7 +1193,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_RatedCapacity", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedCurrent.
         /// </summary>
@@ -1202,7 +1202,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_RatedCurrent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedVoltage.
         /// </summary>
@@ -1211,7 +1211,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_RatedRatedVoltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedVoltage.
         /// </summary>
@@ -1220,7 +1220,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_RatedVoltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ResultCards.
         /// </summary>
@@ -1229,7 +1229,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_ResultCards", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartAlternator.
         /// </summary>
@@ -1238,7 +1238,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_SmartAlternator", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartElectrics.
         /// </summary>
@@ -1247,7 +1247,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_SmartElectrics", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SupplyFromHEVPossible.
         /// </summary>
@@ -1256,7 +1256,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ElectricSystem_SupplyFromHEVPossible", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Fan.
         /// </summary>
@@ -1265,7 +1265,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_Fan", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HVAC.
         /// </summary>
@@ -1274,7 +1274,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_HVAC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LEDLights.
         /// </summary>
@@ -1283,7 +1283,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_LEDLights", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PneumaticSystem.
         /// </summary>
@@ -1292,7 +1292,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdBlueDosing.
         /// </summary>
@@ -1301,7 +1301,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_AdBlueDosing", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirsuspensionControl.
         /// </summary>
@@ -1310,7 +1310,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_AirsuspensionControl", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CompressorRatio.
         /// </summary>
@@ -1319,7 +1319,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_CompressorRatio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SizeOfAirSupply.
         /// </summary>
@@ -1328,7 +1328,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_CompressorSize", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DoorDriveTechnology.
         /// </summary>
@@ -1337,7 +1337,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_DoorDriveTechnology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PneumaticSCRReagentDosing.
         /// </summary>
@@ -1346,7 +1346,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_SCRReagentDosing", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartCompressionSystem.
         /// </summary>
@@ -1355,7 +1355,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_SmartcompressionSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SmartRegenerationSystem.
         /// </summary>
@@ -1364,7 +1364,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_PneumaticSystem_SmartRegenerationSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -1373,7 +1373,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ResultCard_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Idle.
         /// </summary>
@@ -1382,7 +1382,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ResultCard_Idle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Overrun.
         /// </summary>
@@ -1391,7 +1391,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ResultCard_Overrun", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Traction.
         /// </summary>
@@ -1400,7 +1400,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_ResultCard_Traction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SteeringPump.
         /// </summary>
@@ -1409,7 +1409,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_SteeringPump", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Technology.
         /// </summary>
@@ -1418,7 +1418,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusAux_Technology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Cooling.
         /// </summary>
@@ -1427,7 +1427,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusHVACHeatPumpCooling", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Heating.
         /// </summary>
@@ -1436,7 +1436,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusHVACHeatPumpHeating", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
@@ -1445,7 +1445,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("BusManufacturingStepDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Capacitance.
         /// </summary>
@@ -1454,7 +1454,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_Capacitance", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to InternalResistance.
         /// </summary>
@@ -1463,7 +1463,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_InternalResistance", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxChargingCurrent.
         /// </summary>
@@ -1472,7 +1472,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_MaxChargingCurrent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxDischargingCurrent.
         /// </summary>
@@ -1481,7 +1481,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_MaxDischargingCurrent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxVoltage.
         /// </summary>
@@ -1490,7 +1490,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_MaxVoltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinVoltage.
         /// </summary>
@@ -1499,7 +1499,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Capacitor_MinVoltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ChassisConfiguration.
         /// </summary>
@@ -1508,7 +1508,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ChassisConfiguration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ConventionalLorryOutputType.
         /// </summary>
@@ -1517,7 +1517,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_ConventionalLorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exempted_CompletedBusOutputType.
         /// </summary>
@@ -1526,7 +1526,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_Exempted_CompletedBusOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Exempted_LorryOutputType.
         /// </summary>
@@ -1535,7 +1535,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_Exempted_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_F2_LorryOutputType.
         /// </summary>
@@ -1544,7 +1544,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_F2_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_F3_LorryOutputType.
         /// </summary>
@@ -1553,7 +1553,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_F3_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_F4_LorryOutputType.
         /// </summary>
@@ -1562,7 +1562,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_F4_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_IEPC_F_LorryOutputType.
         /// </summary>
@@ -1571,7 +1571,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_F_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_IEPC_S_LorryOutputType.
         /// </summary>
@@ -1580,7 +1580,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_S_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_Px_LorryOutputType.
         /// </summary>
@@ -1589,7 +1589,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_Px_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_S2_LorryOutputType.
         /// </summary>
@@ -1598,7 +1598,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_S2_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_S3_LorryOutputType.
         /// </summary>
@@ -1607,7 +1607,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_S3_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV_S4_LorryOutputType.
         /// </summary>
@@ -1616,7 +1616,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_HEV_S4_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV_E2_LorryOutputType.
         /// </summary>
@@ -1625,7 +1625,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_PEV_E2_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV_E3_LorryOutputType.
         /// </summary>
@@ -1634,7 +1634,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_PEV_E3_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV_E4_LorryOutputType.
         /// </summary>
@@ -1643,7 +1643,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_PEV_E4_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV_IEPC_LorryOutputType.
         /// </summary>
@@ -1652,7 +1652,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CIF_OutputDataType_PEV_IEPC_LorryOutputType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CompletedBusManufacturerOutputDataType.
         /// </summary>
@@ -1661,7 +1661,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CompletedBusManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleVIFType.
         /// </summary>
@@ -1670,7 +1670,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CompletedBusVehicleVIFType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ADC.
         /// </summary>
@@ -1679,7 +1679,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ADC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AirDrag.
         /// </summary>
@@ -1688,7 +1688,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_AirDrag", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Angledrive.
         /// </summary>
@@ -1697,7 +1697,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Angledrive", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AppVersion.
         /// </summary>
@@ -1706,7 +1706,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_AppVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Auxiliaries.
         /// </summary>
@@ -1715,7 +1715,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Auxiliaries", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Axlegear.
         /// </summary>
@@ -1724,7 +1724,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Axlegear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleWheels.
         /// </summary>
@@ -1733,7 +1733,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_AxleWheels", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BatterySystem.
         /// </summary>
@@ -1742,7 +1742,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_BatterySystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CapacitorSystem.
         /// </summary>
@@ -1751,7 +1751,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_CapacitorSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CertificationMethod.
         /// </summary>
@@ -1760,7 +1760,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_CertificationMethod", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CertificationNumber.
         /// </summary>
@@ -1769,7 +1769,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_CertificationNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CertifiedAeroReduction.
         /// </summary>
@@ -1778,7 +1778,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_CertifiedAeroReduction", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Creator.
         /// </summary>
@@ -1787,7 +1787,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Creator", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
@@ -1796,7 +1796,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Date", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DriverModel.
         /// </summary>
@@ -1805,7 +1805,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_DriverModel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricEnergyStorage.
         /// </summary>
@@ -1814,7 +1814,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ElectricEnergyStorage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachine.
         /// </summary>
@@ -1823,7 +1823,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ElectricMachine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachineGEN.
         /// </summary>
@@ -1832,7 +1832,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ElectricMachineGEN", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachineSystem.
         /// </summary>
@@ -1841,7 +1841,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ElectricMachineSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Engine.
         /// </summary>
@@ -1850,7 +1850,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Engine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelCell.
         /// </summary>
@@ -1859,7 +1859,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_FuelCell", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gearbox.
         /// </summary>
@@ -1868,7 +1868,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Gearbox", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MainCertificationMethod.
         /// </summary>
@@ -1877,7 +1877,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Gearbox_CertificationMethod", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to id.
         /// </summary>
@@ -1886,7 +1886,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ID_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to IEPC.
         /// </summary>
@@ -1895,7 +1895,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_IEPC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manufacturer.
         /// </summary>
@@ -1904,7 +1904,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Manufacturer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddress.
         /// </summary>
@@ -1913,7 +1913,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_ManufacturerAddress", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Model.
         /// </summary>
@@ -1922,7 +1922,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Model", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Retarder.
         /// </summary>
@@ -1931,7 +1931,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Retarder", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TechnicalReportId.
         /// </summary>
@@ -1940,7 +1940,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_TechnicalReportId", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueConverter.
         /// </summary>
@@ -1949,7 +1949,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_TorqueConverter", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Transmission.
         /// </summary>
@@ -1958,7 +1958,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Transmission", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>
@@ -1967,7 +1967,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOType.
         /// </summary>
@@ -1976,7 +1976,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Type_Attr_PTO", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Vehicle.
         /// </summary>
@@ -1985,7 +1985,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Component_Vehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
@@ -1994,7 +1994,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ComponentDataWrapper", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleComponentsType.
         /// </summary>
@@ -2003,7 +2003,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Components_type_attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CompressorDrive.
         /// </summary>
@@ -2012,7 +2012,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CompressorDrive", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Conditioning.
         /// </summary>
@@ -2021,7 +2021,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Conditioning", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to coolantTempInlet.
         /// </summary>
@@ -2030,7 +2030,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Conditioning_CoolantTempInlet", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to coolingPower.
         /// </summary>
@@ -2039,7 +2039,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Conditioning_CoolingPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -2048,7 +2048,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Conditioning_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CorrectedActualMass.
         /// </summary>
@@ -2057,7 +2057,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("CorrectedActualMass", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to di.
         /// </summary>
@@ -2066,7 +2066,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Signature.
         /// </summary>
@@ -2075,7 +2075,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Algorithm.
         /// </summary>
@@ -2084,7 +2084,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Algorithm_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Reference.
         /// </summary>
@@ -2093,7 +2093,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DigestMethod.
         /// </summary>
@@ -2102,7 +2102,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference_DigestMethod", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DigestValue.
         /// </summary>
@@ -2111,7 +2111,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference_DigestValue", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Transforms.
         /// </summary>
@@ -2120,7 +2120,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference_Transforms", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Transform.
         /// </summary>
@@ -2129,7 +2129,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference_Transforms_Transform", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to URI.
         /// </summary>
@@ -2138,7 +2138,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DI_Signature_Reference_URI_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DragCurve.
         /// </summary>
@@ -2147,7 +2147,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DragCurve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to dragTorque.
         /// </summary>
@@ -2156,7 +2156,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DragCurve_DragTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -2165,7 +2165,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DragCurve_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -2174,7 +2174,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DragCurve_Gear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to outShaftSpeed.
         /// </summary>
@@ -2183,7 +2183,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DragCurve_OutShaftSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to decisionFactorVel.
         /// </summary>
@@ -2192,7 +2192,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Driver_CoastingDFTargetSpeedLookupMapping_DecisionFactor_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to targetVelocity.
         /// </summary>
@@ -2201,7 +2201,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Driver_CoastingDFTargetSpeedLookupMapping_TargetVelocity_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to decisionFactorDrop.
         /// </summary>
@@ -2210,7 +2210,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Driver_CoastingDFVelocityDropLookupMapping_DecisionFactorDrop_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to velocityDrop.
         /// </summary>
@@ -2219,7 +2219,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Driver_CoastingDFVelocityDropLookupMapping_VelocityDrop_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DriverAccelerationCurve.
         /// </summary>
@@ -2228,7 +2228,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_DriverAccelerationCurve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -2237,7 +2237,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_DriverAccelerationCurve_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EcoRoll.
         /// </summary>
@@ -2246,7 +2246,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_EcoRoll", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineStopStart.
         /// </summary>
@@ -2255,7 +2255,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_EngineStopStart", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineStopStartParameters.
         /// </summary>
@@ -2264,7 +2264,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_EngineStopStartParameters", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LookAheadCoasting.
         /// </summary>
@@ -2273,7 +2273,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DecisionFactorOffset.
         /// </summary>
@@ -2282,7 +2282,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_DecisionFactorOffset", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DecisionFactorScaling.
         /// </summary>
@@ -2291,7 +2291,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_DecisionFactorScaling", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
@@ -2300,7 +2300,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_Enabled", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinSpeed.
         /// </summary>
@@ -2309,7 +2309,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_MinSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PreviewDistanceFactor.
         /// </summary>
@@ -2318,7 +2318,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_PreviewDistanceFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SpeedDependentDecisionFactor.
         /// </summary>
@@ -2327,7 +2327,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_SpeedDependentDecisionFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VelocityDropDecisionFactor.
         /// </summary>
@@ -2336,7 +2336,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_LookAheadCoasting_VelocityDropDecisionFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Overspeed.
         /// </summary>
@@ -2345,7 +2345,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AllowedOverspeed.
         /// </summary>
@@ -2354,7 +2354,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed_AllowedOverspeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AllowedUnderspeed.
         /// </summary>
@@ -2363,7 +2363,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed_AllowedUnderspeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
@@ -2372,7 +2372,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed_Enabled", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinSpeed.
         /// </summary>
@@ -2381,7 +2381,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed_MinSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mode.
         /// </summary>
@@ -2390,7 +2390,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_Overspeed_Mode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ShiftStrategyParameters.
         /// </summary>
@@ -2399,7 +2399,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DownshiftAfterUpshiftDelay.
         /// </summary>
@@ -2408,7 +2408,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_DownshiftAfterUpshiftDelay", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PowershiftShiftTime.
         /// </summary>
@@ -2417,7 +2417,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_PowershiftShiftTime", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to StartAcceleration.
         /// </summary>
@@ -2426,7 +2426,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_StartAcceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to StartSpeed.
         /// </summary>
@@ -2435,7 +2435,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_StartSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to StartTorqueReserve.
         /// </summary>
@@ -2444,7 +2444,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_StartTorqueReserve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TimeBetweenGearshift.
         /// </summary>
@@ -2453,7 +2453,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_TimeBetweenGearshift", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueReserve.
         /// </summary>
@@ -2462,7 +2462,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_TorqueReserve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to UpshiftAfterDownshiftDelay.
         /// </summary>
@@ -2471,7 +2471,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_UpshiftAfterDownshiftDelay", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to UpshiftMinAcceleration.
         /// </summary>
@@ -2480,7 +2480,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("DriverModel_ShiftStrategyParameters_UpshiftMinAcceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricEnergyStorage.
         /// </summary>
@@ -2489,7 +2489,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricEnergyStorage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Battery.
         /// </summary>
@@ -2498,7 +2498,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricEnergyStorage_Battery", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Capacitor.
         /// </summary>
@@ -2507,7 +2507,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricEnergyStorage_Capacitor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ContinuousTorque.
         /// </summary>
@@ -2516,7 +2516,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_ContinuousTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Count.
         /// </summary>
@@ -2525,7 +2525,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_Count", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DcDcConverterIncluded.
         /// </summary>
@@ -2534,7 +2534,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_DcDcConverterIncluded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachineType.
         /// </summary>
@@ -2543,7 +2543,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_ElectricMachineType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to IHPCType.
         /// </summary>
@@ -2552,7 +2552,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_IHPCType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OverloadDuration.
         /// </summary>
@@ -2561,7 +2561,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_OverloadDuration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OverloadTorque.
         /// </summary>
@@ -2570,7 +2570,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_OverloadTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to P2.5GearRatios.
         /// </summary>
@@ -2579,7 +2579,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_P2.5GearRatios", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -2588,7 +2588,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_P2_5GearRatios_Gear_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Position.
         /// </summary>
@@ -2597,7 +2597,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_Position", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PowertrainPosition.
         /// </summary>
@@ -2606,7 +2606,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_PowertrainPosition", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to R85RatedPower.
         /// </summary>
@@ -2615,7 +2615,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_R85RatedPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RotationalInertia.
         /// </summary>
@@ -2624,7 +2624,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_RotationalInertia", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TestSpeedContinuousTorque.
         /// </summary>
@@ -2633,7 +2633,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_TestSpeedContinuousTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TestSpeedOverloadTorque.
         /// </summary>
@@ -2642,7 +2642,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_TestSpeedOverloadTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TestVoltageOverload.
         /// </summary>
@@ -2651,7 +2651,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_TestVoltageOverload", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VoltageLevel.
         /// </summary>
@@ -2660,7 +2660,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachine_VoltageLevel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachineSystem.
         /// </summary>
@@ -2669,7 +2669,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMachineSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachine.
         /// </summary>
@@ -2678,7 +2678,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMotorTorqueLimit_ElectricMachine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMotorTorqueLimits.
         /// </summary>
@@ -2687,7 +2687,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ElectricMotorTorqueLimits", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BFColdHot.
         /// </summary>
@@ -2696,7 +2696,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_ColdHotBalancingFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CFNCV.
         /// </summary>
@@ -2705,7 +2705,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_CorrecionFactor_NCV", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CFRegPer.
         /// </summary>
@@ -2714,7 +2714,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_CorrectionFactor_RegPer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Displacement.
         /// </summary>
@@ -2723,7 +2723,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_Displacement", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to engineSpeed.
         /// </summary>
@@ -2732,7 +2732,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_EngineFullLoadCurve_EngineSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCCorrection.
         /// </summary>
@@ -2741,7 +2741,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FCCorrection", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelConsumptionMap.
         /// </summary>
@@ -2750,7 +2750,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to engineSpeed.
         /// </summary>
@@ -2759,7 +2759,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_EngineSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -2768,7 +2768,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to fuelConsumption.
         /// </summary>
@@ -2777,7 +2777,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_FuelConsumption_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torque.
         /// </summary>
@@ -2786,7 +2786,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_Torque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to electricPower.
         /// </summary>
@@ -2795,7 +2795,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_WHRElPower_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to mechanicalPower.
         /// </summary>
@@ -2804,7 +2804,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelConsumptionMap_WHRMechPower_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mode.
         /// </summary>
@@ -2813,7 +2813,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelModes", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Fuel.
         /// </summary>
@@ -2822,7 +2822,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelModes_Fuel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelType.
         /// </summary>
@@ -2831,7 +2831,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FuelType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FullLoadAndDragCurve.
         /// </summary>
@@ -2840,7 +2840,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FullLoadAndDragCurve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to dragTorque.
         /// </summary>
@@ -2849,7 +2849,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FullLoadCurve_DragTorque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -2858,7 +2858,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FullLoadCurve_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxTorque.
         /// </summary>
@@ -2867,7 +2867,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_FullLoadCurve_MaxTorque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to IdlingSpeed.
         /// </summary>
@@ -2876,7 +2876,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_IdlingSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Inertia.
         /// </summary>
@@ -2885,7 +2885,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_Inertia", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxEngineTorque.
         /// </summary>
@@ -2894,7 +2894,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_MaxTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedPower.
         /// </summary>
@@ -2903,7 +2903,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_RatedPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedSpeed.
         /// </summary>
@@ -2912,7 +2912,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_RatedSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineDataDeclarationType.
         /// </summary>
@@ -2921,7 +2921,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricalOutput.
         /// </summary>
@@ -2930,7 +2930,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHR_ElectricalOutput", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MechanicalOutputICE.
         /// </summary>
@@ -2939,7 +2939,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHR_MechanicalOutputICE", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MechanicalOutputDrivetrain.
         /// </summary>
@@ -2948,7 +2948,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHR_MechanicalOutputIDrivetrain", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHRCorrection.
         /// </summary>
@@ -2957,7 +2957,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHRCorrectionFactors.
         /// </summary>
@@ -2966,7 +2966,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BFColdHot.
         /// </summary>
@@ -2975,7 +2975,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_BFColdHot", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CFRegPer.
         /// </summary>
@@ -2984,7 +2984,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_CFRegPer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Electrical.
         /// </summary>
@@ -2993,7 +2993,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Electrical", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mechanical.
         /// </summary>
@@ -3002,7 +3002,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Mechanical", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Motorway.
         /// </summary>
@@ -3011,7 +3011,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Motorway", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Rural.
         /// </summary>
@@ -3020,7 +3020,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Rural", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Urban.
         /// </summary>
@@ -3029,7 +3029,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Urban", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHRMap.
         /// </summary>
@@ -3038,7 +3038,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3047,7 +3047,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHRType.
         /// </summary>
@@ -3056,7 +3056,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHRType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHTCEngineering.
         /// </summary>
@@ -3065,7 +3065,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHTCEngineering", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHTCMotorway.
         /// </summary>
@@ -3074,7 +3074,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHTCMotorway", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHTCRural.
         /// </summary>
@@ -3083,7 +3083,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHTCRural", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHTCUrban.
         /// </summary>
@@ -3092,7 +3092,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Engine_WHTCUrban", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SumNetPower.
         /// </summary>
@@ -3101,7 +3101,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Exempted_SumNetPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Technology.
         /// </summary>
@@ -3110,7 +3110,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Exempted_Technology", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Resource.
         /// </summary>
@@ -3119,7 +3119,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExternalResource", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to component.
         /// </summary>
@@ -3128,7 +3128,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExtResource_Component_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to file.
         /// </summary>
@@ -3137,7 +3137,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExtResource_File_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>
@@ -3146,7 +3146,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExtResource_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to csv.
         /// </summary>
@@ -3155,7 +3155,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExtResource_Type_Value_CSV", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to xml.
         /// </summary>
@@ -3164,7 +3164,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ExtResource_Type_Value_XML", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelCell.
         /// </summary>
@@ -3173,7 +3173,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_Cell", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to fuelConsumption.
         /// </summary>
@@ -3182,7 +3182,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_Consumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3191,7 +3191,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_ConsumptionEntry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Count.
         /// </summary>
@@ -3200,7 +3200,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_Count", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCSRatedPower.
         /// </summary>
@@ -3209,7 +3209,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_FCSRatedPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxPower.
         /// </summary>
@@ -3218,7 +3218,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinPower.
         /// </summary>
@@ -3227,7 +3227,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelCellModule.
         /// </summary>
@@ -3236,7 +3236,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_Module", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to powerOutput.
         /// </summary>
@@ -3245,7 +3245,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_PowerOutput", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelCellPowerOutputConsumptionMap.
         /// </summary>
@@ -3254,7 +3254,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("FuelCell_PowerOutputConsumptionMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gear.
         /// </summary>
@@ -3263,7 +3263,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_EntryName", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to number.
         /// </summary>
@@ -3272,7 +3272,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_GearNumber_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxOutShaftSpeed.
         /// </summary>
@@ -3281,7 +3281,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_MaxOutputShaftSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxOutShaftTorque.
         /// </summary>
@@ -3290,7 +3290,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_MaxOutputShaftTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -3299,7 +3299,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to engineTorque.
         /// </summary>
@@ -3308,7 +3308,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_ShiftPolygon_EngineTorque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to downshiftSpeed.
         /// </summary>
@@ -3317,7 +3317,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_ShiftPolygonMapping_DownshiftSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to upshiftSpeed.
         /// </summary>
@@ -3326,7 +3326,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gear_ShiftPolygonMapping_UpshiftSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GearboxDataDeclarationType.
         /// </summary>
@@ -3335,7 +3335,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_attr_GearboxDataDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxlegearRatio.
         /// </summary>
@@ -3344,7 +3344,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_AxlegearRatio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DifferentialIncluded.
         /// </summary>
@@ -3353,7 +3353,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_DifferentialIncluded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Efficiency.
         /// </summary>
@@ -3362,7 +3362,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_Efficiency", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to number.
         /// </summary>
@@ -3371,7 +3371,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_GearNumber_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxSpeed.
         /// </summary>
@@ -3380,7 +3380,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_MaxSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -3389,7 +3389,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueLossMap.
         /// </summary>
@@ -3398,7 +3398,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_TorqueLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3407,7 +3407,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gear_TorqueLossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gears.
         /// </summary>
@@ -3416,7 +3416,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GearsDeclarationType.
         /// </summary>
@@ -3425,7 +3425,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears_Attr_GearsDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gear.
         /// </summary>
@@ -3434,7 +3434,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears_Gear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ShiftPolygon.
         /// </summary>
@@ -3443,7 +3443,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears_Gear_ShiftPolygon", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3452,7 +3452,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears_Gear_ShiftPolygon_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxTorque.
         /// </summary>
@@ -3461,7 +3461,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Gears_MaxTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Inertia.
         /// </summary>
@@ -3470,7 +3470,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_Inertia", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TractionInterruption.
         /// </summary>
@@ -3479,7 +3479,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_TractionInterruption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransmissionType.
         /// </summary>
@@ -3488,7 +3488,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Gearbox_TransmissionType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
@@ -3497,7 +3497,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("GearRatio_Ratio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to g/kWh.
         /// </summary>
@@ -3506,7 +3506,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("GramsPerKWattHour", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleVIFType.
         /// </summary>
@@ -3515,7 +3515,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Hashing_VehicleVIFType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to IEPC.
         /// </summary>
@@ -3524,7 +3524,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("IEPC_Component", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DesignTypeWheelMotor.
         /// </summary>
@@ -3533,7 +3533,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("IEPC_DesignTypeWheelMotor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DifferentialIncluded.
         /// </summary>
@@ -3542,7 +3542,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("IEPC_DifferentialIncluded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DisengagementClutch.
         /// </summary>
@@ -3551,7 +3551,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NrOfDesignTypeWheelMotorMeasured.
         /// </summary>
@@ -3560,7 +3560,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("IEPC_NrOfDesignTypeWheelMotorMeasured", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3569,7 +3569,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("LookAheadCoasting_SpeedDependentDecisionFactor_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3578,7 +3578,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("LookAheadCoasting_VelocityDropDecisionFactor_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddress.
         /// </summary>
@@ -3587,7 +3587,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturerAddress", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddressCompletedVehicle.
         /// </summary>
@@ -3596,7 +3596,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturerAddressCompletedVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerCompletedVehicle.
         /// </summary>
@@ -3605,7 +3605,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturerCompletedVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerPrimaryVehicle.
         /// </summary>
@@ -3614,7 +3614,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturerPrimaryVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerRecord.
         /// </summary>
@@ -3623,7 +3623,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturerRecord", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturingStep.
         /// </summary>
@@ -3632,7 +3632,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BusManufacturingStepDataType.
         /// </summary>
@@ -3641,7 +3641,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_Bus_DataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HashPreviousStep.
         /// </summary>
@@ -3650,7 +3650,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_HashPreviousStep", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to stepCount.
         /// </summary>
@@ -3659,7 +3659,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_StepCount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to stepCount.
         /// </summary>
@@ -3668,7 +3668,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ManufacturingStep_stepCount_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxTorqueCurve.
         /// </summary>
@@ -3677,7 +3677,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -3686,7 +3686,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve_attr_gear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3695,7 +3695,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxTorque.
         /// </summary>
@@ -3704,7 +3704,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve_MaxTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to minTorque.
         /// </summary>
@@ -3713,7 +3713,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve_MinTorque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to outShaftSpeed.
         /// </summary>
@@ -3722,7 +3722,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MaxTorqueCurve_OutShaftSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Cycle.
         /// </summary>
@@ -3731,7 +3731,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Missions_Cycle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to additional ADAS technologies.
         /// </summary>
@@ -3740,7 +3740,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAddADAs", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced aerodynamic measures.
         /// </summary>
@@ -3749,7 +3749,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvAero", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced auxiliary technologies.
         /// </summary>
@@ -3758,7 +3758,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvAux", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced drivetrain technologies.
         /// </summary>
@@ -3767,7 +3767,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvDrivetrain", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced engine technologies.
         /// </summary>
@@ -3776,7 +3776,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvEngine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced powertrain integration and hybridisation.
         /// </summary>
@@ -3785,7 +3785,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvPowertrain", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdvancedReducingTechnologies.
         /// </summary>
@@ -3794,7 +3794,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvReducingTech", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to advanced rolling resistance measures.
         /// </summary>
@@ -3803,7 +3803,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAdvRoll", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Axle.
         /// </summary>
@@ -3812,7 +3812,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAxle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Axlegear.
         /// </summary>
@@ -3821,7 +3821,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAxlegear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to axleNumber.
         /// </summary>
@@ -3830,7 +3830,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAxleNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleWheels.
         /// </summary>
@@ -3839,7 +3839,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringAxleWheels", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to category.
         /// </summary>
@@ -3848,7 +3848,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringCategory", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CO2.
         /// </summary>
@@ -3857,7 +3857,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringCO2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdditionalData.
         /// </summary>
@@ -3866,7 +3866,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringDataNode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DataType.
         /// </summary>
@@ -3875,7 +3875,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringDataTypeSuffix", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricEnergyStorage.
         /// </summary>
@@ -3884,7 +3884,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringElectricEnergyStorage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachine.
         /// </summary>
@@ -3893,7 +3893,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringElectricMachine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricMachineGEN.
         /// </summary>
@@ -3902,7 +3902,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringElectricMachineGEN", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Engine.
         /// </summary>
@@ -3911,7 +3911,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringEngine", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -3920,7 +3920,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringEntry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelConsumption.
         /// </summary>
@@ -3929,7 +3929,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringFuelConsumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelType.
         /// </summary>
@@ -3938,7 +3938,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringFuelType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Gearbox.
         /// </summary>
@@ -3947,7 +3947,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringGearbox", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoLicenseNbr.
         /// </summary>
@@ -3956,7 +3956,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringLicenseNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Make.
         /// </summary>
@@ -3965,7 +3965,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringMake", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Manufacturer.
         /// </summary>
@@ -3974,7 +3974,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringManufacturer", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerAddress.
         /// </summary>
@@ -3983,7 +3983,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringManufacturerAddress", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to other.
         /// </summary>
@@ -3992,7 +3992,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringOtherTech", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoMonitoring.
         /// </summary>
@@ -4001,7 +4001,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringRootNode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TypeApprovalNumber.
         /// </summary>
@@ -4010,7 +4010,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringTypeApprovalNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Tyre.
         /// </summary>
@@ -4019,7 +4019,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringTyre", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Vehicle.
         /// </summary>
@@ -4028,7 +4028,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHSC.
         /// </summary>
@@ -4037,7 +4037,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringWHSC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to WHTC.
         /// </summary>
@@ -4046,7 +4046,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MonitoringWHTC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ConventionalLorryManufacturerOutputDataType.
         /// </summary>
@@ -4055,7 +4055,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_ConventionalLorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ConventionalPrimaryBusManufacturerOutputDataType.
         /// </summary>
@@ -4064,7 +4064,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCHV-F2_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4073,7 +4073,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCHV-F3_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4082,7 +4082,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCHV-F4_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4091,7 +4091,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FCHV-IEPC-F_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4100,7 +4100,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV-IEPC-S_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4109,7 +4109,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV-Px_IHPCLorryManufacturerOutputDataType.
         /// </summary>
@@ -4118,7 +4118,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV-S2_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4127,7 +4127,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV-S3_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4136,7 +4136,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to HEV-S4_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4145,7 +4145,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV-E2_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4154,7 +4154,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV-E3_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4163,7 +4163,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV-E4_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4172,7 +4172,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PEV-IEPC_LorryManufacturerOutputDataType.
         /// </summary>
@@ -4181,7 +4181,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
@@ -4190,7 +4190,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRFDataNode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerOutputDataType.
         /// </summary>
@@ -4199,7 +4199,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("MRFDataTypeSuffix", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PowerMap.
         /// </summary>
@@ -4208,7 +4208,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to electricPower.
         /// </summary>
@@ -4217,7 +4217,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap_ElectricPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -4226,7 +4226,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -4235,7 +4235,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap_Gear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to outShaftSpeed.
         /// </summary>
@@ -4244,7 +4244,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap_OutShaftSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torque.
         /// </summary>
@@ -4253,7 +4253,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PowerMap_Torque", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PrimaryBusDeclarationType.
         /// </summary>
@@ -4262,7 +4262,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PrimaryBusDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PrimaryBusManufacturerOutputDataType.
         /// </summary>
@@ -4271,7 +4271,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("PrimaryBusManufacturerOutputDataType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to REESS.
         /// </summary>
@@ -4280,7 +4280,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BatteryType.
         /// </summary>
@@ -4289,7 +4289,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_BatteryType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ConnectorsSubsystemsIncluded.
         /// </summary>
@@ -4298,7 +4298,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_ConnectorsSubsystemsIncluded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CurrentLimits.
         /// </summary>
@@ -4307,7 +4307,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_CurrentLimits", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxChargingCurrent.
         /// </summary>
@@ -4316,7 +4316,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_CurrentLimits_MaxChargingCurrent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxDischargingCurrent.
         /// </summary>
@@ -4325,7 +4325,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_CurrentLimits_MaxDischargingCurrent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SoC.
         /// </summary>
@@ -4334,7 +4334,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_CurrentLimits_SoC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to InternalResistance.
         /// </summary>
@@ -4343,7 +4343,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to R_10.
         /// </summary>
@@ -4352,7 +4352,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve_R10", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to R_120.
         /// </summary>
@@ -4361,7 +4361,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve_R120", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to R_2.
         /// </summary>
@@ -4370,7 +4370,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve_R2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to R_20.
         /// </summary>
@@ -4379,7 +4379,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve_R20", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SoC.
         /// </summary>
@@ -4388,7 +4388,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_InternalResistanceCurve_SoC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to JunctionboxIncluded.
         /// </summary>
@@ -4397,7 +4397,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_JunctionboxIncluded", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -4406,7 +4406,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_MapEntry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OCV.
         /// </summary>
@@ -4415,7 +4415,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_OCV", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OCV.
         /// </summary>
@@ -4424,7 +4424,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_OCV_OCV", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SoC.
         /// </summary>
@@ -4433,7 +4433,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_OCV_SoC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RatedCapacity.
         /// </summary>
@@ -4442,7 +4442,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_RatedCapacity", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TestingTemperature.
         /// </summary>
@@ -4451,7 +4451,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("REESS_TestingTemperature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CdxA.
         /// </summary>
@@ -4460,7 +4460,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_AirDrag_CdxA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ApplicationInformation.
         /// </summary>
@@ -4469,7 +4469,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ApplicationInfo_ApplicationInformation", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
@@ -4478,7 +4478,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ApplicationInfo_Date", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SimulationToolVersion.
         /// </summary>
@@ -4487,7 +4487,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ApplicationInfo_SimulationToolVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AveragePayload.
         /// </summary>
@@ -4496,7 +4496,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_AveragePayload", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CO2StandardsGroup.
         /// </summary>
@@ -4505,7 +4505,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_CO2StandardsGroup", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CertificationMethod.
         /// </summary>
@@ -4514,7 +4514,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Component_CertificationMethod", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CertificationNumber.
         /// </summary>
@@ -4523,7 +4523,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Component_CertificationNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
@@ -4532,7 +4532,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_DataWrap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mode.
         /// </summary>
@@ -4541,7 +4541,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Engine_FuelMode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ExemptedVehicle.
         /// </summary>
@@ -4550,7 +4550,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ExemptedVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransmissionRatioFinalGear.
         /// </summary>
@@ -4559,7 +4559,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Gearbox_TransmissionRatioFinalGear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GearsCount.
         /// </summary>
@@ -4568,7 +4568,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_GetGearbox_GearsCount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to InputDataSignature.
         /// </summary>
@@ -4577,7 +4577,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Input_Signature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to InputDataSignature.
         /// </summary>
@@ -4586,7 +4586,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_InputDataSignature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ManufacturerRecordSignature.
         /// </summary>
@@ -4595,7 +4595,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ManufacturerRecord_Signature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EnergyConsumption.
         /// </summary>
@@ -4604,7 +4604,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_EnergyConsumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelMode.
         /// </summary>
@@ -4613,7 +4613,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_FuelMode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to dual fuel mode.
         /// </summary>
@@ -4622,7 +4622,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_FuelMode_Val_Dual", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to single fuel mode.
         /// </summary>
@@ -4631,7 +4631,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_FuelMode_Val_Single", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MassPassengers.
         /// </summary>
@@ -4640,7 +4640,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_MassPassengers", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Mission.
         /// </summary>
@@ -4649,7 +4649,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_Mission", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PassengerCount.
         /// </summary>
@@ -4658,7 +4658,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_PassengerCount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Payload.
         /// </summary>
@@ -4667,7 +4667,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_Payload", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Result.
         /// </summary>
@@ -4676,7 +4676,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_Result", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
@@ -4685,7 +4685,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_Status", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to status.
         /// </summary>
@@ -4694,7 +4694,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Result_Status_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ResultDataSignature.
         /// </summary>
@@ -4703,7 +4703,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultData_Signature", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ActualChargeDepletingRange.
         /// </summary>
@@ -4712,7 +4712,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_ActualChargeDepletingRange", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageSpeed.
         /// </summary>
@@ -4721,7 +4721,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_AverageSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageDrivingSpeed.
         /// </summary>
@@ -4730,7 +4730,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_AvgDrivingSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CO2_ZEV_AuxHeater.
         /// </summary>
@@ -4739,7 +4739,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_CO2ZEVAuxHeater", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Distance.
         /// </summary>
@@ -4748,7 +4748,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_Distance", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricEnergy.
         /// </summary>
@@ -4757,7 +4757,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_ElectricEnergyConsumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineSpeedDriving.
         /// </summary>
@@ -4766,7 +4766,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_EngineSpeedDriving", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Average.
         /// </summary>
@@ -4775,7 +4775,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_EngineSpeedDriving_Avg", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
@@ -4784,7 +4784,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_EngineSpeedDriving_Max", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Min.
         /// </summary>
@@ -4793,7 +4793,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_EngineSpeedDriving_Min", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EquivalentAllElectricRange.
         /// </summary>
@@ -4802,7 +4802,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_EquivalentAllElectricRange", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FC_ZEV_AuxHeater.
         /// </summary>
@@ -4811,7 +4811,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_FCZEVAuxHeater", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelType.
         /// </summary>
@@ -4820,7 +4820,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_FuelType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FullLoadDrivingtimePercentage.
         /// </summary>
@@ -4829,7 +4829,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_FullLoadDrivingtimePercentage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GearshiftCount.
         /// </summary>
@@ -4838,7 +4838,16 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_GearshiftCount", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HydrogenRange.
+        /// </summary>
+        public static string Report_ResultEntry_HydrogenRange {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_HydrogenRange", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxAcceleration.
         /// </summary>
@@ -4847,7 +4856,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_MaxAcceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxDeceleration.
         /// </summary>
@@ -4856,7 +4865,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_MaxDeceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxSpeed.
         /// </summary>
@@ -4865,7 +4874,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_MaxSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinSpeed.
         /// </summary>
@@ -4874,7 +4883,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_MinSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PassengerCount.
         /// </summary>
@@ -4883,7 +4892,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_PassengerCount", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Payload.
         /// </summary>
@@ -4892,7 +4901,43 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_Payload", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ranges.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to lifetime.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_Attr {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to begin of life.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_BOL_Val {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_BOL_Val", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to end of life.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_EOL_Val {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_EOL_Val", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to SimulationParameters.
         /// </summary>
@@ -4901,7 +4946,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_SimulationParameters", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Total.
         /// </summary>
@@ -4910,7 +4955,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_Total", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TotalVehicleMass.
         /// </summary>
@@ -4919,7 +4964,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_TotalVehicleMass", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehiclePerformance.
         /// </summary>
@@ -4928,7 +4973,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_VehiclePerformance", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ElectricEnergyConsumption.
         /// </summary>
@@ -4937,7 +4982,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_VIF_ElectricEnergyConsumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ZeroCO2EmissionsRange.
         /// </summary>
@@ -4946,7 +4991,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_ResultEntry_ZeroCO2EmissionsRange", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Results.
         /// </summary>
@@ -4955,7 +5000,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageAxlegearEfficiency.
         /// </summary>
@@ -4964,7 +5009,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_AverageAxlegearEfficiency", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageGearboxEfficiency.
         /// </summary>
@@ -4973,7 +5018,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_AverageGearboxEfficiency", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageSpeed.
         /// </summary>
@@ -4982,7 +5027,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_AverageSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CO2.
         /// </summary>
@@ -4991,7 +5036,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_CO2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
@@ -5000,7 +5045,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Error", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ErrorDetails.
         /// </summary>
@@ -5009,7 +5054,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_ErrorDetails", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Fuel.
         /// </summary>
@@ -5018,7 +5063,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Fuel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>
@@ -5027,7 +5072,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Fuel_Type_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelConsumption.
         /// </summary>
@@ -5036,7 +5081,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_FuelConsumption", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelType.
         /// </summary>
@@ -5045,7 +5090,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_FuelType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OVCMode.
         /// </summary>
@@ -5054,7 +5099,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_OVCMode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PrimaryVehicleSubgroup.
         /// </summary>
@@ -5063,7 +5108,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_PrimaryVehicleSubgroup", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to error.
         /// </summary>
@@ -5072,7 +5117,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Status_Error_Val", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to success.
         /// </summary>
@@ -5081,7 +5126,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Status_Success_Val", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Summary.
         /// </summary>
@@ -5090,7 +5135,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Summary", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to unit.
         /// </summary>
@@ -5099,7 +5144,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Results_Unit_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SpecificCO2Emissions.
         /// </summary>
@@ -5108,7 +5153,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_SpecificCO2Emissions", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TyreCertificationNumber.
         /// </summary>
@@ -5117,7 +5162,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Tyre_TyreCertificationNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TyreDimension.
         /// </summary>
@@ -5126,7 +5171,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Tyre_TyreDimension", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TyreRRCDeclared.
         /// </summary>
@@ -5135,7 +5180,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Tyre_TyreRRCDeclared", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageRRCMotorVehicleTyres.
         /// </summary>
@@ -5144,7 +5189,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_AverageRRC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AverageFuelEfficiencyLabelMotorVehicleTyres.
         /// </summary>
@@ -5153,7 +5198,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_AverageRRCLabel", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleRatio.
         /// </summary>
@@ -5162,7 +5207,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_AxleRatio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineDisplacement.
         /// </summary>
@@ -5171,7 +5216,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_EngineDisplacement", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineRatedPower.
         /// </summary>
@@ -5180,7 +5225,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_EngineRatedPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FuelTypes.
         /// </summary>
@@ -5189,7 +5234,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_FuelTypes", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Retarder.
         /// </summary>
@@ -5198,7 +5243,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_Retarder", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TransmissionMainCertificationMethod.
         /// </summary>
@@ -5207,7 +5252,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_TransmissionCertificationMethod", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleGroup.
         /// </summary>
@@ -5216,7 +5261,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Report_Vehicle_VehicleGroup", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to status.
         /// </summary>
@@ -5225,7 +5270,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Result_Status", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to current.
         /// </summary>
@@ -5234,7 +5279,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ResultCard_Entry_CurrentAttr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to smartCurrent.
         /// </summary>
@@ -5243,7 +5288,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("ResultCard_Entry_SmartCurrent_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>
@@ -5252,7 +5297,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Results_Report_OVCModeAttr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to charge depleting.
         /// </summary>
@@ -5261,7 +5306,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Results_Report_OVCModeAttr_ChargeDepleting", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to charge sustaining.
         /// </summary>
@@ -5270,7 +5315,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Results_Report_OVCModeAttr_ChargeSustaining", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RetarderDataDeclarationType.
         /// </summary>
@@ -5279,7 +5324,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Retarder_Attr_DataDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RetarderLossMap.
         /// </summary>
@@ -5288,7 +5333,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Retarder_RetarderLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -5297,7 +5342,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Retarder_RetarderLossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to retarderSpeed.
         /// </summary>
@@ -5306,7 +5351,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Retarder_RetarderLossmap_RetarderSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLoss.
         /// </summary>
@@ -5315,7 +5360,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Retarder_RetarderLossmap_TorqueLoss_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to schemaLocation.
         /// </summary>
@@ -5324,7 +5369,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("SchemaLocation", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to schemaVersion.
         /// </summary>
@@ -5333,7 +5378,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("SchemaVersion", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Component_Type_Attr.
         /// </summary>
@@ -5342,7 +5387,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("String", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ApplicationInformation.
         /// </summary>
@@ -5351,7 +5396,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Tag_ApplicationInformation", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ResultDataSignature.
         /// </summary>
@@ -5360,7 +5405,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Tag_ResultDataSignatureNode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Vehicle.
         /// </summary>
@@ -5369,7 +5414,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Tag_Vehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CCUpshiftMinAcceleration.
         /// </summary>
@@ -5378,7 +5423,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_CCUpshiftMinAcceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Characteristics.
         /// </summary>
@@ -5387,7 +5432,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_Characteristics", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -5396,7 +5441,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_Characteristics_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CLUpshiftMinAcceleration.
         /// </summary>
@@ -5405,7 +5450,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_CLUpshiftMinAcceleration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Inertia.
         /// </summary>
@@ -5414,7 +5459,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_Inertia", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxInputSpeed.
         /// </summary>
@@ -5423,7 +5468,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_MaxInputSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ReferenceRPM.
         /// </summary>
@@ -5432,7 +5477,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_ReferenceRPM", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ShiftPolygon.
         /// </summary>
@@ -5441,7 +5486,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_ShiftPolygon", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -5450,7 +5495,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverter_ShiftPolygon_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to speedRatio.
         /// </summary>
@@ -5459,7 +5504,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverterData_SpeedRatio_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueRatio.
         /// </summary>
@@ -5468,7 +5513,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverterData_TorqueRatio_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to inputTorqueRef.
         /// </summary>
@@ -5477,7 +5522,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueConverterDataMapping_InputTorqueRef_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -5486,7 +5531,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueCurve_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -5495,7 +5540,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TorqueCurve_Gear", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
         /// </summary>
@@ -5504,7 +5549,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TPMLM", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to inputSpeed.
         /// </summary>
@@ -5513,7 +5558,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TransmissionLossmap_InputSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to inputTorque.
         /// </summary>
@@ -5522,7 +5567,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TransmissionLossmap_InputTorque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLoss.
         /// </summary>
@@ -5531,7 +5576,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("TransmissionLossmap_TorqueLoss_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TyreDataDeclarationType.
         /// </summary>
@@ -5540,7 +5585,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Tyre_Type_Attr_TyreDataDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gCO2/tkm.
         /// </summary>
@@ -5549,7 +5594,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_gCO2Pertkm", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to kg.
         /// </summary>
@@ -5558,7 +5603,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_kg", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to km.
         /// </summary>
@@ -5567,7 +5612,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_km", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to km/h.
         /// </summary>
@@ -5576,7 +5621,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_kmph", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to kW.
         /// </summary>
@@ -5585,7 +5630,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_kW", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ltr.
         /// </summary>
@@ -5594,7 +5639,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_ltr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to m/s².
         /// </summary>
@@ -5603,7 +5648,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_mps2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Nm.
         /// </summary>
@@ -5612,7 +5657,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_Nm", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to rpm.
         /// </summary>
@@ -5621,7 +5666,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_RPM", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to t.
         /// </summary>
@@ -5630,7 +5675,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_t", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to W.
         /// </summary>
@@ -5639,7 +5684,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Unit_W", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to %.
         /// </summary>
@@ -5648,7 +5693,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("UnitPercent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoComponentEngineering.
         /// </summary>
@@ -5657,7 +5702,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoComponentEngineering", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoCustomerInformation.
         /// </summary>
@@ -5666,7 +5711,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoCustomerReport", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoInputDeclaration.
         /// </summary>
@@ -5675,7 +5720,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoInputDeclaration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoInputEngineering.
         /// </summary>
@@ -5684,7 +5729,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoInputEngineering", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineOnlyMode.
         /// </summary>
@@ -5693,7 +5738,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoJob_EngineOnlyMode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MissionCycles.
         /// </summary>
@@ -5702,7 +5747,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoJob_MissionCycles", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoOutput.
         /// </summary>
@@ -5711,7 +5756,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoManufacturerReport", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoOutputMultistep.
         /// </summary>
@@ -5720,7 +5765,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoOutputMultistep", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VectoOutputPrimaryVehicle.
         /// </summary>
@@ -5729,7 +5774,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VectoPrimaryVehicleReport", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxAcceleration.
         /// </summary>
@@ -5738,7 +5783,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AccelerationCurve_MaxAcceleration_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxDeceleration.
         /// </summary>
@@ -5747,7 +5792,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AccelerationCurve_MaxDeceleration_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to vehicleSpeed.
         /// </summary>
@@ -5756,7 +5801,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AccelerationCurve_VehicleSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ADAS.
         /// </summary>
@@ -5765,7 +5810,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to APTEcoRollReleaseLockupClutch.
         /// </summary>
@@ -5774,7 +5819,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_ATEcoRollReleaseLockupClutch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EcoRoll.
         /// </summary>
@@ -5783,7 +5828,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_EcoRoll", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EcoRollWithEngineStop.
         /// </summary>
@@ -5792,7 +5837,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_EcoRollWithEngineStopStart", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EcoRollWithoutEngineStop.
         /// </summary>
@@ -5801,7 +5846,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_EcoRollWithoutEngineStop", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineStopStart.
         /// </summary>
@@ -5810,7 +5855,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_EngineStopStart", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PredictiveCruiseControl.
         /// </summary>
@@ -5819,7 +5864,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ADAS_PCC", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AdvancedDriverAssist.
         /// </summary>
@@ -5828,7 +5873,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to EngineStartStop.
         /// </summary>
@@ -5837,7 +5882,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist_EngineStartStop", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ActivationDelay.
         /// </summary>
@@ -5846,7 +5891,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist_EngineStartStop_ActivationDelay", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
@@ -5855,7 +5900,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxSpeed.
         /// </summary>
@@ -5864,7 +5909,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist_EngineStartStop_MaxSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MinOnTime.
         /// </summary>
@@ -5873,7 +5918,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AdvancedDriverAssist_EngineStartStop_MinOnTime", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CdxA.
         /// </summary>
@@ -5882,7 +5927,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AirDragArea", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AngledriveType.
         /// </summary>
@@ -5891,7 +5936,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AngledriveType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ArchitectureID.
         /// </summary>
@@ -5900,7 +5945,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ArchitectureID", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Articulated.
         /// </summary>
@@ -5909,7 +5954,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_Articulated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to AxleConfiguration.
         /// </summary>
@@ -5918,7 +5963,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_AxleConfiguration", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BodyworkCode.
         /// </summary>
@@ -5927,7 +5972,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_BodyworkCode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to BoostingLimitations.
         /// </summary>
@@ -5936,7 +5981,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_BoostingLimitation", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CargoVolume.
         /// </summary>
@@ -5945,7 +5990,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CargoVolume", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Clutch.
         /// </summary>
@@ -5954,7 +5999,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_Clutch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Components.
         /// </summary>
@@ -5963,7 +6008,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_Components", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CrossWindCorrectionData.
         /// </summary>
@@ -5972,7 +6017,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionData", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -5981,7 +6026,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionData_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to beta.
         /// </summary>
@@ -5990,7 +6035,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionMap_Beta", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CdScalingFactor.
         /// </summary>
@@ -5999,7 +6044,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionMap_CdScalingFactor", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to deltaCdxA.
         /// </summary>
@@ -6008,7 +6053,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionMap_DeltaCdxA", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to vehicleSpeed.
         /// </summary>
@@ -6017,7 +6062,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrosswindCorrectionMap_VehicleSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CrossWindCorrectionMode.
         /// </summary>
@@ -6026,7 +6071,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CrossWindCorrectionMode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CurbMassChassis.
         /// </summary>
@@ -6035,7 +6080,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CurbMassChassis", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CurbMassExtra.
         /// </summary>
@@ -6044,7 +6089,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CurbMassExtra", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CurbWeightChassis.
         /// </summary>
@@ -6053,7 +6098,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CurbWeightChassis", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to CurbWeightExtra.
         /// </summary>
@@ -6062,7 +6107,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_CurbWeightExtra", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DualFuelVehicle.
         /// </summary>
@@ -6071,7 +6116,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_DualFuelVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GrossVehicleMass.
         /// </summary>
@@ -6107,7 +6152,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_HybridElectricHDV", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to IdlingSpeed.
         /// </summary>
@@ -6116,7 +6161,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_IdlingSpeed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LegislativeCategory.
         /// </summary>
@@ -6125,7 +6170,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_LegislativeCategory", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to LegislativeClass.
         /// </summary>
@@ -6134,7 +6179,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_LegislativeClass", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Loading.
         /// </summary>
@@ -6143,7 +6188,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_Loading", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxChargingPower.
         /// </summary>
@@ -6152,7 +6197,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_MaxChargingPower", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxNetPower1.
         /// </summary>
@@ -6161,7 +6206,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_MaxNetPower1", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to MaxNetPower2.
         /// </summary>
@@ -6170,7 +6215,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_MaxNetPower2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to NgTankSystem.
         /// </summary>
@@ -6179,7 +6224,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_NgTankSystem", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to OvcHev.
         /// </summary>
@@ -6188,7 +6233,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_OvcHev", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTO.
         /// </summary>
@@ -6197,7 +6242,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTO", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOOtherElements.
         /// </summary>
@@ -6206,7 +6251,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTO_OtherElements", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOShaftsGearWheels.
         /// </summary>
@@ -6215,7 +6260,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTO_ShaftsGearWheels", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOCycle.
         /// </summary>
@@ -6224,7 +6269,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOCycle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to engineSpeed.
         /// </summary>
@@ -6233,7 +6278,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOCycle_EngineSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -6242,7 +6287,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOCycle_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to time.
         /// </summary>
@@ -6251,7 +6296,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOCycle_Time_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torque.
         /// </summary>
@@ -6260,7 +6305,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOCycle_Torque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOIdleLossMap.
         /// </summary>
@@ -6269,7 +6314,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOIdleLossMap", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to engineSpeed.
         /// </summary>
@@ -6278,7 +6323,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOIdleLossMap_EngineSpeed_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -6287,7 +6332,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOIdleLossMap_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ptoTorqueLoss.
         /// </summary>
@@ -6296,7 +6341,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOIdleLossMap_TorqueLoss_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to PTOType.
         /// </summary>
@@ -6305,7 +6350,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_PTOType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ClassBus.
         /// </summary>
@@ -6314,7 +6359,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_RegisteredClass", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RetarderRatio.
         /// </summary>
@@ -6323,7 +6368,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_RetarderRatio", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to RetarderType.
         /// </summary>
@@ -6332,7 +6377,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_RetarderType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SleeperCab.
         /// </summary>
@@ -6341,7 +6386,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_SleeperCab", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to SteeredAxles.
         /// </summary>
@@ -6350,7 +6395,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_SteeredAxles", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TorqueLimits.
         /// </summary>
@@ -6359,7 +6404,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TorqueLimits", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Entry.
         /// </summary>
@@ -6368,7 +6413,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TorqueLimits_Entry", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to gear.
         /// </summary>
@@ -6377,7 +6422,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TorqueLimits_Entry_Gear_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to maxTorque.
         /// </summary>
@@ -6386,7 +6431,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TorqueLimits_Entry_MaxTorque_Attr", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
         /// </summary>
@@ -6395,7 +6440,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TPMLM", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleTypeApprovalNumber.
         /// </summary>
@@ -6404,7 +6449,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_TypeApprovalNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleCategory.
         /// </summary>
@@ -6413,7 +6458,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_VehicleCategory", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleCode.
         /// </summary>
@@ -6422,7 +6467,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_VehicleCode", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VIN.
         /// </summary>
@@ -6431,7 +6476,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_VIN", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VocationalVehicle.
         /// </summary>
@@ -6440,7 +6485,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_VocationalVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ZeroEmissionVehicle.
         /// </summary>
@@ -6449,7 +6494,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("Vehicle_ZeroEmissionVehicle", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleDeclarationType.
         /// </summary>
@@ -6458,7 +6503,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VehicleAttr_VehicleDeclarationType", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleGroupCO2.
         /// </summary>
@@ -6467,7 +6512,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VehicleGroupCO2", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to VehicleTypeApprovalNumber.
         /// </summary>
@@ -6476,7 +6521,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VehicleTypeApprovalNumber", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Voltage.
         /// </summary>
@@ -6485,7 +6530,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("VoltageLevel_Voltage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Vocational.
         /// </summary>
@@ -6494,7 +6539,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XMLCustomerReportIsVocational", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLimit.
         /// </summary>
@@ -6503,7 +6548,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XMLManufacturerReport_torqueLimit", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to torqueLimitPercent.
         /// </summary>
@@ -6512,7 +6557,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XMLManufacturerReport_torqueLimitPercent", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to xmlns.
         /// </summary>
@@ -6521,7 +6566,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XMLNS", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to xsi.
         /// </summary>
@@ -6530,7 +6575,7 @@ namespace TUGraz.VectoCommon.Resources {
                 return ResourceManager.GetString("XSI", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to type.
         /// </summary>

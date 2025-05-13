@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			}
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
-			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(), 
+			Results = _resultFactory.GetCIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(), 
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted); 
 			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));

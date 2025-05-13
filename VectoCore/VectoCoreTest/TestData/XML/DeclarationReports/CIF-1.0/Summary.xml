@@ -3,7 +3,7 @@
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Summaries>
 		<!-- 
-Conventional Lorry - non H2 ICE -->
+Conventional Lorry - non H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryConventionalType">
 			<Vocational>true</Vocational>
 			<AveragePayload unit="t">12.345</AveragePayload>
@@ -29,7 +29,7 @@ Conventional Lorry - non H2 ICE -->
 			<CO2 unit="g/t-km">123.0</CO2>
 		</Summary>
 		<!-- 
-Conventional Bus - non H2 ICE -->
+Conventional Bus - non H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryConventionalType">
 			<Vocational>true</Vocational>
 			<AveragePassengerCount>34.5</AveragePassengerCount>
@@ -55,7 +55,7 @@ Conventional Bus - non H2 ICE -->
 			<CO2 unit="g/t-km">123.0</CO2>
 		</Summary>
 		<!-- 
-Conventional Lorry - H2 ICE -->
+Conventional Lorry - H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryConventionalType">
 			<Vocational>true</Vocational>
 			<AveragePayload unit="t">12.345</AveragePayload>
@@ -85,8 +85,134 @@ Conventional Lorry - H2 ICE -->
 			</Ranges>
 		</Summary>
 		<!-- 
-Conventional Bus - H2 ICE -->
+Conventional Bus - H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryConventionalType">
+			<Vocational>true</Vocational>
+			<AveragePassengerCount>34.5</AveragePassengerCount>
+			<Fuel type="H2">
+				<!-- depending on vehicle type and fuel type not all units are present -->
+				<FuelConsumption unit="g/km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
+			</Fuel>
+			<!-- depending on vehicle type and fuel type not all units are present -->
+			<CO2 unit="g/km">123.0</CO2>
+			<CO2 unit="g/m³-km">123.0</CO2>
+			<CO2 unit="g/p-km">123.0</CO2>
+			<CO2 unit="g/t-km">123.0</CO2>
+			<!-- only for completed buses -->
+			<FC_ZEV_AuxHeater type="Diesel">
+				<FuelConsumption unit="g/km">1.23</FuelConsumption>
+				<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
+				<FuelConsumption unit="l/100km">1.23</FuelConsumption>
+				<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
+				<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
+				<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
+			</FC_ZEV_AuxHeater>
+			<CO2_ZEV_AuxHeater>
+				<CO2 unit="g/km">1.23</CO2>
+				<CO2 unit="g/p-km">1.23</CO2>
+			</CO2_ZEV_AuxHeater>
+			<Ranges>
+				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
+				<HydrogenRange unit="km">345.0</HydrogenRange>
+			</Ranges>
+		</Summary>
+
+		<!-- 
+Non-OVC Hybrid electric Lorry - non H2 ICE OK -->
+		<Summary xsi:type="ResultSummaryNonOVCHEVType">
+			<Vocational>true</Vocational>
+			<AveragePayload unit="t">12.345</AveragePayload>
+			<Fuel type="Diesel">
+				<!-- depending on vehicle type and fuel type not all units are present -->
+				<FuelConsumption unit="g/km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
+			</Fuel>
+			<!-- depending on vehicle type and fuel type not all units are present -->
+			<CO2 unit="g/km">123.0</CO2>
+			<CO2 unit="g/m³-km">123.0</CO2>
+			<CO2 unit="g/p-km">123.0</CO2>
+			<CO2 unit="g/t-km">123.0</CO2>
+		</Summary>
+		<!-- 
+Non-OVC Hybrid electric Bus - non H2 ICE OK -->
+		<Summary xsi:type="ResultSummaryNonOVCHEVType">
+			<Vocational>true</Vocational>
+			<AveragePassengerCount>34.5</AveragePassengerCount>
+			<Fuel type="Diesel">
+				<!-- depending on vehicle type and fuel type not all units are present -->
+				<FuelConsumption unit="g/km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
+			</Fuel>
+			<!-- depending on vehicle type and fuel type not all units are present -->
+			<CO2 unit="g/km">123.0</CO2>
+			<CO2 unit="g/m³-km">123.0</CO2>
+			<CO2 unit="g/p-km">123.0</CO2>
+			<CO2 unit="g/t-km">123.0</CO2>
+		</Summary>
+		<!-- 
+Non-OVC Hybrid electric Lorry - H2 ICE OK -->
+		<Summary xsi:type="ResultSummaryNonOVCHEVType">
+			<Vocational>true</Vocational>
+			<AveragePayload unit="t">12.345</AveragePayload>
+			<Fuel type="H2">
+				<!-- depending on vehicle type and fuel type not all units are present -->
+				<FuelConsumption unit="g/km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
+				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
+			</Fuel>
+			<!-- depending on vehicle type and fuel type not all units are present -->
+			<CO2 unit="g/km">123.0</CO2>
+			<CO2 unit="g/m³-km">123.0</CO2>
+			<CO2 unit="g/p-km">123.0</CO2>
+			<CO2 unit="g/t-km">123.0</CO2>
+			<Ranges>
+				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
+				<HydrogenRange unit="km">345.0</HydrogenRange>
+			</Ranges>
+		</Summary>
+		<!-- 
+Non-OVC Hybrid electric Bus - H2 ICE OK -->
+		<Summary xsi:type="ResultSummaryNonOVCHEVType">
 			<Vocational>true</Vocational>
 			<AveragePassengerCount>34.5</AveragePassengerCount>
 			<Fuel type="H2">
@@ -128,132 +254,7 @@ Conventional Bus - H2 ICE -->
 			</Ranges>
 		</Summary>
 		<!-- 
-Non-OVC Hybrid electric Lorry - non H2 ICE -->
-		<Summary xsi:type="ResultSummaryNonOVCHEVType">
-			<Vocational>true</Vocational>
-			<AveragePayload unit="t">12.345</AveragePayload>
-			<Fuel type="Diesel">
-				<!-- depending on vehicle type and fuel type not all units are present -->
-				<FuelConsumption unit="g/km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
-			</Fuel>
-			<!-- depending on vehicle type and fuel type not all units are present -->
-			<CO2 unit="g/km">123.0</CO2>
-			<CO2 unit="g/m³-km">123.0</CO2>
-			<CO2 unit="g/p-km">123.0</CO2>
-			<CO2 unit="g/t-km">123.0</CO2>
-		</Summary>
-		<!-- 
-Non-OVC Hybrid electric Bus - non H2 ICE -->
-		<Summary xsi:type="ResultSummaryNonOVCHEVType">
-			<Vocational>true</Vocational>
-			<AveragePassengerCount>34.5</AveragePassengerCount>
-			<Fuel type="Diesel">
-				<!-- depending on vehicle type and fuel type not all units are present -->
-				<FuelConsumption unit="g/km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
-			</Fuel>
-			<!-- depending on vehicle type and fuel type not all units are present -->
-			<CO2 unit="g/km">123.0</CO2>
-			<CO2 unit="g/m³-km">123.0</CO2>
-			<CO2 unit="g/p-km">123.0</CO2>
-			<CO2 unit="g/t-km">123.0</CO2>
-		</Summary>
-		<!-- 
-Non-OVC Hybrid electric Lorry - H2 ICE -->
-		<Summary xsi:type="ResultSummaryNonOVCHEVType">
-			<Vocational>true</Vocational>
-			<AveragePayload unit="t">12.345</AveragePayload>
-			<Fuel type="H2">
-				<!-- depending on vehicle type and fuel type not all units are present -->
-				<FuelConsumption unit="g/km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
-			</Fuel>
-			<!-- depending on vehicle type and fuel type not all units are present -->
-			<CO2 unit="g/km">123.0</CO2>
-			<CO2 unit="g/m³-km">123.0</CO2>
-			<CO2 unit="g/p-km">123.0</CO2>
-			<CO2 unit="g/t-km">123.0</CO2>
-			<Ranges>
-				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
-				<HydrogenRange unit="km">345.0</HydrogenRange>
-			</Ranges>
-		</Summary>
-		<!-- 
-Non-OVC Hybrid electric Bus - H2 ICE -->
-		<Summary xsi:type="ResultSummaryNonOVCHEVType">
-			<Vocational>true</Vocational>
-			<AveragePassengerCount>34.5</AveragePassengerCount>
-			<Fuel type="H2">
-				<!-- depending on vehicle type and fuel type not all units are present -->
-				<FuelConsumption unit="g/km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="g/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/100km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="l/t-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/m³-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/p-km">123.0</FuelConsumption>
-				<FuelConsumption unit="MJ/t-km">123.0</FuelConsumption>
-			</Fuel>
-			<!-- depending on vehicle type and fuel type not all units are present -->
-			<CO2 unit="g/km">123.0</CO2>
-			<CO2 unit="g/m³-km">123.0</CO2>
-			<CO2 unit="g/p-km">123.0</CO2>
-			<CO2 unit="g/t-km">123.0</CO2>
-			<!-- only for completed buses -->
-			<FC_ZEV_AuxHeater type="Diesel">
-				<FuelConsumption unit="g/km">1.23</FuelConsumption>
-				<FuelConsumption unit="g/p-km">1.23</FuelConsumption>
-				<FuelConsumption unit="l/100km">1.23</FuelConsumption>
-				<FuelConsumption unit="l/p-km">1.23</FuelConsumption>
-				<FuelConsumption unit="MJ/km">1.23</FuelConsumption>
-				<FuelConsumption unit="MJ/p-km">1.23</FuelConsumption>
-			</FC_ZEV_AuxHeater>
-			<CO2_ZEV_AuxHeater>
-				<CO2 unit="g/km">1.23</CO2>
-				<CO2 unit="g/p-km">1.23</CO2>
-			</CO2_ZEV_AuxHeater>
-			<Ranges>
-				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
-				<HydrogenRange unit="km">345.0</HydrogenRange>
-			</Ranges>
-		</Summary>
-		<!-- 
-OVC Hybrid electric Lorry - non H2 ICE -->
+OVC Hybrid electric Lorry - non H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryOVCHEVType">
 			<Vocational>true</Vocational>
 			<AveragePayload unit="t">12.345</AveragePayload>
@@ -300,7 +301,7 @@ OVC Hybrid electric Lorry - non H2 ICE -->
 			</Ranges>
 		</Summary>
 		<!-- 
-OVC Hybrid electric Bus - non H2 ICE -->
+OVC Hybrid electric Bus - non H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryOVCHEVType">
 			<Vocational>true</Vocational>
 			<AveragePassengerCount>34.5</AveragePassengerCount>
@@ -347,7 +348,7 @@ OVC Hybrid electric Bus - non H2 ICE -->
 			</Ranges>
 		</Summary>
 		<!-- 
-OVC Hybrid electric Lorry - H2 ICE -->
+OVC Hybrid electric Lorry - H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryOVCHEVType">
 			<Vocational>true</Vocational>
 			<AveragePayload unit="t">12.345</AveragePayload>
@@ -395,7 +396,7 @@ OVC Hybrid electric Lorry - H2 ICE -->
 			<HydrogenRange unit="km">34.56</HydrogenRange>
 		</Summary>
 		<!-- 
-OVC Hybrid electric Bus - H2 ICE -->
+OVC Hybrid electric Bus - H2 ICE OK -->
 		<Summary xsi:type="ResultSummaryOVCHEVType">
 			<Vocational>true</Vocational>
 			<AveragePassengerCount>34.5</AveragePassengerCount>
@@ -457,7 +458,7 @@ OVC Hybrid electric Bus - H2 ICE -->
 		</Summary>
 
 		<!-- 
-PEV Lorry -->
+PEV Lorry OK -->
 		<Summary xsi:type="ResultSummaryPEVType">
 			<Vocational>true</Vocational>
 			<AveragePayload unit="t">12.345</AveragePayload>
@@ -489,7 +490,7 @@ PEV Lorry -->
 			</Ranges>
 		</Summary>
 		<!-- 
-PEV Bus -->
+PEV Bus OK -->
 		<Summary xsi:type="ResultSummaryPEVType">
 			<Vocational>true</Vocational>
 			<AveragePassengerCount>34.5</AveragePassengerCount>
@@ -559,7 +560,7 @@ Non-OVC FuelCell Lorry -->
 			<CO2 unit="g/m³-km">123.0</CO2>
 			<CO2 unit="g/p-km">123.0</CO2>
 			<CO2 unit="g/t-km">123.0</CO2>
-			<Ranges>
+			<Ranges lifetime="independent">
 				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
 				<HydrogenRange unit="km">345.0</HydrogenRange>
 			</Ranges>
@@ -602,7 +603,7 @@ Non-OVC FuelCell Bus -->
 				<CO2 unit="g/km">1.23</CO2>
 				<CO2 unit="g/p-km">1.23</CO2>
 			</CO2_ZEV_AuxHeater>
-			<Ranges>
+			<Ranges lifetime="independent">
 				<ZeroCO2EmissionsRange unit="km">345.0</ZeroCO2EmissionsRange>
 				<HydrogenRange unit="km">345.0</HydrogenRange>
 			</Ranges>

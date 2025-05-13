@@ -4,7 +4,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/XSD/VectoO
 	<Results>
 		<Status>success</Status>
 		<!-- 
-Conventional Lorry - non H2 ICE -->
+Conventional Lorry - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -36,7 +36,7 @@ Conventional Lorry - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Conventional Bus - non H2 ICE -->
+Conventional Bus - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -69,7 +69,7 @@ Conventional Bus - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Conventional Lorry - H2 ICE -->
+Conventional Lorry - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -105,7 +105,7 @@ Conventional Lorry - H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Conventional Bus - H2 ICE -->
+Conventional Bus - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessConventionalType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -156,7 +156,7 @@ Conventional Bus - H2 ICE -->
 		</Result>
 
 		<!-- 
-Non-OVC Hybrid electric Lorry - non H2 ICE -->
+Non-OVC Hybrid electric Lorry - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -188,7 +188,7 @@ Non-OVC Hybrid electric Lorry - non H2 ICE -->
 			</Total>
 		</Result>
 <!-- 
-Non-OVC Hybrid electric Bus - non H2 ICE -->
+Non-OVC Hybrid electric Bus - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -221,7 +221,7 @@ Non-OVC Hybrid electric Bus - non H2 ICE -->
 			</Total>
 		</Result>		
 		<!-- 
-Non-OVC Hybrid electric Lorry - H2 ICE -->
+Non-OVC Hybrid electric Lorry - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -257,7 +257,7 @@ Non-OVC Hybrid electric Lorry - H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-Non-OVC Hybrid electric Bus - H2 ICE -->
+Non-OVC Hybrid electric Bus - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessNonOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -308,7 +308,7 @@ Non-OVC Hybrid electric Bus - H2 ICE -->
 		</Result>
 
 		<!-- 
-OVC Hybrid electric Lorry - non H2 ICE -->
+OVC Hybrid electric Lorry - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -420,7 +420,7 @@ OVC Hybrid electric Lorry - non H2 ICE -->
 			</Total>
 		</Result>
 		<!--
-OVC Hybrid electric Bus - non H2 ICE -->
+OVC Hybrid electric Bus - non H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -533,7 +533,7 @@ OVC Hybrid electric Bus - non H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-OVC Hybrid electric Lorry - H2 ICE -->
+OVC Hybrid electric Lorry - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -646,7 +646,7 @@ OVC Hybrid electric Lorry - H2 ICE -->
 			</Total>
 		</Result>
 		<!-- 
-OVC Hybrid electric Bus - H2 ICE -->
+OVC Hybrid electric Bus - H2 ICE OK -->
 		<Result xsi:type="ResultSuccessOVCHEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -773,7 +773,7 @@ OVC Hybrid electric Bus - H2 ICE -->
 		</Result>
 
 		<!-- 
-PEV Lorry -->
+PEV Lorry OK -->
 		<Result xsi:type="ResultSuccessPEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>
@@ -807,7 +807,7 @@ PEV Lorry -->
 			</Total>
 		</Result>
 		<!-- 
-PEV Bus -->
+PEV Bus OK -->
 		<Result xsi:type="ResultSuccessPEVType" status="success">
 			<Mission>Mission</Mission>
 			<SimulationParameters>

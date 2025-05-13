@@ -1574,6 +1574,7 @@
 									</xs:element>
 									<xs:element name="HydrogenRange" type="DrivingRangeType"/>
 								</xs:sequence>
+								<xs:attribute name="lifetime" type="xs:string" use="required"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
