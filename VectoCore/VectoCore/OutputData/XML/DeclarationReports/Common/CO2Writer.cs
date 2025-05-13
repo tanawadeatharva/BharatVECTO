@@ -129,7 +129,70 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		}
 	}
 
-	public class BusCO2Writer : CO2WriterBase
+	public abstract class BusCO2WriterBase : CO2WriterBase
+	{
+		public BusCO2WriterBase(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        public override XElement[] GetElements(IResultEntry entry)
+		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
+						new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
+					.ToArray();
+			}
+
+			var retval = new List<XElement>();
+			retval.AddRange(GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement())));
+
+			if (!entry.OVCMode.IsOneOf(OvcHevMode.ChargeDepleting, OvcHevMode.ChargeSustaining) && entry.FuelData.All(f => f.FuelType.IsHydrogenFuel())) {
+				var tmp = _factory.GetFuelConsumptionBus(_factory, TNS);
+				retval.Add(new XElement(TNS + XMLNames.Report_ResultEntry_FCZEVAuxHeater,
+						new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),
+						tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel, entry.Distance,
+							entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
+							new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
+					));
+				retval.Add(new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
+						GetCO2ResultEntries(entry.ZEV_CO2, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+							.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
+					));
+			}
+			return retval.ToArray();
+		}
+
+		public override XElement[] GetElements(IWeightedResult entry)
+		{
+			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+				return GetCO2ResultEntries(entry.CO2PerMeter, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+					.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2,
+						new ConvertedSI(double.NaN, x.Value.Units).ValueAsUnit()))
+					.ToArray();
+			}
+
+			var retVal = new List<XElement>();
+			retVal.AddRange(GetCO2ResultEntries(entry.CO2PerMeter, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement())));
+			
+			if (entry.FuelConsumption.Keys.All(x => x.FuelType.IsHydrogenFuel())) {
+				var tmp = _factory.GetFuelConsumptionBus(_factory, TNS);
+				retVal.Add(new XElement(TNS + XMLNames.Report_ResultEntry_FCZEVAuxHeater,
+					new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),
+					tmp?.GetFuelConsumptionEntries(entry.ZEV_FuelConsumption_AuxHtr, entry.AuxHeaterFuel,
+						entry.Payload, entry.CargoVolume, entry.PassengerCount).Select(x =>
+						new XElement(TNS + XMLNames.Report_Results_FuelConsumption, new FormattedReportValue(x).GetElement()))
+				));
+				retVal.Add(new XElement(TNS + XMLNames.Report_ResultEntry_CO2ZEVAuxHeater,
+					GetCO2ResultEntries(entry.ZEV_CO2, entry.Payload, entry.CargoVolume, entry.PassengerCount)
+						.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement()))
+				));
+            }
+			return retVal.ToArray();
+		}
+    }
+
+	public class BusCO2Writer : BusCO2WriterBase
     {
         public BusCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -151,8 +214,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		}
 	}
 
-	public class BusSummaryCO2Writer : CO2WriterBase
-	{
+	public class BusSummaryCO2Writer : BusCO2WriterBase
+    {
 		public BusSummaryCO2Writer(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		protected override IList<FormattedReportValue> GetCO2ResultEntries(Kilogram CO2Total, Meter distance, Kilogram payload, CubicMeter volume, double? passengers)

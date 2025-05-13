@@ -57,15 +57,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			Results = _resultFactory.GetVIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetVIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 
 		}
 
-		
-		public void WriteResult(IResultEntry result)
+		protected virtual string GetVehicleXMLType(VectoRunData modelData)
+		{
+			return modelData.VehicleData.InputData.XMLSource.Name;
+		}
+
+        public void WriteResult(IResultEntry result)
 		{
 			_results.Add(result);
 		}

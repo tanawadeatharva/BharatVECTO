@@ -2762,7 +2762,7 @@
 						</xs:annotation>
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceType">
+								<xs:element name="VehiclePerformance" type="mrf:VehiclePerformanceFCHVType">
 									<xs:annotation>
 										<xs:documentation>I.2.2.</xs:documentation>
 									</xs:annotation>
@@ -3243,6 +3243,11 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VehiclePerformanceFCHVType">
+		<xs:complexContent>
+			<xs:extension base="mrf:VehiclePerformancePEVType"/>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="VehiclePerformanceType">
 		<xs:sequence>
@@ -4061,7 +4066,7 @@
 	</xs:group>
 	<xs:group name="HydrogenRangesSequenceGroup">
 		<xs:sequence>
-			<xs:element name="ZeroCO2EmissionRange" type="mrf:DrivingRangeType">
+			<xs:element name="ZeroCO2EmissionsRange" type="mrf:DrivingRangeType">
 				<xs:annotation>
 					<xs:documentation>I.2.4.3.</xs:documentation>
 				</xs:annotation>

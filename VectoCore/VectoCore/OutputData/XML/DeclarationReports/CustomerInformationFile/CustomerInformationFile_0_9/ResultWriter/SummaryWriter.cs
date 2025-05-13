@@ -54,7 +54,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 						: null,
 					ElectricEnergyConsumptionWriter?.GetElement(weightedResult),
 					CO2Writer?.GetElements(weightedResult),
-					ElectricRangeWriter?.GetElements(weightedResult)
+					ElectricRangeWriter?.GetElements(weightedResult),
+					HydrogenRangeWriter?.GetElements(weightedResult)
 				);
 
 				results.Add(element);
@@ -76,9 +77,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		protected abstract ICO2Writer CO2Writer { get; }
 
 		protected abstract IElectricRangeWriter ElectricRangeWriter { get; }
-		
-		#endregion
-	}
+
+		protected virtual IHydrogenRangeWriter HydrogenRangeWriter => _factory.GetHydrogenRangeWriter(_factory, TNS);
+
+        #endregion
+    }
 
 	
 
@@ -132,6 +135,52 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		#endregion
 	}
+
+	public class LorryFCHVNonOVCSummaryWriter : LorrySummaryWriterBase
+	{
+		public LorryFCHVNonOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of CifSummaryWriterBase
+
+		public override string ResultSummaryXMLType => "ResultSummaryFCHVType";
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultLorry(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+
+    }
+
+	public class LorryFCHVOVCSummaryWriter : AbstractResultWriter, IReportResultsSummaryWriter
+    {
+		public LorryFCHVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        #region Implementation of IReportResultsSummaryWriter
+
+        public virtual XElement[] GetElement(IList<IResultEntry> entries)
+		{
+			return new[] {
+				new XElement(TNS + XMLNames.Report_Results_Summary,
+					new XAttribute(xsi + XMLNames.XSIType, "ResultSummaryFCHVType"),
+					new XElement(TNS + "Info", "Not applicable for OVC-FCHV"))
+			};
+
+		}
+
+		public XElement[] GetElement(IList<IOVCResultEntry> entries)
+		{
+			return new[] {
+				new XElement(TNS + XMLNames.Report_Results_Summary,
+					new XAttribute(xsi + XMLNames.XSIType, "ResultSummaryFCHVType"),
+					new XElement(TNS + "Info", "Not applicable for OVC-FCHV"))
+			};
+        }
+
+		#endregion
+
+	}
+
 
 	public class LorryPEVSummaryWriter : LorrySummaryWriterBase
 	{
@@ -214,7 +263,52 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class BusPEVSummaryWriter : BusSummaryWriterBase
+	public class BusFCHVNonOVCSummaryWriter : LorrySummaryWriterBase
+	{
+		public BusFCHVNonOVCSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of CifSummaryWriterBase
+
+		public override string ResultSummaryXMLType => "ResultSummaryFCHVType";
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionLorry(_factory, TNS);
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
+		protected override ICO2Writer CO2Writer => _factory.GetCO2SummaryResultBus(_factory, TNS);
+		protected override IElectricRangeWriter ElectricRangeWriter => null;
+
+		#endregion
+
+	}
+
+	public class BusFCHVOVCSummaryWriter : AbstractResultWriter, IReportResultsSummaryWriter
+	{
+		public BusFCHVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Implementation of IReportResultsSummaryWriter
+
+		public virtual XElement[] GetElement(IList<IResultEntry> entries)
+		{
+			return new[] {
+				new XElement(TNS + XMLNames.Report_Results_Summary,
+					new XAttribute(xsi + XMLNames.XSIType, "ResultSummaryFCHVType"),
+					new XElement(TNS + "Info", "Not applicable for OVC-FCHV"))
+			};
+
+		}
+
+		public XElement[] GetElement(IList<IOVCResultEntry> entries)
+		{
+			return new[] {
+				new XElement(TNS + XMLNames.Report_Results_Summary,
+					new XAttribute(xsi + XMLNames.XSIType, "ResultSummaryFCHVType"),
+					new XElement(TNS + "Info", "Not applicable for OVC-FCHV"))
+			};
+		}
+
+		#endregion
+
+	}
+
+    public class BusPEVSummaryWriter : BusSummaryWriterBase
 	{
 		public BusPEVSummaryWriter(ICIFResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 

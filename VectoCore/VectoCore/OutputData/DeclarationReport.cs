@@ -153,7 +153,11 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		VectoRun.Status Status { get; }
 
-        MeterPerSecond AverageSpeed { get; }
+		VectoSimulationJobType JobType { get; }
+
+		bool OffVehicleCharging { get; }
+
+		MeterPerSecond AverageSpeed { get; }
 
 		MeterPerSecond AverageDrivingSpeed { get; }
 

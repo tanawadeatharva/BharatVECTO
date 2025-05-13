@@ -84,20 +84,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 
-		public class FuelCellNonOVCLorry : AbstractCIFResultsWriter
+		public class FCHVNonOVCLorry : AbstractCIFResultsWriter
 		{
-			public FuelCellNonOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+			public FCHVNonOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
 
-			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVNonOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryFCHVNonOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
 
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVNonOVCSummaryWriter(_cifFactory, TNS);
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryFCHVNonOVCSummaryWriter(_cifFactory, TNS);
 
 		}
 
-		public class FuelCellOVCLorry : AbstractCIFResultsWriter
+		public class FCHVOVCLorry : AbstractCIFResultsWriter
 		{
-			public FuelCellOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+			public FCHVOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
 
 			#region Overrides of AbstractResultsWriter
 
@@ -119,10 +119,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			#endregion
 
-			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryHEVOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryFCHVOVCSuccessResultWriter(_cifFactory, TNS);
 			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetLorryErrorResultWriter(_cifFactory, TNS);
 
-			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryHEVOVCSummaryWriter(_cifFactory, TNS);
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetLorryFCHVOVCSummaryWriter(_cifFactory, TNS);
 
 		}
 
@@ -198,7 +198,44 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 
-		public class PEVBus : AbstractCIFResultsWriter
+		public class FCHVNonOVCBus : AbstractCIFResultsWriter
+		{
+			public FCHVNonOVCBus(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+
+			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusFCHVNonOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter(_cifFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusFCHVNonOVCSummaryWriter(_cifFactory, TNS);
+		}
+
+        public class FCHVOVCBus : AbstractCIFResultsWriter
+		{
+
+			public override XElement GenerateResults(List<IResultEntry> results)
+			{
+				var ordered = GetOrderedResultsOVC(results);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
+					ordered.Select(x =>
+						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
+						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+							? ResultSuccessWriter.GetElement(x)
+							: ResultErrorWriter.GetElement(x)),
+					SummaryWriter.GetElement(ordered)
+				);
+			}
+
+            protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetBusFCHVOVCSuccessResultWriter(_cifFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _cifFactory.GetBusErrorResultWriter(_cifFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _cifFactory.GetBusFCHVOVCSummaryWriter(_cifFactory, TNS);
+
+			public FCHVOVCBus(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
+		}
+
+        public class PEVBus : AbstractCIFResultsWriter
 		{
 			public PEVBus(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
 

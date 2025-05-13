@@ -1924,7 +1924,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
             var retVal = new WeightedResult() {
-                Distance = cdResult.Distance,
+				Status = VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
+				Distance = cdResult.Distance,
                 Payload = cdResult.Payload,
                 CargoVolume = cdResult.CargoVolume,
                 PassengerCount = cdResult.PassengerCount,
@@ -2019,6 +2022,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var retVal = new WeightedResult() {
 				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -2230,6 +2235,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var result = new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().VectoRunData.JobType,
+				OffVehicleCharging = false,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -2274,6 +2281,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().Weighted.JobType,
+				OffVehicleCharging = true,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),

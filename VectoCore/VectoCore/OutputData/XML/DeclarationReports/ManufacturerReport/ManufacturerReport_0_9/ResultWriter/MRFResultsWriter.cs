@@ -83,7 +83,49 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 
-		public class PEVLorry : AbstractMRFResultsWriter
+		public class FCHVNonOVCLorry : AbstractMRFResultsWriter
+        {
+			public FCHVNonOVCLorry(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
+
+			protected override IResultGroupWriter ResultSuccessWriter => _mrfFactory.GetLorryFCHVNonOVCSuccessResultWriter(_mrfFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _mrfFactory.GetLorryErrorResultWriter(_mrfFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _mrfFactory.GetLorryFCHVNonOVCSummaryWriter(_mrfFactory, TNS);
+
+		}
+
+		public class FCHVOVCLorry : AbstractMRFResultsWriter
+        {
+			public FCHVOVCLorry(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
+
+			#region Overrides of AbstractResultsWriter
+
+			public override XElement GenerateResults(List<IResultEntry> results)
+			{
+				var ordered = GetOrderedResultsOVC(results);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
+					ordered.Select(x =>
+						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
+						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+							? ResultSuccessWriter.GetElement(x)
+							: ResultErrorWriter.GetElement(x)),
+					SummaryWriter.GetElement(ordered)
+				);
+			}
+
+			#endregion
+
+			protected override IResultGroupWriter ResultSuccessWriter => _mrfFactory.GetLorryFCHVOVCSuccessResultWriter(_mrfFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _mrfFactory.GetLorryErrorResultWriter(_mrfFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _mrfFactory.GetLorryFCHVOVCSummaryWriter(_mrfFactory, TNS);
+
+		}
+
+        public class PEVLorry : AbstractMRFResultsWriter
 		{
 			public PEVLorry(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
 
@@ -157,7 +199,44 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 
-		public class PEVBus : AbstractMRFResultsWriter
+		public class FCHVNonOVCBus : AbstractMRFResultsWriter
+        {
+			public FCHVNonOVCBus(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
+
+			protected override IResultGroupWriter ResultSuccessWriter => _mrfFactory.GetBusFCHVNonOVCSuccessResultWriter(_mrfFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _mrfFactory.GetBusErrorResultWriter(_mrfFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _mrfFactory.GetBusFCHVNonOVCSummaryWriter(_mrfFactory, TNS);
+		}
+
+		public class FCHVOVCBus : AbstractMRFResultsWriter
+        {
+
+			public override XElement GenerateResults(List<IResultEntry> results)
+			{
+				var ordered = GetOrderedResultsOVC(results);
+				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
+				return new XElement(TNS + XMLNames.Report_Results,
+					new XElement(TNS + XMLNames.Report_Result_Status,
+						allSuccess ? XMLNames.Report_Results_Status_Success_Val : XMLNames.Report_Results_Status_Error_Val),
+					ordered.Select(x =>
+						x.ChargeDepletingResult.Status == VectoRun.Status.Success &&
+						x.ChargeSustainingResult.Status == VectoRun.Status.Success
+							? ResultSuccessWriter.GetElement(x)
+							: ResultErrorWriter.GetElement(x)),
+					SummaryWriter.GetElement(ordered)
+				);
+			}
+
+			protected override IResultGroupWriter ResultSuccessWriter => _mrfFactory.GetBusFCHVOVCSuccessResultWriter(_mrfFactory, TNS);
+			protected override IResultGroupWriter ResultErrorWriter => _mrfFactory.GetBusErrorResultWriter(_mrfFactory, TNS);
+
+			public override Common.IReportResultsSummaryWriter SummaryWriter => _mrfFactory.GetBusFCHVOVCSummaryWriter(_mrfFactory, TNS);
+
+			public FCHVOVCBus(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
+		}
+
+        public class PEVBus : AbstractMRFResultsWriter
 		{
 			public PEVBus(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
 

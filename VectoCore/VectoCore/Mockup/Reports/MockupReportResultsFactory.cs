@@ -21,21 +21,21 @@ namespace TUGraz.VectoMockup.Reports
 
 		#region Implementation of IResultsWriterFactory
 
-		public IResultsWriter GetCIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetCIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(CIF, MockupResultReader.ResultType.CIF);
 			return new MockupDummyResultsWriter(CIF, MockupResultReader.ResultType.CIF);
 		}
 
-		public IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetMRFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(MRF, MockupResultReader.ResultType.CIF);
 			return new MockupDummyResultsWriter(MRF, MockupResultReader.ResultType.MRF);
 		}
 
-		public IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetVIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(VIF, MockupResultReader.ResultType.CIF);

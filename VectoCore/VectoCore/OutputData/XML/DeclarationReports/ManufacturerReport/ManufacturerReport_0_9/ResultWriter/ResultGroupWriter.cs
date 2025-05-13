@@ -173,7 +173,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRFErrorDetailsWriter : AbstractResultWriter, IResultSequenceWriter
+    public class VehiclePerformanceFCHVMRFWriter : VehiclePerformancePEVMRFWriter
+    {
+        public VehiclePerformanceFCHVMRFWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+    }
+
+    public class MRFErrorDetailsWriter : AbstractResultWriter, IResultSequenceWriter
 	{
 		public MRFErrorDetailsWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 

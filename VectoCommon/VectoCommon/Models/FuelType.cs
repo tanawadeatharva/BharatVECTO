@@ -30,6 +30,7 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -85,6 +86,11 @@ namespace TUGraz.VectoCommon.Models
 		public static string ToXMLFormat(this FuelType ftype)
 		{
 			return ftype.GetLabel();
+		}
+
+		public static bool IsHydrogenFuel(this FuelType ftype)
+		{
+			return ftype.IsOneOf(FuelType.H2CI, FuelType.H2PI, FuelType.H2FC);
 		}
 	}
 }
