@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
             retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				aerodynamicDragArea, deltaCdxAIMC,
+				cdxA, deltaCdxAIMC,
                 GetDeclarationAirResistanceCurve(
 					mission.CrossWindCorrectionParameters,
 					cdxA,
