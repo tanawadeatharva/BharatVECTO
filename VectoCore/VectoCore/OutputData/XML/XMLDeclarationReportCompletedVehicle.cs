@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var result = new CompletedBusResult
             {
                 Status = VectoRun.Status.Success,
+                VectoRunData = specific.VectoRunData,
             };
             result.Status = generic.Status != VectoRun.Status.Success ? generic.Status : result.Status;
             result.Status = specific.Status != VectoRun.Status.Success ? specific.Status : result.Status;
@@ -286,7 +287,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-			public VectoRunData VectoRunData => null;
+			public VectoRunData VectoRunData { get; set; }
             public VectoRun.Status Status { get; set; }
             public OvcHevMode OVCMode { get; set; }
             public MissionType Mission { get; set; }
