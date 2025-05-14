@@ -472,11 +472,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesData ?? (_busAuxiliariesData = new JSONBusAuxiliariesData(this));
 
-		#region Overrides of JSONVehicleDataV7
+        #region Overrides of JSONVehicleDataV7
 
-		public override bool Articulated => Body.GetEx<bool>("Articulated");
+        public override bool Articulated => Body.ContainsKey("Articulated") ? Body.GetEx<bool>("Articulated") : base.Articulated;
 
-		protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
+        protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV9(this));
 		}
