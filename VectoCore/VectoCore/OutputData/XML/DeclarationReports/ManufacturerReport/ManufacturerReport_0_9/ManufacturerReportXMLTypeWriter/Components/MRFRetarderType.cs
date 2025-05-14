@@ -19,14 +19,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var retarderData = inputData.JobInputData.Vehicle.Components.RetarderInputData;
-			var iepcData = inputData.JobInputData.Vehicle.Components.IEPC;
-			var retarderPossible = iepcData == null || !iepcData.DesignTypeWheelMotor;
-			if (retarderData == null || !retarderPossible) {
+			if (retarderData == null) {
 				return null;
 			}
+
 			var result = new XElement(_mrf + XMLNames.Component_Retarder,
-                new XElement(_mrf + XMLNames.Vehicle_RetarderType,
-                    retarderData.Type.ToXMLFormat()));
+                new XElement(_mrf + XMLNames.Vehicle_RetarderType, retarderData.Type.ToXMLFormat()));
+
 			if (retarderData.Type.IsDedicatedComponent()) {
 				result.Add(new XElement(_mrf + XMLNames.Component_Model,
 						inputData.JobInputData.Vehicle.Components.RetarderInputData.Model),
