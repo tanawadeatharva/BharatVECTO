@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
@@ -24,6 +26,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public FuelCellPowerMap FuelCellPowerMap { get; set; }
 
 		public FuelCellSystemShareMap FuelCellShareMap { get; set; }
+
+		public IList<IFuelProperties> Fuel => new List<IFuelProperties>() { FuelData.H2 };
 
 		public Watt ChargingPower(Meter mileageCounterDistance)
 		{

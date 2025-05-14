@@ -103,12 +103,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public XMLDeclaration_PEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile)
         {
-            if (!OVC)
+			string FCHVPrefix = "F";
+			if (!OVC && PowertrainPositionPrefix != FCHVPrefix)
             {
                 throw new VectoException("OVC must be set to true for PEVs.");
             }
 
-            if (!BatteryOnlyMode)
+            if (!BatteryOnlyMode && PowertrainPositionPrefix != FCHVPrefix)
             {
                 throw new VectoException("BatteryOnlyMode must be set to true for PEVs.");
             }

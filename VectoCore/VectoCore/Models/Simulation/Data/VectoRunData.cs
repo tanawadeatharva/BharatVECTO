@@ -149,11 +149,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public SuperCapData SuperCapData { get; internal set; }
 
-		// todo amogoda: m9. see how FuelCellSystemData and FuelCellSystemDeclarationData should be combined and used.
 		public FuelCellSystemData FuelCellSystemData { get; internal set; }
-
-		// todo amogoda: m use for simulation purposes
-		public FuelCellSystemDeclarationData FuelCellSystemDeclarationData { get; internal set; }
 
 		public DCDCData DCDCData { get; internal set; }
 
