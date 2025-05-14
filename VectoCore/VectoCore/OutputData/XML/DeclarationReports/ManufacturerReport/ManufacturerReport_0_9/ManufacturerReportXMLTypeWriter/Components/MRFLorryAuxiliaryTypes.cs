@@ -35,21 +35,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	}
 
-	internal class MRFFCHV_LorryAuxiliariesType : AbstractMrfXmlType, IMRFLorryAuxiliariesType
-	{
-		public MRFFCHV_LorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		public XElement GetXmlType(IAuxiliariesDeclarationInputData auxData)
-		{
-			var steeringPumpData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.SteeringPump);
-			var pneumaticSystemData = auxData.Auxiliaries.Single(aux => aux.Type == AuxiliaryType.PneumaticSystem);
-
-			return new XElement(_mrf + XMLNames.Component_Auxiliaries,
-				steeringPumpData.Technology.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
-				new XElement(_mrf + XMLNames.BusAux_PneumaticSystem, new XElement(_mrf + XMLNames.Auxiliaries_Auxiliary_Technology, pneumaticSystemData.Technology.Single())));
-		}
-	}
-
 	internal class MRFPEV_LorryAuxiliariesType : AbstractMrfXmlType, IMRFLorryAuxiliariesType
 	{
 		public MRFPEV_LorryAuxiliariesType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }

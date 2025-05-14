@@ -22,10 +22,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IXmlTypeWriter GetHEV_S3_LorryVehicleType();
 		IXmlTypeWriter GetHEV_S4_LorryVehicleType();
 		IXmlTypeWriter GetHEV_IEPC_LorryVehicleType();
-		IXmlTypeWriter GetHEV_F2_LorryVehicleType();
-		IXmlTypeWriter GetHEV_F3_LorryVehicleType();
-		IXmlTypeWriter GetHEV_F4_LorryVehicleType();
-		IXmlTypeWriter GetHEV_IEPC_F_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_F2_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_F3_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_F4_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E2_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E3_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		IReportVehicleOutputGroup GetGeneralVehicleSequenceGroupWriter();
 		IReportOutputGroup GetLorryGeneralVehicleSequenceGroupWriter();
-		IReportOutputGroup GetFuelCellLorryVehicleSequenceGroupWriter();
+		IReportOutputGroup GetFCHVLorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetConventionalLorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetConventionalCompletedBusVehicleSequenceGroupWriter();
 		IReportOutputGroup GetEngineGroup();
@@ -75,10 +75,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetFuelCell_LorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetHEV_CompletedBusVehicleSequenceGroupWriter();
 		IReportOutputGroup GetHEV_LorryVehicleTypeGroup();
-		IReportOutputGroup GetFuelCell_LorryVehicleTypeGroup();
+		IReportOutputGroup GetFCHV_LorryVehicleTypeGroup();
 		IReportOutputGroup GetElectricMachineGroup();
 		IReportOutputGroup GetREESSGroup();
-		IReportOutputGroup GetPEV_LorryVehicleTypeGroup();
+        IReportOutputGroup GetFuelCellGroup();
+        IReportOutputGroup GetPEV_LorryVehicleTypeGroup();
 
 		IReportOutputGroup GetPEV_LorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetPEV_CompletedBusVehicleSequenceGroupWriter();
@@ -99,5 +100,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		IReportOutputGroup GetPEVCompletedBusVehicleTypeGroup();
 		IReportOutputGroup GetIEPCTransmissionGroup();
-	}
+    }
 }

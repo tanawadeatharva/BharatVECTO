@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 {
     public abstract class CustomerInformationFile : AbstractCustomerReport
     {
-        public static XNamespace Cif => XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
+        public static XNamespace Cif => Namespace;
 		
         protected CustomerInformationFile(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 	}
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
     #region LorryCIF
     public class ConventionalLorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_ConventionalLorryOutputType;
+		public override string OutputDataType => "Conventional_LorryOutputType";
 		public ConventionalLorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S2_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S2_LorryOutputType;
+		public override string OutputDataType => "HEV_Sx_LorryOutputType";
 		public HEV_S2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S3_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S3_LorryOutputType;
+		public override string OutputDataType => "HEV_Sx_LorryOutputType";
 		public HEV_S3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_S4_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_S4_LorryOutputType;
+		public override string OutputDataType => "HEV_Sx_LorryOutputType";
 		public HEV_S4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class HEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_IEPC_S_LorryOutputType;
+		public override string OutputDataType => "HEV_Sx_LorryOutputType";
 		public HEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -115,69 +115,63 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class HEV_F2_Lorry_CIF : CustomerInformationFile
+	public class FCHV_F2_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F2_LorryOutputType;
-		public HEV_F2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+		public override string OutputDataType => "FCHV_Fx_LorryOutputType";
+		public FCHV_F2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetHEV_F2_LorryVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetFCHV_F2_LorryVehicleType().GetElement(inputData);
 		}
 
 		#endregion
 	}
 
-	public class HEV_F3_Lorry_CIF : CustomerInformationFile
+	public class FCHV_F3_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F3_LorryOutputType;
-		public HEV_F3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+		public override string OutputDataType => "FCHV_Fx_LorryOutputType";
+		public FCHV_F3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetHEV_F3_LorryVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetFCHV_F3_LorryVehicleType().GetElement(inputData);
 		}
 
 		#endregion
 	}
 
-	public class HEV_F4_Lorry_CIF : CustomerInformationFile
+	public class FCHV_F4_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_F4_LorryOutputType;
-		public HEV_F4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+		public override string OutputDataType => "FCHV_Fx_LorryOutputType";
 
-		#region Overrides of AbstractCustomerReport
+		public FCHV_F4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetHEV_F4_LorryVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetFCHV_F4_LorryVehicleType().GetElement(inputData);
 		}
-
-		#endregion
 	}
 
-	public class HEV_IEPC_F_Lorry_CIF : CustomerInformationFile
+	public class FCHV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_HEV_IEPC_F_LorryOutputType;
-		public HEV_IEPC_F_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
-
-		#region Overrides of AbstractCustomerReport
+		public override string OutputDataType => "FCHV_Fx_LorryOutputType";
+		
+		public FCHV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
-			Vehicle = _cifFactory.GetHEV_IEPC_F_LorryVehicleType().GetElement(inputData);
+			Vehicle = _cifFactory.GetFCHV_IEPC_LorryVehicleType().GetElement(inputData);
 		}
-
-		#endregion
 	}
 
 	public class PEV_E2_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E2_LorryOutputType;
+		public override string OutputDataType => "PEV_Ex_LorryOutputType";
 		public PEV_E2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -192,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_E3_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E3_LorryOutputType;
+		public override string OutputDataType => "PEV_Ex_LorryOutputType";
 		public PEV_E3_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -207,7 +201,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_E4_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_E4_LorryOutputType;
+		public override string OutputDataType => "PEV_Ex_LorryOutputType";
 		public PEV_E4_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -225,7 +219,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	public class PEV_IEPC_Lorry_CIF : CustomerInformationFile
 	{
-		public override string OutputDataType => XMLNames.CIF_OutputDataType_PEV_IEPC_LorryOutputType;
+		public override string OutputDataType => "PEV_Ex_LorryOutputType";
 		public PEV_IEPC_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 
 		#region Overrides of AbstractCustomerReport
@@ -282,17 +276,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				throw new VectoException("CompletedBus CustomerInformationFile requires MultistepBusInputData");
 			}
 			Input = inputData.JobInputData.PrimaryVehicle.Vehicle;
-			Results = _resultFactory.GetCIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetCIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
-			InputDataIntegrity = new XElement(Cif_0_9 + XMLNames.Report_InputDataSignature,
+			InputDataIntegrity = new XElement(Namespace + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
 					: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di));
 					//new XElement());
-			InputDataIntegrityPrimaryVehicle = new XElement(Cif_0_9 + "InputDataSignaturePrimaryVehicle",
+			InputDataIntegrityPrimaryVehicle = new XElement(Namespace + "InputDataSignaturePrimaryVehicle",
 				inputData.JobInputData.PrimaryVehicle.PrimaryVehicleInputDataHash.ToXML(_di));
 			ManufacturerReportIntegrityPrimaryVehicle =
-				new XElement(Cif_0_9 + "ManufacturerRecordSignaturePrimaryVehicle", inputData.JobInputData.PrimaryVehicle.ManufacturerRecordHash.ToXML(_di));
+				new XElement(Namespace + "ManufacturerRecordSignaturePrimaryVehicle", inputData.JobInputData.PrimaryVehicle.ManufacturerRecordHash.ToXML(_di));
 		}
 
 		protected override IList<XElement> GetReportContents(XElement resultSignature)
@@ -302,9 +296,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				InputDataIntegrityPrimaryVehicle,
 				ManufacturerReportIntegrityPrimaryVehicle,
 				InputDataIntegrity,
-				new XElement(Cif_0_9 + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
+				new XElement(Namespace + XMLNames.Report_ManufacturerRecord_Signature, resultSignature),
 				Results.GenerateResults(_results),
-				XMLHelper.GetApplicationInfo(Cif_0_9)
+				XMLHelper.GetApplicationInfo(Namespace)
 			};
 		}
 

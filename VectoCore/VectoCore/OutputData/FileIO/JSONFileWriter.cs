@@ -629,7 +629,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("ElectricMotors", GetElectricMotors(vehicle, basePath));
 		body.Add("Batteries", GetBattery(vehicle, basePath));
 		body.Add("OvcHev", vehicle.OVC);
-		body.Add("MaxChargingPower", vehicle.OVC ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
+		body.Add("MaxChargingPower", vehicle.OVC ? vehicle.MaxChargingPower?.ConvertToKiloWatt().Value ?? 0 : 0);
 
 		var IMCDictionary = GetInMotionChargingData(vehicle);
 		body.Add("InMotionCharging", IMCDictionary);
@@ -728,7 +728,7 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add("Batteries", battery);
 		if (vehicle.VehicleType == VectoSimulationJobType.IEPC_S) {
 			body.Add("OvcHev", vehicle.OVC);
-			body.Add("MaxChargingPower", vehicle.OVC ? vehicle.MaxChargingPower.ConvertToKiloWatt().Value : 0);
+			body.Add("MaxChargingPower", vehicle.OVC ? vehicle.MaxChargingPower?.ConvertToKiloWatt().Value ?? 0 : 0);
 		}
 
 		if (vehicle.Components.FuelCellSystemInputData?.FuelCellStrings != null) {

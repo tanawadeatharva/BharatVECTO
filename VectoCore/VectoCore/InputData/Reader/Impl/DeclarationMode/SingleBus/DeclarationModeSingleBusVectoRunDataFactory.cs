@@ -245,9 +245,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					foreach (var mission in _segment.Missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 							if (SingleBusDataProvider.PrimaryVehicle.OVC) {
-								if (SingleBusDataProvider.PrimaryVehicle.MaxChargingPower.IsEqual(0)) {
-									throw new VectoException(
-										"MaxChargingPower has to be greater than 0 if OVC is selected");
+								if (SingleBusDataProvider.PrimaryVehicle.MaxChargingPower != null &&
+									SingleBusDataProvider.PrimaryVehicle.MaxChargingPower.IsEqual(0))
+								{
+									throw new VectoException("MaxChargingPower has to be greater than 0 if OVC is selected");
 								}
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
@@ -256,13 +257,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 							}
 						}
 					}
-				}
-			}
-
-			protected void CheckMaxChargingPowerPresent(IVehicleDeclarationInputData vehicle)
-			{
-				if (vehicle.OVC && vehicle.MaxChargingPower == null) {
-					throw new VectoException($"{XMLNames.Vehicle_MaxChargingPower} must be set for OVC Vehicles");
 				}
 			}
 		}

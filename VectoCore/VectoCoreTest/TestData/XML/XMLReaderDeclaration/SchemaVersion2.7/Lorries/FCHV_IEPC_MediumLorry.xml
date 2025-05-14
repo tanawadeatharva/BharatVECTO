@@ -155,6 +155,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>20.0</SOCmin>
+					<SOCmax>80.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<IEPC>
@@ -367,10 +369,13 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_FCHV_LorryDataType">
+				<Data xsi:type="AUX_PEV_LorryDataType">
 					<SteeringPump>
 						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
+					<ElectricSystem>
+						<Technology>Standard technology</Technology>
+					</ElectricSystem>
 					<PneumaticSystem>
 						<Technology>Vacuum pump + elec. driven</Technology>
 					</PneumaticSystem>

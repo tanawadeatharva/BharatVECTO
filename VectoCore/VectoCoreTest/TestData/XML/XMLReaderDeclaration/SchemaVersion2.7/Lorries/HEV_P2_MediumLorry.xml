@@ -229,9 +229,7 @@
 						</v2.3:Signature>
 					</REESS>
 					<SOCmin>20.0</SOCmin>
-					<!-- optional -->
 					<SOCmax>80.0</SOCmax>
-					<!-- optional -->
 				</Battery>
 				<Battery>
 					<StringID>1</StringID>
@@ -272,6 +270,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>20.0</SOCmin>
+					<SOCmax>80.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<Gearbox>

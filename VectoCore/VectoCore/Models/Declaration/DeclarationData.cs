@@ -247,6 +247,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 					false, ng, ovcHev);
 			}
 
+			if (!segment.Found && allowVocational)
+			{
+                allowVocational = false;
+                segment = DeclarationData.TruckSegments.Lookup(
+                    vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+                    vehicle.CurbMassChassis,
+                    false, ng, ovcHev);
+            }
+
 			if (!segment.Found && throwException) {
 				throw new VectoException(
 					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
@@ -1921,6 +1930,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(x => x.Item1, x => x.Item2);
 
 			var retVal = new WeightedResult() {
+				Status = VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -2017,6 +2029,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var retVal = new WeightedResult() {
 				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -2054,12 +2068,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static ChargingEfficiencies CalculateChargingEfficiencyOVCHEV(VectoRunData runData,
 			VehicleOperationLookup.VehicleOperationData vehicleOperation)
 		{
-			var maxChargingPwrVeh = runData.MaxChargingPower;
 			var batteryData = runData.BatteryData;
 			var depotChargingPower =
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
-			var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-				maxChargingPwrVeh);
+
+			var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
 
 			var tmpBattery = new BatterySystem(null, batteryData);
 			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
@@ -2149,11 +2164,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			WattSecond energyDepot, WattSecond energyInMission, WattSecond energyInMotion)
 		{
 			var batteryData = runData.BatteryData;
-			var maxChargingPwrVeh = runData.MaxChargingPower;
 			var depotChargingPower =
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
-			var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-				maxChargingPwrVeh);
+
+            var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
+
 			var inMotionChargingPower = GetInMotionChargingPower(runData.Mission.MissionType);
 
 			var tmpBattery = new BatterySystem(null, batteryData);
@@ -2228,6 +2245,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var result = new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().VectoRunData.JobType,
+				OffVehicleCharging = false,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -2272,6 +2291,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().Weighted.JobType,
+				OffVehicleCharging = true,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),

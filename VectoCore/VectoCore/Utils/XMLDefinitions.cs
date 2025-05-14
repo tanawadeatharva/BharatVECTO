@@ -126,15 +126,17 @@ namespace TUGraz.VectoCore.Utils
         public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V10 =
             DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.0";
 
-        public const string MONITORING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
-
-		public const string MONITORING_SCHEMA_VERSION = "1.2";
-
-		public const string MONITORING_NAMESPACE_URI = MONITORING_NAMESPACE + ":v" + MONITORING_SCHEMA_VERSION;
+        public const string MONITORING_NAMESPACE_URI = "urn:tugraz:ivt:VectoAPI:MonitoringOutput:v1.2";
 
 		public const string DECLARATION_OUTPUT = "urn:tugraz:ivt:VectoAPI:DeclarationOutput";
 
-		public const string DECLARATION_OUTPUT_NAMESPACE_URI_V09 = DECLARATION_OUTPUT + ":v0.9";
+		public const string DECLARATION_OUTPUT_NAMESPACE_URI = DECLARATION_OUTPUT + ":v1.0";
+
+		public const string CUSTOMER_OUTPUT = "urn:tugraz:ivt:VectoAPI:CustomerOutput";
+
+		public const string CUSTOMER_OUTPUT_NAMESPACE_URI = CUSTOMER_OUTPUT + ":v1.0";
+
+		public const string DI_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#";
 
 		public const string XSI_TYPE_LOCALNAME = "type";
 

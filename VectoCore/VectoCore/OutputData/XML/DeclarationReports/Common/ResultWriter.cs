@@ -95,23 +95,69 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 	}
 
-	public class LorryPEVResultWriter : ResultWriterBase
+	
+	public class LorryFCHVNonOVCResultWriter : ResultWriterBase
+    {
+
+		public LorryFCHVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
+				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
+				SimulationParameterWriter.GetElement(entry),
+				GetPrimaryBusSubGroupElement(entry),
+				_factory.GetLorryFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry)
+				//ResultTotalWriter.GetElement(entry)
+			);
+		}
+
+        public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
+		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryFCHVNonOVCTotalWriter(_factory, TNS);
+
+		public override string ResultXMLType => "ResultSuccessFCHVType";
+    }
+
+	public class LorryFCHVOVCResultWriter : ResultWriterBase
+    {
+
+		public LorryFCHVOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Implementation of IResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override XElement GetElement(IOVCResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Result_Result,
+				new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+				new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
+				_factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+				_factory.GetLorrySimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+				_factory.GetLorryFCHVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+				_factory.GetLorryFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult)
+			);
+		}
+
+		#endregion
+
+		public override IResultGroupWriter SimulationParameterWriter { get; }
+		public override IResultGroupWriter ResultTotalWriter { get; }
+
+		public override string ResultXMLType => "ResultSuccessFCHVType";
+    }
+
+    public class LorryPEVResultWriter : ResultWriterBase
 	{
 
 		public LorryPEVResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
 		public override string ResultXMLType => "ResultSuccessPEVType";
-		public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
-		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryPEVTotalWriter(_factory, TNS);
-	}
-
-	// todo amogoda: m13. should this be used or hybrid non-ovc?
-	public class LorryPEVNonOVCResultWriter : ResultWriterBase
-	{
-
-		public LorryPEVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
-
-		public override string ResultXMLType => "ResultSuccessNonOVCPEVType";
 		public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
 		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryPEVTotalWriter(_factory, TNS);
 	}
@@ -188,11 +234,50 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
+	public class LorryFCHVOVCChargeDepletingWriter : AbstractResultGroupWriter
+	{
+		public LorryFCHVOVCChargeDepletingWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
+		#region Overrides of AbstractResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
+				_factory.GetVehiclePerformanceFCHVLorry(_factory, TNS).GetElement(entry),
+				entry.FuelData.Select(f =>
+					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
+				_factory.GetElectricEnergyConsumptionLorry(_factory, TNS).GetElement(entry),
+                _factory.GetHydrogenRangeWriter(_factory, TNS).GetElements(entry)
+			);
+        }
+
+		#endregion
+	}
+
+	public class LorryFCHVOVCChargeSustainingWriter : AbstractResultGroupWriter
+	{
+		public LorryFCHVOVCChargeSustainingWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeSustaining),
+				_factory.GetVehiclePerformanceFCHVLorry(_factory, TNS).GetElement(entry),
+				entry.FuelData.Select(f =>
+					_factory.GetFuelConsumptionLorry(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
+				_factory.GetHydrogenRangeWriter(_factory, TNS).GetElements(entry)
+			);
+        }
+
+		#endregion
+	}
 
 	// ----- bus
 
-	public class BusConvMRFResultWriter : ResultWriterBase
+    public class BusConvMRFResultWriter : ResultWriterBase
 	{
 		public BusConvMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
@@ -341,6 +426,104 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				entry.FuelData.Select(f =>
 					_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
 				_factory.GetCO2ResultBus(_factory, TNS).GetElements(entry)
+			);
+		}
+
+		#endregion
+	}
+
+    public class BusFCHVNonOVCResultWriter : ResultWriterBase
+    {
+
+        public BusFCHVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        public override XElement GetElement(IResultEntry entry)
+        {
+            return new XElement(TNS + XMLNames.Report_Result_Result,
+                new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+                new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
+                _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
+                SimulationParameterWriter.GetElement(entry),
+                GetPrimaryBusSubGroupElement(entry),
+                _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry)
+            //ResultTotalWriter.GetElement(entry)
+            );
+        }
+
+        public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
+        public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryFCHVNonOVCTotalWriter(_factory, TNS);
+
+        public override string ResultXMLType => "ResultSuccessFCHVType";
+    }
+
+    public class BusFCHVOVCResultWriter : ResultWriterBase
+    {
+
+        public BusFCHVOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        #region Implementation of IResultGroupWriter
+
+        public override XElement GetElement(IResultEntry entry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override XElement GetElement(IOVCResultEntry entry)
+        {
+            return new XElement(TNS + XMLNames.Report_Result_Result,
+                new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+                new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
+                _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusFCHVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult)
+            );
+        }
+
+        #endregion
+
+        public override IResultGroupWriter SimulationParameterWriter { get; }
+        public override IResultGroupWriter ResultTotalWriter { get; }
+
+        public override string ResultXMLType => "ResultSuccessFCHVType";
+    }
+
+
+	public class BusFCHVOVCChargeDepletingWriter : AbstractResultGroupWriter
+	{
+		public BusFCHVOVCChargeDepletingWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeDepleting),
+				_factory.GetVehiclePerformanceFCHVBus(_factory, TNS).GetElement(entry),
+				entry.FuelData.Select(f =>
+					_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
+				_factory.GetElectricEnergyConsumptionBus(_factory, TNS).GetElement(entry),
+				_factory.GetHydrogenRangeWriter(_factory, TNS).GetElements(entry)
+			);
+		}
+
+		#endregion
+	}
+
+	public class BusFCHVOVCChargeSustainingWriter : AbstractResultGroupWriter
+	{
+		public BusFCHVOVCChargeSustainingWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		#region Overrides of AbstractResultGroupWriter
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return new XElement(TNS + XMLNames.Report_Results_OVCMode,
+				new XAttribute(XMLNames.Results_Report_OVCModeAttr, XMLNames.Results_Report_OVCModeAttr_ChargeSustaining),
+				_factory.GetVehiclePerformanceFCHVBus(_factory, TNS).GetElement(entry),
+				entry.FuelData.Select(f =>
+					_factory.GetFuelConsumptionBus(_factory, TNS).GetElement(entry, entry.FuelConsumptionFinal(f.FuelType))),
+				_factory.GetHydrogenRangeWriter(_factory, TNS).GetElements(entry)
 			);
 		}
 

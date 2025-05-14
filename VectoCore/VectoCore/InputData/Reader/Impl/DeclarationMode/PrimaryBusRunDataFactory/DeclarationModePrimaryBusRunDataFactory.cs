@@ -291,9 +291,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 
 							if (vehicle.OVC) {
-								if (vehicle.MaxChargingPower == null || vehicle.MaxChargingPower.IsEqual(0)) {
+								if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0)) {
 									throw new VectoException(
-										"MaxChargingPower is required and has to be greater than 0 if OVC is selected");
+										"MaxChargingPower has to be greater than 0 if OVC is selected");
 								}
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
@@ -557,11 +557,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 						if (vehicle.OVC)
 						{
-							if (vehicle.MaxChargingPower == null || vehicle.MaxChargingPower.IsEqual(0))
+							if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0))
 							{
 								throw new VectoException(
-									"MaxChargingPower is required and has to be greater than 0 if OVC is selected");
+									"MaxChargingPower has to be greater than 0 if OVC is selected");
 							}
+
 							yield return CreateVectoRunData(mission, loading, null, OvcHevMode.ChargeDepleting);
 							yield return CreateVectoRunData(mission, loading, null, OvcHevMode.ChargeSustaining);
 						}

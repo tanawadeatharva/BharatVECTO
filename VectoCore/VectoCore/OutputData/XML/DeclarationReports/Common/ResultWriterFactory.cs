@@ -1,4 +1,5 @@
 ﻿using System;
+using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Utils.Ninject;
@@ -7,19 +8,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
     public class ResultWriterFactory : IResultsWriterFactory
     {
-        private readonly IInternalResultWriterFactory _internalFactory;
+        //private readonly IInternalResultWriterFactory _internalFactory;
+		private readonly IKernel _kernel;
 
-        public ResultWriterFactory(IInternalResultWriterFactory internalFactory)
+        public ResultWriterFactory(IKernel kernel)
         {
-            _internalFactory = internalFactory;
+			_kernel = kernel;
+            //_internalFactory = kernel.Get<IInternalResultWriterFactory>();
         }
 
         #region Implementation of IResultsWriterFactory
 
-        public IResultsWriter GetCIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+        public IResultsWriter GetCIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
         {
             try {
-                return _internalFactory.GetCIFResultsWriter(
+				var internalFactory = _kernel.Get<IInternalResultWriterFactory>(ResultWriterNamingHelper.GetResultWriterName(inputData));
+;                return internalFactory.GetCIFResultsWriter(
                     new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
 						XmlDocumentType.CustomerReport, vehicleCategory,
                         jobType.GetPowertrainArchitectureType(), ovc, exempted));
@@ -28,22 +32,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             }
         }
 
-		public IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetMRFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			try {
-				var resultsVehicleClassification = new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
+				var internalFactory = _kernel.Get<IInternalResultWriterFactory>(ResultWriterNamingHelper.GetResultWriterName(inputData));
+                var resultsVehicleClassification = new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
 						XmlDocumentType.ManufacturerReport, vehicleCategory,
 						jobType.GetPowertrainArchitectureType(), ovc, exempted);
-				return _internalFactory.GetMRFResultsWriter(resultsVehicleClassification);
+				return internalFactory.GetMRFResultsWriter(resultsVehicleClassification);
 			} catch (Exception e) {
 				throw new Exception($"Could not create ResultsWriter for vehicle category {vehicleCategory}, {jobType}, ovc: {ovc}, exempted: {exempted}", e);
 			}
         }
 
-		public IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetVIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			try {
-				return _internalFactory.GetVIFResultsWriter(
+				var internalFactory = _kernel.Get<IInternalResultWriterFactory>(ResultWriterNamingHelper.GetResultWriterName(inputData));
+                return internalFactory.GetVIFResultsWriter(
 					new VehicleTypeAndArchitectureStringHelperResults.ResultsVehicleClassification(
 						XmlDocumentType.MultistepOutputData, vehicleCategory,
 						jobType.GetPowertrainArchitectureType(), ovc, exempted));
@@ -53,5 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		}
 
 		#endregion
+
+
     }
 }

@@ -22,14 +22,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			var vehicleData = inputData.JobInputData.Vehicle;
 			var ihpc = vehicleData.Components?.GearboxInputData?.Type == GearboxType.IHPC;
-			var dualFuel = vehicleData.Components?.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1) ?? false;
 
 			var result = new List<XElement>()
 			{
-				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
-				new XElement(_mrf + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
+                new XElement(_mrf + "HEVArchitecture", ihpc ? GearboxType.IHPC.ToXMLFormat() : vehicleData.ArchitectureID.GetLabel()),
 				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OVC),
-				vehicleData.OVC ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ValueAsUnit("kW", 1)) : null,
+				new XElement(_mrf + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat()),
 			};
 			result.Add(_mrfFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			result.Add(_mrfFactory.GetBoostingLimitationsType().GetElement(inputData.JobInputData.Vehicle));
