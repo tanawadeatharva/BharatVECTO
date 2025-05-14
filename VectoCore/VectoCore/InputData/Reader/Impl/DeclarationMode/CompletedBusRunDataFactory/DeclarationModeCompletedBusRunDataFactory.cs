@@ -252,12 +252,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcHevMode)
 			{
 				var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
+				simulationRunData.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				simulationRunData.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
 
 				var primaryBusAuxiliaries = PrimaryVehicle.Components.BusAuxiliaries;
 
                 simulationRunData.VehicleData =
                     DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-                simulationRunData.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, simulationRunData.Cycle.ShareDistanceHighway);
+                simulationRunData.AirdragData = DataAdapterGeneric.CreateAirdragData(PrimaryVehicle, mission, new Segment(), ovcHevMode);
                 simulationRunData.EngineData =
                     DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
                 simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -294,10 +296,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var simulationRunData = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
+				simulationRunData.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				simulationRunData.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
+
 
 				simulationRunData.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
-				simulationRunData.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission);
+				simulationRunData.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
 				simulationRunData.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 				simulationRunData.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -451,6 +456,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcHevMode)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
+				rd.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				rd.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
+
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -474,7 +482,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
                 rd.VehicleData =
                     DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-                rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, rd.Cycle.ShareDistanceHighway);
+                rd.AirdragData = DataAdapterGeneric.CreateAirdragData(PrimaryVehicle, mission, primarySegment, ovcHevMode);
                 rd.EngineData =
                     DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
                 //rd.ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
@@ -509,6 +517,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
+				rd.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				rd.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
+
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -532,7 +543,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
-				rd.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission);
+				rd.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 				rd.HybridStrategyParameters = DataAdapterGeneric.CreateHybridStrategy(
@@ -699,6 +710,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcHevMode)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
+				rd.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				rd.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
+
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
@@ -719,7 +733,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				rd.VehicleData =
 					DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, primarySegment, mission, loading, false);
-				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(null, null, mission, new Segment(), ovcHevMode, rd.Cycle.ShareDistanceHighway);
+				rd.AirdragData = DataAdapterGeneric.CreateAirdragData(PrimaryVehicle, mission, primarySegment, ovcHevMode);
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 
@@ -773,6 +787,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var rd = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
+				rd.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				rd.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
+
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
@@ -789,7 +806,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				rd.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle,
 					CompletedVehicle, _segment, mission, loading);
-				rd.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission);
+				rd.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
 				rd.EngineData =
 					DataAdapterGeneric.CreateEngineData(PrimaryVehicle, modeIdx.Value, mission);
 
@@ -946,6 +963,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcHevMode)
 			{
 				var result = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
+				result.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				result.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -970,7 +989,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				//result.VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
 				 //   mission, loading);
 				result.AirdragData =
-					DataAdapterGeneric.CreateAirdragData(PrimaryVehicle.Components.AirdragInputData, PrimaryVehicle.InMotionCharging, mission, _segment, ovcHevMode, result.Cycle.ShareDistanceHighway);
+					DataAdapterGeneric.CreateAirdragData(PrimaryVehicle, mission, _segment, ovcHevMode);
 				if (AxleGearRequired() || PrimaryVehicle.Components.AxleGearInputData != null)
 				{
 					result.AxleGearData =
@@ -1002,6 +1021,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var result = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
+				result.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+				result.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
+
 
 				DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
@@ -1020,7 +1042,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 				result.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
 					mission, loading);
-				result.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission);
+				result.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
 				if (AxleGearRequired() || PrimaryVehicle.Components.AxleGearInputData != null) {
 					result.AxleGearData =
 						DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);

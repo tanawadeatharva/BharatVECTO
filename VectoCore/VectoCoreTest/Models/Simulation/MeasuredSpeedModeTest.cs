@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 
                             CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection),
 				},
@@ -329,7 +329,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                             CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection)
 				},

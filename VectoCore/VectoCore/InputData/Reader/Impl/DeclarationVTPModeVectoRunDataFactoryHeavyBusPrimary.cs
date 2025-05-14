@@ -63,9 +63,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             var vtpMission = tempVehicle.VehicleCode.GetFloorType() == FloorType.LowFloor
                 ? DeclarationData.VTPMode.SelectedMissionLowFloorBus
                 : DeclarationData.VTPMode.SelectedMissionHighFloorBus;
-            AirdragData = DataAdapter.CreateAirdragData(
-                vehicle.Components.AirdragInputData, vehicle.InMotionCharging,
-                Segment.Missions.First(), Segment, OvcHevMode.NotApplicable, 0);
+            AirdragData = DataAdapter.CreateAirdragData(vehicle,
+                Segment.Missions.First(), Segment, OvcHevMode.NotApplicable);
             EngineData = DataAdapter.CreateEngineData(
                 vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
                 new Mission() { MissionType = vtpMission });

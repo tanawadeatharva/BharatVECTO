@@ -66,8 +66,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		List<DrivingCycleData.DrivingCycleEntry> Entries { get; }
 
-		double ShareDistanceHighway { get; }
-		
 		string Name { get; }
 		
 		CycleType CycleType { get; }
@@ -78,7 +76,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(DrivingCycleData), "ValidateCycleData")]
 	public class DrivingCycleData : SimulationComponentData, IDrivingCycleData
 	{
-		private double? _shareHighway;
 		internal DrivingCycleData() {}
 
 		[JsonIgnore]
@@ -124,40 +121,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				return new ValidationResult($"Validation of Cycle {cycleData.Name} failed", result);
 			}
 			return ValidationResult.Success;
-		}
-
-		public double ShareDistanceHighway
-		{
-			get {
-				if (!_shareHighway.HasValue) {
-					_shareHighway = CalculateShareHighway();
-				} 
-				return _shareHighway.Value;
-			}
-		}
-
-		private double CalculateShareHighway()
-		{
-			if (CycleType != CycleType.DistanceBased) {
-				return double.NaN;
-			}
-			var onHighway = Entries.First().Highway;
-			var highwayDistance = 0.SI<Meter>();
-
-			for (var i = 1; i < Entries.Count; i++) {
-				var entry = Entries[i];
-				if (onHighway) {
-					if (entry.Highway) {
-						highwayDistance += entry.Distance - Entries[i - 1].Distance;
-					} else {
-						onHighway = false;
-					}
-				} else {
-					onHighway = entry.Highway;
-				}
-			}
-			var distance = Entries.Last().Distance - Entries.First().Distance;
-			return highwayDistance / distance;
 		}
 
 		[DebuggerDisplay(

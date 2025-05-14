@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return stage;
 		}
 
-		public IManufacturingStageInputData ConsolidateManufacturingStage
+		public virtual IManufacturingStageInputData ConsolidateManufacturingStage
 		{
 			get
 			{
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	public class ConsolidateManufacturingStages : ConsolidatedDataBase, IManufacturingStageInputData
 	{
 		private ConsolidatedVehicleData _consolidatedVehicleData;
-		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
+		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		
 		public ConsolidateManufacturingStages(IPrimaryVehicleInformationInputDataProvider primaryVehicle, 
 			IEnumerable<IManufacturingStageInputData> manufacturingStages) : base(manufacturingStages)
@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public int StepCount => _manufacturingStages?.First().StepCount ?? 0;
 
-		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
+		public virtual IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 
 		public IApplicationInformation ApplicationInformation => _manufacturingStages?.First().ApplicationInformation;
 
@@ -549,7 +549,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsumerTechnology? DoorDriveTechnology => GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology));
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
-		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
+
+		public IVehicleInMotionChargingDeclaration InMotionCharging => GetVehiclePropertyValue<IVehicleInMotionChargingDeclaration>(nameof(InMotionCharging));
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{

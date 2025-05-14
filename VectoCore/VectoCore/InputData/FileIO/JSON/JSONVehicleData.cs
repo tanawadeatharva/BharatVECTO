@@ -576,7 +576,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool Articulated => false;
 
-		public virtual Meter Height => Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
+		public virtual Meter Height => SavedInDeclarationMode ? null : Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
 
 		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 

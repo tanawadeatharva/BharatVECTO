@@ -605,7 +605,6 @@ Public Class VehicleForm
 			    If (vehicle.InMotionCharging.Enabled) Then
 				    cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
 				    tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.Value().ToString()
-				    cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
 				    tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
 			    End If
 		    Else
@@ -1219,7 +1218,6 @@ Public Class VehicleForm
 		            End If
 
 		            veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-		            veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 		            veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 		            veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 		        End If
@@ -1236,7 +1234,6 @@ Public Class VehicleForm
 				End If
 
 				veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-				veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 				veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 				veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 				End If

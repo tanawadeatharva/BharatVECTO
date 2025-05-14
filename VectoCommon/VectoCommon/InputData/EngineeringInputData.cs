@@ -129,7 +129,6 @@ namespace TUGraz.VectoCommon.InputData
 		bool Enabled { get; }
 		double ShareIMCAvailabilityTotalMission { get; }
 		SquareMeter DeltaCdxA { get; }
-		bool IMCOnMotorwayOnly { get; }
     }
 
 	public interface IVehicleComponentsEngineering
