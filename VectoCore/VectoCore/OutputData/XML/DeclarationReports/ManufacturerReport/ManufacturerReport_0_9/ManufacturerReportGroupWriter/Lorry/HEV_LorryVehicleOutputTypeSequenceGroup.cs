@@ -23,8 +23,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			result.Add(new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicleData.SleeperCab));
                 
 			result.AddRange(_mrfFactory.GetHEV_VehicleSequenceGroup().GetElements(inputData));
-			if (vehicleData.TankSystem.HasValue) {
-				result.Add(new XElement(_mrf + "TankSystem", vehicleData.TankSystem.Value.ToString()));
+
+            var tankSystem = vehicleData.TankSystem.HasValue
+                ? vehicleData.TankSystem.Value.ToString()
+                : (vehicleData.HydrogenStorageTechnology.HasValue
+                    ? vehicleData.HydrogenStorageTechnology.Value.ToString()
+                    : null);
+
+            if (tankSystem != null) {
+				result.Add(new XElement(_mrf + "TankSystem", tankSystem));
 			}
 
 			return result;

@@ -29,10 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
@@ -86,7 +89,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 
-	}
+		protected void CheckH2Properties(IVehicleDeclarationInputData vehicle)
+		{
+            if (vehicle.Components.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
+            {
+                if (vehicle.H2StorageUsableCapacity == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare H2StorageUsableCapacity.");
+                }
+
+				if (vehicle.HydrogenStorageTechnology == null)
+				{
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare HydrogenStorageTechnology.");
+                }
+            }
+        }
+
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -109,8 +128,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
 			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+            vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
-			return vehicle;
+			CheckH2Properties(vehicle);
+
+            return vehicle;
 		}
 	}
 
@@ -136,7 +158,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
 			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
-			return vehicle;
+            CheckH2Properties(vehicle);
+
+            return vehicle;
 		}
 	}
 
@@ -163,6 +187,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
 			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
+
+			CheckH2Properties(vehicle);
 
 			return vehicle;
 		}
@@ -201,9 +227,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
 
-			return vehicle;
+            CheckH2Properties(vehicle);
+
+            return vehicle;
 		}
-	}
+
+        protected void CheckH2Properties(IVehicleDeclarationInputData vehicle)
+        {
+            if (vehicle.Components.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
+            {
+                if (vehicle.H2StorageUsableCapacity == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare H2StorageUsableCapacity.");
+                }
+
+                if (vehicle.HydrogenStorageTechnology == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare HydrogenStorageTechnology.");
+                }
+            }
+        }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
