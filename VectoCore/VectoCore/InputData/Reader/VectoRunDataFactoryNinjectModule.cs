@@ -76,15 +76,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_F2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV,
-					ArchitectureID.E2));
+					ArchitectureID.F2));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_F3>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV,
-					ArchitectureID.E3));
+					ArchitectureID.F3));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_F4>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV,
-					ArchitectureID.E4));
+					ArchitectureID.F4));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_F_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV_IEPC,
@@ -155,15 +155,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_F2>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV,
-					ArchitectureID.E2));
+					ArchitectureID.F2));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_F3>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV,
-					ArchitectureID.E3));
+					ArchitectureID.F3));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_F4>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV,
-					ArchitectureID.E4));
+					ArchitectureID.F4));
 			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_F_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV_IEPC,
 					ArchitectureID.F_IEPC));
