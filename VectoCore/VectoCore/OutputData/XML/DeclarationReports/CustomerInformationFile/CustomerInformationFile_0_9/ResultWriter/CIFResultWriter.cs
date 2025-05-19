@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			public FCHVOVCLorry(ICIFResultsWriterFactory cifFactory) : base(cifFactory) { }
 
 			#region Overrides of AbstractResultsWriter
-
+			
 			public override XElement GenerateResults(List<IResultEntry> results)
 			{
 				var ordered = GetOrderedResultsOVCFCHV(results);
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 					SummaryWriter.GetElement(ordered)
 				);
 			}
-
+			
 			#endregion
 
 			protected override IResultGroupWriter ResultSuccessWriter => _cifFactory.GetLorryFCHVOVCSuccessResultWriter(_cifFactory, TNS);

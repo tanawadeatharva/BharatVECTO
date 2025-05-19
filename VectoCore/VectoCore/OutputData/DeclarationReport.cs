@@ -134,7 +134,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter HydrogenRange { get; }
 
-		IFuelProperties AuxHeaterFuel { get; }
+        DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; }
+
+        DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; }
+
+        IFuelProperties AuxHeaterFuel { get; }
 		Kilogram ZEV_FuelConsumption_AuxHtr { get; }
 		Kilogram ZEV_CO2 { get; }
 

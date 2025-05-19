@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			Batteries = new List<Tuple<int, BatteryData>>();
 		}
 
-		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
+        public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
 

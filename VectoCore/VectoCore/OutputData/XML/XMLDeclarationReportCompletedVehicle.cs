@@ -335,6 +335,8 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }
             public Meter HydrogenRange { get; set; }
+            public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; private set; }
+            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; private set; }
             public IFuelProperties AuxHeaterFuel { get; set; }
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }

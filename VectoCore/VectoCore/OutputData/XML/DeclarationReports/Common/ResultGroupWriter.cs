@@ -395,19 +395,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	{
 		public HydrogenRangeWriterFCHV(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IHydrogenRangeWriter
-
-		public XElement[] GetElements(IResultEntry weightedResult)
+		public XElement[] GetElements(IResultEntry result)
 		{
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute("lifetime", "independent"),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
+						result.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        result.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
         }
 
@@ -417,15 +414,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute("lifetime", "independent"),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
+                        weightedResult.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
 		}
-
-		#endregion
 	}
 
 	// -------------------------
@@ -434,43 +428,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	{
 		public HydrogenRangeWriterFCHV_OVC(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IHydrogenRangeWriter
-
-		public XElement[] GetElements(IResultEntry results)
+		public XElement[] GetElements(IResultEntry result)
 		{
-			switch(results.OVCMode) {
+			switch(result.OVCMode) {
 				case OvcHevMode.ChargeSustaining:
 					return new[] {
 						new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 							new XAttribute("lifetime", "independent"),
 							new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-								//weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-								new ConvertedSI(double.NaN, "km").ValueAsUnit()),
+								result.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 							new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-								new ConvertedSI(double.NaN, "km").ValueAsUnit())
-						)
+                                result.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                        )
 					};
 				case OvcHevMode.ChargeDepleting:
 					return new[] {
-						// TODO: MQ 20250509: replace NaN with actual computed values
 						new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 							new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_BOL_Val),
 							new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+								result.BeginOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
 							new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+                                result.BeginOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
 							new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
+                                result.BeginOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
 						),
 						new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 							new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_EOL_Val),
 							new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-							new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-							new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-								new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
-						),
+                                result.EndOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
+                            new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+                                result.EndOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
+                            new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+                                result.EndOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
+                        ),
 					};
             }
 			return null;
@@ -480,8 +470,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		{
 			throw new NotImplementedException();
 		}
-
-		#endregion
 	}
 
     // -------------------------
