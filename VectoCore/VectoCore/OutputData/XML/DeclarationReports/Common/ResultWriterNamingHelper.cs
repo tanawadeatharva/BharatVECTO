@@ -34,7 +34,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 					throw new VectoException("unknown XML type of multistep input data {0}",
 						inputData.JobInputData.Vehicle.DataSource.TypeVersion);
 				}
-			switch (inputData.JobInputData.Vehicle.DataSource.TypeVersion) {
+            switch (inputData.JobInputData.Vehicle.DataSource.TypeVersion) {
+				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10:
+				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20:
+				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21:
+				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V22:
+				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V221:
 				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24:
 					return RESULT_WRITER_2nd_AMDM;
 				case XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27:
