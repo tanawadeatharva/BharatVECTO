@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_strategy?.Request(absTime, dt, outTorque, outAngularVelocity);
 
 			var driveOffSpeed = DataBus.VehicleInfo.VehicleStopped && outAngularVelocity > 0;
-			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-1);
+			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 5e-2);
 			if (!dryRun && (driveOffSpeed || driveOffTorque)) {
 				Gear = ModelData.GearList.First();
 				LastShift = absTime;
