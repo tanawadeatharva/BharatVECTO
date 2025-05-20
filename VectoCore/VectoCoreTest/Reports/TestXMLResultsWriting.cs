@@ -83,7 +83,7 @@ public class TestXMLResultsWriting
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, 3, VectoSimulationJobType.ParallelHybridVehicle, false, false, typeof(CIFResultsWriter.HEVNonOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, 3, VectoSimulationJobType.SerialHybridVehicle, true, false, typeof(CIFResultsWriter.HEVOVCBus)),
 		TestCase(VehicleCategory.HeavyBusCompletedVehicle, 3, VectoSimulationJobType.BatteryElectricVehicle, true, false, typeof(CIFResultsWriter.PEVBus)),
-		TestCase(VehicleCategory.HeavyBusCompletedVehicle, 3, VectoSimulationJobType.FCHV, false, false, typeof(CIFResultsWriter.HEVNonOVCBus)),
+		TestCase(VehicleCategory.HeavyBusCompletedVehicle, 3, VectoSimulationJobType.FCHV, false, false, typeof(CIFResultsWriter.FCHVNonOVCBus)),
 	]
     public void Test_CIF_ReportResultInstance(VehicleCategory vehicleCategory, int amdm, VectoSimulationJobType jobType,  bool ovc,
 		bool exempted, Type expectedResultWriterType)
@@ -773,7 +773,7 @@ public class TestXMLResultsWriting
 		Assert.AreEqual(1518.750, weighted.EquivalentAllElectricRange.Value(), 1e-3);
 		Assert.AreEqual(1518.750, weighted.ZeroCO2EmissionsRange.Value(), 1e-3);
 
-		Assert.AreEqual(55.659, weighted.ElectricEnergyConsumption.ConvertToKiloWattHour(), 1e-3);
+		Assert.AreEqual(53.676, weighted.ElectricEnergyConsumption.ConvertToKiloWattHour(), 1e-3);
 
 	}
 
@@ -965,6 +965,7 @@ public class TestXMLResultsWriting
 				VehicleClass = VehicleClass.Class5,
 				VehicleCategory = vehicleCategory,
 				OffVehicleCharging = offVehicleCharging,
+				H2StorageUsableCapacity = fuels.Any(x => x.IsHydrogenFuel()) ? 80.SI<Kilogram>() : null
 			},
 			EngineData = new CombustionEngineData() {
 				FuelMode = 0,

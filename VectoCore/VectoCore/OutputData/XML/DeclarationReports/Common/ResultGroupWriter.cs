@@ -310,37 +310,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	{
 		public HydrogenRangeWriterICE(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IHydrogenRangeWriter
-
-		public XElement[] GetElements(IResultEntry results)
+		public XElement[] GetElements(IResultEntry result)
 		{
-			// TODO MQ 20250512: insert actual results here!
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
+                        result.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        result.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
 		}
 
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
-			// TODO MQ 20250512: insert actual results here!
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//results.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
+                        weightedResult.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
         }
-
-		#endregion
 	}
 
 	// -------------------------
@@ -349,37 +341,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	{
 		public HydrogenRangeWriterHEV(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IHydrogenRangeWriter
-
-		public XElement[] GetElements(IResultEntry results)
+		public XElement[] GetElements(IResultEntry result)
 		{
-			// TODO MQ 20250512: insert actual results here!
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//results.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
+                        result.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        result.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
         }
 
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
-			// TODO MQ 20250512: insert actual results here!
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						//weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()
-						new ConvertedSI(double.NaN, "km").ValueAsUnit()),
+                        weightedResult.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-						new ConvertedSI(double.NaN, "km").ValueAsUnit())
-				)
+                        weightedResult.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+                )
 			};
         }
-
-		#endregion
 	}
 
 	// -------------------------
@@ -388,27 +372,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 	{
 		public HydrogenRangeWriterHEV_OVC(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IHydrogenRangeWriter
-
-		public XElement[] GetElements(IResultEntry results)
+		public XElement[] GetElements(IResultEntry result)
 		{
-			// TODO MQ 20250512: insert actual results here!
 			return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-					new ConvertedSI(double.NaN, "km").ValueAsUnit())
-			};
+                    result.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+            };
 		}
 
 		public XElement[] GetElements(IWeightedResult weightedResult)
 		{
-            // TODO MQ 20250512: insert actual results here!
-			return new[] {
+            return new[] {
 				new XElement(TNS + XMLNames.Report_ResultEntry_HydrogenRange,
-					new ConvertedSI(double.NaN, "km").ValueAsUnit())
-			};
+                    weightedResult.HydrogenRange.ConvertToKiloMeter().ValueAsUnit())
+            };
         }
-
-		#endregion
 	}
 
 	// -------------------------
