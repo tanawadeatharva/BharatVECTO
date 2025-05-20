@@ -28,6 +28,8 @@
 	<!-- Changelog
 	29-04-2025: Removed PTO element from IEPC vehicles and NgTankSystem from vehicles without ICE. Added NgTankSystem to multiple-SHEV Primary Bus.
 	10-05-2025: Replaced AUX_Component_FCHV_LorryType with AUX_Component_PEV_Lorry_Type because AUX_Component_FCHV_LorryType was wrong and redundant.
+	15-05-2025: Added H2StorageUsableCapacityType for H2StorageUsableCapacity
+	16-05-2025: Added H2 elements to PHEV and SHEV vehicles.
 	-->
 
 	<!--                      JOB                           -->
@@ -112,11 +114,7 @@
 					<xs:element name="ADAS" type="ADAS_Conventional_Type"/>
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:sequence minOccurs="0">
-						<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-							<xs:annotation>
-								<xs:documentation>P545 - [kg]</xs:documentation>
-							</xs:annotation>
-						</xs:element>
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					</xs:sequence>
 					<xs:element name="Components" type="Components_Conventional_LorryType"/>
@@ -156,6 +154,10 @@
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="BoostingLimitations" type="BoostingLimitationsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-Px_LorryType"/>
 					<xs:element name="MonitoringData" type="HEV-Px_IHPC_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -250,6 +252,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_SHEV_Sx_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -285,6 +291,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-IEPC-S_LorryType"/>
 					<xs:element name="MonitoringData" type="HEV-IEPC-S_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -315,11 +325,7 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Abstract_Components_FCHV_Fx_LorryDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_FCHV_Fx_DataType" minOccurs="0"/>
@@ -350,11 +356,7 @@
 					</xs:element>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Components_FCHV_IEPC_LorryType"/>
 					<xs:element name="MonitoringData" type="FCHV_IEPC_DataType" minOccurs="0"/>
@@ -426,11 +428,7 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Components_Multiple_FCHV_LorryDeclarationType"/>
 					<xs:element name="MonitoringData" type="Multiple_FCHV_DataType" minOccurs="0"/>
@@ -472,6 +470,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyLorryType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_Multiple_SHEV_LorryType"/>
 					<xs:element name="MonitoringData" type="Multiple_SHEV_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -540,11 +542,7 @@
 					<xs:element name="ADAS" type="ADAS_Conventional_Type"/>
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:sequence minOccurs="0">
-						<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-							<xs:annotation>
-								<xs:documentation>P545 - [kg]</xs:documentation>
-							</xs:annotation>
-						</xs:element>
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					</xs:sequence>
 					<xs:element name="Components" type="Components_Conventional_LorryType"/>
@@ -584,6 +582,10 @@
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="BoostingLimitations" type="BoostingLimitationsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-Px_LorryType"/>
 					<xs:element name="MonitoringData" type="HEV-Px_IHPC_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -678,6 +680,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyMediumLorryType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Abstract_Components_HEV-Sx_LorryDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_SHEV_Sx_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -713,6 +719,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyMediumLorryType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-IEPC-S_LorryType"/>
 					<xs:element name="MonitoringData" type="HEV-IEPC-S_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -743,11 +753,7 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyMediumLorryType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Abstract_Components_FCHV_Fx_LorryDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_FCHV_Fx_DataType" minOccurs="0"/>
@@ -778,11 +784,7 @@
 					</xs:element>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyMediumLorryType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Components_FCHV_IEPC_LorryType"/>
 					<xs:element name="MonitoringData" type="FCHV_IEPC_DataType" minOccurs="0"/>
@@ -837,11 +839,7 @@
 					<xs:element name="ADAS" type="ADAS_Conventional_Type"/>
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:sequence minOccurs="0">
-						<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-							<xs:annotation>
-								<xs:documentation>P545 - [kg]</xs:documentation>
-							</xs:annotation>
-						</xs:element>
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					</xs:sequence>
 					<xs:element name="Components" type="Components_Conventional_PrimaryBusType"/>
@@ -891,6 +889,10 @@
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="BoostingLimitations" type="BoostingLimitationsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-Px_PrimaryBusType"/>
 					<xs:element name="MonitoringData" type="HEV-Px_IHPC_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -1015,6 +1017,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Abstract_Components_HEV-Sx_PrimaryBusDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_SHEV_Sx_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -1060,6 +1066,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_HEV-IEPC-S_PrimaryBus"/>
 					<xs:element name="MonitoringData" type="HEV-IEPC-S_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -1100,11 +1110,7 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="ElectricMachineTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Abstract_Components_FCHV_Fx_PrimaryBusDeclarationType"/>
 					<xs:element name="MonitoringData" type="Abstract_FCHV_Fx_DataType" minOccurs="0"/>
@@ -1145,11 +1151,7 @@
 					</xs:element>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Components_FCHV_IEPC_PrimaryBusType"/>
 					<xs:element name="MonitoringData" type="FCHV_IEPC_DataType" minOccurs="0"/>
@@ -1241,11 +1243,7 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="Components" type="Components_Multiple_FCHV_PrimaryBusDeclarationType"/>
 					<xs:element name="MonitoringData" type="Multiple_FCHV_DataType" minOccurs="0"/>
@@ -1302,6 +1300,10 @@
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type"/>
 					<xs:element name="ElectricMotorTorqueLimits" type="MultipleElectricMachineTorqueLimitsType" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_Multiple_SHEV_PrimaryBusDeclarationType"/>
 					<xs:element name="MonitoringData" type="Multiple_SHEV_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -1407,11 +1409,7 @@
 					</xs:element>
 					<xs:element name="ADAS" type="ADAS_Conventional_Type" minOccurs="0"/>
 					<xs:sequence minOccurs="0">
-						<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-							<xs:annotation>
-								<xs:documentation>P545 - [kg]</xs:documentation>
-							</xs:annotation>
-						</xs:element>
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					</xs:sequence>
 					<xs:element name="Components" type="Components_Conventional_CompletedBusType" minOccurs="0"/>
@@ -1463,6 +1461,10 @@
 					</xs:element>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_HEV_Type" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="Components" type="Components_xEV_CompletedBusType" minOccurs="0"/>
 					<xs:element name="MonitoringData" type="Completed_DataType" minOccurs="0"/>
 				</xs:sequence>
@@ -1549,11 +1551,7 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="H2StorageUsableCapacity" type="v1.0:Double1">
-						<xs:annotation>
-							<xs:documentation>P545 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
 					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
 					<xs:element name="ADAS" type="ADAS_PEV_Type" minOccurs="0"/>
@@ -1847,6 +1845,14 @@
 		<xs:union memberTypes="v2.4:ArchitectureID_HEV-IEPC-S_Type v2.4:ArchitectureID_HEV-Sx_Type"/>
 	</xs:simpleType>
 
+	<xs:simpleType name="H2StorageUsableCapacityType">
+		<xs:annotation>
+			<xs:documentation>P545 - [kg]</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double1">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="HydrogenStorageTechnologyType">
 		<xs:annotation>
 			<xs:appinfo>

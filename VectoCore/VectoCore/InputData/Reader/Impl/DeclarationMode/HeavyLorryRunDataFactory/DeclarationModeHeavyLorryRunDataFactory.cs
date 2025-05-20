@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 				
 				CheckSuperCap(vehicle);
-				AngleDriveAllowed(vehicle);
+				
 				var simulationRunData = new VectoRunData
 				{
 					Loading = loading.Key,
@@ -177,8 +177,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			protected abstract bool AxleGearRequired();
-
-			protected abstract void AngleDriveAllowed(IVehicleDeclarationInputData inputData);
 		}
 
 		public class Conventional : LorryBase
@@ -295,11 +293,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			protected override bool AxleGearRequired()
 			{
 				return true;
-			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
 			}
 
 			#endregion
@@ -433,13 +426,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
             #endregion
 
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
-				{
-					throw new VectoException("Angledrive not allowed in pure electric vehicles");
-				}
-			}
         }
 
 		public class PEV_E2 : BatteryElectric
@@ -628,15 +614,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#endregion
 
-
-			#region Overrides of LorryBase
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
-			}
-
-			#endregion
 		}
 		
 	}

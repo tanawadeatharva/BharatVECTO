@@ -7,6 +7,7 @@
 	2025-05-10: Fixed FCHV_IEPC Auxiliaries type (HEVLorryAuxOutputType -> PEVLorryAuxOutputType).
 	2025-05-11: Fixed type of Engine FuelType to include all new types (e.g. H2).
 	2025-05-11: Fixed FCHV_IEPC Primary Bus Aux type (HEVPrimaryBusAuxOutputType -> PEVPrimaryBusAuxOutputType).
+	2025-05-14: Made Retarder compulsory everywhere.
 	-->
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -368,7 +369,7 @@
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -464,7 +465,7 @@
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -1609,7 +1610,7 @@
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -1703,7 +1704,7 @@
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -4249,7 +4250,7 @@
 					<xs:documentation>I.1.6.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -4264,7 +4265,7 @@
 	<xs:group name="Powertrain-E3-SequenceGroup">
 		<xs:sequence>
 			<xs:element name="ElectricMachine" type="mrf:ElectricMachineType"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>
@@ -4284,7 +4285,7 @@
 	<xs:group name="Powertrain-IEPC-SequenceGroup">
 		<xs:sequence>
 			<xs:element name="IEPCSpecifications" type="mrf:xEV-IEPC-Type"/>
-			<xs:element name="Retarder" type="mrf:RetarderType" minOccurs="0">
+			<xs:element name="Retarder" type="mrf:RetarderType">
 				<xs:annotation>
 					<xs:documentation>I.1.4.</xs:documentation>
 				</xs:annotation>

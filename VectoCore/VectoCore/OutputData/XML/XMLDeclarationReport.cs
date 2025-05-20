@@ -197,7 +197,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Meter ZeroCO2EmissionsRange { get; set; }
 
-			public IFuelProperties AuxHeaterFuel { get; set; }
+            public Meter HydrogenRange { get; set; }
+
+            public IFuelProperties AuxHeaterFuel { get; set; }
 
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
 
@@ -270,6 +272,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 					}
 				}
+
+				if (runData.EngineData?.Fuels.Any(x => x.FuelData.FuelType.IsHydrogenFuel()) ?? false)
+				{
+					var h2Fuel = runData.EngineData?.Fuels.Where(x => x.FuelData.FuelType.IsHydrogenFuel()).Select(x => x.FuelData.FuelType).First();
+					var totalFc = FuelConsumptionFinal(h2Fuel.Value)?.TotalFuelConsumptionCorrected;
+					
+					var range = ((totalFc != null) && (totalFc > 0))
+						? Distance * (runData.VehicleData.H2StorageUsableCapacity / totalFc)
+						: null;
+
+					HydrogenRange = range;
+					ZeroCO2EmissionsRange = range;
+                }
 
 				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
 					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder

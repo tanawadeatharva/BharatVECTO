@@ -180,13 +180,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			}
 
             #endregion
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
-				{
-					throw new VectoException("Angledrive not allowed in serial hybrid vehicles");
-				}
-			}
         }
 
 		public class ParallelHybrid : Hybrid
@@ -300,15 +293,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				return true;
 			}
-
-			#region Overrides of Hybrid
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
-			}
-
-			#endregion
 		}
 
 		public class HEV_S2 : SerialHybrid
