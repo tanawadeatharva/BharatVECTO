@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces
@@ -7,7 +8,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     {
         BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
             VectoSimulationJobType jobType,
-            bool ovc);
+            bool ovc,
+            double deterioration = DeclarationData.Battery.GenericDeterioration);
 
         SuperCapData CreateSuperCapData(IElectricStorageSystemDeclarationInputData reessInputData);
     }

@@ -59,6 +59,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using Point = TUGraz.VectoCommon.Utils.Point;
 using System.Diagnostics;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -1790,8 +1791,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double GenericDeterioration => 0.05;
-
+			public const double GenericDeterioration = 0.05;
 
 			public static double GetMaxSoc(BatteryType type)
 			{
@@ -2118,7 +2118,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		}
 
-		public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
+        public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
 		{
 			var batteryData = runData.BatteryData;
 			var tmpBattery = new BatterySystem(null, batteryData);
@@ -2323,11 +2323,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 		}
 
+        public static ElectricRangesPEV CalculateElectricRangesFCHV(VectoRunData runData, IModalDataContainer data, double deterioration)
+        {
+            return runData.InMotionCharging
+                ? DoCalculateElectricRangesIMCFCHV(data, runData, deterioration)
+                : DoCalculateElectricRangesFCHV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
+                    data.Distance, CalculateChargingEfficiencyPEV(runData), runData, deterioration);
+        }
 
-		public static ElectricRangesPEV CalculateElectricRangesPEV(VectoRunData runData, IModalDataContainer data)
+        public static ElectricRangesPEV CalculateElectricRangesPEV(VectoRunData runData, IModalDataContainer data)
 		{
 			return runData.InMotionCharging
-				? DoCalculateElectricRangesIMCPEV(data, runData)
+				? DoCalculateElectricRangesIMCPEV(data, runData, runData.BatteryData)
 				: DoCalculateElectricRangesPEV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
 					data.Distance, CalculateChargingEfficiencyPEV(runData), runData.BatteryData);
 		}
@@ -2339,7 +2346,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 				distance: distance, chargingEfficiencyBattery: 1, batteryData);
 		}
 
-		private static ElectricRangesPEV DoCalculateElectricRangesPEV(WattSecond electricEnergyConsumptionSoCCorr, Meter distance, double chargingEfficiencyBattery, BatterySystemData runDataBatteryData)
+        private static ElectricRangesPEV DoCalculateElectricRangesFCHV(
+			WattSecond electricEnergyConsumptionSoCCorr, 
+			Meter distance, 
+			double chargingEfficiencyBattery, 
+			VectoRunData runData,
+			double deterioration)
+		{
+			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
+                runData.InputData.JobInputData.Vehicle.Components.ElectricStorage, 
+				runData.JobType, 
+				runData.VehicleData.OffVehicleCharging, 
+				deterioration);
+
+            return DoCalculateElectricRangesPEV(electricEnergyConsumptionSoCCorr, distance, chargingEfficiencyBattery, batteryData);
+        }
+
+        private static ElectricRangesPEV DoCalculateElectricRangesPEV(WattSecond electricEnergyConsumptionSoCCorr, Meter distance, double chargingEfficiencyBattery, BatterySystemData runDataBatteryData)
 		{
 			var batteryData = runDataBatteryData;
 			if (batteryData == null) {
@@ -2365,9 +2388,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
-		internal static ElectricRangesPEV DoCalculateElectricRangesIMCPEV(IModalDataContainer modData, VectoRunData runData)
+        internal static ElectricRangesPEV DoCalculateElectricRangesIMCFCHV(IModalDataContainer modData, VectoRunData runData, double deterioration)
 		{
-			var batteryData = runData.BatteryData;
+			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
+                runData.InputData.JobInputData.Vehicle.Components.ElectricStorage,
+                runData.JobType,
+                runData.VehicleData.OffVehicleCharging,
+                deterioration);
+
+            return DoCalculateElectricRangesIMCPEV(modData, runData, batteryData);
+        }
+
+        internal static ElectricRangesPEV DoCalculateElectricRangesIMCPEV(IModalDataContainer modData, VectoRunData runData, BatterySystemData batteryData)
+		{
 			if (batteryData == null) {
 				throw new VectoException("Battery Data is required for PEV range calculation");
 			}

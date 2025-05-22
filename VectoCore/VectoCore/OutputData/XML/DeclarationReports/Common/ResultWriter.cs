@@ -129,8 +129,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public override XElement GetElement(IResultEntry entry)
 		{
-			throw new NotImplementedException();
-		}
+            throw new NotImplementedException();
+        }
 
 		public override XElement GetElement(IOVCResultEntry entry)
 		{

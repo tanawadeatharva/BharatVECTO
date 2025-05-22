@@ -79,6 +79,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public class ResultEntry : IResultEntry
 		{
+			public const double BEGIN_OF_LIFE_DETERIORATION = 0;
+			public const double END_OF_LIFE_DETERIORATION = 0.1;
+
 			public ResultEntry()
 			{
 				Distance = double.MaxValue.SI<Meter>();
@@ -201,6 +204,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             public Meter HydrogenRange { get; set; }
 
+			public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; private set; }
+
+            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; private set; }
+
             public IFuelProperties AuxHeaterFuel { get; set; }
 
 			public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
@@ -259,8 +266,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
 				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_Final;
 
-				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
-					|| runData.JobType.IsFCHV())
+				if (runData.JobType.IsBatteryElectric())
 				{
 					var ranges = DeclarationData.CalculateElectricRangesPEV(runData, data);
 					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
@@ -269,10 +275,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
 			
 					var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
-					if (fc != null && !runData.JobType.IsFCHV()) {
-						ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
-						AuxHeaterFuel = fc.Fuel;
-					}
+                    if (fc != null)
+                    {
+                        ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
+                        AuxHeaterFuel = fc.Fuel;
+                    }
 				}
 
 				if (runData.EngineData?.Fuels.Any(x => x.FuelData.FuelType.IsHydrogenFuel()) ?? false)
@@ -288,7 +295,23 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ZeroCO2EmissionsRange = range;
                 }
 
-				if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S)) {
+				if (runData.JobType.IsFCHV())
+				{
+					var totalFc = FuelConsumptionFinal(FuelType.H2FC)?.TotalFuelConsumptionCorrected;
+
+                    var range = ((totalFc != null) && (totalFc > 0))
+                        ? Distance * (runData.VehicleData.H2StorageUsableCapacity / totalFc)
+                        : null;
+
+                    HydrogenRange = range;
+                    ZeroCO2EmissionsRange = range;
+
+                    BeginOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, BEGIN_OF_LIFE_DETERIORATION);
+                    EndOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, END_OF_LIFE_DETERIORATION);
+                    ElectricEnergyConsumption = (BeginOfLifeRanges.ElectricEnergyConsumption + EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+                }
+
+                if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV_IEPC)) {
 					var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 						? ModalResultField.P_retarder_in
 						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
@@ -363,11 +386,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ActualChargeDepletingRange = ActualChargeDepletingRange,
 					EquivalentAllElectricRange = EquivalentAllElectricRange,
 					ZeroCO2EmissionsRange = ZeroCO2EmissionsRange,
+					HydrogenRange = HydrogenRange,
 					AuxHeaterFuel = AuxHeaterFuel,
 					ZEV_FuelConsumption_AuxHtr = ZEV_FuelConsumption_AuxHtr,
 					ZEV_CO2 = ZEV_CO2,
 					PrimaryResult = PrimaryResult,
 					BatteryEfficiencyDischarge = BatteryEfficiencyDischarge,
+					BeginOfLifeRanges = BeginOfLifeRanges,
+					EndOfLifeRanges = EndOfLifeRanges
 				};
 			}
 		}

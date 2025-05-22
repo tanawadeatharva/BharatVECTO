@@ -471,11 +471,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: Vehicle.Components.ElectricStorage,
 					Vehicle.VehicleType,
-					Vehicle.OVC,
+                    Vehicle.OVC,
 					(bs) => runData.BatteryData = bs,
 					(sc) => runData.SuperCapData = sc);
 
-				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits, runData.BatteryData.CalculateVoltageCenterSoc(), null);
+                runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
+
+                runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits, runData.BatteryData.CalculateVoltageCenterSoc(), null);
 				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
 				{
 					runData.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
@@ -526,6 +528,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				
 				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
 				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
+
+				runData.OVCMode = ovcMode;
 
 				return runData;
 			}

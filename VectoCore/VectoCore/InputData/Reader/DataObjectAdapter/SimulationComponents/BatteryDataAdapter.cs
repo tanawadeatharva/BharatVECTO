@@ -19,7 +19,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
 			VectoSimulationJobType jobType,
-			bool ovc)
+			bool ovc,
+			double deterioration = DeclarationData.Battery.GenericDeterioration)
 		{
 			if (batteryInputData == null) {
 				return null;
@@ -62,10 +63,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				}
 			
 				var batteryData = new BatteryData() {
-					MinSOC = maxSoc  * ((1d/2) * DeclarationData.Battery.GenericDeterioration)
-							+ minSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration),
-					MaxSOC = (maxSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration)
-							+ minSoc * ((1d/2) * DeclarationData.Battery.GenericDeterioration)),
+					MinSOC = maxSoc  * ((1d/2) * deterioration)
+							+ minSoc * (1 - (1d/2) * deterioration),
+					MaxSOC = (maxSoc * (1 - (1d/2) * deterioration)
+							+ minSoc * ((1d/2) * deterioration)),
 					MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 					Capacity = b.Capacity,
 					InternalResistance =
@@ -148,7 +149,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#region Implementation of IElectricStorageAdapter
 
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
-			VectoSimulationJobType jobType, bool ovc)
+			VectoSimulationJobType jobType, bool ovc, double deterioration)
 		{
 			if (batteryInputData == null) {
 				return null;
