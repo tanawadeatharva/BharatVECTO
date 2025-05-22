@@ -47,7 +47,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
@@ -107,7 +106,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Mission = runData.Mission.MissionType;
 				LoadingType = runData.Loading;
 				FuelMode = runData.EngineData?.FuelMode ?? 0;
-				FuelData = runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
 				Payload = runData.VehicleData.Loading;
 				TotalVehicleMass = runData.VehicleData.TotalVehicleMass;
 				CargoVolume = runData.VehicleData.CargoVolume;
@@ -117,6 +115,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
 				VectoRunData = runData;
+
+				FuelData = runData.JobType.IsFCHV() ?
+					runData.FuelCellSystemData.Fuel :
+					runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
 
 				SetResultData(runData, modalData, 0.0);
 			}
@@ -257,8 +259,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
 				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_Final;
 
-				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-						VectoSimulationJobType.IEPC_E)) {
+				if (runData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
+					|| runData.JobType.IsFCHV())
+				{
 					var ranges = DeclarationData.CalculateElectricRangesPEV(runData, data);
 					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
@@ -266,10 +269,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
 			
 					var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
-					if (fc != null) {
+					if (fc != null && !runData.JobType.IsFCHV()) {
 						ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
 						AuxHeaterFuel = fc.Fuel;
-
 					}
 				}
 
@@ -317,6 +319,56 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public void SetResultWeightingFactor(double weightingFactor)
 			{
 				WeightingFactor = weightingFactor;
+			}
+
+			public IResultEntry Clone(OvcHevMode ovcMode)
+			{
+				return new ResultEntry()
+				{
+					OVCMode = ovcMode,
+					VectoRunData = VectoRunData,
+					Mission = Mission,
+					LoadingType = LoadingType,
+					FuelMode = FuelMode,
+					FuelData = FuelData,
+					Payload = Payload,
+					TotalVehicleMass = TotalVehicleMass,
+					CargoVolume = CargoVolume,
+					PassengerCount = PassengerCount,
+					VehicleClass = VehicleClass,
+					MaxChargingPower = MaxChargingPower,
+					AverageSpeed = AverageSpeed,
+					AverageDrivingSpeed = AverageDrivingSpeed,
+					EnergyConsumptionTotal = EnergyConsumptionTotal,
+					ElectricEnergyConsumption = ElectricEnergyConsumption,
+					CO2Total = CO2Total,
+					CorrectedFinalFuelConsumption = CorrectedFinalFuelConsumption,
+					Distance = Distance,
+					GearshiftCount = GearshiftCount,
+					FullLoadPercentage = FullLoadPercentage,
+					MaxDeceleration = MaxDeceleration,
+					MaxAcceleration = MaxAcceleration,
+					MaxSpeed = MaxSpeed,
+					MinSpeed = MinSpeed,
+					Error = Error,
+					Status = Status,
+					StackTrace = StackTrace,
+					BatteryData = BatteryData,
+					EngineSpeedDrivingMin = EngineSpeedDrivingMin,
+					EngineSpeedDrivingAvg = EngineSpeedDrivingAvg,
+					EngineSpeedDrivingMax = EngineSpeedDrivingMax,
+					AverageGearboxEfficiency = AverageGearboxEfficiency,
+					AverageAxlegearEfficiency = AverageAxlegearEfficiency,
+					WeightingFactor = WeightingFactor,
+					ActualChargeDepletingRange = ActualChargeDepletingRange,
+					EquivalentAllElectricRange = EquivalentAllElectricRange,
+					ZeroCO2EmissionsRange = ZeroCO2EmissionsRange,
+					AuxHeaterFuel = AuxHeaterFuel,
+					ZEV_FuelConsumption_AuxHtr = ZEV_FuelConsumption_AuxHtr,
+					ZEV_CO2 = ZEV_CO2,
+					PrimaryResult = PrimaryResult,
+					BatteryEfficiencyDischarge = BatteryEfficiencyDischarge,
+				};
 			}
 		}
 

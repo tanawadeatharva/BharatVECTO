@@ -448,8 +448,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
-						var simulationRunData = CreateVectoRunData(mission, loading, null);
-						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
+						var ovcMode = vehicle.OVC ? OvcHevMode.ChargeSustaining : OvcHevMode.NotApplicable;
+
+						var simulationRunData = CreateVectoRunData(mission, loading, null, ovcMode);
 						yield return simulationRunData;
 					}
 				}
@@ -470,7 +471,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: Vehicle.Components.ElectricStorage,
 					Vehicle.VehicleType,
-					true,
+					Vehicle.OVC,
 					(bs) => runData.BatteryData = bs,
 					(sc) => runData.SuperCapData = sc);
 
@@ -517,7 +518,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					? municipalPtoTransmissionData
 					: ptoTransmissionData;
 
+				runData.OVCMode = ovcMode;
+				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OVC)
+				{
+					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
+				}
+				
 				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
+				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 
 				return runData;
 			}
@@ -536,7 +544,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					/// Comment from [1]:
 					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
-					// todo amogoda: m12. create FcAdapter "wrapper".
 					iterationRunData.BatteryData = engDataAdapter.CreateFuelCellPreProcessingBattery(
 						fuelCellSystemData,
 						iterationRunData.BatteryData,

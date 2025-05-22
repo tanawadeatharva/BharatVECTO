@@ -149,6 +149,8 @@ namespace TUGraz.VectoCore.OutputData
 		double BatteryEfficiencyDischarge { get; set; }
 		
 		void SetResultWeightingFactor(double weightingFactor);
+
+		IResultEntry Clone(OvcHevMode ovcMode);
 	}
 
 	public interface IWeightedResult
