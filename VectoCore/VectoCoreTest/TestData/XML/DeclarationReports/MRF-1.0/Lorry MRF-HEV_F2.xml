@@ -15,7 +15,7 @@
 			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 			<HybridElectricHDV>false</HybridElectricHDV>
 			<SleeperCab>true</SleeperCab>
-			<FCHVArchitecture>E2</FCHVArchitecture>
+			<FCHVArchitecture>F2</FCHVArchitecture>
 			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
 			<DynamicChargingTechnology>String</DynamicChargingTechnology>
 			<ADAS>
