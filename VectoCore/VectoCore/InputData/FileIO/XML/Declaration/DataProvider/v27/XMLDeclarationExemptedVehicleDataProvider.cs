@@ -1,4 +1,10 @@
-﻿using System.Xml.Linq;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_V27_XML
+#endif
+
+//#define PROHIBIT_V27_XML
+
+using System.Xml.Linq;
 using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -10,10 +16,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
     public abstract class AbstractXMLDeclarationExemptedVehicleDataProviderV27 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
     {
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
-
+        
         public AbstractXMLDeclarationExemptedVehicleDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
             base(jobData, xmlNode, sourceFile)
-        {}
+        {
+            CheckVehicleAllowed();
+        }
+
+        protected virtual void CheckVehicleAllowed()
+        {
+#if PROHIBIT_V27_XML
+            throw new VectoException("this v2.7 vehicle is not supported yet.");
+#endif
+        }
 
         public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");
 
