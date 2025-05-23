@@ -103,13 +103,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public XMLDeclaration_PEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile)
         {
-			string FCHVPrefix = "F";
-			if (!OVC && PowertrainPositionPrefix != FCHVPrefix)
+			if (!OVC)
             {
                 throw new VectoException("OVC must be set to true for PEVs.");
             }
 
-            if (!BatteryOnlyMode && PowertrainPositionPrefix != FCHVPrefix)
+            if (!BatteryOnlyMode)
             {
                 throw new VectoException("BatteryOnlyMode must be set to true for PEVs.");
             }
@@ -144,7 +143,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override IPTOTransmissionInputData PTOTransmissionInputData => null;
     }
 
-    public class XMLDeclaration_FCHV_HeavyLorry_DataProviderV27 : XMLDeclaration_PEV_HeavyLorry_DataProviderV27
+    public class XMLDeclaration_FCHV_HeavyLorry_DataProviderV27 : AbstractXMLVehicleDataProviderV27
     {
 		public new const string XSD_TYPE = "Vehicle_FCHV_Fx_HeavyLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -153,22 +152,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
 		public XMLDeclaration_FCHV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile)
-		{
-		}
+		{}
 
-		#region Overrides of XMLDeclarationHevPxHeavyLorryDataProviderV24
+        public override bool OVC => GetBool("OVC");
 
-		public override TableData BoostingLimitations => null;
+        public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
+
+        public override DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+
+        public override TableData BoostingLimitations => null;
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
-
-		#endregion
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
 
         public override bool HybridElectricHDV => true;
-
-        public override ArchitectureID ArchitectureID => base.ArchitectureID;
     }
 
 	public class XMLDeclaration_FCHV_IEPC_HeavyLorry_DataProviderV27 : XMLDeclaration_FCHV_HeavyLorry_DataProviderV27

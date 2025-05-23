@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
     }
 
-    public class XMLDeclaration_FCHV_MediumLorry_DataProviderV27 : XMLDeclaration_PEV_MediumLorry_DataProviderV27
+    public class XMLDeclaration_FCHV_MediumLorry_DataProviderV27 : AbstractXMLDeclarationMediumLorryVehicleDataProviderV27
     {
 		public new const string XSD_TYPE = "Vehicle_FCHV_Fx_MediumLorryDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -170,7 +170,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
 		
 		public override bool HybridElectricHDV => true;
-	}
+
+        public override bool OVC => GetBool("OVC");
+
+        public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
+
+        public override DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
+
+        public override IList<ITorqueLimitInputData> TorqueLimits => null;
+    }
 
 	public class XMLDeclaration_FCHV_IEPC_MediumLorry_DataProviderV27 : XMLDeclaration_FCHV_MediumLorry_DataProviderV27
     {
@@ -181,5 +189,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 			: base(jobData, xmlNode, sourceFile) { }
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
-	}
+
+        public override XmlElement PTONode => null;
+
+        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+    }
 }
