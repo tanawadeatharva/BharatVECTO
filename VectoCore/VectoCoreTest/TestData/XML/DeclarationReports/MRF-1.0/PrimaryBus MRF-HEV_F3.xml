@@ -13,7 +13,7 @@
 			<VehicleGroupCO2>a</VehicleGroupCO2>
 			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 			<HybridElectricHDV>false</HybridElectricHDV>
-			<FCHVArchitecture>E2</FCHVArchitecture>
+			<FCHVArchitecture>F2</FCHVArchitecture>
 			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
 			<DynamicChargingTechnology>String</DynamicChargingTechnology>
 			<ADAS>
