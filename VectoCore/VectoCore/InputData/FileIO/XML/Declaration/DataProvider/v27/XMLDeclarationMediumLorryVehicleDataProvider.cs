@@ -47,6 +47,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             base(jobData, xmlNode,sourceFile)
         { }
 
+        protected override void CheckVehicleAllowed()
+        {
+            //Allow here all conventionals and disallow non-H2 fueled at job level.
+        }
+
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
     }
 
@@ -164,6 +169,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public XMLDeclaration_FCHV_MediumLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile) { }
+
+        protected override void CheckVehicleAllowed()
+        {
+            //Do nothing -> Vehicle Allowed
+        }
 
         public override string PowertrainPositionPrefix => "F";
 

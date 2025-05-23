@@ -1,8 +1,10 @@
 ﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
 #define PROHIBIT_OLD_XML
+#define PROHIBIT_V27_XML
 #endif
 
 //#define PROHIBIT_OLD_XML
+//#define PROHIBIT_V27_XML
 
 /*
 * This file is part of VECTO.
@@ -970,7 +972,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			string sourceFile)
 			: base(jobData, xmlNode, sourceFile)
 		{
+			CheckVehicleAllowed();
 		}
+
+        protected virtual void CheckVehicleAllowed()
+        {
+#if PROHIBIT_V27_XML
+            throw new VectoException("this v2.7 vehicle is not supported yet.");
+#endif
+        }
 
         public override string PowertrainPositionPrefix => null;
 

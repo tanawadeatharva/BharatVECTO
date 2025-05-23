@@ -19,7 +19,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
         public XMLDeclaration_Conventional_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) { }
+            : base(jobData, xmlNode, sourceFile) 
+        {}
+
+        protected override void CheckVehicleAllowed()
+        {
+            //Allow here all conventionals and disallow non-H2 fueled at job level.
+        }
 
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
     }
@@ -153,6 +159,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 		public XMLDeclaration_FCHV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile)
 		{}
+
+        protected override void CheckVehicleAllowed()
+        {
+            //Do nothing -> Vehicle Allowed
+        }
 
         public override bool OVC => GetBool("OVC");
 
