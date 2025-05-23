@@ -432,7 +432,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
             Assert.AreEqual(true, vehicle.SleeperCab);
             Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(1.0.SI<Kilogram>(), vehicle.H2StorageUsableCapacity);
+            Assert.AreEqual(80.0.SI<Kilogram>(), vehicle.H2StorageUsableCapacity);
             Assert.AreEqual(HydrogenStorageTechnology.Compressed, vehicle.HydrogenStorageTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.WithEngineStop, vehicle.ADAS.EcoRoll);
