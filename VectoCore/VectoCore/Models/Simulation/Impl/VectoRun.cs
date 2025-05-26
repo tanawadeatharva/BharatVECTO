@@ -102,7 +102,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Log.Info("VectoJob preprocessing.");
 
-			// todo amogoda: preprocessors
 			foreach (var preprocessing in Container.GetPreprocessingRuns) {
 				preprocessing.RunPreprocessing();
 			}

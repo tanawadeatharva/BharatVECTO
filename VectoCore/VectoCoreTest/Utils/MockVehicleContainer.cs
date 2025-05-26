@@ -292,8 +292,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void FinishSimulation() {}
 
 		public void FinishSimulationRun(Exception e) {}
-		public void StartSimulationRun()
-		{ }
+		
+		public void StartSimulationRun() { }
 
 		public Watt SetAxlegearLoss
 		{

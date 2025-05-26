@@ -638,14 +638,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				iterativeRunStrategy.Update = (modData, iterationRunData) =>
 				{
-					var engDataAdapter = new EngineeringDataAdapter();
+					var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
 
 					/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
 					/// Comment from [1]:
 					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
-					// todo amogoda: m12. create FcAdapter "wrapper".
-					iterationRunData.BatteryData = engDataAdapter.CreateFuelCellPreProcessingBattery(
+					iterationRunData.BatteryData = fchvDataAdapter.CreateFuelCellPreProcessingBattery(
 						fuelCellData,
 						iterationRunData.BatteryData,
 						out var fcBatteries);
@@ -657,14 +656,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					iterationRunData.JobType = FuelCellJobType;
 					iterationRunData.ModFileSuffix = string.Empty;
 					iterationRunData.FuelCellSystemData = fuelCellData;
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
+					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection()
+					{
+						FCHVElectricEnergyConsumptionSoC = FCHVPostProcessingCorrection.CalculateElectricEnergyConsumption(modData),
+					};
 
 					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-						engDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
-					iterationRunData.FuelCellSystemData.FuelCellShareMap = engDataAdapter.CreateFuelCellShareMap(fuelCellData);
+						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
+					iterationRunData.FuelCellSystemData.FuelCellShareMap = fchvDataAdapter.CreateFuelCellShareMap(fuelCellData);
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;
+					runData.Iteration++;
 				};
 
 				return iterativeRunStrategy;

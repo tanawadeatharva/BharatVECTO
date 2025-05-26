@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				VectoRunData = runData;
 
 				FuelData = runData.JobType.IsFCHV() ?
-					runData.FuelCellSystemData.Fuel :
+					runData.FuelCellSystemData?.Fuel :
 					runData.EngineData?.Fuels.Select(x => x.FuelData).ToList() ?? new List<IFuelProperties>();
 
 				SetResultData(runData, modalData, 0.0);
