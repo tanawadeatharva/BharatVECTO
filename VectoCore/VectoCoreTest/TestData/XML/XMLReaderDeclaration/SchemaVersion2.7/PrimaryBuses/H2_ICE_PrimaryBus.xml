@@ -17,18 +17,18 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>700</IdlingSpeed>
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ADAS>
-			<EngineStopStart>false</EngineStopStart>
+			<EngineStopStart>true</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
-			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits>
 			<Entry gear="6" maxTorque="1800"/>
@@ -2196,8 +2196,8 @@
 						<CompressorDrive>mechanically</CompressorDrive>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
-						<SmartCompressionSystem>false</SmartCompressionSystem>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartCompressionSystem>true</SmartCompressionSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>

@@ -18,13 +18,13 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
 		<RetarderType>None</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>P2</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
@@ -17207,7 +17207,7 @@
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology>conventional</AlternatorTechnology>
-						<SupplyFromHEVPossible>false</SupplyFromHEVPossible>
+						<SupplyFromHEVPossible>true</SupplyFromHEVPossible>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
@@ -17215,7 +17215,7 @@
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
 						<SmartCompressionSystem>true</SmartCompressionSystem>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>

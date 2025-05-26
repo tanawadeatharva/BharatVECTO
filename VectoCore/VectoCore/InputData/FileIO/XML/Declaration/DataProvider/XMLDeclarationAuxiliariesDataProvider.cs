@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			: base(vehicle, componentNode, sourceFile) { }
 	}
 
-    public class XMLDeclarationAuxiliariesLorryDataProviderV27 : XMLDeclarationAuxiliariesDataProviderV20
+    public class XMLDeclarationAuxiliaries_Lorry_DataProviderV27 : XMLDeclarationAuxiliariesDataProviderV20
     {
         public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         public static readonly string QUALIFIED_XSD_TYPE_PEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_TYPE);
         public static readonly string QUALIFIED_XSD_TYPE_FCHV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_FCHV_TYPE);
 
-        public XMLDeclarationAuxiliariesLorryDataProviderV27(
+        public XMLDeclarationAuxiliaries_Lorry_DataProviderV27(
             IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
             : base(vehicle, componentNode, sourceFile) { }
     }

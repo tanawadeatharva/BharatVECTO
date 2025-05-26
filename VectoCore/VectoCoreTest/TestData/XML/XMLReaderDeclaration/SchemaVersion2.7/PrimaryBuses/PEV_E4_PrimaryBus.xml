@@ -19,22 +19,22 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<ArchitectureID>E3</ArchitectureID>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<ArchitectureID>E4</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
 		</ADAS>
 		<ElectricMotorTorqueLimits>
 			<ElectricMachine>
-				<Position>2</Position>
+				<Position>4</Position>
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
@@ -53,7 +53,7 @@
 		</ElectricMotorTorqueLimits>
 		<Components xsi:type="Components_PEV-E4_PrimaryBusType">
 			<ElectricMachine>
-				<PowertrainPosition>2</PowertrainPosition>
+				<PowertrainPosition>4</PowertrainPosition>
 				<Count>2</Count>
 				<ElectricMachineSystem>
 					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
@@ -2275,7 +2275,7 @@
 					</SteeringPump>
 					<PneumaticSystem>
 						<CompressorDrive>electrically</CompressorDrive>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 					</PneumaticSystem>
 					<HVAC>

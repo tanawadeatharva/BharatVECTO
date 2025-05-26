@@ -19,16 +19,16 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
-		<AngledriveType>None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<AngledriveType>Separate Angledrive</AngledriveType>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>E2</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
@@ -5557,7 +5557,7 @@
 					</SteeringPump>
 					<PneumaticSystem>
 						<CompressorDrive>electrically</CompressorDrive>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 					</PneumaticSystem>
 					<HVAC>

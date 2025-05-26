@@ -21,11 +21,5 @@
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<SumNetPower>350000</SumNetPower>
 		<Technology>FCV Article 9 exempted</Technology>
-		<MonitoringData>
-			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
-			<Vehicle>
-				<Make>##VEHICLE_MAKE##</Make>
-			</Vehicle>
-		</MonitoringData>
 	</Vehicle>
 </tns:VectoInputDeclaration>
