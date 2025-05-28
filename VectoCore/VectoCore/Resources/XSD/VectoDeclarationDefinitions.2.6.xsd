@@ -1035,7 +1035,7 @@
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
 								<xs:enumeration value="Measured"/>
-								<xs:enumeration value="Standard Values"/>
+								<xs:enumeration value="Standard values"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
