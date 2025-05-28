@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -1809,7 +1810,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
+		public static int GetDeclarationReportFinalResultEntryIndex<T>(List<T> results) where T:IResultEntry
+		{
+			if (results.Any(r => r.OVCMode == OvcHevMode.ChargeSustaining)) {
+				return results.Select((r, idx) => Tuple.Create(Math.Abs(r.DeltaSoC), idx)).MinBy(x => x.Item1).Item2;
+			}
+
+			return results.Count - 1;
+		}
+
+		public static int GetSumDataFinalResultEntryIndex(List<DataRow> results)
+		{
+			if (results.Any(r => r.Field<string>(SumDataFields.OVCHEVMode) == OvcHevMode.ChargeSustaining.ToString())) {
+				return results
+					.Select((r, idx) =>
+						Tuple.Create(
+							Math.Abs(r.Field<double>(SumDataFields.REESS_EndSoC) -
+									r.Field<double>(SumDataFields.REESS_StartSoC)), idx)).MinBy(x => x.Item1).Item2;
+			}
+
+			return results.Count - 1;
+		}
+
+        public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
 		{
 			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
 			//CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);

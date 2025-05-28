@@ -380,14 +380,36 @@ namespace TUGraz.VectoCore.OutputData
 			return Tuple.Create<ModalResultField[], WriteFuelEntry>(null, w);
 		}
 
+		public static int GetSumDataSortingValue(int jobNbr, int runNbr, int iterationCnt)
+		{
+			var iteration = iterationCnt < 0 ? 99 : iterationCnt;
+			return jobNbr * 1000000 + runNbr * 1000 + iteration;
+		}
+
+		public static string GetSumDataJobID(int jobNbr, int runNbr, int iterationCnt)
+		{
+			var iteration = "";
+			if (iterationCnt < 0) {
+				iteration = "F";
+			}
+
+			if (iterationCnt > 0) {
+				iteration = iterationCnt.ToString();
+			}
+
+			return $"{jobNbr}-{runNbr}-{iteration}";
+		}
+
 		public static readonly Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>> SumDataValue =
 			new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 				// common fields
-				{ SORT, SumFunc((r, m) => r.JobNumber * 1000 + r.RunNumber) }, {
+				{ SORT, SumFunc((r, m) => GetSumDataSortingValue(r.JobNumber, r.RunNumber, r.Iteration))},
+				{
 					JOB,
-					SumFunc((r, m) => $"{r.JobNumber}-{r.RunNumber}-{(r.Iteration != 0 ? r.Iteration.ToString() : "")}")
+					SumFunc((r, m) => GetSumDataJobID(r.JobNumber, r.RunNumber, r.Iteration))
 				},
-				{ INPUTFILE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) }, {
+				{ INPUTFILE, SumFunc((r, m) => SummaryDataContainer.ReplaceNotAllowedCharacters(r.JobName)) },
+				{
 					CYCLE,
 					SumFunc((r, m) =>
 						SummaryDataContainer.ReplaceNotAllowedCharacters(r.Cycle.Name +
@@ -396,13 +418,13 @@ namespace TUGraz.VectoCore.OutputData
 				{ STATUS, SumFunc((r, m) => m.RunStatus) },
 				{ OVCHEVMode, SumFunc((r, m) => r.OVCMode) },
 				{ TIME, SumFunc((r, m) => (ConvertedSI)m.Duration, ModalResultField.time) },
-				{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter(), ModalResultField.dist) }, {
+				{ DISTANCE, SumFunc((r, m) => m.Distance?.ConvertToKiloMeter(), ModalResultField.dist) },
+				{
 					SPEED,
 					SumFunc((r, m) => m.Speed()?.ConvertToKiloMeterPerHour(), ModalResultField.dist,
 						ModalResultField.time)
 				},
 				{ ALTITUDE_DELTA, SumFunc((r, m) => (ConvertedSI)m.AltitudeDelta(), ModalResultField.altitude) },
-
 
 				// Vehicle 
 				{ VEHICLE_FUEL_TYPE, SumFunc((r, m) => m.FuelData.Select(x => x.GetLabel()).Join()) }, {
