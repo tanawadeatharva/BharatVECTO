@@ -13,13 +13,12 @@
 		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
 		<NgTankSystem>Compressed</NgTankSystem>
-		<!-- optional -->
 		<NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>10</NumberPassengersStandingLowerDeck>
 		<NumberPassengerSeatsUpperDeck>11</NumberPassengerSeatsUpperDeck>
 		<NumberPassengersStandingUpperDeck>2</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CB</BodyworkCode>
-		<LowEntry>false</LowEntry>
+		<LowEntry>true</LowEntry>
 		<HeightIntegratedBody>2500</HeightIntegratedBody>
 		<VehicleLength>9500</VehicleLength>
 		<VehicleWidth>2500</VehicleWidth>
@@ -34,6 +33,8 @@
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 			<APTEcoRollReleaseLockupClutch>true</APTEcoRollReleaseLockupClutch>
 		</ADAS>
+		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
 			<AirDrag>
 				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -61,11 +62,11 @@
 				<Data xsi:type="AUX_Conventional_CompletedBusType">
 					<ElectricSystem>
 						<LEDLights>
-							<Interiorlights>false</Interiorlights>
+							<Interiorlights>true</Interiorlights>
 							<Dayrunninglights>true</Dayrunninglights>
 							<Positionlights>true</Positionlights>
 							<Brakelights>true</Brakelights>
-							<Headlights>false</Headlights>
+							<Headlights>true</Headlights>
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
@@ -79,7 +80,7 @@
 							<Heating>none</Heating>
 						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>50000</AuxiliaryHeaterPower>
-						<DoubleGlazing>false</DoubleGlazing>
+						<DoubleGlazing>true</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
 						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
 					</HVAC>

@@ -20,13 +20,12 @@
 		<AirdragModifiedMultistep>true</AirdragModifiedMultistep>
 		<ClassBus>II+III</ClassBus>
 		<NgTankSystem>Compressed</NgTankSystem>
-		<!-- optional -->
 		<NumberPassengerSeatsLowerDeck>1</NumberPassengerSeatsLowerDeck>
 		<NumberPassengersStandingLowerDeck>10</NumberPassengersStandingLowerDeck>
 		<NumberPassengerSeatsUpperDeck>11</NumberPassengerSeatsUpperDeck>
 		<NumberPassengersStandingUpperDeck>2</NumberPassengersStandingUpperDeck>
 		<BodyworkCode>CB</BodyworkCode>
-		<LowEntry>false</LowEntry>
+		<LowEntry>true</LowEntry>
 		<HeightIntegratedBody>2500</HeightIntegratedBody>
 		<VehicleLength>9500</VehicleLength>
 		<VehicleWidth>2500</VehicleWidth>
@@ -34,11 +33,13 @@
 		<DoorDriveTechnology>electric</DoorDriveTechnology>
 		<VehicleDeclarationType>final</VehicleDeclarationType>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
+		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
 			<AirDrag>
 				<v2.0:Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -66,11 +67,11 @@
 				<Data xsi:type="AUX_xEV_CompletedBusType">
 					<ElectricSystem>
 						<LEDLights>
-							<Interiorlights>false</Interiorlights>
+							<Interiorlights>true</Interiorlights>
 							<Dayrunninglights>true</Dayrunninglights>
 							<Positionlights>true</Positionlights>
 							<Brakelights>true</Brakelights>
-							<Headlights>false</Headlights>
+							<Headlights>true</Headlights>
 						</LEDLights>
 					</ElectricSystem>
 					<HVAC>
@@ -84,12 +85,12 @@
 							<Heating>none</Heating>
 						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>50000</AuxiliaryHeaterPower>
-						<DoubleGlazing>false</DoubleGlazing>
+						<DoubleGlazing>true</DoubleGlazing>
 						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
 						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
-						<WaterElectricHeater>false</WaterElectricHeater>
-						<AirElectricHeater>false</AirElectricHeater>
-						<OtherHeatingTechnology>false</OtherHeatingTechnology>
+						<WaterElectricHeater>true</WaterElectricHeater>
+						<AirElectricHeater>true</AirElectricHeater>
+						<OtherHeatingTechnology>true</OtherHeatingTechnology>
 					</HVAC>
 				</Data>
 			</Auxiliaries>

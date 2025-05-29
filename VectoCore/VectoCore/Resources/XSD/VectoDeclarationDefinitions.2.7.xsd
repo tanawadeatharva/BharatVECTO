@@ -30,6 +30,7 @@
 	10-05-2025: Replaced AUX_Component_FCHV_LorryType with AUX_Component_PEV_Lorry_Type because AUX_Component_FCHV_LorryType was wrong and redundant.
 	15-05-2025: Added H2StorageUsableCapacityType for H2StorageUsableCapacity
 	16-05-2025: Added H2 elements to PHEV and SHEV vehicles.
+	27-05-2025: Making new fields of completed buses optional (multiple OEMs can be involved in completed buses).
 	-->
 
 	<!--                      JOB                           -->
@@ -1459,7 +1460,7 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
+					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType" minOccurs="0" />
 					<xs:element name="ADAS" type="ADAS_HEV_Type" minOccurs="0"/>
 					<xs:sequence minOccurs="0">
 						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
@@ -1507,7 +1508,7 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
+					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType" minOccurs="0" />
 					<xs:element name="ADAS" type="ADAS_PEV_Type" minOccurs="0"/>
 					<xs:element name="Components" type="Components_xEV_CompletedBusType" minOccurs="0"/>
 					<xs:element name="MonitoringData" type="Completed_DataType" minOccurs="0"/>
@@ -1551,9 +1552,9 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
-					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
-					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType"/>
+					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType" minOccurs="0" />
+					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType" minOccurs="0" />
+					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType" minOccurs="0" />
 					<xs:element name="ADAS" type="ADAS_PEV_Type" minOccurs="0"/>
 					<xs:element name="Components" type="Components_xEV_CompletedBusType" minOccurs="0"/>
 					<xs:element name="MonitoringData" type="Completed_DataType" minOccurs="0"/>
@@ -2427,7 +2428,7 @@
 					<xs:documentation>P239 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="SimulationToolLicenseNumber" type="SimulationToolLicenseNumberType"/>
+			<xs:element name="SimulationToolLicenseNumber" type="SimulationToolLicenseNumberType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
 	<xs:group name="Vehicle_CompletedBusParametersSequenceGroup">

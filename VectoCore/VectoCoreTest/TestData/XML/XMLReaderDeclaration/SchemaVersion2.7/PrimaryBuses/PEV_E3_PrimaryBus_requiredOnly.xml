@@ -8,9 +8,8 @@
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd" 
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3"
-	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6"
 	>
-	<Vehicle xsi:type="Vehicle_FCHV_Fx_PrimaryBusDeclarationType" id="F3_PrimaryBus">
+	<Vehicle xsi:type="Vehicle_PEV_PrimaryBusDeclarationType" id="PEV_E3_PrimaryBus">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>PEV Heavy Lorry E2</Model>
@@ -25,138 +24,16 @@
 		<RetarderType>None</RetarderType>
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<ArchitectureID>F3</ArchitectureID>
+		<ArchitectureID>E3</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
 		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
-			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
+			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
 		</ADAS>
-		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
-		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
-		<Components xsi:type="Components_FCHV_F3_PrimaryBusType">
-			<FuelCellSystem>
-				<FuelCellModule>
-					<Count>1</Count>
-					<FuelCell>
-						<Data xsi:type="FuelCellDataDeclarationType" id="FuelCell" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
-							<Manufacturer>a</Manufacturer>
-							<Model>a</Model>
-							<CertificationNumber>token</CertificationNumber>
-							<Date>2017-01-01T00:00:00Z</Date>
-							<AppVersion>aaaaa</AppVersion>
-							<CertificationMethod>Measured</CertificationMethod>
-							<FCSRatedPower>15</FCSRatedPower>
-							<FuelCellPowerOutputConsumptionMap>
-								<Entry powerOutput='125.00' fuelConsumption='0.00' />
-								<Entry powerOutput='250.00' fuelConsumption='0.00' />
-								<Entry powerOutput='500.00' fuelConsumption='0.00' />
-								<Entry powerOutput='1000.00' fuelConsumption='0.00' />
-							</FuelCellPowerOutputConsumptionMap>
-						</Data>
-						<v2.6:Signature>
-							<di:Reference URI="#BAT-asdf">
-								<di:Transforms>
-									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-								</di:Transforms>
-								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
-							</di:Reference>
-						</v2.6:Signature>
-					</FuelCell>
-					<MinPower>10000</MinPower>
-					<MaxPower>100000</MaxPower>
-				</FuelCellModule>
-			</FuelCellSystem>
-			<ElectricEnergyStorage>
-				<Battery>
-					<StringID>0</StringID>
-					<REESS>
-						<v2.3:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
-							<Manufacturer>a</Manufacturer>
-							<Model>a</Model>
-							<CertificationNumber>token</CertificationNumber>
-							<Date>2017-01-01T00:00:00Z</Date>
-							<AppVersion>aaaaa</AppVersion>
-							<CertificationMethod>Measured</CertificationMethod>
-							<BatteryType>HPBS</BatteryType>
-							<RatedCapacity>324.00</RatedCapacity>
-							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
-							<JunctionboxIncluded>true</JunctionboxIncluded>
-							<TestingTemperature>20</TestingTemperature>
-							<OCV>
-								<Entry SoC="0" OCV="673.50"/>
-								<Entry SoC="100" OCV="750.20"/>
-							</OCV>
-							<InternalResistance>
-								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
-								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
-							</InternalResistance>
-							<CurrentLimits>
-								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
-								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
-							</CurrentLimits>
-						</v2.3:Data>
-						<v2.3:Signature>
-							<di:Reference URI="#BAT-asdf">
-								<di:Transforms>
-									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-								</di:Transforms>
-								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
-							</di:Reference>
-						</v2.3:Signature>
-					</REESS>
-					<SOCmin>8.0</SOCmin>
-					<SOCmax>92.0</SOCmax>
-				</Battery>
-				<Battery>
-					<StringID>1</StringID>
-					<REESS>
-						<v2.3:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
-							<Manufacturer>a</Manufacturer>
-							<Model>a</Model>
-							<CertificationNumber>token</CertificationNumber>
-							<Date>2017-01-01T00:00:00Z</Date>
-							<AppVersion>aaaaa</AppVersion>
-							<CertificationMethod>Measured</CertificationMethod>
-							<BatteryType>HPBS</BatteryType>
-							<RatedCapacity>324.00</RatedCapacity>
-							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
-							<JunctionboxIncluded>true</JunctionboxIncluded>
-							<TestingTemperature>20</TestingTemperature>
-							<OCV>
-								<Entry SoC="0" OCV="673.50"/>
-								<Entry SoC="100" OCV="750.20"/>
-							</OCV>
-							<InternalResistance>
-								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
-								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
-							</InternalResistance>
-							<CurrentLimits>
-								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
-								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
-							</CurrentLimits>
-						</v2.3:Data>
-						<v2.3:Signature>
-							<di:Reference URI="#BAT-asdf">
-								<di:Transforms>
-									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-								</di:Transforms>
-								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
-							</di:Reference>
-						</v2.3:Signature>
-					</REESS>
-					<SOCmin>8.0</SOCmin>
-					<SOCmax>92.0</SOCmax>
-				</Battery>
-			</ElectricEnergyStorage>
+		<Components xsi:type="Components_PEV-E3_PrimaryBusType">
 			<ElectricMachine>
-				<PowertrainPosition>2</PowertrainPosition>
+				<PowertrainPosition>3</PowertrainPosition>
 				<Count>2</Count>
 				<ElectricMachineSystem>
 					<v2.3:Data xsi:type="ElectricMachineSystemMeasuredDataDeclarationType" id="EM-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
@@ -2205,6 +2082,88 @@
 					</v2.3:Signature>
 				</ElectricMachineSystem>
 			</ElectricMachine>
+			<ElectricEnergyStorage>
+				<Battery>
+					<StringID>0</StringID>
+					<REESS>
+						<v2.3:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+							<Manufacturer>a</Manufacturer>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<Date>2017-01-01T00:00:00Z</Date>
+							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
+							<BatteryType>HPBS</BatteryType>
+							<RatedCapacity>324.00</RatedCapacity>
+							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+							<JunctionboxIncluded>true</JunctionboxIncluded>
+							<TestingTemperature>20</TestingTemperature>
+							<OCV>
+								<Entry SoC="0" OCV="673.50"/>
+								<Entry SoC="100" OCV="750.20"/>
+							</OCV>
+							<InternalResistance>
+								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
+								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
+							</InternalResistance>
+							<CurrentLimits>
+								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+							</CurrentLimits>
+						</v2.3:Data>
+						<v2.3:Signature>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
+							</di:Reference>
+						</v2.3:Signature>
+					</REESS>
+				</Battery>
+				<Battery>
+					<StringID>1</StringID>
+					<REESS>
+						<v2.3:Data id="BAT-asdf" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xsi:type="BatterySystemDataType">
+							<Manufacturer>a</Manufacturer>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<Date>2017-01-01T00:00:00Z</Date>
+							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
+							<BatteryType>HPBS</BatteryType>
+							<RatedCapacity>324.00</RatedCapacity>
+							<ConnectorsSubsystemsIncluded>true</ConnectorsSubsystemsIncluded>
+							<JunctionboxIncluded>true</JunctionboxIncluded>
+							<TestingTemperature>20</TestingTemperature>
+							<OCV>
+								<Entry SoC="0" OCV="673.50"/>
+								<Entry SoC="100" OCV="750.20"/>
+							</OCV>
+							<InternalResistance>
+								<Entry SoC="0" R_2="10.00" R_10="11.00" R_20="12.00"/>
+								<Entry SoC="100" R_2="12.00" R_10="14.00" R_20="16.00"/>
+							</InternalResistance>
+							<CurrentLimits>
+								<Entry SoC="0" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+								<Entry SoC="100" maxChargingCurrent="500.00" maxDischargingCurrent="500.00"/>
+							</CurrentLimits>
+						</v2.3:Data>
+						<v2.3:Signature>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
+							</di:Reference>
+						</v2.3:Signature>
+					</REESS>
+				</Battery>
+			</ElectricEnergyStorage>
 			<Axlegear>
 				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -2606,7 +2565,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_FCHV_PrimaryBusType">
+				<Data xsi:type="AUX_PEV_PrimaryBusType">
 					<SteeringPump>
 						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>

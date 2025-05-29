@@ -19,23 +19,24 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>1</IdlingSpeed>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Output Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>S4</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<ElectricMotorTorqueLimits>
 			<ElectricMachine>
-				<Position>2</Position>
+				<Position>4</Position>
 				<VoltageLevel>
 					<Voltage>100</Voltage>
 					<MaxTorqueCurve>
@@ -52,6 +53,8 @@
 				</VoltageLevel>
 			</ElectricMachine>
 		</ElectricMotorTorqueLimits>
+		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components xsi:type="Components_HEV-S4_PrimaryBusType">
 			<Engine>
 				<v2.0:Data xsi:type="EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
@@ -3225,13 +3228,13 @@
 						<CompressorDrive>electrically</CompressorDrive>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<PneumaticSCRReagentDosing>true</PneumaticSCRReagentDosing>
 					</PneumaticSystem>
 					<HVAC>
 						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
-						<EngineWasteGasHeatExchanger>false</EngineWasteGasHeatExchanger>
+						<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
 					</HVAC>
 				</Data>
 			</Auxiliaries>
