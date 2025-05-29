@@ -276,8 +276,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				.Cast<PerSecond>();
 			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
 
-			foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
+            var dtLow = dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval*0.8);
+            var isGear1 = currentGear.Gear.Equals(1);
+			var beforeReachingTargetSpeed = DataBus.DrivingCycleInfo.TargetSpeed.IsSmallerOrEqual(DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt) && DataBus.DriverInfo.DriverAcceleration.IsGreater(0.0);
+			var rightIsStop = DataBus.DrivingCycleInfo.CycleData.RightSample.VehicleTargetSpeed.IsEqual(0.0);
+
+            foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				
+				if (dtLow && isGear1 && !beforeReachingTargetSpeed && rightIsStop) {
+                    continue;
+                }
+
 				if (next == null) {
 					// no further gear
 					continue;
