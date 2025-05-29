@@ -4,7 +4,6 @@
 #endif
 
 //#define PROHIBIT_OLD_XML
-//#define PROHIBIT_V27_XML
 
 /*
 * This file is part of VECTO.
@@ -975,10 +974,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			CheckVehicleAllowed();
 		}
 
-        protected virtual void CheckVehicleAllowed()
+        protected virtual void CheckVehicleAllowed(string extraMessage = "")
         {
 #if PROHIBIT_V27_XML
-            throw new VectoException("this v2.7 vehicle is not supported yet.");
+            throw new VectoException($"This v2.7 vehicle is not supported yet. {extraMessage}");
 #endif
         }
 

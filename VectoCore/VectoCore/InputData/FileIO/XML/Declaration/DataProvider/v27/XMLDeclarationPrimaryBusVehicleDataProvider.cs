@@ -25,9 +25,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 			SourceType = DataSourceType.XMLEmbedded;
 		}
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
+        protected override void CheckVehicleAllowed(string extraMessage = "")
+        {
+            base.CheckVehicleAllowed("Buses not supported yet.");
+        }
 
-		public override bool? SleeperCab => false;
+        #region Overrides of XMLDeclarationVehicleDataProviderV10
+
+        public override bool? SleeperCab => false;
 
 		public override CubicMeter CargoVolume => null;
 
