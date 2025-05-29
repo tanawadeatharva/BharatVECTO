@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             : base(jobData, xmlNode, sourceFile) 
         {}
 
-        protected override void CheckVehicleAllowed()
+        protected override void CheckVehicleAllowed(string extraMessage = "")
         {
             //Allow here all conventionals and disallow non-H2 fueled at job level.
         }
@@ -41,6 +41,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             if (!OVC && BatteryOnlyMode)
             {
                 throw new VectoException("For PHEV vehicles, BatteryOnlyMode should be false if OVC is false.");
+            }
+        }
+
+        protected override void CheckVehicleAllowed(string extraMessage = "")
+        {
+            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
+            {
+                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
             }
         }
 
@@ -70,6 +78,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public XMLDeclaration_SHEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile) { }
+
+        protected override void CheckVehicleAllowed(string extraMessage = "")
+        {
+            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
+            {
+                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
+            }
+        }
 
         public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
@@ -120,6 +136,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             }
         }
 
+        protected override void CheckVehicleAllowed(string extraMessage = "")
+        {
+            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
+            {
+                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
+            }
+        }
+
         public override string PowertrainPositionPrefix => "E";
 
         public override bool OVC => GetBool("OVC");
@@ -160,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 			: base(jobData, xmlNode, sourceFile)
 		{}
 
-        protected override void CheckVehicleAllowed()
+        protected override void CheckVehicleAllowed(string extraMessage = "")
         {
             //Do nothing -> Vehicle Allowed
         }

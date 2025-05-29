@@ -2,8 +2,6 @@
 #define PROHIBIT_V27_XML
 #endif
 
-//#define PROHIBIT_V27_XML
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         protected virtual void CheckVehicleAllowed()
         {
 #if PROHIBIT_V27_XML
-            throw new VectoException("this v2.7 vehicle is not supported yet.");
+            throw new VectoException("This v2.7 vehicle is not supported yet. Buses not supported yet.");
 #endif
         }
 

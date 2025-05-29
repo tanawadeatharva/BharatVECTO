@@ -33,8 +33,6 @@
 #define PROHIBIT_V27_XML
 #endif
 
-//#define PROHIBIT_V27_XML
-
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -127,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
             if (!vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())))
             {
 #if PROHIBIT_V27_XML
-                throw new VectoException("this v2.7 vehicle is not supported yet.");
+                throw new VectoException("This v2.7 vehicle is not supported yet. It is not fuelled by hydrogen.");
 #endif
             }
         }
