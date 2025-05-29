@@ -1054,10 +1054,7 @@ lbFound:
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                            
-                                Using reader As XmlReader = XmlReader.Create(jobFile)
-                                    input = xmlInputReader.CreateDeclaration(reader)
-                                End Using
+                                input = xmlInputReader.CreateDeclaration(jobFile)
                             Case XMLNames.VectoOutputMultistep
                                 Using reader As XmlReader = XmlReader.Create(jobFile)
                                     Dim vifInput = DirectCast(xmlInputReader.Create(reader), IMultistepBusInputDataProvider)

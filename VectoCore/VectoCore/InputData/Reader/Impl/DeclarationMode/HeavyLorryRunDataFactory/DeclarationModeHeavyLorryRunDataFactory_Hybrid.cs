@@ -534,11 +534,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				iterativeRunStrategy.Update = (modData, iterationRunData) =>
 				{
+					var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
+
 					/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
 					/// Comment from [1]:
 					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
-					iterationRunData.BatteryData = FCHVDeclarationDataAdapter.CreateFuelCellPreProcessingBattery(
+					iterationRunData.BatteryData = fchvDataAdapter.CreateFuelCellPreProcessingBattery(
 						fuelCellSystemData,
 						iterationRunData.BatteryData,
 						out var fcBatteries);
@@ -556,9 +558,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					};
 
 					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-						FCHVDeclarationDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
+						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
 					iterationRunData.FuelCellSystemData.FuelCellShareMap =
-						FCHVDeclarationDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
+						fchvDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;

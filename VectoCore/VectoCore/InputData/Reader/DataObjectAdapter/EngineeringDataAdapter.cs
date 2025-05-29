@@ -42,10 +42,8 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
@@ -65,24 +63,39 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using System.Runtime.CompilerServices;
-using static System.Net.WebRequestMethods;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
+		private string _jobFilePath;
+		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
+
 		public IOutputDataWriter DebugOutputDataWriter
 		{
 			get;
 			set;
 		}
 
-		private AirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
+		public string JobFilePath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_jobFilePath))
+				{
+					return DebugOutputDataWriter.JobFile;
+				}
+				return _jobFilePath;
+			}
+			set
+			{
+				_jobFilePath = value;
+			}
+		}
+
 		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
@@ -1136,7 +1149,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         private FuelCellPowerMap CreateDynamicFuelCellPowerMap(IModalDataContainer modData, FuelCellSystemData fcData, BatterySystemData batData)
 		{
 			var fcPostProcessor = new FuelCellPreRunPostprocessor(modData) {
-				Writer = DebugOutputDataWriter
+				WriterBasePath = JobFilePath
 			};
 			fcData.PreRunPostProcessing = fcPostProcessor;
 
