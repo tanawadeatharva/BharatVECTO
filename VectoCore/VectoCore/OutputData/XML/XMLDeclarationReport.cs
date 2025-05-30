@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
 				VectoRunData = runData;
+				OVCIteration = runData.Iteration;
 
 				FuelData = runData.JobType.IsFCHV() ?
 					runData.FuelCellSystemData.Fuel :
@@ -216,8 +217,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public OvcHevMode OVCMode { get; set; }
 
+			public int OVCIteration { get; private set; }
+
+            public double DeltaSoC { get; private set; }
+
 			// used for factor method
-			public IResult PrimaryResult { get; set; }
+            public IResult PrimaryResult { get; set; }
 
 			public double BatteryEfficiencyDischarge { get; set; }
 
@@ -330,6 +335,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 					AverageAxlegearEfficiency = double.NaN;
 				}
 
+				DeltaSoC = OVCMode == OvcHevMode.ChargeSustaining ? data.REESSDeltaSoc() : 0;
+				
 				WeightingFactor = weightingFactor;
 				PrimaryResult = runData.PrimaryResult;
 

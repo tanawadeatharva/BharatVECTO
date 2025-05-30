@@ -289,8 +289,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public VectoRunData VectoRunData { get; set; }
             public VectoRun.Status Status { get; set; }
-            public OvcHevMode OVCMode { get; set; }
-            public MissionType Mission { get; set; }
+			public MissionType Mission { get; set; }
 			public LoadingType LoadingType { get; set; }
 
 			public int FuelMode { get; set; }
@@ -340,6 +339,11 @@ namespace TUGraz.VectoCore.OutputData.XML
             public IFuelProperties AuxHeaterFuel { get; set; }
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }
+
+			public OvcHevMode OVCMode { get; set; }
+			public int OVCIteration { get; }
+			public double DeltaSoC { get; }
+
 
 			public double BatteryEfficiencyDischarge { get; set; }
 
