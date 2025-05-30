@@ -451,7 +451,15 @@ namespace TUGraz.VectoCommon.InputData
 
 		SquareMeter AirDragArea_0 { get; } // P245
 
-		XmlNode XMLSource { get; }
+        SquareMeter DeltaCdxA_CFD { get; } //P561
+
+        SquareMeter DeltaCdxA_declared { get; } //P563
+
+        SquareMeter DeltaTransferredCdxA { get; } //P564
+
+        string LicenseNumberCFDMethod { get; } //P562
+
+        XmlNode XMLSource { get; }
 
 	}
 
