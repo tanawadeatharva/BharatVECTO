@@ -1154,7 +1154,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			fcData.PreRunPostProcessing = fcPostProcessor;
 
 
-			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone());
+			var result = fcPostProcessor.CalculateFuelCellPowerDemand(fcData, batData.Clone(), modData.WriteModalResults);
 			//Debug($"Window distance = {result.Distance}, SoC = {result.InitSoc}");
 			batData.InitialSoC = result.InitSoc;
 			return new FuelCellPowerMap(result.Entries);
