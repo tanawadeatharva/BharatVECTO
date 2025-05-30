@@ -84,26 +84,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		#if USE_EXTERNAL_DECLARATION_DATA
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		#endif
+		//#if USE_EXTERNAL_DECLARATION_DATA
+		//[MethodImpl(MethodImplOptions.Synchronized)]
+		//#endif
 		protected DataTable ReadCsvResource(string resourceId, Action<string> overrideWarning = null)
 		{
 			// TODO: MQ 2020-07 Remove in official bus version!
-			#if USE_EXTERNAL_DECLARATION_DATA
-			var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
-			var parts = tmp.Split('.');
-			var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
+			//#if USE_EXTERNAL_DECLARATION_DATA
+			//var tmp = resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "");
+			//var parts = tmp.Split('.');
+			//var fileName = Path.GetFullPath(Path.Combine(@"Declaration\Override", string.Join(".", parts[parts.Length-2], parts[parts.Length-1])));
 
-			if (File.Exists(fileName)) {
-				if (overrideWarning != null) {
-					overrideWarning($"{resourceId} overridden by {fileName}");
-				}
+			//if (File.Exists(fileName)) {
+			//	if (overrideWarning != null) {
+			//		overrideWarning($"{resourceId} overridden by {fileName}");
+			//	}
 
-				_readFromFile = true;
-				return VectoCSVFile.Read(fileName);
-			}
-			#endif
+			//	_readFromFile = true;
+			//	return VectoCSVFile.Read(fileName);
+			//}
+			//#endif
 
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 		}
