@@ -271,6 +271,15 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public SquareMeter TransferredAirDragArea => _airdragViewModel.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => _airdragViewModel.AirDragArea_0;
-		public XmlNode XMLSource { get; }
+
+		public string LicenseNumberCFDMethod => _airdragViewModel.LicenseNumberCFDMethod;
+
+		public SquareMeter DeltaCdxA_CFD => _airdragViewModel.DeltaCdxA_CFD;
+
+		public SquareMeter DeltaCdxA_declared => _airdragViewModel.DeltaCdxA_declared;
+
+		public SquareMeter DeltaTransferredCdxA => _airdragViewModel.DeltaTransferredCdxA;
+
+        public XmlNode XMLSource { get; }
 	}
 }

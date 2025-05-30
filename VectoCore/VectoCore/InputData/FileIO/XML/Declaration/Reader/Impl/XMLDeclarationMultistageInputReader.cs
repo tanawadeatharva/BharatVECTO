@@ -1078,8 +1078,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
-		
-		public XmlNode XMLSource => AirdragEntry.XMLSource;
+
+		public SquareMeter DeltaCdxA_CFD => AirdragEntry?.DeltaCdxA_CFD;
+
+		public SquareMeter DeltaCdxA_declared => AirdragEntry?.DeltaCdxA_declared;
+
+		public SquareMeter DeltaTransferredCdxA => AirdragEntry?.DeltaTransferredCdxA;
+
+		public string LicenseNumberCFDMethod => AirdragEntry?.LicenseNumberCFDMethod;
+
+        public XmlNode XMLSource => AirdragEntry.XMLSource;
 
 		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }

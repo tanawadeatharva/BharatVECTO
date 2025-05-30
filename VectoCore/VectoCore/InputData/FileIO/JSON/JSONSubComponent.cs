@@ -482,7 +482,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
+		public SquareMeter DeltaCdxA_CFD => (Body["DeltaCdxA_CFD"] == null) ? null : Body.GetEx<double>("DeltaCdxA_CFD").SI<SquareMeter>();
+
+		public SquareMeter DeltaCdxA_declared => (Body["DeltaCdxA_declared"] == null) ? null : Body.GetEx<double>("DeltaCdxA_declared").SI<SquareMeter>();
+
+		public SquareMeter DeltaTransferredCdxA => (Body["DeltaTransferredCdxA"] == null) ? null : Body.GetEx<double>("DeltaTransferredCdxA").SI<SquareMeter>();
+
+		public string LicenseNumberCFDMethod => (Body["LicenseNumberCFDMethod"] == null) ? null : Body.GetEx<string>("LicenseNumberCFDMethod");
+
+        public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
 
 		public virtual TableData CrosswindCorrectionMap
 		{

@@ -491,6 +491,10 @@ Public Class Vehicle
 
     Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
     Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
+    Public ReadOnly Property DeltaCdxA_CFD As SquareMeter Implements IAirdragDeclarationInputData.DeltaCdxA_CFD
+    Public ReadOnly Property DeltaCdxA_declared As SquareMeter Implements IAirdragDeclarationInputData.DeltaCdxA_declared
+    Public ReadOnly Property DeltaTransferredCdxA As SquareMeter Implements IAirdragDeclarationInputData.DeltaTransferredCdxA
+    Public ReadOnly Property LicenseNumberCFDMethod As String Implements IAirdragDeclarationInputData.LicenseNumberCFDMethod
     Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
 
     Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
