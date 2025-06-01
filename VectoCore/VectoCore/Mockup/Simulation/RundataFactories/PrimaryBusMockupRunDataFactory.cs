@@ -218,9 +218,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             var xmlVehicle = vehicle as IXMLDeclarationVehicleData;
             return new RetarderData()
             {
-                Type = xmlVehicle.RetarderType,
+                Type = xmlVehicle.GetRetarderType(),
 
-                Ratio = xmlVehicle.RetarderType.IsDedicatedComponent() ? xmlVehicle.RetarderRatio : 0,
+                Ratio = xmlVehicle.GetRetarderType().IsDedicatedComponent() ? xmlVehicle.GetRetarderRatio() : 0,
             };
         }
 

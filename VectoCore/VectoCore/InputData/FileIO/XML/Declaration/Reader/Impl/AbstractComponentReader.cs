@@ -32,10 +32,12 @@
 using System;
 using System.Xml;
 using System.Xml.Schema;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
+using System.Linq;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 {
@@ -59,7 +61,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return componentNode;
 		}
 
-		protected virtual T CreateComponent<T>(
+        protected virtual XmlNodeList GetComponentNodes(string component)
+        {
+            var componentNodes = ((BaseNode.LocalName == component)
+				? BaseNode.ParentNode 
+				: BaseNode)
+					.SelectNodes(XMLHelper.QueryLocalName(component));
+
+            return componentNodes;
+        }
+
+        protected IList<T> CreateComponents<T>(string component, Func<string, XmlNode, string, T> componentCreator)
+		{
+			var components = new List<T>();
+            var componentNodes = GetComponentNodes(component);
+
+			foreach (XmlNode componentNode in componentNodes)
+			{
+                var type = componentNode.SchemaInfo.SchemaType;
+                var version = XMLHelper.GetXsdType(type);
+
+                if (string.IsNullOrWhiteSpace(version))
+                {
+                    version = XMLHelper.GetVersionFromNamespaceUri((componentNode.SchemaInfo.SchemaType?.Parent as XmlSchemaElement)?.QualifiedName.Namespace);
+                }
+
+                components.Add(componentCreator(version, componentNode, ParentComponent.DataSource.SourceFile));
+            }
+
+            return components;
+        }
+
+        protected virtual T CreateComponent<T>(
 			string component, Func<string, XmlNode, string, T> componentCreator, bool createDummy = false)
 		{
 			var componentNode = GetComponentNode(component);

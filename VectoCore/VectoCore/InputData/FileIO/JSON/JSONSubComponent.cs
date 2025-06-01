@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -382,7 +383,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual string PTOTransmissionType => (_token == null) || (_token[JsonKeys.Vehicle_PTO_Type] == null)
+        public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
+
+        public virtual string PTOTransmissionType => (_token == null) || (_token[JsonKeys.Vehicle_PTO_Type] == null)
 			? PTO_TYPE_NONE
 			: _token[JsonKeys.Vehicle_PTO_Type].Value<string>();
 
@@ -523,6 +526,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#region IPTOTransmissionInputData
+
+		public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
 
 		public virtual string PTOTransmissionType
 		{

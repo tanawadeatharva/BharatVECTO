@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -50,23 +51,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IXMLDeclarationVehicleData Vehicle;
-
+		private int? _axleNumber;
 
 		public XMLDeclarationAngledriveDataProviderV10(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile, int? axleNumber = null) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
+			_axleNumber = axleNumber;
 		}
 
 		#region Implementation of IAngledriveInputData
 
-		public virtual AngledriveType Type => Vehicle.AngledriveType;
+		public virtual AngledriveType Type => Vehicle.GetAngledriveType(AxleNumber.Value);
 
 		public virtual double Ratio => GetDouble(XMLNames.AngleDrive_Ratio);
 
-		public virtual TableData LossMap =>
+        private int? AxleNumber => 
+			_axleNumber ?? (_axleNumber = int.Parse(GetAttribute(BaseNode?.ParentNode, "axleNumber") ?? $"{Constants.NOT_IN_AXLE_POWERTRAIN}"));
+
+        public virtual TableData LossMap =>
 			ReadTableData(
 				XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
 				AttributeMappings.TransmissionLossmapMapping);

@@ -31,9 +31,11 @@
 
 using System.Xml;
 using System.Xml.Linq;
+using System.Linq;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -63,7 +65,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLPTOReader
 
-		public virtual IPTOTransmissionInputData PTOInputData => _ptoInputData ?? (_ptoInputData = CreateComponent(XMLNames.Vehicle_PTO, PTOCreator));
+		public virtual IPTOTransmissionInputData GetPTOInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => 
+			_ptoInputData ?? (_ptoInputData = CreateComponent(XMLNames.Vehicle_PTO, PTOCreator));
 
 		#endregion
 
@@ -109,9 +112,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-		public XMLPTOReaderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+        
+        public XMLPTOReaderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
 			vehicle, componentNode)
 		{ }
 	}
+
+	public class XMLMultiplePTOReaderV27 : XMLPTOReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+		public new static readonly string XSD_TYPE = "MultiplePTOType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLMultiplePTOReaderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+           vehicle, componentNode)
+        { }
+
+		public override IPTOTransmissionInputData GetPTOInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
+        {
+			return CreateComponents(XMLNames.Vehicle_PTO, PTOCreator).FirstOrDefault(x => x.AxleNumber == axleNumber);
+        }
+
+        protected override IPTOTransmissionInputData PTOCreator(string version, XmlNode componentNode, string sourceFile)
+        {
+            return Factory.CreatePTOData(version, Vehicle, componentNode, sourceFile);
+        }
+    }
 }

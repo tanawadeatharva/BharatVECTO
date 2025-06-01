@@ -662,7 +662,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#region Test Electric Motor TorqueLimits Reader
 
-		private void TestElectricMotorTorqueLimits(IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> limits)
+		private void TestElectricMotorTorqueLimits(IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> limits)
 		{
 			Assert.IsNotNull(limits);
 			Assert.AreEqual(1, limits.Count);

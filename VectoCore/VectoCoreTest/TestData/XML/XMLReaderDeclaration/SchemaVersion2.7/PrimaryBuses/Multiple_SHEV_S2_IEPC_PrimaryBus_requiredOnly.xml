@@ -13,14 +13,11 @@
 		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>20000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>1</IdlingSpeed>
-		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
-		<RetarderType axleNumber="2">Transmission Input Retarder</RetarderType>
-		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
-		<RetarderRatio axleNumber="2">2.000</RetarderRatio>
-		<AngledriveType axleNumber="1">Separate Angledrive</AngledriveType>
+		<RetarderType axleNumber="1">None</RetarderType>
+		<RetarderType axleNumber="2">None</RetarderType>
+		<AngledriveType axleNumber="1">None</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
 		<ArchitectureID>S2</ArchitectureID>
 		<ArchitectureIDPwt2>S-IEPC</ArchitectureIDPwt2>
 		<OVC>true</OVC>
@@ -30,44 +27,6 @@
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<ElectricMotorTorqueLimits>
-			<ElectricMachine>
-				<Position>GEN</Position>
-				<VoltageLevel>
-					<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
-			<ElectricMachine axleNumber="1">
-				<Position>2</Position>
-				<VoltageLevel>
-					<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
-		</ElectricMotorTorqueLimits>
-		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
-		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
 			<Engine>
 				<v2.0:Data xsi:type="EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
@@ -3179,116 +3138,6 @@
 						</di:Reference>
 					</v2.0:Signature>
 				</Gearbox>
-				<TorqueConverter>
-					<!-- optional -->
-					<v2.0:Data xsi:type="TorqueConverterDataDeclarationType" id="TQ-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
-						<Manufacturer>Some Manufacturer</Manufacturer>
-						<Model>Some Model</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-02-15T11:00:00Z</Date>
-						<AppVersion>TC CalcApp 123</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<Characteristics>
-							<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
-							<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
-							<Entry speedRatio="0.9000" torqueRatio="0.90" inputTorqueRef="200.00"/>
-						</Characteristics>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#TQ-1234">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>P8mKieew0dWJFSIPapRXdUf2FsYG4ONvolD5kjkYEkw=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</TorqueConverter>
-				<Angledrive>
-					<!-- optional -->
-					<v2.0:Data id="agl-vi2Oak2N" xsi:type="AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-						<Model>Generic 40t Long Haul Truck Gearbox</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<Ratio>2.345</Ratio>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<TorqueLossMap>
-							<Entry inputSpeed="0.00" inputTorque="-10000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="-1000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="10.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="0.00" torqueLoss="10.00"/>
-							<Entry inputSpeed="0.00" inputTorque="10000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="1000.00" torqueLoss="100.00"/>
-						</TorqueLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#agl-vi2Oak2N">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>iVRxT+wETVrlCQhZMsiqRC1mKcw3a3KSeb1y5uhINQk=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Angledrive>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed='0.00' torqueLoss='10.00'/>
-							<Entry retarderSpeed='100.00' torqueLoss='10.00'/>
-							<Entry retarderSpeed='200.00' torqueLoss='10.10'/>
-							<Entry retarderSpeed='300.00' torqueLoss='10.20'/>
-							<Entry retarderSpeed='400.00' torqueLoss='10.30'/>
-							<Entry retarderSpeed='500.00' torqueLoss='10.50'/>
-							<Entry retarderSpeed='600.00' torqueLoss='10.70'/>
-							<Entry retarderSpeed='700.00' torqueLoss='11.00'/>
-							<Entry retarderSpeed='800.00' torqueLoss='11.30'/>
-							<Entry retarderSpeed='900.00' torqueLoss='11.60'/>
-							<Entry retarderSpeed='1000.00' torqueLoss='12.00'/>
-							<Entry retarderSpeed='1100.00' torqueLoss='12.40'/>
-							<Entry retarderSpeed='1200.00' torqueLoss='12.90'/>
-							<Entry retarderSpeed='1300.00' torqueLoss='13.40'/>
-							<Entry retarderSpeed='1400.00' torqueLoss='13.90'/>
-							<Entry retarderSpeed='1500.00' torqueLoss='14.50'/>
-							<Entry retarderSpeed='1600.00' torqueLoss='15.10'/>
-							<Entry retarderSpeed='1700.00' torqueLoss='15.80'/>
-							<Entry retarderSpeed='1800.00' torqueLoss='16.50'/>
-							<Entry retarderSpeed='1900.00' torqueLoss='17.20'/>
-							<Entry retarderSpeed='2000.00' torqueLoss='18.00'/>
-							<Entry retarderSpeed='2100.00' torqueLoss='18.80'/>
-							<Entry retarderSpeed='2200.00' torqueLoss='19.70'/>
-							<Entry retarderSpeed='2300.00' torqueLoss='20.60'/>
-							<Entry retarderSpeed='2400.00' torqueLoss='21.50'/>
-							<Entry retarderSpeed='2500.00' torqueLoss='22.50'/>
-							<Entry retarderSpeed='2600.00' torqueLoss='23.50'/>
-							<Entry retarderSpeed='2700.00' torqueLoss='24.60'/>
-							<Entry retarderSpeed='2800.00' torqueLoss='25.70'/>
-							<Entry retarderSpeed='2900.00' torqueLoss='26.80'/>
-							<Entry retarderSpeed='3000.00' torqueLoss='28.00'/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
 				<Axlegear>
 					<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -3418,62 +3267,6 @@
 						</di:Reference>
 					</v2.3:Signature>
 				</IEPC>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
-				<Axlegear>
-					<!-- optional -->
-					<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-						<Model>Generic 40t Long Haul Truck AxleGear</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<LineType>Single portal axle</LineType>
-						<Ratio>2.590</Ratio>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<TorqueLossMap>
-							<Entry inputSpeed="0.00" inputTorque="-5000.00" torqueLoss="115.00"/>
-							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="40.00"/>
-							<Entry inputSpeed="0.00" inputTorque="15000.00" torqueLoss="265.00"/>
-							<Entry inputSpeed="2100.00" inputTorque="-5000.00" torqueLoss="115.00"/>
-							<Entry inputSpeed="2100.00" inputTorque="0.00" torqueLoss="40.00"/>
-							<Entry inputSpeed="2100.00" inputTorque="35000.00" torqueLoss="565.00"/>
-						</TorqueLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#AXL-EC3ohnoh">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>Ux2vo+s07pGr9XCbvNs/YbJcFaZClORRGXpP6Eyeze8=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Axlegear>
 			</Powertrain>
 			<AxleWheels>
 				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -3563,94 +3356,5 @@
 				</Data>
 			</Auxiliaries>
 		</Components>
-		<MonitoringData>
-			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
-			<Vehicle>
-				<Make>##VEHICLE_MAKE##</Make>
-			</Vehicle>
-			<Engine>
-				<Manufacturer>##ENGINE_MANUFACTURER##</Manufacturer>
-				<ManufacturerAddress>##ENGINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-				<Make>##ENGINE_MAKE##</Make>
-				<WHTC>
-					<FuelType>Diesel CI</FuelType>
-					<CO2 unit="g/kWh">NaN</CO2>
-					<FuelConsumption unit="g/kWh">NaN</FuelConsumption>
-				</WHTC>
-				<WHSC>
-					<FuelType>Diesel CI</FuelType>
-					<CO2 unit="g/kWh">NaN</CO2>
-					<FuelConsumption unit="g/kWh">NaN</FuelConsumption>
-				</WHSC>
-				<TypeApprovalNumber>##TYPE_APPROVAL_NUMBER##</TypeApprovalNumber>
-			</Engine>
-			<ElectricMachineGEN>
-				<Manufacturer>##ELECTRIC_MACHINE_GEN_MANUFACTURER##</Manufacturer>
-				<ManufacturerAddress>##ELECTRIC_MACHINE_GEN_MANUFACTURERADDRESS##</ManufacturerAddress>
-				<Make>##ELECTRIC_MACHINE_GEN_MAKE##</Make>
-			</ElectricMachineGEN>
-			<ElectricEnergyStorage>
-				<Manufacturer>##ELECTRIC_ENERGY_STORAGE_MANUFACTURER##</Manufacturer>
-				<ManufacturerAddress>##ELECTRIC_ENERGY_STORAGE_MANUFACTURERADDRESS##</ManufacturerAddress>
-				<Make>##ELECTRIC_ENERGY_STORAGE_MAKE##</Make>
-			</ElectricEnergyStorage>
-			<Powertrain axleNumber="1" xsi:type="xEV_EM2_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-				<Gearbox>
-					<Manufacturer>##GEARBOX_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##GEARBOX_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##GEARBOX_MAKE##</Make>
-				</Gearbox>
-				<Axlegear>
-					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##AXLEGEAR_MAKE##</Make>
-				</Axlegear>
-			</Powertrain>
-			<Powertrain axleNumber="2" xsi:type="xEV_IEPC_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-				<Axlegear>
-					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##AXLEGEAR_MAKE##</Make>
-				</Axlegear>
-			</Powertrain>
-			<AxleWheels>
-				<Axle axleNumber="1">
-					<Tyre>
-						<Manufacturer>##TYRE_1_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_1_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_1_MAKE##</Make>
-					</Tyre>
-				</Axle>
-				<Axle axleNumber="2">
-					<Tyre>
-						<Manufacturer>##TYRE_2_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_2_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_2_MAKE##</Make>
-					</Tyre>
-				</Axle>
-			</AxleWheels>
-			<AdvancedReducingTechnologies>
-				<!--
-<Entry category="advanced aerodynamic measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced rolling resistance measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced drivetrain technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced engine technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced auxiliary technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="additional ADAS technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced powertrain integration and hybridisation">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="other">##TECHNOLOGY_BRAND_NAME##</Entry>
--->
-			</AdvancedReducingTechnologies>
-		</MonitoringData>
 	</Vehicle>
 </tns:VectoInputDeclaration>

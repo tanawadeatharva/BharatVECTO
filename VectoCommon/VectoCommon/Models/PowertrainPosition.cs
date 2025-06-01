@@ -43,7 +43,7 @@ namespace TUGraz.VectoCommon.InputData {
 			}
 
 			// todo amogoda: m3.x F prefix added, treated as B or E.
-			var supportedPrefixes = new[] { "B", "E", "F" };
+			var supportedPrefixes = new[] { "B", "E", "F", "S" };
 			if (supportedPrefixes.Contains(prefix, StringComparer.InvariantCultureIgnoreCase)) {
 				return $"{BatteryElectricPrefix}E{pos}".ParseEnum<PowertrainPosition>();
 			}
@@ -144,4 +144,17 @@ namespace TUGraz.VectoCommon.InputData {
 			return IsBatteryElectric(pos);
 		}
 	}
+
+    public class EMPlacement
+    {
+        public EMPlacement(PowertrainPosition position, int axleNumber)
+        {
+            Position = position;
+            AxleNumber = axleNumber;
+        }
+
+        public PowertrainPosition Position { get; private set; }
+
+        public int AxleNumber { get; private set; }
+    }
 }

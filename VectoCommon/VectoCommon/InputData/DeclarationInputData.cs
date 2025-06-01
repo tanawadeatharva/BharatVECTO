@@ -218,7 +218,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
-		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 
 		TableData BoostingLimitations { get; }
 
@@ -231,7 +231,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		ArchitectureID ArchitectureID { get; }
 
-		bool OVC { get; }
+        ArchitectureID ArchitectureIDPwt2 { get; }
+
+        bool OVC { get; }
 
 		bool BatteryOnlyMode { get; }
 
@@ -283,7 +285,34 @@ namespace TUGraz.VectoCommon.InputData
 		IIEPCDeclarationInputData IEPC { get; }
 
 		IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
-	}
+
+        IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; }
+
+        ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+    }
+
+	public interface IAxlePowertrainDeclarationInputData
+	{
+        int AxleNumber { get; }
+
+        VectoSimulationJobType Type { get; }
+
+        IGearboxDeclarationInputData GearboxInputData { get; }
+
+        IAxleGearInputData AxleGearInputData { get; }
+
+        ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
+
+        IAngledriveInputData AngledriveInputData { get; }
+
+        IRetarderInputData RetarderInputData { get; }
+
+        IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+        ElectricMachineEntry<IElectricMotorDeclarationInputData> ElectricMotor { get; }
+
+        IIEPCDeclarationInputData IEPCInputData { get; }
+    }
 
 	public static class ComponentsHelper{
 		/// <summary>

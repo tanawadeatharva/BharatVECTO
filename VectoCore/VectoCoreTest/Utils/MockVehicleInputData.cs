@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 
 		public TableData BoostingLimitations { get; }
 
@@ -126,7 +126,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public ArchitectureID ArchitectureID { get; }
 
-		public bool OVC { get; }
+        public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }

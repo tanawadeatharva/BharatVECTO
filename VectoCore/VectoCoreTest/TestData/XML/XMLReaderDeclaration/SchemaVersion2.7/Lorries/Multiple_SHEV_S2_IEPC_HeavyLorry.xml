@@ -13,29 +13,30 @@
 		<CorrectedActualMass>4670</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>11990</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-		<RetarderType axleNumber="1">None</RetarderType>
-		<RetarderType axleNumber="2">None</RetarderType>
-		<AngledriveType axleNumber="1">None</AngledriveType>
+		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
+		<RetarderType axleNumber="2">Transmission Input Retarder</RetarderType>
+		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
+		<RetarderRatio axleNumber="2">2.000</RetarderRatio>
+		<AngledriveType axleNumber="1">Separate Angledrive</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
 		<PTO axleNumber="1">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
+			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
+			<PTOOtherElements>shift claw, synchronizer, sliding gearwheel</PTOOtherElements>
 		</PTO>
 		<PTO axleNumber="2">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
+			<PTOShaftsGearWheels>drive shaft and/or up to 2 gear wheels</PTOShaftsGearWheels>
+			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
 		<NgTankSystem>Liquefied</NgTankSystem>
-		<!-- optional -->
-		<SleeperCab>false</SleeperCab>
+		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>S2</ArchitectureID>
 		<ArchitectureIDPwt2>S-IEPC</ArchitectureIDPwt2>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
@@ -76,6 +77,8 @@
 				</VoltageLevel>
 			</ElectricMachine>
 		</ElectricMotorTorqueLimits>
+		<H2StorageUsableCapacity>80.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
 			<Engine>
 				<v2.0:Data xsi:type="EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
@@ -201,6 +202,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLFuelCellDeclarationInputData CreateFuelCellInputData(string version, XmlNode componentNode, string sourceFile);
 
 		IXMLFuelCellSystemDeclarationInputData CreateFuelCellSystemInputData(string version, XmlNode componentNode, string sourceFile);
+
+        IXMLAxlePowertrainDeclarationInputData CreateAxlePowertrainInputData(
+			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
         IXMLMonitoringReader CreateMonitoringReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode monitoringNode);
     }
