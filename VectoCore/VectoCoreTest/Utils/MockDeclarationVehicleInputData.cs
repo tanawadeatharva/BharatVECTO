@@ -70,13 +70,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Meter EntranceHeight { get; }
 		public ConsumerTechnology? DoorDriveTechnology { get; }
 		public VehicleDeclarationType VehicleDeclarationType { get; }
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 		public IVehicleComponentsDeclaration Components => this;
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+		public ArchitectureID ArchitectureIDPwt2 {  get; }
+
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -99,9 +101,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; set; }
 		public IIEPCDeclarationInputData IEPC { get; set; }
 		public IFuelCellSystemDeclarationInputData FuelCellSystem { get; set; }
-
+        public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; set; }
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; set; }
+		
 		#endregion
-	}
+    }
 
 	public class MockEngineeringVehicleInputData : IVehicleEngineeringInputData, IVehicleComponentsEngineering
 	{
@@ -149,7 +153,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public XmlNode XMLSource { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		public IVehicleComponentsEngineering Components => this;
@@ -211,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
 
-		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+		IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
 
 		#endregion
 	}

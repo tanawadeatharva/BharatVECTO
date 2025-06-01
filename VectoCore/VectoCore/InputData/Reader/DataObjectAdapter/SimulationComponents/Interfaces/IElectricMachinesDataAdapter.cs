@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     {
         IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
             IElectricMachinesDeclarationInputData electricMachines,
-            IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null);
+            IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null);
 
 		List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc,
 			Volt averageVoltage);

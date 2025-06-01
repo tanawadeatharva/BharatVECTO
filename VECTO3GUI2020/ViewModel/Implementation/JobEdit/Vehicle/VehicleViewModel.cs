@@ -361,12 +361,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		ConsumerTechnology? IVehicleDeclarationInputData.DoorDriveTechnology { get; }
 
 		public VehicleDeclarationType VehicleDeclarationType => throw new NotImplementedException();
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
 		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -571,9 +573,9 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			}
 
 			EngineIdleSpeed = _vehicleInputData.EngineIdleSpeed;
-			RetarderType = _vehicleInputData.RetarderType;
-			RetarderRatio = _vehicleInputData.RetarderRatio;
-			AngledriveType = _vehicleInputData.AngledriveType;
+			RetarderType = _vehicleInputData.GetRetarderType();
+			RetarderRatio = _vehicleInputData.GetRetarderRatio();
+			AngledriveType = _vehicleInputData.GetAngledriveType();
 
 		}
 	}

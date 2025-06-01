@@ -32,6 +32,7 @@
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
@@ -54,11 +55,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 
 		IXMLADASReader ADASReader { set; }
 
-		AngledriveType AngledriveType { get; }
+		AngledriveType GetAngledriveType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
 
-		RetarderType RetarderType { get; }
+        RetarderType GetRetarderType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
 
-		double RetarderRatio { get; }
-		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+		double GetRetarderRatio(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
+
+		IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
 	}
 }

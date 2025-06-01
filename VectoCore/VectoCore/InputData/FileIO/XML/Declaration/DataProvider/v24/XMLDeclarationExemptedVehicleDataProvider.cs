@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -71,13 +72,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override XmlElement ADASNode => null;
 
-		public override AngledriveType AngledriveType => AngledriveType.None;
+		public override AngledriveType GetAngledriveType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => AngledriveType.None;
 
-		public override RetarderType RetarderType => RetarderType.None;
+		public override RetarderType GetRetarderType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => RetarderType.None;
+		
+		public override double GetRetarderRatio(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => 0;
 
-		public override double RetarderRatio => 0;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v3.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
-	<Vehicle xsi:type="Vehicle_Multiple_PEV_PrimaryBusDeclarationType" id="A">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="2.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v3.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob v:/VectoCore/VectoCore/Resources/XSD/VectoDeclarationJob.xsd" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
+	<Vehicle xsi:type="Vehicle_Multiple_FCHV_PrimaryBusDeclarationType" id="A">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>PEV Heavy Lorry E2</Model>
@@ -12,41 +12,56 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
-		<RetarderType axleNumber="2">Transmission Input Retarder</RetarderType>
-		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
-		<RetarderRatio axleNumber="2">2.000</RetarderRatio>
-		<AngledriveType axleNumber="1">Separate Angledrive</AngledriveType>
+		<RetarderType axleNumber="1">None</RetarderType>
+		<RetarderType axleNumber="2">None</RetarderType>
+		<AngledriveType axleNumber="1">None</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<ArchitectureID>E2</ArchitectureID>
-		<ArchitectureIDPwt2>E-IEPC</ArchitectureIDPwt2>
+		<ArchitectureID>F2</ArchitectureID>
+		<ArchitectureIDPwt2>F-IEPC</ArchitectureIDPwt2>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
 		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<ElectricMotorTorqueLimits>
-			<ElectricMachine axleNumber="1"> 
-				<Position>2</Position>
-				<VoltageLevel>
-					<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
-		</ElectricMotorTorqueLimits>
+		<H2StorageUsableCapacity>1.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
 		<Components>
+			<FuelCellSystem>
+				<FuelCellModule>
+					<Count>1</Count>
+					<FuelCell>
+						<Data xsi:type="FuelCellDataDeclarationType" id="FuelCell" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
+							<Manufacturer>a</Manufacturer>
+							<Model>a</Model>
+							<CertificationNumber>token</CertificationNumber>
+							<Date>2017-01-01T00:00:00Z</Date>
+							<AppVersion>aaaaa</AppVersion>
+							<CertificationMethod>Measured</CertificationMethod>
+							<FCSRatedPower>15</FCSRatedPower>
+							<FuelCellPowerOutputConsumptionMap>
+								<Entry powerOutput='125.00' fuelConsumption='0.00'/>
+								<Entry powerOutput='250.00' fuelConsumption='0.00'/>
+								<Entry powerOutput='500.00' fuelConsumption='0.00'/>
+								<Entry powerOutput='1000.00' fuelConsumption='0.00'/>
+							</FuelCellPowerOutputConsumptionMap>
+						</Data>
+						<v2.6:Signature>
+							<di:Reference URI="#BAT-asdf">
+								<di:Transforms>
+									<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+									<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+								</di:Transforms>
+								<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+								<di:DigestValue>22QLOYTZK+bUIolzdEzc3Ut0wPIOXEBdWv72ST0Zbyw=</di:DigestValue>
+							</di:Reference>
+						</v2.6:Signature>
+					</FuelCell>
+					<MinPower>10000</MinPower>
+					<MaxPower>100000</MaxPower>
+				</FuelCellModule>
+			</FuelCellSystem>
 			<ElectricEnergyStorage>
 				<Battery>
 					<StringID>0</StringID>
@@ -5071,83 +5086,6 @@
 						</di:Reference>
 					</v2.0:Signature>
 				</Gearbox>
-				<TorqueConverter>
-					<!-- optional -->
-					<v2.0:Data xsi:type="TorqueConverterDataDeclarationType" id="TQ-1234" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
-						<Manufacturer>Some Manufacturer</Manufacturer>
-						<Model>Some Model</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-02-15T11:00:00Z</Date>
-						<AppVersion>TC CalcApp 123</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<Characteristics>
-							<Entry speedRatio="0.0000" torqueRatio="1.00" inputTorqueRef="300.00"/>
-							<Entry speedRatio="0.5000" torqueRatio="1.00" inputTorqueRef="200.00"/>
-							<Entry speedRatio="0.9000" torqueRatio="0.90" inputTorqueRef="200.00"/>
-						</Characteristics>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference>
-							<di:DigestMethod Algorithm=""/>
-							<di:DigestValue/>
-						</di:Reference>
-					</v2.0:Signature>
-				</TorqueConverter>
-				<Angledrive>
-					<!-- optional -->
-					<v2.0:Data id="agl-vi2Oak2N" xsi:type="AngledriveDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-						<Model>Generic 40t Long Haul Truck Gearbox</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<Ratio>2.345</Ratio>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<TorqueLossMap>
-							<Entry inputSpeed="0.00" inputTorque="-10000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="-1000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="10.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="0.00" torqueLoss="10.00"/>
-							<Entry inputSpeed="0.00" inputTorque="10000.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="1000.00" inputTorque="1000.00" torqueLoss="100.00"/>
-						</TorqueLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#agl-vi2Oak2N">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>iVRxT+wETVrlCQhZMsiqRC1mKcw3a3KSeb1y5uhINQk=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Angledrive>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
 				<Axlegear>
 					<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -11311,371 +11249,6 @@
 						</di:Reference>
 					</v2.3:Signature>
 				</IEPC>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
-				<Axlegear>
-					<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
-						<Model>Generic 40t Long Haul Truck AxleGear</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<LineType>Single portal axle</LineType>
-						<Ratio>2.590</Ratio>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<TorqueLossMap>
-							<Entry inputSpeed="0.00" inputTorque="-5478.00" torqueLoss="220.00"/>
-							<Entry inputSpeed="0.00" inputTorque="-176.00" torqueLoss="28.00"/>
-							<Entry inputSpeed="0.00" inputTorque="0.00" torqueLoss="8.00"/>
-							<Entry inputSpeed="0.00" inputTorque="116.00" torqueLoss="14.00"/>
-							<Entry inputSpeed="0.00" inputTorque="220.00" torqueLoss="17.00"/>
-							<Entry inputSpeed="0.00" inputTorque="326.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="0.00" inputTorque="432.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="0.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="0.00" inputTorque="853.00" torqueLoss="38.00"/>
-							<Entry inputSpeed="0.00" inputTorque="1274.00" torqueLoss="53.00"/>
-							<Entry inputSpeed="0.00" inputTorque="1696.00" torqueLoss="67.00"/>
-							<Entry inputSpeed="0.00" inputTorque="2117.00" torqueLoss="82.00"/>
-							<Entry inputSpeed="0.00" inputTorque="2538.00" torqueLoss="96.00"/>
-							<Entry inputSpeed="0.00" inputTorque="2959.00" torqueLoss="110.00"/>
-							<Entry inputSpeed="0.00" inputTorque="3376.00" torqueLoss="119.00"/>
-							<Entry inputSpeed="0.00" inputTorque="3785.00" torqueLoss="123.00"/>
-							<Entry inputSpeed="0.00" inputTorque="4200.00" torqueLoss="130.00"/>
-							<Entry inputSpeed="0.00" inputTorque="6309.00" torqueLoss="204.00"/>
-							<Entry inputSpeed="0.00" inputTorque="8409.00" torqueLoss="268.00"/>
-							<Entry inputSpeed="0.00" inputTorque="10507.00" torqueLoss="332.00"/>
-							<Entry inputSpeed="0.00" inputTorque="12606.00" torqueLoss="396.00"/>
-							<Entry inputSpeed="0.00" inputTorque="16804.00" torqueLoss="523.00"/>
-							<Entry inputSpeed="0.00" inputTorque="21002.00" torqueLoss="651.00"/>
-							<Entry inputSpeed="0.00" inputTorque="25199.00" torqueLoss="778.00"/>
-							<Entry inputSpeed="0.00" inputTorque="29397.00" torqueLoss="905.00"/>
-							<Entry inputSpeed="0.00" inputTorque="33594.00" torqueLoss="1032.00"/>
-							<Entry inputSpeed="0.00" inputTorque="37792.00" torqueLoss="1160.00"/>
-							<Entry inputSpeed="0.00" inputTorque="41990.00" torqueLoss="1288.00"/>
-							<Entry inputSpeed="0.00" inputTorque="46187.00" torqueLoss="1415.00"/>
-							<Entry inputSpeed="0.00" inputTorque="50385.00" torqueLoss="1542.00"/>
-							<Entry inputSpeed="143.00" inputTorque="-5482.00" torqueLoss="216.00"/>
-							<Entry inputSpeed="143.00" inputTorque="-174.00" torqueLoss="28.00"/>
-							<Entry inputSpeed="143.00" inputTorque="0.00" torqueLoss="9.00"/>
-							<Entry inputSpeed="143.00" inputTorque="116.00" torqueLoss="14.00"/>
-							<Entry inputSpeed="143.00" inputTorque="222.00" torqueLoss="17.00"/>
-							<Entry inputSpeed="143.00" inputTorque="326.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="143.00" inputTorque="432.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="143.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="143.00" inputTorque="853.00" torqueLoss="38.00"/>
-							<Entry inputSpeed="143.00" inputTorque="1273.00" torqueLoss="52.00"/>
-							<Entry inputSpeed="143.00" inputTorque="1694.00" torqueLoss="66.00"/>
-							<Entry inputSpeed="143.00" inputTorque="2115.00" torqueLoss="80.00"/>
-							<Entry inputSpeed="143.00" inputTorque="2536.00" torqueLoss="94.00"/>
-							<Entry inputSpeed="143.00" inputTorque="2957.00" torqueLoss="108.00"/>
-							<Entry inputSpeed="143.00" inputTorque="3372.00" torqueLoss="116.00"/>
-							<Entry inputSpeed="143.00" inputTorque="3786.00" torqueLoss="123.00"/>
-							<Entry inputSpeed="143.00" inputTorque="4200.00" torqueLoss="130.00"/>
-							<Entry inputSpeed="143.00" inputTorque="6323.00" torqueLoss="218.00"/>
-							<Entry inputSpeed="143.00" inputTorque="8427.00" torqueLoss="287.00"/>
-							<Entry inputSpeed="143.00" inputTorque="10532.00" torqueLoss="356.00"/>
-							<Entry inputSpeed="143.00" inputTorque="12635.00" torqueLoss="425.00"/>
-							<Entry inputSpeed="143.00" inputTorque="16843.00" torqueLoss="563.00"/>
-							<Entry inputSpeed="143.00" inputTorque="21052.00" torqueLoss="701.00"/>
-							<Entry inputSpeed="143.00" inputTorque="25260.00" torqueLoss="839.00"/>
-							<Entry inputSpeed="143.00" inputTorque="29467.00" torqueLoss="977.00"/>
-							<Entry inputSpeed="143.00" inputTorque="33676.00" torqueLoss="1115.00"/>
-							<Entry inputSpeed="143.00" inputTorque="37884.00" torqueLoss="1253.00"/>
-							<Entry inputSpeed="143.00" inputTorque="42092.00" torqueLoss="1391.00"/>
-							<Entry inputSpeed="143.00" inputTorque="46300.00" torqueLoss="1529.00"/>
-							<Entry inputSpeed="143.00" inputTorque="50509.00" torqueLoss="1667.00"/>
-							<Entry inputSpeed="285.00" inputTorque="-5496.00" torqueLoss="202.00"/>
-							<Entry inputSpeed="285.00" inputTorque="-172.00" torqueLoss="32.00"/>
-							<Entry inputSpeed="285.00" inputTorque="0.00" torqueLoss="10.00"/>
-							<Entry inputSpeed="285.00" inputTorque="118.00" torqueLoss="16.00"/>
-							<Entry inputSpeed="285.00" inputTorque="223.00" torqueLoss="19.00"/>
-							<Entry inputSpeed="285.00" inputTorque="327.00" torqueLoss="22.00"/>
-							<Entry inputSpeed="285.00" inputTorque="432.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="285.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="285.00" inputTorque="851.00" torqueLoss="37.00"/>
-							<Entry inputSpeed="285.00" inputTorque="1271.00" torqueLoss="50.00"/>
-							<Entry inputSpeed="285.00" inputTorque="1690.00" torqueLoss="63.00"/>
-							<Entry inputSpeed="285.00" inputTorque="2110.00" torqueLoss="75.00"/>
-							<Entry inputSpeed="285.00" inputTorque="2530.00" torqueLoss="88.00"/>
-							<Entry inputSpeed="285.00" inputTorque="2950.00" torqueLoss="101.00"/>
-							<Entry inputSpeed="285.00" inputTorque="3369.00" torqueLoss="113.00"/>
-							<Entry inputSpeed="285.00" inputTorque="3780.00" torqueLoss="117.00"/>
-							<Entry inputSpeed="285.00" inputTorque="4195.00" torqueLoss="124.00"/>
-							<Entry inputSpeed="285.00" inputTorque="6305.00" torqueLoss="200.00"/>
-							<Entry inputSpeed="285.00" inputTorque="8402.00" torqueLoss="262.00"/>
-							<Entry inputSpeed="285.00" inputTorque="10499.00" torqueLoss="324.00"/>
-							<Entry inputSpeed="285.00" inputTorque="12596.00" torqueLoss="386.00"/>
-							<Entry inputSpeed="285.00" inputTorque="16791.00" torqueLoss="510.00"/>
-							<Entry inputSpeed="285.00" inputTorque="20987.00" torqueLoss="636.00"/>
-							<Entry inputSpeed="285.00" inputTorque="25181.00" torqueLoss="760.00"/>
-							<Entry inputSpeed="285.00" inputTorque="29376.00" torqueLoss="884.00"/>
-							<Entry inputSpeed="285.00" inputTorque="33570.00" torqueLoss="1009.00"/>
-							<Entry inputSpeed="285.00" inputTorque="37765.00" torqueLoss="1133.00"/>
-							<Entry inputSpeed="285.00" inputTorque="41960.00" torqueLoss="1259.00"/>
-							<Entry inputSpeed="285.00" inputTorque="46154.00" torqueLoss="1383.00"/>
-							<Entry inputSpeed="285.00" inputTorque="50350.00" torqueLoss="1507.00"/>
-							<Entry inputSpeed="428.00" inputTorque="-5501.00" torqueLoss="200.00"/>
-							<Entry inputSpeed="428.00" inputTorque="-167.00" torqueLoss="35.00"/>
-							<Entry inputSpeed="428.00" inputTorque="0.00" torqueLoss="12.00"/>
-							<Entry inputSpeed="428.00" inputTorque="119.00" torqueLoss="17.00"/>
-							<Entry inputSpeed="428.00" inputTorque="224.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="428.00" inputTorque="328.00" torqueLoss="23.00"/>
-							<Entry inputSpeed="428.00" inputTorque="433.00" torqueLoss="26.00"/>
-							<Entry inputSpeed="428.00" inputTorque="643.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="428.00" inputTorque="851.00" torqueLoss="37.00"/>
-							<Entry inputSpeed="428.00" inputTorque="1270.00" torqueLoss="49.00"/>
-							<Entry inputSpeed="428.00" inputTorque="1689.00" torqueLoss="61.00"/>
-							<Entry inputSpeed="428.00" inputTorque="2109.00" torqueLoss="74.00"/>
-							<Entry inputSpeed="428.00" inputTorque="2529.00" torqueLoss="87.00"/>
-							<Entry inputSpeed="428.00" inputTorque="2949.00" torqueLoss="100.00"/>
-							<Entry inputSpeed="428.00" inputTorque="3365.00" torqueLoss="109.00"/>
-							<Entry inputSpeed="428.00" inputTorque="3778.00" torqueLoss="115.00"/>
-							<Entry inputSpeed="428.00" inputTorque="4191.00" torqueLoss="121.00"/>
-							<Entry inputSpeed="428.00" inputTorque="6296.00" torqueLoss="191.00"/>
-							<Entry inputSpeed="428.00" inputTorque="8390.00" torqueLoss="251.00"/>
-							<Entry inputSpeed="428.00" inputTorque="10485.00" torqueLoss="310.00"/>
-							<Entry inputSpeed="428.00" inputTorque="12579.00" torqueLoss="369.00"/>
-							<Entry inputSpeed="428.00" inputTorque="16767.00" torqueLoss="486.00"/>
-							<Entry inputSpeed="428.00" inputTorque="20955.00" torqueLoss="604.00"/>
-							<Entry inputSpeed="428.00" inputTorque="25143.00" torqueLoss="723.00"/>
-							<Entry inputSpeed="428.00" inputTorque="29332.00" torqueLoss="841.00"/>
-							<Entry inputSpeed="428.00" inputTorque="33521.00" torqueLoss="958.00"/>
-							<Entry inputSpeed="428.00" inputTorque="37708.00" torqueLoss="1076.00"/>
-							<Entry inputSpeed="428.00" inputTorque="41897.00" torqueLoss="1195.00"/>
-							<Entry inputSpeed="428.00" inputTorque="46084.00" torqueLoss="1313.00"/>
-							<Entry inputSpeed="428.00" inputTorque="50273.00" torqueLoss="1430.00"/>
-							<Entry inputSpeed="570.00" inputTorque="-5512.00" torqueLoss="188.00"/>
-							<Entry inputSpeed="570.00" inputTorque="-167.00" torqueLoss="37.00"/>
-							<Entry inputSpeed="570.00" inputTorque="0.00" torqueLoss="13.00"/>
-							<Entry inputSpeed="570.00" inputTorque="121.00" torqueLoss="19.00"/>
-							<Entry inputSpeed="570.00" inputTorque="224.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="570.00" inputTorque="328.00" torqueLoss="23.00"/>
-							<Entry inputSpeed="570.00" inputTorque="433.00" torqueLoss="26.00"/>
-							<Entry inputSpeed="570.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="570.00" inputTorque="850.00" torqueLoss="36.00"/>
-							<Entry inputSpeed="570.00" inputTorque="1268.00" torqueLoss="46.00"/>
-							<Entry inputSpeed="570.00" inputTorque="1685.00" torqueLoss="58.00"/>
-							<Entry inputSpeed="570.00" inputTorque="2104.00" torqueLoss="70.00"/>
-							<Entry inputSpeed="570.00" inputTorque="2523.00" torqueLoss="81.00"/>
-							<Entry inputSpeed="570.00" inputTorque="2943.00" torqueLoss="94.00"/>
-							<Entry inputSpeed="570.00" inputTorque="3363.00" torqueLoss="107.00"/>
-							<Entry inputSpeed="570.00" inputTorque="3776.00" torqueLoss="113.00"/>
-							<Entry inputSpeed="570.00" inputTorque="4189.00" torqueLoss="118.00"/>
-							<Entry inputSpeed="570.00" inputTorque="6281.00" torqueLoss="175.00"/>
-							<Entry inputSpeed="570.00" inputTorque="8369.00" torqueLoss="230.00"/>
-							<Entry inputSpeed="570.00" inputTorque="10459.00" torqueLoss="283.00"/>
-							<Entry inputSpeed="570.00" inputTorque="12547.00" torqueLoss="336.00"/>
-							<Entry inputSpeed="570.00" inputTorque="16724.00" torqueLoss="443.00"/>
-							<Entry inputSpeed="570.00" inputTorque="20901.00" torqueLoss="550.00"/>
-							<Entry inputSpeed="570.00" inputTorque="25078.00" torqueLoss="658.00"/>
-							<Entry inputSpeed="570.00" inputTorque="29255.00" torqueLoss="764.00"/>
-							<Entry inputSpeed="570.00" inputTorque="33432.00" torqueLoss="871.00"/>
-							<Entry inputSpeed="570.00" inputTorque="37611.00" torqueLoss="979.00"/>
-							<Entry inputSpeed="570.00" inputTorque="41788.00" torqueLoss="1086.00"/>
-							<Entry inputSpeed="570.00" inputTorque="45965.00" torqueLoss="1192.00"/>
-							<Entry inputSpeed="570.00" inputTorque="50142.00" torqueLoss="1299.00"/>
-							<Entry inputSpeed="713.00" inputTorque="-5517.00" torqueLoss="181.00"/>
-							<Entry inputSpeed="713.00" inputTorque="-165.00" torqueLoss="39.00"/>
-							<Entry inputSpeed="713.00" inputTorque="0.00" torqueLoss="14.00"/>
-							<Entry inputSpeed="713.00" inputTorque="122.00" torqueLoss="20.00"/>
-							<Entry inputSpeed="713.00" inputTorque="225.00" torqueLoss="22.00"/>
-							<Entry inputSpeed="713.00" inputTorque="329.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="713.00" inputTorque="433.00" torqueLoss="27.00"/>
-							<Entry inputSpeed="713.00" inputTorque="641.00" torqueLoss="30.00"/>
-							<Entry inputSpeed="713.00" inputTorque="850.00" torqueLoss="36.00"/>
-							<Entry inputSpeed="713.00" inputTorque="1267.00" torqueLoss="45.00"/>
-							<Entry inputSpeed="713.00" inputTorque="1684.00" torqueLoss="56.00"/>
-							<Entry inputSpeed="713.00" inputTorque="2102.00" torqueLoss="67.00"/>
-							<Entry inputSpeed="713.00" inputTorque="2521.00" torqueLoss="79.00"/>
-							<Entry inputSpeed="713.00" inputTorque="2939.00" torqueLoss="90.00"/>
-							<Entry inputSpeed="713.00" inputTorque="3358.00" torqueLoss="102.00"/>
-							<Entry inputSpeed="713.00" inputTorque="3775.00" torqueLoss="111.00"/>
-							<Entry inputSpeed="713.00" inputTorque="4188.00" torqueLoss="118.00"/>
-							<Entry inputSpeed="713.00" inputTorque="6272.00" torqueLoss="166.00"/>
-							<Entry inputSpeed="713.00" inputTorque="8357.00" torqueLoss="217.00"/>
-							<Entry inputSpeed="713.00" inputTorque="10442.00" torqueLoss="267.00"/>
-							<Entry inputSpeed="713.00" inputTorque="12527.00" torqueLoss="317.00"/>
-							<Entry inputSpeed="713.00" inputTorque="16697.00" torqueLoss="416.00"/>
-							<Entry inputSpeed="713.00" inputTorque="20867.00" torqueLoss="517.00"/>
-							<Entry inputSpeed="713.00" inputTorque="25039.00" torqueLoss="617.00"/>
-							<Entry inputSpeed="713.00" inputTorque="29209.00" torqueLoss="717.00"/>
-							<Entry inputSpeed="713.00" inputTorque="33379.00" torqueLoss="818.00"/>
-							<Entry inputSpeed="713.00" inputTorque="37549.00" torqueLoss="918.00"/>
-							<Entry inputSpeed="713.00" inputTorque="41719.00" torqueLoss="1017.00"/>
-							<Entry inputSpeed="713.00" inputTorque="45890.00" torqueLoss="1117.00"/>
-							<Entry inputSpeed="713.00" inputTorque="50060.00" torqueLoss="1218.00"/>
-							<Entry inputSpeed="855.00" inputTorque="-5524.00" torqueLoss="174.00"/>
-							<Entry inputSpeed="855.00" inputTorque="-162.00" torqueLoss="42.00"/>
-							<Entry inputSpeed="855.00" inputTorque="0.00" torqueLoss="15.00"/>
-							<Entry inputSpeed="855.00" inputTorque="122.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="855.00" inputTorque="226.00" torqueLoss="22.00"/>
-							<Entry inputSpeed="855.00" inputTorque="329.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="855.00" inputTorque="434.00" torqueLoss="27.00"/>
-							<Entry inputSpeed="855.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="855.00" inputTorque="849.00" torqueLoss="35.00"/>
-							<Entry inputSpeed="855.00" inputTorque="1266.00" torqueLoss="45.00"/>
-							<Entry inputSpeed="855.00" inputTorque="1683.00" torqueLoss="55.00"/>
-							<Entry inputSpeed="855.00" inputTorque="2100.00" torqueLoss="65.00"/>
-							<Entry inputSpeed="855.00" inputTorque="2518.00" torqueLoss="77.00"/>
-							<Entry inputSpeed="855.00" inputTorque="2937.00" torqueLoss="87.00"/>
-							<Entry inputSpeed="855.00" inputTorque="3355.00" torqueLoss="99.00"/>
-							<Entry inputSpeed="855.00" inputTorque="3775.00" torqueLoss="111.00"/>
-							<Entry inputSpeed="855.00" inputTorque="4188.00" torqueLoss="117.00"/>
-							<Entry inputSpeed="855.00" inputTorque="6264.00" torqueLoss="158.00"/>
-							<Entry inputSpeed="855.00" inputTorque="8346.00" torqueLoss="205.00"/>
-							<Entry inputSpeed="855.00" inputTorque="10427.00" torqueLoss="252.00"/>
-							<Entry inputSpeed="855.00" inputTorque="12509.00" torqueLoss="299.00"/>
-							<Entry inputSpeed="855.00" inputTorque="16674.00" torqueLoss="393.00"/>
-							<Entry inputSpeed="855.00" inputTorque="20838.00" torqueLoss="487.00"/>
-							<Entry inputSpeed="855.00" inputTorque="25003.00" torqueLoss="581.00"/>
-							<Entry inputSpeed="855.00" inputTorque="29167.00" torqueLoss="675.00"/>
-							<Entry inputSpeed="855.00" inputTorque="33330.00" torqueLoss="769.00"/>
-							<Entry inputSpeed="855.00" inputTorque="37495.00" torqueLoss="863.00"/>
-							<Entry inputSpeed="855.00" inputTorque="41659.00" torqueLoss="957.00"/>
-							<Entry inputSpeed="855.00" inputTorque="45823.00" torqueLoss="1051.00"/>
-							<Entry inputSpeed="855.00" inputTorque="49988.00" torqueLoss="1145.00"/>
-							<Entry inputSpeed="998.00" inputTorque="-5526.00" torqueLoss="172.00"/>
-							<Entry inputSpeed="998.00" inputTorque="-160.00" torqueLoss="44.00"/>
-							<Entry inputSpeed="998.00" inputTorque="0.00" torqueLoss="16.00"/>
-							<Entry inputSpeed="998.00" inputTorque="123.00" torqueLoss="22.00"/>
-							<Entry inputSpeed="998.00" inputTorque="227.00" torqueLoss="23.00"/>
-							<Entry inputSpeed="998.00" inputTorque="331.00" torqueLoss="26.00"/>
-							<Entry inputSpeed="998.00" inputTorque="435.00" torqueLoss="28.00"/>
-							<Entry inputSpeed="998.00" inputTorque="641.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="998.00" inputTorque="850.00" torqueLoss="36.00"/>
-							<Entry inputSpeed="998.00" inputTorque="1266.00" torqueLoss="45.00"/>
-							<Entry inputSpeed="998.00" inputTorque="1682.00" torqueLoss="55.00"/>
-							<Entry inputSpeed="998.00" inputTorque="2100.00" torqueLoss="64.00"/>
-							<Entry inputSpeed="998.00" inputTorque="2517.00" torqueLoss="74.00"/>
-							<Entry inputSpeed="998.00" inputTorque="2935.00" torqueLoss="86.00"/>
-							<Entry inputSpeed="998.00" inputTorque="3354.00" torqueLoss="97.00"/>
-							<Entry inputSpeed="998.00" inputTorque="3772.00" torqueLoss="109.00"/>
-							<Entry inputSpeed="998.00" inputTorque="4185.00" torqueLoss="115.00"/>
-							<Entry inputSpeed="998.00" inputTorque="6258.00" torqueLoss="153.00"/>
-							<Entry inputSpeed="998.00" inputTorque="8338.00" torqueLoss="197.00"/>
-							<Entry inputSpeed="998.00" inputTorque="10418.00" torqueLoss="242.00"/>
-							<Entry inputSpeed="998.00" inputTorque="12498.00" torqueLoss="288.00"/>
-							<Entry inputSpeed="998.00" inputTorque="16658.00" torqueLoss="377.00"/>
-							<Entry inputSpeed="998.00" inputTorque="20817.00" torqueLoss="466.00"/>
-							<Entry inputSpeed="998.00" inputTorque="24977.00" torqueLoss="556.00"/>
-							<Entry inputSpeed="998.00" inputTorque="29137.00" torqueLoss="645.00"/>
-							<Entry inputSpeed="998.00" inputTorque="33297.00" torqueLoss="735.00"/>
-							<Entry inputSpeed="998.00" inputTorque="37456.00" torqueLoss="825.00"/>
-							<Entry inputSpeed="998.00" inputTorque="41616.00" torqueLoss="914.00"/>
-							<Entry inputSpeed="998.00" inputTorque="45776.00" torqueLoss="1003.00"/>
-							<Entry inputSpeed="998.00" inputTorque="49936.00" torqueLoss="1093.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="-5529.00" torqueLoss="169.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="-158.00" torqueLoss="46.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="0.00" torqueLoss="18.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="125.00" torqueLoss="23.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="229.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="332.00" torqueLoss="27.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="436.00" torqueLoss="29.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="643.00" torqueLoss="32.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="851.00" torqueLoss="37.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="1267.00" torqueLoss="45.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="1683.00" torqueLoss="55.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="2100.00" torqueLoss="64.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="2516.00" torqueLoss="74.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="2934.00" torqueLoss="85.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="3352.00" torqueLoss="96.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="3771.00" torqueLoss="108.00"/>
-							<Entry inputSpeed="1140.00" inputTorque="4183.00" torqueLoss="114.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="-5529.00" torqueLoss="169.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="-155.00" torqueLoss="49.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="0.00" torqueLoss="19.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="126.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="230.00" torqueLoss="26.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="333.00" torqueLoss="28.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="437.00" torqueLoss="30.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="644.00" torqueLoss="34.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="853.00" torqueLoss="38.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="1267.00" torqueLoss="46.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="1683.00" torqueLoss="55.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="2098.00" torqueLoss="64.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="2516.00" torqueLoss="74.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="2934.00" torqueLoss="85.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="3351.00" torqueLoss="95.00"/>
-							<Entry inputSpeed="1283.00" inputTorque="3764.00" torqueLoss="101.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="-5531.00" torqueLoss="167.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="-153.00" torqueLoss="51.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="0.00" torqueLoss="20.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="128.00" torqueLoss="26.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="231.00" torqueLoss="27.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="336.00" torqueLoss="30.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="436.00" torqueLoss="29.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="646.00" torqueLoss="36.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="853.00" torqueLoss="38.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="1268.00" torqueLoss="46.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="1683.00" torqueLoss="55.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="2098.00" torqueLoss="63.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="2516.00" torqueLoss="73.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="2932.00" torqueLoss="84.00"/>
-							<Entry inputSpeed="1425.00" inputTorque="3345.00" torqueLoss="89.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="-5538.00" torqueLoss="160.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="-148.00" torqueLoss="56.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="0.00" torqueLoss="21.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="129.00" torqueLoss="28.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="232.00" torqueLoss="29.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="336.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="440.00" torqueLoss="32.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="647.00" torqueLoss="37.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="854.00" torqueLoss="41.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="1269.00" torqueLoss="48.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="1684.00" torqueLoss="57.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="2101.00" torqueLoss="65.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="2517.00" torqueLoss="74.00"/>
-							<Entry inputSpeed="1568.00" inputTorque="2929.00" torqueLoss="80.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="-5540.00" torqueLoss="158.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="-144.00" torqueLoss="60.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="0.00" torqueLoss="24.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="132.00" torqueLoss="30.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="234.00" torqueLoss="31.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="340.00" torqueLoss="34.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="442.00" torqueLoss="35.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="650.00" torqueLoss="38.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="856.00" torqueLoss="42.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="1269.00" torqueLoss="49.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="1684.00" torqueLoss="57.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="2098.00" torqueLoss="64.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="2515.00" torqueLoss="73.00"/>
-							<Entry inputSpeed="1853.00" inputTorque="2928.00" torqueLoss="79.00"/>
-						</TorqueLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#AXL-EC3ohnoh">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Axlegear>
 			</Powertrain>
 			<AxleWheels>
 				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -11738,7 +11311,7 @@
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>
-				<Data xsi:type="AUX_PEV_PrimaryBusType">
+				<Data xsi:type="AUX_FCHV_PrimaryBusType">
 					<SteeringPump>
 						<Technology axleNumber="1">Electric driven pump</Technology>
 					</SteeringPump>
@@ -11753,73 +11326,5 @@
 				</Data>
 			</Auxiliaries>
 		</Components>
-		<MonitoringData>
-			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
-			<Vehicle>
-				<Make>##VEHICLE_MAKE##</Make>
-			</Vehicle>
-			<ElectricEnergyStorage>
-				<Manufacturer>##ELECTRIC_ENERGY_STORAGE_MANUFACTURER##</Manufacturer>
-				<ManufacturerAddress>##ELECTRIC_ENERGY_STORAGE_MANUFACTURERADDRESS##</ManufacturerAddress>
-				<Make>##ELECTRIC_ENERGY_STORAGE_MAKE##</Make>
-			</ElectricEnergyStorage>
-			<Powertrain axleNumber="1" xsi:type="xEV_EM2_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-				<Gearbox>
-					<Manufacturer>##GEARBOX_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##GEARBOX_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##GEARBOX_MAKE##</Make>
-				</Gearbox>
-				<Axlegear>
-					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##AXLEGEAR_MAKE##</Make>
-				</Axlegear>
-			</Powertrain>
-			<Powertrain axleNumber="2" xsi:type="xEV_IEPC_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-				<Axlegear>
-					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##AXLEGEAR_MAKE##</Make>
-				</Axlegear>
-			</Powertrain>
-			<AxleWheels>
-				<Axle axleNumber="1">
-					<Tyre>
-						<Manufacturer>##TYRE_1_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_1_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_1_MAKE##</Make>
-					</Tyre>
-				</Axle>
-				<Axle axleNumber="2">
-					<Tyre>
-						<Manufacturer>##TYRE_2_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_2_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_2_MAKE##</Make>
-					</Tyre>
-				</Axle>
-			</AxleWheels>
-			<AdvancedReducingTechnologies>
-				<!--
-<Entry category="advanced aerodynamic measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced rolling resistance measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced drivetrain technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced engine technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced auxiliary technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="additional ADAS technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced powertrain integration and hybridisation">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="other">##TECHNOLOGY_BRAND_NAME##</Entry>
--->
-			</AdvancedReducingTechnologies>
-		</MonitoringData>
 	</Vehicle>
 </tns:VectoInputDeclaration>

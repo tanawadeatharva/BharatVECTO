@@ -254,16 +254,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override ArchitectureID ArchitectureID { get => VehicleType.GetArchitectureID(PowertrainPosition.IEPC); }
 
-		#region Overrides of JSONVehicleDataV7
+        #region Overrides of JSONVehicleDataV7
 
-		//public override bool OvcHev => true;
+        //public override bool OvcHev => true;
 
-		//public override Watt MaxChargingPower => 0.SI<Watt>();
+        //public override Watt MaxChargingPower => 0.SI<Watt>();
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+    }
 
 	public class JSONVehicleDataV10_HEV_BEV :  JSONVehicleDataV9, IVehicleEngineeringInputData
 	{
@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 		//	throw new NotImplementedException();
-		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		public override IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 		{
 			get
 			{
@@ -403,14 +403,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							Path.Combine(BasePath, (x as JProperty)?.Value.Value<string>() ?? ""),
 							"ElectricMotorTorqueLimits")
 					)).ToList();
-					return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>()
-						{{ GetElectricMachines().Entries.First().Position, entries }};
+					return new Dictionary<EMPlacement, IList<Tuple<Volt, TableData>>>()
+						{{ new EMPlacement(GetElectricMachines().Entries.First().Position, Constants.NOT_IN_AXLE_POWERTRAIN), entries }};
 				}
 
-				return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
+				return new Dictionary<EMPlacement, IList<Tuple<Volt, TableData>>>() {
 					{
-						GetElectricMachines().Entries.First().Position,
-						new List<Tuple<Volt, TableData>>() {
+                        new EMPlacement(GetElectricMachines().Entries.First().Position, Constants.NOT_IN_AXLE_POWERTRAIN),
+                        new List<Tuple<Volt, TableData>>() {
 							Tuple.Create((Volt)null, ReadTableData(
 								Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
 								"ElectricMotorTorqueLimits"))
@@ -578,7 +578,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Meter Height => SavedInDeclarationMode ? null : Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
 
-		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public virtual IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 
 		public virtual TableData BoostingLimitations => null;
 
@@ -591,8 +591,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
+        
+		public ArchitectureID ArchitectureIDPwt2 { get; }
 
-		public int? NumSteeredAxles => null;
+        public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual ArchitectureID ArchitectureID { get; }
@@ -725,8 +727,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IPTOTransmissionInputData IVehicleComponentsDeclaration.PTOTransmissionInputData => _ptoInputData ?? (_ptoInputData = new JSONPTOTransmissioninputData(this));
 
+        public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; }
 
-		IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+
+        IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
 
 		IElectricStorageSystemEngineeringInputData IVehicleComponentsEngineering.ElectricStorage => GetElectricStorage();
 

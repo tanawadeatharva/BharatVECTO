@@ -12,24 +12,21 @@
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>10143</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
-		<RetarderType axleNumber="2">Transmission Input Retarder</RetarderType>
-		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
-		<RetarderRatio axleNumber="2">2.000</RetarderRatio>
+		<RetarderType axleNumber="1">None</RetarderType>
+		<RetarderType axleNumber="2">None</RetarderType>
 		<AngledriveType axleNumber="1">None</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
 		<PTO axleNumber="1">
-			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
-			<PTOOtherElements>shift claw, synchronizer, sliding gearwheel</PTOOtherElements>
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<PTO axleNumber="2">
-			<PTOShaftsGearWheels>drive shaft and/or up to 2 gear wheels</PTOShaftsGearWheels>
-			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
+			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
+			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<VocationalVehicle>true</VocationalVehicle>
 		<SleeperCab>true</SleeperCab>
-		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
 		<ArchitectureID>E3</ArchitectureID>
 		<ArchitectureIDPwt2>E4</ArchitectureIDPwt2>
 		<OVC>true</OVC>
@@ -38,42 +35,6 @@
 		<ADAS>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<ElectricMotorTorqueLimits>
-			<ElectricMachine axleNumber="1">
-				<Position>3</Position>
-				<VoltageLevel>
-					<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
-			<ElectricMachine  axleNumber="2">
-				<Position>4</Position>
-				<VoltageLevel>
-					<Voltage>100</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-				<VoltageLevel>
-					<Voltage>500</Voltage>
-					<MaxTorqueCurve>
-						<Entry outShaftSpeed="0.00" maxTorque="200.00" minTorque="-200.00"/>
-						<Entry outShaftSpeed="1000.00" maxTorque="300.00" minTorque="-300.00"/>
-					</MaxTorqueCurve>
-				</VoltageLevel>
-			</ElectricMachine>
-		</ElectricMotorTorqueLimits>
 		<Components>
 			<ElectricEnergyStorage>
 				<Battery>
@@ -2126,31 +2087,6 @@
 						</v2.3:Signature>
 					</ADC>
 				</ElectricMachine>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
 				<Axlegear>
 					<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
@@ -4184,30 +4120,6 @@
 						</v2.3:Signature>
 					</ADC>
 				</ElectricMachine>
-				<Retarder><!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>
 			</Powertrain>
 			<AxleWheels>
 				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -4285,87 +4197,6 @@
 					</HVAC>
 				</Data>
 			</Auxiliaries>
-			<AirDrag>
-				<!-- optional -->
-				<v2.0:Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-					<Manufacturer>Generic Manufacturer</Manufacturer>
-					<Model>Generic Model</Model>
-					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-					<Date>2017-03-24T15:00:00Z</Date>
-					<AppVersion>Vecto AirDrag x.y</AppVersion>
-					<CdxA_0>4.31</CdxA_0>
-					<TransferredCdxA>4.31</TransferredCdxA>
-					<DeclaredCdxA>4.31</DeclaredCdxA>
-				</v2.0:Data>
-				<v2.0:Signature>
-					<di:Reference URI="#CabinX23h">
-						<di:Transforms>
-							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-						</di:Transforms>
-						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>NroIsfnT7+1zYG5CTHxpclh0ZaRZvGyrfFPmWdKbFbg=</di:DigestValue>
-					</di:Reference>
-				</v2.0:Signature>
-			</AirDrag>
 		</Components>
-		<MonitoringData>
-			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
-			<Vehicle>
-				<Make>##VEHICLE_MAKE##</Make>
-			</Vehicle>
-			<ElectricEnergyStorage>
-				<Manufacturer>##ELECTRIC_ENERGY_STORAGE_MANUFACTURER##</Manufacturer>
-				<ManufacturerAddress>##ELECTRIC_ENERGY_STORAGE_MANUFACTURERADDRESS##</ManufacturerAddress>
-				<Make>##ELECTRIC_ENERGY_STORAGE_MAKE##</Make>
-			</ElectricEnergyStorage>
-			<Powertrain axleNumber="1" xsi:type="xEV_EM3_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-				<Axlegear>
-					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##AXLEGEAR_MAKE##</Make>
-				</Axlegear>
-			</Powertrain>
-			<Powertrain axleNumber="2" xsi:type="xEV_EM4_Powertrain_DataType">
-				<ElectricMachine>
-					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
-					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
-					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
-				</ElectricMachine>
-			</Powertrain>
-			<AxleWheels>
-				<Axle axleNumber="1">
-					<Tyre>
-						<Manufacturer>##TYRE_1_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_1_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_1_MAKE##</Make>
-					</Tyre>
-				</Axle>
-				<Axle axleNumber="2">
-					<Tyre>
-						<Manufacturer>##TYRE_2_MANUFACTURER##</Manufacturer>
-						<ManufacturerAddress>##TYRE_2_MANUFACTURERADDRESS##</ManufacturerAddress>
-						<Make>##TYRE_2_MAKE##</Make>
-					</Tyre>
-				</Axle>
-			</AxleWheels>
-			<AdvancedReducingTechnologies>
-				<!--
-<Entry category="advanced aerodynamic measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced rolling resistance measures">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced drivetrain technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced engine technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced auxiliary technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="additional ADAS technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="advanced powertrain integration and hybridisation">##TECHNOLOGY_BRAND_NAME##</Entry>
-<Entry category="other">##TECHNOLOGY_BRAND_NAME##</Entry>
--->
-			</AdvancedReducingTechnologies>
-		</MonitoringData>
 	</Vehicle>
 </tns:VectoInputDeclaration>
