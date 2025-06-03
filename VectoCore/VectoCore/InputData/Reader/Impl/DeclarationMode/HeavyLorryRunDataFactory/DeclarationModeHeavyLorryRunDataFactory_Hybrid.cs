@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					: ptoTransmissionData;
 
 				runData.OVCMode = ovcMode;
-				runData.ModFileSuffix = "_pre";
+				runData.ModFileSuffix += "_pre";
 				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
 				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 
@@ -564,6 +564,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;
+					runData.ModFileSuffix += runData.Loading;
 					runData.Iteration++;
 				};
 
