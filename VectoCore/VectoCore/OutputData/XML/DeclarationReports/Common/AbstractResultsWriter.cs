@@ -130,9 +130,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 					{
 						ChargeDepletingResult = cd,
 						ChargeSustainingResult = cs,
-						Weighted = cd.VehicleClass.IsCompletedBus() ?
-									DeclarationData.CalculateWeightedResultCompletedBus(cd, cs) :
-									DeclarationData.CalculateWeightedResult(cd, cs)
+						Weighted = null
 					};
 				})
 				.ToList<IOVCResultEntry>();
