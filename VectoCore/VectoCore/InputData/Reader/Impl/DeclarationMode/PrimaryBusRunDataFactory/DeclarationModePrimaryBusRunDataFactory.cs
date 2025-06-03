@@ -526,7 +526,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			}
 		}
 
-		public class FuelCell : Hybrid
+		public class FuelCell : BatteryElectric
 		{
 			public FuelCell(
 				IDeclarationInputDataProvider dataProvider,
@@ -554,22 +554,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				{
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
+						var ovcMode = vehicle.OVC ? OvcHevMode.ChargeSustaining : OvcHevMode.NotApplicable;
 
-						if (vehicle.OVC)
-						{
-							if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0))
-							{
-								throw new VectoException(
-									"MaxChargingPower has to be greater than 0 if OVC is selected");
-							}
-
-							yield return CreateVectoRunData(mission, loading, null, OvcHevMode.ChargeDepleting);
-							yield return CreateVectoRunData(mission, loading, null, OvcHevMode.ChargeSustaining);
-						}
-						else
-						{
-							yield return CreateVectoRunData(mission, loading, null, OvcHevMode.ChargeSustaining);
-						}
+						var simulationRunData = CreateVectoRunData(mission, loading, null, ovcMode);
+						yield return simulationRunData;
 					}
 				}
 			}
@@ -625,7 +613,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
 
+				runData.OVCMode = ovcMode;
+				runData.ModFileSuffix += "_pre";
 				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
+				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 
 				return runData;
 
@@ -667,6 +658,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;
+					runData.ModFileSuffix += runData.Loading;
 					runData.Iteration++;
 				};
 
