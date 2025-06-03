@@ -39,17 +39,15 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
     public partial class FuelCellPreRunPostprocessor : IFuelCellPreRunInfo
     {
-		#region
-
-		public IOutputDataWriter Writer { get; set; }
-		#endregion
-		//public ModalDataContainer ModData;
+		public string WriterBasePath { get; set; }
 
 		#region PreRunInfo
 
 		private string RunName;
 		private PreRunEntry[] _preRunResults;
 		private Meter _totalDistance;
+		private bool _writeModalResults = true;
+
         public Meter TotalDistance
 		{
 			get => _totalDistance ?? (_totalDistance =
@@ -150,6 +148,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 
 			return es;
 		}
+
+		public SearchResult CalculateFuelCellPowerDemand(FuelCellSystemData fcData, BatterySystemData batData, bool writeModalResults)
+		{
+			_writeModalResults = writeModalResults;
+			return CalculateFuelCellPowerDemand(fcData, batData);
+		}
+
 		/// <summary>
 		/// Entry
 		/// </summary>
@@ -570,16 +575,22 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             return true;
         }
 
-
-
 		[Conditional("TRACE_FC")]
 		private void WriteEntriesToFile(Meter windowSize, FCCalcEntry[] fcCalcEntries, double initSoc,
             WattSecond deltaEnergyBatInt, bool success)
         {
-
 			lock (fileLock)
             {
-                using (var fs = new StreamWriter(Path.Combine(Path.GetDirectoryName(Writer?.JobFile) ?? "", $"fuelcell_data_{RunName}_{Math.Round(windowSize.Value(), 0)}_soc_{initSoc}_{(success ? "success" : "")}.csv")))
+				if (!_writeModalResults)
+				{
+					return;
+				}
+
+				var preRunEntriesCSVPath = Path.Combine(
+					Path.GetDirectoryName(WriterBasePath) ?? "",
+					$"fuelcell_data_{RunName}_{Math.Round(windowSize.Value(), 0)}_soc_{initSoc}_{(success ? "success" : "")}.csv");
+
+				using (var fs = new StreamWriter(preRunEntriesCSVPath))
                 {
                     fs.WriteLine($"DeltaEnergyBat: {deltaEnergyBatInt} / {deltaEnergyBatInt.ConvertToKiloWattHour()}");
                     fs.WriteLine(FCCalcEntry.Header);

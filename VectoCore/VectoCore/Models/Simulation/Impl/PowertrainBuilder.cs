@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -158,7 +159,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = BuildFullPowertrainIEPCE(data, modData, sumWriter);
 
 			ConnectFuelCellSystem(container.ElectricSystemInfo as ElectricSystem, data, container);
-			
+
 			return container;
 		}
 
@@ -167,6 +168,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = BuildFullPowertrainBatteryElectric(data, modData, sumWriter);
 			var es = container.ElectricSystemInfo as ElectricSystem;
 			ConnectFuelCellSystem(es, data, container);
+
 			return container;
 		}
 

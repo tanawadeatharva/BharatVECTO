@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Ninject;
@@ -387,8 +388,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 	}
-
-
+	
 	public class ExemptedVehicleContainer : VehicleContainer, IExemptedVehicleContainer
     {
 		private IMileageCounter _mileageCounter;

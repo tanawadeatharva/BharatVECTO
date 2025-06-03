@@ -26,10 +26,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.IEPC_S.ToString());
 
-			// todo amogoda: m12 - check usage of SerialHybridModalDataPostprocessingCorrection is correct 
-			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
+			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
 				.Named(VectoSimulationJobType.FCHV.ToString());
-			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
+			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
 				.Named(VectoSimulationJobType.FCHV_IEPC.ToString());
 
 			Bind<IModalDataPostProcessor>().To<ParallelHybridModalDataPostprocessingCorrection>()

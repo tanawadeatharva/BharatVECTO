@@ -475,8 +475,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					(bs) => runData.BatteryData = bs,
 					(sc) => runData.SuperCapData = sc);
 
-                runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
-
                 runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits, runData.BatteryData.CalculateVoltageCenterSoc(), null);
 				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
 				{
@@ -521,15 +519,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					: ptoTransmissionData;
 
 				runData.OVCMode = ovcMode;
-				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OVC)
-				{
-					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
-				}
-				
+				runData.ModFileSuffix += "_pre";
 				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData);
 				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
-
-				runData.OVCMode = ovcMode;
 
 				return runData;
 			}
@@ -542,13 +534,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				iterativeRunStrategy.Update = (modData, iterationRunData) =>
 				{
-					var engDataAdapter = new EngineeringDataAdapter();
+					var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
 
 					/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
 					/// Comment from [1]:
 					///		In case the battery is modified after creating the rundata
 					///		(testing, do not create new battery data).
-					iterationRunData.BatteryData = engDataAdapter.CreateFuelCellPreProcessingBattery(
+					iterationRunData.BatteryData = fchvDataAdapter.CreateFuelCellPreProcessingBattery(
 						fuelCellSystemData,
 						iterationRunData.BatteryData,
 						out var fcBatteries);
@@ -560,15 +552,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					iterationRunData.JobType = FuelCellJobType;
 					iterationRunData.ModFileSuffix = string.Empty;
 					iterationRunData.FuelCellSystemData = fuelCellSystemData;
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
+					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection()
+					{
+						FCHVElectricEnergyConsumptionSoC = FCHVPostProcessingCorrection.CalculateElectricEnergyConsumption(modData),
+					};
 
 					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-						engDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
+						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
 					iterationRunData.FuelCellSystemData.FuelCellShareMap =
-						engDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
+						fchvDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;
+					runData.ModFileSuffix += runData.Loading;
+					runData.Iteration++;
 				};
 
 				return iterativeRunStrategy;
@@ -582,11 +579,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 							// Pre-run, iteration 0.
 							new PreRunOptions()
 							{
-#if TRACE_FC
 								WriteModAndSumData = true,
-#else
-								WriteModAndSumData = false
-#endif
+//#if TRACE_FC
+//								WriteModAndSumData = true,
+//#else
+//								WriteModAndSumData = false
+//#endif
 							},
 
 							// Real run, iteration 1.

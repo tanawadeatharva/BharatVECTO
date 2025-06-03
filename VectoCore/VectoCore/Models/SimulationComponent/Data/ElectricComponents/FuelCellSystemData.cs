@@ -77,7 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 
 			var powerDemand = fcPostProcessor.CalculateFuelCellPowerDemand(
 				this,
-				batteryData.Clone());
+				batteryData.Clone(),
+				modData.WriteModalResults);
 			batteryData.InitialSoC = powerDemand.InitSoc;
 
 			FuelCellPowerMap = new FuelCellPowerMap(powerDemand.Entries);
