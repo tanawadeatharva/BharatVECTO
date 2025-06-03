@@ -1810,10 +1810,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static int GetDeclarationReportFinalResultEntryIndex<T>(List<T> results) where T:IResultEntry
+		public static int GetDeclarationReportFinalResultEntryIndex<T>(List<T> results, VectoSimulationJobType jobType) where T:IResultEntry
 		{
-			if (results.Any(r => r.OVCMode == OvcHevMode.ChargeSustaining)) {
-				return results.Select((r, idx) => Tuple.Create(Math.Abs(r.DeltaSoC), idx)).MinBy(x => x.Item1).Item2;
+			if (results.Any(r => r.OVCMode == OvcHevMode.ChargeSustaining))
+			{
+				/// FCHV pre-run should not be taken into account for the final result.
+				/// FCHVs Iteration == 0 -> PEV pre-run.
+				return results
+					.Select((r, idx) => Tuple.Create(r, idx))
+					.Where(r => (jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC) ? r.Item1.OVCIteration != 0 : true)
+					.MinBy(r => Math.Abs(r.Item1.DeltaSoC)).Item2;
 			}
 
 			return results.Count - 1;

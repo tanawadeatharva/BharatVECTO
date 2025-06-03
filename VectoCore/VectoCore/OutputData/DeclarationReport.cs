@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.OutputData
 	public abstract class DeclarationReport<T> : IDeclarationReport where T : class, IResultEntry, new()
 	{
 		
-		private readonly List<Tuple<MissionType, LoadingType, T>> ResultsInternal = new List<Tuple<MissionType, LoadingType, T>>();
+		private readonly List<Tuple<MissionType, LoadingType, VectoSimulationJobType, T>> ResultsInternal = new List<Tuple<MissionType, LoadingType, VectoSimulationJobType, T>>();
 
 		
 		/// <summary>
@@ -253,15 +253,15 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void AddResult(VectoRunData runData,
-			IModalDataContainer modData)
+		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
 			//return;
 			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T();
 				entry.Initialize(runData, modData);
-				lock (ResultsInternal) {
-					ResultsInternal.Add(Tuple.Create(entry.Mission, entry.LoadingType, entry));
+				lock (ResultsInternal)
+				{
+					ResultsInternal.Add(Tuple.Create(entry.Mission, entry.LoadingType, runData.JobType, entry));
 				}
 
 				DoStoreResult(entry, runData, modData);
@@ -274,15 +274,16 @@ namespace TUGraz.VectoCore.OutputData
 			get
 			{
 				lock (ResultsInternal) {
-					return ResultsInternal.GroupBy(x => Tuple.Create(x.Item1, x.Item2, x.Item3.VehicleClass, x.Item3.OVCMode),
-							x => x.Item3,
-							(grp, results) => {
-								var myResults = results.ToList();
-								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(myResults);
-								if (bestResult < 0 || bestResult >= myResults.Count) {
-									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {myResults.Count}");
+					return ResultsInternal.GroupBy(
+							r => Tuple.Create(r.Item1, r.Item2, r.Item4.VehicleClass, r.Item4.OVCMode, r.Item3),
+							k => k.Item4,
+							(group, results) => {
+								var simResults = results.ToList();
+								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.Item5);
+								if (bestResult < 0 || bestResult >= simResults.Count) {
+									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {simResults.Count}");
 								}
-								return myResults[bestResult];
+								return simResults[bestResult];
 							});
 				}
             }
@@ -292,7 +293,10 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			get
 			{
-				return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
+				return Results
+					.OrderBy(x => x.VehicleClass)
+					.ThenBy(x => x.FuelMode)
+					.ThenBy(x => x.Mission)
 					.ThenBy(x => x.LoadingType);
             }
 		}
