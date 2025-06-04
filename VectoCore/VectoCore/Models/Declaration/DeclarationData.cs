@@ -1817,9 +1817,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				/// FCHV pre-run should not be taken into account for the final result.
 				/// FCHVs Iteration == 0 -> PEV pre-run.
 				return results
-					.Select((r, idx) => Tuple.Create(r, idx))
-					.Where(r => (jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC) ? r.Item1.OVCIteration != 0 : true)
-					.MinBy(r => Math.Abs(r.Item1.DeltaSoC)).Item2;
+					.Select((r, idx) => (entry: r, index: idx))
+					.Where(r => (jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC) ? r.entry.OVCIteration != 0 : true)
+					.MinBy(r => Math.Abs(r.entry.DeltaSoC)).index;
 			}
 
 			return results.Count - 1;

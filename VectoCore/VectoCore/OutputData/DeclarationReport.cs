@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -43,7 +41,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData
@@ -221,7 +218,8 @@ namespace TUGraz.VectoCore.OutputData
 	public abstract class DeclarationReport<T> : IDeclarationReport where T : class, IResultEntry, new()
 	{
 		
-		private readonly List<Tuple<MissionType, LoadingType, VectoSimulationJobType, T>> ResultsInternal = new List<Tuple<MissionType, LoadingType, VectoSimulationJobType, T>>();
+		private readonly List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)> ResultsInternal =
+			new List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)>();
 
 		
 		/// <summary>
@@ -261,7 +259,7 @@ namespace TUGraz.VectoCore.OutputData
 				entry.Initialize(runData, modData);
 				lock (ResultsInternal)
 				{
-					ResultsInternal.Add(Tuple.Create(entry.Mission, entry.LoadingType, runData.JobType, entry));
+					ResultsInternal.Add((entry.Mission, entry.LoadingType, runData.JobType, entry));
 				}
 
 				DoStoreResult(entry, runData, modData);
@@ -275,11 +273,11 @@ namespace TUGraz.VectoCore.OutputData
 			{
 				lock (ResultsInternal) {
 					return ResultsInternal.GroupBy(
-							r => Tuple.Create(r.Item1, r.Item2, r.Item4.VehicleClass, r.Item4.OVCMode, r.Item3),
-							k => k.Item4,
+							r => (r.missionType, r.loading, vehicleClass: r.entry.VehicleClass, ovcMode: r.entry.OVCMode, r.simulationType),
+							r => r.entry,
 							(group, results) => {
 								var simResults = results.ToList();
-								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.Item5);
+								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.simulationType);
 								if (bestResult < 0 || bestResult >= simResults.Count) {
 									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {simResults.Count}");
 								}
