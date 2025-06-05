@@ -1,8 +1,15 @@
+# VECTO 5\.x Release Notes
 
-## VECTO v5.0.0-RC (05-06-2025)
+![](img%5CRelease%20Notes%20Vecto4x0.png)
+
+<!-- Cover Slide -->
 
 
-### Features
+
+# VECTO v5.0.0-RC (05-06-2025)
+
+
+## Features
 
 - New (v2.7) XSD for vehicles (vecto/vecto!334)
 
@@ -33,7 +40,7 @@
 - HEV - Get Best dSOC in vsum (vecto/vecto!383)
 
 
-### Bug Fixes
+## Bug Fixes
 
 - Non-https link in manual (vecto/vecto!339)
 
@@ -112,7 +119,10 @@
 - Ignore FCHV pre-run in best deltaSoC calculation (vecto/vecto!388)
 
 
-### Drop
+## Drop
 
 - MaxChargingPower requirement for OVC in v2.7 (vecto/vecto!358)
+
+
+
 
