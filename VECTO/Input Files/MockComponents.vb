@@ -33,4 +33,5 @@ Public Class MockComponents
     Public ReadOnly Property ElectricStorage As IElectricStorageSystemDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricStorage
     Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
     Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
+    Public ReadOnly Property FuelCellSystem As IFuelCellSystemDeclarationInputData Implements IVehicleComponentsDeclaration.FuelCellSystem
 End Class

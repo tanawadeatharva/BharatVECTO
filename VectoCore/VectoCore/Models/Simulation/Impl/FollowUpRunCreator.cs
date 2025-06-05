@@ -27,6 +27,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public interface IFollowUpRunCreator
 	{
 		bool RunAgain(Action<VectoRunData> runAgainAction, IVectoRun run, Action<PreRunOptions> beforeNextRun);
+
+		// in case a follow-up run is indicated by RunAgain, this property needs to provide the Powertrain builder to create the 
+		// follow-up run
+		IPowertrainBuilder PowertrainBuilder { get; }
 	}
 
 
@@ -39,6 +43,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return false;
 		}
 
+		// as no follow-up run is created the powertrain builder is not necessary
+		public IPowertrainBuilder PowertrainBuilder => null;
+
 		#endregion
 	}
 
@@ -47,14 +54,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public class FollowUpRunCreator : LoggingObject, IFollowUpRunCreator
 	{
-		private string original_modfile_suffix = null;
-		private int iteration = 0;
+		private string _originalModfileSuffix = null;
+		private int _iteration = 0;
 
 		private readonly IIterativeRunStrategy _strategy;
 
-		public FollowUpRunCreator(IIterativeRunStrategy strategy)
+		public IPowertrainBuilder PowertrainBuilder { get; private set; }
+
+		public FollowUpRunCreator(IIterativeRunStrategy strategy, IPowertrainBuilder ptBuilder)
 		{
 			_strategy = strategy;
+			PowertrainBuilder = ptBuilder;
 		}
 
 		/// <summary>
@@ -70,20 +80,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			var modalDataContainer = run.GetContainer().ModalData;
 			var vectoRunData = run.GetContainer().RunData;
-			if (!_strategy.RunAgain(iteration, modalDataContainer, vectoRunData) || !run.FinishedWithoutErrors) {
+			if (!_strategy.RunAgain(_iteration, modalDataContainer, vectoRunData)) {
 				return false;
 			}
-			original_modfile_suffix = original_modfile_suffix ?? (original_modfile_suffix = vectoRunData.ModFileSuffix);
+			_originalModfileSuffix = _originalModfileSuffix ?? (_originalModfileSuffix = vectoRunData.ModFileSuffix);
 
 	
 			Log.Info(string.Format("Run {0} again!", run.RunName));
 
-			var options = _strategy.GetPreRunOptions(iteration);
+			var options = _strategy.GetPreRunOptions(_iteration);
 			beforeNextRun(options);
 
-			vectoRunData.ModFileSuffix = original_modfile_suffix + (iteration + 1);
-			_strategy.UpdateRunData(iteration, modalDataContainer, vectoRunData);
-			iteration++;
+			vectoRunData.ModFileSuffix = _originalModfileSuffix + (_iteration + 1);
+			_strategy.UpdateRunData(_iteration, modalDataContainer, vectoRunData);
+			_iteration++;
 			runAgainAction(vectoRunData);
 			return true;
 		}

@@ -105,10 +105,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
-	
-	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
+    public class XMLDeclarationJobInputDataProviderV27 : XMLDeclarationJobInputDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+        public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationJobInputDataProviderV27(XmlNode node, IXMLDeclarationInputData inputProvider, string fileName) :
+            base(node, inputProvider, fileName)
+        { }
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+
+        #region Overrides of XMLDeclarationJobInputDataProviderV10
+
+
+        public override VectoSimulationJobType JobType { get => Vehicle.VehicleType; }
+
+        #endregion
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01 : AbstractXMLResource,
 		IXMLPrimaryVehicleBusJobInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI =

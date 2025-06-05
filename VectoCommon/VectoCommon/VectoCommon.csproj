@@ -1,9 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Title>Vehicle Energy Consumption Calculation TOol: VectoCommon</Title>
+    <Description>Provides Vecto models and utils.</Description>
+  </PropertyGroup>
+  <PropertyGroup>
     <RootNamespace>TUGraz.VectoCommon</RootNamespace>
     <AssemblyName>VectoCommon</AssemblyName>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-     
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 

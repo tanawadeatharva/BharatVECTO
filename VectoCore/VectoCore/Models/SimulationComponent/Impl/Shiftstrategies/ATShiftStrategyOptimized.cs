@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private List<CombustionEngineFuelData> fcMap;
 		private Dictionary<uint, EngineFullLoadCurve> fld;
 		private ShiftStrategyParameters shiftStrategyParameters;
-		private SimplePowertrainContainer TestContainer;
+		private ISimpleVehicleContainer TestContainer;
 		private ATGearbox TestContainerGbx;
 
 		private Kilogram vehicleMass;
@@ -149,9 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		private void InitializeTestContainer(VectoRunData runData)
 		{
 			// fuel list here has no effect as this is the mod-container for the test-powertrain only
-			TestContainer = new SimplePowertrainContainer(runData);
-
-			PowertrainBuilder.BuildSimplePowertrain(runData, TestContainer);
+			TestContainer = PowertrainBuilder.BuildSimplePowertrain(runData);
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
@@ -189,7 +187,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					response);
 			}
 
-			return CheckEarlyUpshiftFromLocked(
+			if (currentGear.TorqueConverterLocked==false) {
+				return false;
+			}
+
+            return CheckEarlyUpshiftFromLocked(
 				absTime, dt, outTorque, outAngularVelocity, origInTorque, origInAngularVelocity, currentGear, lastShiftTime,
 				response);
 		}
@@ -274,8 +276,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				.Cast<PerSecond>();
 			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
 
-			foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
+            var dtLow = dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval*0.8);
+            var isGear1 = currentGear.Gear.Equals(1);
+			var beforeReachingTargetSpeed = DataBus.DrivingCycleInfo.TargetSpeed.IsSmallerOrEqual(DataBus.VehicleInfo.VehicleSpeed + DataBus.DriverInfo.DriverAcceleration * dt) && DataBus.DriverInfo.DriverAcceleration.IsGreater(0.0);
+			var rightIsStop = DataBus.DrivingCycleInfo.CycleData.RightSample.VehicleTargetSpeed.IsEqual(0.0);
+
+            foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)shiftStrategyParameters.AllowedGearRangeFC))) {
 				
+				if (dtLow && isGear1 && !beforeReachingTargetSpeed && rightIsStop) {
+                    continue;
+                }
+
 				if (next == null) {
 					// no further gear
 					continue;

@@ -103,9 +103,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		#endregion
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
+    public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 

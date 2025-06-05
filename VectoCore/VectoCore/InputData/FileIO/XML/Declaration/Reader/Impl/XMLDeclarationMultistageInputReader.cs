@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return stage;
 		}
 
-		public IManufacturingStageInputData ConsolidateManufacturingStage
+		public virtual IManufacturingStageInputData ConsolidateManufacturingStage
 		{
 			get
 			{
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	public class ConsolidateManufacturingStages : ConsolidatedDataBase, IManufacturingStageInputData
 	{
 		private ConsolidatedVehicleData _consolidatedVehicleData;
-		private IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
+		protected IPrimaryVehicleInformationInputDataProvider _primaryVehicle;
 		
 		public ConsolidateManufacturingStages(IPrimaryVehicleInformationInputDataProvider primaryVehicle, 
 			IEnumerable<IManufacturingStageInputData> manufacturingStages) : base(manufacturingStages)
@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public int StepCount => _manufacturingStages?.First().StepCount ?? 0;
 
-		public IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
+		public virtual IVehicleDeclarationInputData Vehicle => GetConsolidatedVehicleData();
 
 		public IApplicationInformation ApplicationInformation => _manufacturingStages?.First().ApplicationInformation;
 
@@ -549,7 +549,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ConsumerTechnology? DoorDriveTechnology => GetVehiclePropertyValue<ConsumerTechnology?>(nameof(DoorDriveTechnology));
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS => GetADAS();
-		public IVehicleInMotionChargingDeclaration InMotionCharging => new XMLIMCData();
+
+		public IVehicleInMotionChargingDeclaration InMotionCharging => GetVehiclePropertyValue<IVehicleInMotionChargingDeclaration>(nameof(InMotionCharging));
 
 		private IAdvancedDriverAssistantSystemDeclarationInputData GetADAS()
 		{
@@ -583,7 +584,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
 		public string Identifier { get; }
-		public bool ExemptedVehicle
+		public string SimulationToolLicenseNumber { get; }
+        public string VehicleMonitoringData { get; }
+
+        public bool ExemptedVehicle
 		{
 			get
 			{
@@ -621,7 +625,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public bool DualFuelVehicle => _primaryVehicle.Vehicle.DualFuelVehicle;
 
-		public bool OvcHev => _primaryVehicle.Vehicle.OvcHev;
+		public bool OVC => _primaryVehicle.Vehicle.OVC;
 
 		public PerSecond EngineIdleSpeed => _primaryVehicle.Vehicle.EngineIdleSpeed;
 
@@ -631,6 +635,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public ArchitectureID ArchitectureID => _primaryVehicle.Vehicle.ArchitectureID;
 
 		public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
+
+		public Kilogram H2StorageUsableCapacity => _primaryVehicle.Vehicle.H2StorageUsableCapacity;
+
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => _primaryVehicle.Vehicle.HydrogenStorageTechnology;
+
+        public bool BatteryOnlyMode => _primaryVehicle.Vehicle.BatteryOnlyMode;
+
+		public DynamicChargingTechnology DynamicChargingTechnology => _primaryVehicle.Vehicle.DynamicChargingTechnology;
 
         #endregion
 
@@ -645,7 +657,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
-		
+
 
 
 
@@ -975,11 +987,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 					(_consolidateBusAuxiliariesData = new ConsolidatedBusAuxiliariesData(_manufacturingStages));
 		}
 
-
 		public IElectricStorageSystemDeclarationInputData ElectricStorage => null;
 
 		public IElectricMachinesDeclarationInputData ElectricMachines => null;
+		
 		public IIEPCDeclarationInputData IEPC => null;
+
+		public IFuelCellSystemDeclarationInputData FuelCellSystem => null;
 
 		private T GetComponentPropertyValue<T>(string propertyName)
 		{

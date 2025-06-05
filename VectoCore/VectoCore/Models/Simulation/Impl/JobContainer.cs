@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			[MethodImpl(MethodImplOptions.Synchronized)]
-			public ISimulatorFactory GetFollowUpSimulatorFactory()
+			public ISimulatorFactory GetFollowUpSimulatorFactory(IDictionary<int, ProgressEntry> progressEntries)
 			{
 				try {
 					if (followUpSimulatorFactoryFetched || !AllCompleted()) {
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 
 					followUpSimulatorFactoryFetched = true;
-					var factory = _simulatorFactory.FollowUpSimulatorFactory;
+					var factory = _simulatorFactory.FollowUpSimulatorFactory(progressEntries);
 					if (factory != null) {
 						factory.SerializeVectoRunData = _simulatorFactory.SerializeVectoRunData;
 					}
@@ -356,21 +356,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_runContainerMap.TryGetValue(runContainerId, out var runContainer);
 			
 			runContainer?.JobCompleted(runId);
-			AddFollowUpSimulatorFactories(runContainerId);
-
 			try {
-				_runsRwLock.EnterWriteLock();
-				//_unfinishedRuns.Remove(runId);
-				_unfinishedRuns.TryRemove(runId, out var tmpVal);
-				if (AllCompletedUnsafe()) {
-					_sumWriter.Finish();
-
-					if (Runs.All(x => x.Run.FinishedWithoutErrors && (x.ExecException == null))) {
-						_jobArchiveBuilder?.Build();
-					}
-				}
+				// may throw an exception in case not all simulation runs are finished successfully
+				AddFollowUpSimulatorFactories(runContainerId);
 			} finally {
-				_runsRwLock.ExitWriteLock();
+				try {
+					_runsRwLock.EnterWriteLock();
+					//_unfinishedRuns.Remove(runId);
+					_unfinishedRuns.TryRemove(runId, out var tmpVal);
+					if (AllCompletedUnsafe()) {
+						_sumWriter.Finish();
+
+						if (Runs.All(x => x.Run.FinishedWithoutErrors && (x.ExecException == null))) {
+							_jobArchiveBuilder?.Build();
+						}
+					}
+				} finally {
+					_runsRwLock.ExitWriteLock();
+				}
 			}
 		}
 
@@ -378,11 +381,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			try {
 				_runContainerMap.TryGetValue(runContainerId, out var runContainer);
-				var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory();
+				var additionalSimulatorFactory = runContainer?.GetFollowUpSimulatorFactory(GetProgress());
 				if (additionalSimulatorFactory == null) {
 					return;
 				}
-					
 
 				AddRuns(additionalSimulatorFactory);
 				Execute(_multithreaded);
@@ -465,6 +467,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		}
 
+		[DebuggerDisplay("{RunName}{RunSuffix}: {Progress} done: {Done} Success: {Success} ")]
 		public class ProgressEntry
 		{
 			// unique identifier of the simulation run

@@ -11,10 +11,12 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
 namespace TUGraz.VectoMockup.Simulation.RundataFactories
 {
@@ -22,7 +24,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
     {
         public MockupLorryVectoRunDataFactory(IDeclarationInputDataProvider dataProvider,
             IDeclarationReport report,
-			ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
+			ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter, IPowertrainBuilder ptBuilder) 
+			: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder)
         {
 
         }
@@ -78,10 +81,10 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataConventionalTruckNonExempted();
 				case VectoSimulationJobType.BatteryElectricVehicle:
                 case VectoSimulationJobType.IEPC_E:
-					return VectoRunDataBatteryElectricVehicle();
-				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV:
                 case VectoSimulationJobType.FCHV_IEPC:
+                    return VectoRunDataBatteryElectricVehicle();
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -151,31 +154,58 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                     Mission = mission,
                     SimulationType = SimulationType.DistanceCycle,
                     VehicleData = CreateMockupVehicleData(vehicle),
+                    DriverData = CreateMockupDriverData(vehicle),
                     EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     GearboxData = CreateMockupGearboxData(vehicle),
                     AxleGearData = CreateMockupAxleGearData(vehicle),
-
+                    BatteryData = new VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery.BatterySystemData(),
                     JobType = InputDataProvider.JobInputData.JobType,
 
+                };
+
+                runData.BatteryData.Batteries = new List<Tuple<int, BatteryData>>() {
+                    Tuple.Create(1, new BatteryData() {
+                        BatteryId = 0,
+                        Capacity = 7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>(),
+                        ChargeDepletingBattery = true,
+                        MinSOC = 0.2,
+                        MaxSOC = 0.8,
+                        SOCMap = BatterySOCReader.Create("SoC, V\n0, 600\n100, 650\n".ToStream()),
+                        InternalResistance = BatteryInternalResistanceReader.Create("SoC, Ri-2, Ri-10, Ri-20\n0, 20, 20, 20\n100, 20, 20, 20\n".ToStream(), true),
+                        MaxCurrent = BatteryMaxCurrentReader.Create("SoC, I_charge, I_discharge\n0, 300, 300\n100, 500, 500\n".ToStream())
+
+                    })
                 };
             }
 
             runData.InputData = InputDataProvider;
 
-
             return runData;
-
-
-
         }
 
 
+        public static DriverData CreateMockupDriverData(IVehicleDeclarationInputData vehicle)
+        {
+            var uf = DeclarationData.Driver.GetEngineStopStartLorry().UtilityFactor;
 
+            return new DriverData
+            {
+                EngineStopStart = new DriverData.EngineStopStartData()
+                {
+                    UtilityFactorDriving = uf,
+                    UtilityFactorStandstill = uf
+                }
+            };
+        }
 
         protected override void Initialize()
         {
-            _segment = DeclarationData.GetTruckSegment(InputDataProvider.JobInputData.Vehicle).Segment;
-
+            _segment = DeclarationData.GetTruckSegment(
+                InputDataProvider.JobInputData.Vehicle, 
+                batteryElectric: 
+                    InputDataProvider.JobInputData.Vehicle.ArchitectureID.IsBatteryElectricVehicle() ||
+                    InputDataProvider.JobInputData.Vehicle.ArchitectureID.IsFuelCellVehicle()
+            ).Segment;
         }
 
         #endregion
@@ -241,7 +271,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 InputData = vehicleData,
                 SleeperCab = vehicleData.SleeperCab,
                 VehicleClass = _segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VocationalVehicle = vehicleData.VocationalVehicle,
             };
         }

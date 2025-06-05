@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -50,9 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 
 			var totalPowerDemand = powerDemand + chargePower + fcPower - auxDemand - connectorLoss;
-            var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
-
-
+			var maxBatteryPowerDemand = (FuelCell != null) ? VectoMath.Max(totalPowerDemand, Battery.MaxDischargePower(dt)) : totalPowerDemand;
+            var batResponse = Battery.MainBatteryPort.Request(absTime, dt, maxBatteryPowerDemand, dryRun);
 
 			var response = dryRun
 				? (AbstractElectricSystemResponse)new ElectricSystemDryRunResponse(this)
@@ -64,14 +65,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			}
 			if (batResponse is RESSUnderloadResponse)
 			{
-				response = new ElectricSystemUnderloadResponse(this);
-			}
+                response = new ElectricSystemUnderloadResponse(this);
+            }
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(powerDemand, auxDemand, chargePower, connectorLoss, batResponse.PowerDemand);
+				CurrentState.SetState(powerDemand, auxDemand, chargePower + fcPower, connectorLoss, batResponse.PowerDemand);
 			}
 
+			response.MaxNominalFCRatedPower = (FuelCell != null) ? (FuelCell as FuelCellSystem).FuelCellStrings.Sum(x => x.FuelCells.Sum(y => y.MaxPower)) : null;
 			response.AbsTime = absTime;
 			response.SimulationInterval = dt;
 			response.RESSResponse = batResponse;

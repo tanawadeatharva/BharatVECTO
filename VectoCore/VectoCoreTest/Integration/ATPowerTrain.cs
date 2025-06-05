@@ -33,12 +33,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ninject;
+using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -65,7 +68,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string TorqueConverterGenericFile = @"TestData/Components/AT_GBX/TorqueConverter.vtcc";
 		public const string TorqueConverterPowerSplitFile = @"TestData/Components/AT_GBX/TorqueConverterPowerSplit.vtcc";
 		public const string GearboxShiftPolygonFile = @"TestData/Components/AT_GBX/AT-Shift.vgbs";
-
+		
+		
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType,
 			SummaryDataContainer summaryDataContainer, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
@@ -75,11 +79,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType,
+		public static IVehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType,
 			SummaryDataContainer summaryDataContainer, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			var gearboxData = CreateGearboxData(gbxType);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var powertrainBuilder = kernel.Get<ISimplePowertrainBuilder>();
+
+            var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(gbxType);
 
@@ -112,9 +119,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			{
 				WriteModalResults = true,
 			};
-            var container = new VehicleContainer(ExecutionMode.Engineering, modData, summaryDataContainer) {
-				RunData = runData,
-			};
+			var container =
+				VehicleContainer.CreateVehicleContainer(runData, modData,
+					summaryDataContainer);
+			
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
@@ -232,7 +240,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                         CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};

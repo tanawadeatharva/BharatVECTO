@@ -305,8 +305,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public NewtonMeter OverloadTorque { get; internal set; }
 		public PerSecond OverloadTestSpeed { get; internal set; }
 		public Second OverloadTime { get; internal set; }
-		public TableData FullLoadCurve { get; internal set; }
-		//public TableData EfficiencyMap { get; internal set; }
+		public IList<IElectricMotorLoadCurve> FullLoadCurve { get; internal set; }
+		
 		public IList<IElectricMotorPowerMap> PowerMap { get; internal set; }
 
 		#endregion
@@ -319,4 +319,44 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public JoulePerKilogramm NCV { get; internal set; }
     }
 
+	public class FuelCellSystemDeclarationInputData : IFuelCellSystemDeclarationInputData
+	{
+		public List<IFuelCellModuleDeclarationInputData> FuelCellModules { get; internal set; }
+	}
+
+	public class FuelCellModule : IFuelCellModuleDeclarationInputData
+	{
+		public int Count { get; internal set; }
+
+		public Watt MaxPower { get; internal set; }
+
+		public Watt MinPower { get; internal set; }
+
+		public IFuelCellDeclarationInputData FuelCell { get; internal set; }
+	}
+
+	public class FuelCellInputData : IFuelCellDeclarationInputData
+	{
+		public DataSource DataSource { get; internal set; }
+
+		public bool SavedInDeclarationMode { get; internal set; }
+
+		public string Manufacturer { get; internal set; }
+
+		public string Model { get; internal set; }
+
+		public DateTime Date { get; internal set; }
+
+		public string AppVersion { get; internal set; }
+
+		public CertificationMethod CertificationMethod { get; internal set; }
+
+		public string CertificationNumber { get; internal set; }
+
+		public DigestData DigestValue { get; internal set; }
+
+		public Watt FCSRatedPower { get; internal set; }
+
+		public TableData FuelCellPowerOutputConsumptionMap { get; internal set; }
+	}
 }

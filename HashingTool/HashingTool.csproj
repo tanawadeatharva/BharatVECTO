@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <MainProductVersion>0.2.0</MainProductVersion>
-    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
-
     <OutputType>WinExe</OutputType>
     <RootNamespace>HashingTool</RootNamespace>
     <AssemblyName>HashingTool</AssemblyName>
     <UseWPF>true</UseWPF>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
-     
+
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
   </PropertyGroup>

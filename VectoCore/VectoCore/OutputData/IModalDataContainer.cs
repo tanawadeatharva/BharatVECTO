@@ -49,14 +49,21 @@ namespace TUGraz.VectoCore.OutputData
 		string ID { get; }
 	}
 
-	public interface IModalDataContainer
+	public interface IModalDataFactory
 	{
-		/// <summary>
-		/// Indexer for fields of the DataWriter. Accesses the data of the current step.
-		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
-		object this[ModalResultField key] { get; set; }
+		IModalDataContainer CreateModDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult, IModalDataFilter[] filter);
+	}
+
+    public interface IModalDataContainer
+	{
+		bool WriteModalResults { get; set; }
+
+        /// <summary>
+        /// Indexer for fields of the DataWriter. Accesses the data of the current step.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        object this[ModalResultField key] { get; set; }
 
 		object this[ModalResultField key, IFuelProperties fuel] { get; set; }
 

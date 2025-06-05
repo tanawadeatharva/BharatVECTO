@@ -72,6 +72,8 @@ namespace TUGraz.VectoMockup
 
 		#region Implementation of IModalDataContainer
 
+		public bool WriteModalResults { get; set; }
+
 		public object this[ModalResultField key]
 		{
 			get => _modalDataContainerImplementation[key];
@@ -327,7 +329,7 @@ namespace TUGraz.VectoMockup
 
 		public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
 
-		public bool HasBattery => throw new NotImplementedException();
+		public bool HasBattery => false;
 
 		public void RegisterComponent(VectoSimulationComponent component)
 		{

@@ -264,6 +264,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
+		public ISimplePowertrainBuilder SimplePowertrainBuilder => null;
+		public IAuxInProvider BusAux => null;
 
 		public bool PTOActive { get; private set; }
 
@@ -290,8 +292,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void FinishSimulation() {}
 
 		public void FinishSimulationRun(Exception e) {}
-		public void StartSimulationRun()
-		{ }
+		
+		public void StartSimulationRun() { }
 
 		public Watt SetAxlegearLoss
 		{

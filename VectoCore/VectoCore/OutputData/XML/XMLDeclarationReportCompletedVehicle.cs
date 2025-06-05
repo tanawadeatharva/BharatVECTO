@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var result = new CompletedBusResult
             {
                 Status = VectoRun.Status.Success,
+                VectoRunData = specific.VectoRunData,
             };
             result.Status = generic.Status != VectoRun.Status.Success ? generic.Status : result.Status;
             result.Status = specific.Status != VectoRun.Status.Success ? specific.Status : result.Status;
@@ -286,10 +287,9 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-			public VectoRunData VectoRunData => null;
+			public VectoRunData VectoRunData { get; set; }
             public VectoRun.Status Status { get; set; }
-            public OvcHevMode OVCMode { get; set; }
-            public MissionType Mission { get; set; }
+			public MissionType Mission { get; set; }
 			public LoadingType LoadingType { get; set; }
 
 			public int FuelMode { get; set; }
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Kilogram CO2Total { get; set; }
             public Kilogram Payload { get; set; }
             public Kilogram TotalVehicleMass { get; set; }
-            public CubicMeter CargoVolume { get; }
+            public CubicMeter CargoVolume { get; internal set; }
             public double? PassengerCount { get; set; }
             public VehicleClass VehicleClass { get; set; }
 
@@ -333,9 +333,17 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Meter ActualChargeDepletingRange { get; set; }
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }
+            public Meter HydrogenRange { get; set; }
+            public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; private set; }
+            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; private set; }
             public IFuelProperties AuxHeaterFuel { get; set; }
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }
+
+			public OvcHevMode OVCMode { get; set; }
+			public int OVCIteration { get; }
+			public double DeltaSoC { get; }
+
 
 			public double BatteryEfficiencyDischarge { get; set; }
 
@@ -352,6 +360,52 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public void SetResultWeightingFactor(double weightingFactor)
 			{
 				throw new NotImplementedException();
+			}
+
+			public IResultEntry Clone(OvcHevMode ovcMode)
+			{
+				return new CompletedBusResult
+				{
+					VectoRunData = VectoRunData,
+					Status = Status,
+					OVCMode = OVCMode,
+					Mission = Mission,
+					LoadingType = LoadingType,
+					FuelMode = FuelMode,
+					FuelData = FuelData,
+					AverageSpeed = AverageSpeed,
+					AverageDrivingSpeed = AverageDrivingSpeed,
+					MaxSpeed = MaxSpeed,
+					MinSpeed = MinSpeed,
+					MaxDeceleration = MaxDeceleration,
+					MaxAcceleration = MaxAcceleration,
+					EngineSpeedDrivingMin = EngineSpeedDrivingMin,
+					EngineSpeedDrivingAvg = EngineSpeedDrivingAvg,
+					EngineSpeedDrivingMax = EngineSpeedDrivingMax,
+					AverageGearboxEfficiency = AverageGearboxEfficiency,
+					AverageAxlegearEfficiency = AverageAxlegearEfficiency,
+					FullLoadPercentage = FullLoadPercentage,
+					GearshiftCount = GearshiftCount,
+					Distance = Distance,
+					CorrectedFinalFuelConsumption = CorrectedFinalFuelConsumption,
+					ElectricEnergyConsumption = ElectricEnergyConsumption,
+					CO2Total = CO2Total,
+					Payload = Payload,
+					TotalVehicleMass = TotalVehicleMass,
+					CargoVolume = CargoVolume,
+					PassengerCount = PassengerCount,
+					VehicleClass = VehicleClass,
+					PrimaryVehicleClass = PrimaryVehicleClass,
+					MaxChargingPower = MaxChargingPower,
+					WeightingFactor = WeightingFactor,
+					ActualChargeDepletingRange = ActualChargeDepletingRange,
+					EquivalentAllElectricRange = EquivalentAllElectricRange,
+					ZeroCO2EmissionsRange = ZeroCO2EmissionsRange,
+					AuxHeaterFuel = AuxHeaterFuel,
+					ZEV_FuelConsumption_AuxHtr = ZEV_FuelConsumption_AuxHtr,
+					ZEV_CO2 = ZEV_CO2,
+					BatteryEfficiencyDischarge = BatteryEfficiencyDischarge,
+				};
 			}
 
 			public string Error { get; set; } 

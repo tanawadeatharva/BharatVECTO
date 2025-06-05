@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -36,23 +37,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					valid = true;
 					break;
 				case RetarderType.TransmissionInputRetarder:
-					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2);
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2, ArchitectureID.F2);
 					break;
 				case RetarderType.TransmissionOutputRetarder:
 					valid = archId.IsParallelHybridVehicle() ||
-							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2, ArchitectureID.F2);
 					break;
 				case RetarderType.EngineRetarder:
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC);
 					break;
 				case RetarderType.LossesIncludedInTransmission:
 					valid = archId.IsParallelHybridVehicle() ||
-							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC,
-								ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2, ArchitectureID.F2) ||
+							(archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
 					break;
 				case RetarderType.AxlegearInputRetarder:
-					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) ||
-							(archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded &&
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.F3, ArchitectureID.S_IEPC) ||
+							(archId.IsOneOf(ArchitectureID.E_IEPC, ArchitectureID.F_IEPC) && !iepc.DifferentialIncluded &&
 							!iepc.DesignTypeWheelMotor);
 					break;
 				default:
@@ -130,18 +131,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		public RetarderData CreateGenericRetarderData(IRetarderInputData retarder, VectoRunData vehicleData)
 		{
 			bool isBatteryElectric =
-				vehicleData.JobType == VectoSimulationJobType.BatteryElectricVehicle
-				|| vehicleData.JobType == VectoSimulationJobType.IEPC_E;
-			
+				vehicleData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E,
+					VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.IEPC_S);
+
 			PerSecond maxMotorSpeed = isBatteryElectric
-				? vehicleData.ElectricMachinesData[0].Item2.EfficiencyData.MaxSpeed
+				? vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed
 				: vehicleData.EngineData.FullLoadCurves[0].MaxSpeed;
-			
+
 			double maxGbxRatio = vehicleData.GearboxData?.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio ?? 1;
-			double combinedRatios = isBatteryElectric ? maxGbxRatio * vehicleData.ElectricMachinesData[0].Item2.RatioADC : maxGbxRatio;
+			double combinedRatios = isBatteryElectric
+				? maxGbxRatio * vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.RatioADC
+				: maxGbxRatio;
 
 			return _genericRetarderData.CreateGenericBusRetarderData(retarder, maxMotorSpeed, combinedRatios);
-		}
+        }
 
 		public RetarderData CreateRetarderData(IRetarderInputData retarder, ArchitectureID architecture,
 			IIEPCDeclarationInputData iepcInputData)

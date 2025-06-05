@@ -59,6 +59,47 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IXMLCustomerReport>().To<HEV_IEPC_Lorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(VehicleCategoryHelper.Lorry, VectoSimulationJobType.IEPC_S,
 					ArchitectureID.S_IEPC, false,true, false)));
 
+
+			Bind<IXMLCustomerReport>().To<FCHV_F2_Lorry_CIF>()
+				.Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper
+				.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.FCHV,
+					ArchitectureID.F2,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<FCHV_F3_Lorry_CIF>()
+				.Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper
+				.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.FCHV,
+					ArchitectureID.F3,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<FCHV_F4_Lorry_CIF>()
+				.Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper
+				.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.FCHV,
+					ArchitectureID.F4,
+					false,
+					false,
+					false)));
+
+			Bind<IXMLCustomerReport>().To<FCHV_IEPC_Lorry_CIF>()
+				.Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper
+				.ToParams(
+					VehicleCategoryHelper.Lorry,
+					VectoSimulationJobType.FCHV_IEPC,
+					ArchitectureID.F_IEPC,
+					false,
+					true,
+					false)));
+
 			Bind<IXMLCustomerReport>().To<PEV_E2_Lorry_CIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.Lorry,
 					VectoSimulationJobType.BatteryElectricVehicle,
@@ -274,6 +315,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			Bind<IXmlTypeWriter>().To<CIF_HEV_IEPC_S_LorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetHEV_IEPC_LorryVehicleType());
 
+			Bind<IXmlTypeWriter>().To<CIF_FCHV_F2_LorryVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_F2_LorryVehicleType());
+
+			Bind<IXmlTypeWriter>().To<CIF_FCHV_F3_LorryVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_F3_LorryVehicleType());
+
+			Bind<IXmlTypeWriter>().To<CIF_FCHV_F4_LorryVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_F4_LorryVehicleType());
+
+			Bind<IXmlTypeWriter>().To<CIF_FCHV_IEPC_LorryVehicleWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_IEPC_LorryVehicleType());
+
 			Bind<IXmlTypeWriter>().To<CIF_PEV_E2_LorryVehicleWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEV_E2_LorryVehicleType());
 
@@ -336,10 +389,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetLorryGeneralVehicleSequenceGroupWriter());
 			Bind<IReportOutputGroup>().To<ConventionalLorryVehicleSequenceGroupCIF>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalLorryVehicleSequenceGroupWriter());
+			Bind<IReportOutputGroup>().To<FuelCellLorryVehicleSequenceGroupCIF>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHVLorryVehicleSequenceGroupWriter());
+
 			Bind<IReportOutputGroup>().To<HEV_LorryVehicleTypeGroupCIF>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetHEV_LorryVehicleTypeGroup());
 			Bind<IReportOutputGroup>().To<HEV_LorryVehicleSequenceGroupWriter>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetHEV_LorryVehicleSequenceGroupWriter());
+
+
+			Bind<IReportOutputGroup>().To<FuelCell_LorryVehicleTypeGroupCIF>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_LorryVehicleTypeGroup());
+			Bind<IReportOutputGroup>().To<FCHV_LorryVehicleSequenceGroupWriter>().When(AccessedViaCIFFactory)
+				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFuelCell_LorryVehicleSequenceGroupWriter());
+
 			Bind<IReportOutputGroup>().To<PEV_LorryVehicleTypeGroupCIF>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEV_LorryVehicleTypeGroup());
 			Bind<IReportOutputGroup>().To<PEV_LorryVehicleSequenceGroupWriter>().When(AccessedViaCIFFactory)
@@ -374,7 +437,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetElectricMachineGroup());
 			Bind<IReportOutputGroup>().To<REESSGroup>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetREESSGroup());
-			Bind<IReportOutputGroup>().To<LorryAuxGroup>().When(AccessedViaCIFFactory).
+            Bind<IReportOutputGroup>().To<FuelCellGroup>().When(AccessedViaCIFFactory)
+                .NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFuelCellGroup());
+            Bind<IReportOutputGroup>().To<LorryAuxGroup>().When(AccessedViaCIFFactory).
 				NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetLorryAuxGroup());
 			Bind<IReportOutputGroup>().To<ConventionalCompletedBusAuxGroup>().When(AccessedViaCIFFactory)
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalCompletedBusAuxGroup());

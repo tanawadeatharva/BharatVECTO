@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -42,6 +43,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -64,11 +66,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[Parallelizable(ParallelScope.All)]
 	public class MeasuredSpeedModeTest
 	{
+		private IPowertrainBuilder PowertrainBuilder;
 
 		[OneTimeSetUp]
 		public void Init()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			PowertrainBuilder = kernel.Get<IPowertrainBuilder>();
 		}
 
 		/// <summary>
@@ -190,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
 			bool crossWindRequired = false)
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData(), null, null);
 
 			if (autoCycle) {
 				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
@@ -252,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 
                             CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection),
 				},
@@ -324,7 +329,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                             CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 							CrossWindCorrectionMode.NoCorrection)
 				},

@@ -50,6 +50,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -255,7 +256,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                 new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
@@ -298,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph,
 			double height)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                 new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
 					crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
@@ -314,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var airDrag = new AirdragData() {
 				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(null, null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+					new CrosswindCorrectionCdxALookup(null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
 			};
 
 			Assert.IsTrue(airDrag.IsValid(),
@@ -332,7 +333,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
 					CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(null, null, null, null, correctionMode)
+						new CrosswindCorrectionCdxALookup(null, null, null, correctionMode)
 				};
 
 				Assert.IsFalse(airDrag.IsValid(),
@@ -1002,27 +1003,27 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3,
             new[] { 47.7, 47.7 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class4,
-            new[] { 98.9, 49.4, 49.4, 0.0 }),
+            new[] { 98.9, 49.4, 49.4, 0.0, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class4,
-            new[] { 0.0, 0.0 }),
+            new[] { 98.9, 49.4, 49.4, 0.0, 0.0 }),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class5,
-            new[] { 91.0, 140.5, 91.0, 140.5, 91.0 }),
+            new[] { 91.0, 140.5, 91.0, 140.5, 91.0, 0.0 }),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class5,
-            new[] { 0.0 }),
+            new[] { 91.0, 140.5, 91.0, 140.5, 91.0, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9,
-            new[] { 101.4, 142.9, 51.9, 142.9, 0.0 }),
+            new[] { 101.4, 142.9, 51.9, 142.9, 0.0, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class9,
-            new[] { 0.0, 0.0 }),
+            new[] { 101.4, 142.9, 51.9, 142.9, 0.0, 0.0 }),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class10,
-            new[] { 91.0, 140.5, 91.0, 140.5 }),
+            new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class10,
-            new[] { 0.0 }),
+            new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, false, VehicleClass.Class11,
             new[] { 101.4, 142.9, 51.9, 142.9, 0.0, 0.0 }),
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12,
             new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16,
-            new[] { 0.0 })
+            new[] { 101.4, 142.9, 51.9, 142.9, 0.0, })
         ]
         public void SegmentLookupCargoVolumeTest(VehicleCategory category, AxleConfiguration axleConfiguration,
             double grossWeight,
@@ -2280,7 +2281,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>(), _kernel.Get<IPowertrainBuilder>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(6, runs.Count);
@@ -2304,7 +2305,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(
                     @"TestData/Jobs/Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>(), _kernel.Get<IPowertrainBuilder>());
 
             var runs = dataReader.NextRun().ToList();
             Assert.AreEqual(8, runs.Count);
@@ -2328,7 +2329,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         {
             var dataProvider =
                 JSONInputDataFactory.ReadJsonJob(@"TestData/Jobs/40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
+			var dataReader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(dataProvider, null, new DeclarationDataAdapterHeavyLorry.Conventional(), _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>(), _kernel.Get<IPowertrainBuilder>());
 
             var runs = dataReader.NextRun().ToList();
 

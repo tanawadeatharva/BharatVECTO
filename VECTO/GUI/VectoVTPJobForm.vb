@@ -28,6 +28,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.InputData.Impl
+Imports Castle.Components.DictionaryAdapter.Xml
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -37,7 +38,7 @@ Public Class VectoVTPJobForm
     Public VectoFile As String
     Private _changed As Boolean = False
 
-    Dim _xmlInputReader as IXMLInputDataReader
+    Dim _xmlInputReader As IXMLInputDataReader
 
     Dim _vectoJob As IVTPEngineeringJobInputData
 
@@ -60,15 +61,15 @@ Public Class VectoVTPJobForm
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
 
-        pnManufacturerRecord.Visible = Cfg.DeclMode
+        pnManufacturerRecord.Visible = True
         pnFanParameters.Enabled = Not Cfg.DeclMode
-        _ncvGrpBox.Visible = Cfg.DeclMode
-        _ncvFuel1Lbl.Visible = Cfg.DeclMode
-        _ncvFuel1Txtbox.Visible = Cfg.DeclMode
-        _ncvFuel1UnitLbl.Visible = Cfg.DeclMode
-        _ncvFuel2Lbl.Visible = Cfg.DeclMode
-        _ncvFuel2Txtbox.Visible = Cfg.DeclMode
-        _ncvFuel2UnitLbl.Visible = Cfg.DeclMode
+        _ncvGrpBox.Visible = True
+        _ncvFuel1Lbl.Visible = True
+        _ncvFuel1Txtbox.Visible = True
+        _ncvFuel1UnitLbl.Visible = True
+        _ncvFuel2Lbl.Visible = True
+        _ncvFuel2Txtbox.Visible = True
+        _ncvFuel2UnitLbl.Visible = True
 
         GrCycles.Enabled = True
 
@@ -167,6 +168,54 @@ Public Class VectoVTPJobForm
         End Try
     End Function
 
+    Private Sub UpdateCompletedVIFElements()
+        Dim VIFinputData As ICompletedVIF = Nothing
+        Dim foundOutIfPrimary = False
+        Dim isVehiclePrimaryBus = False
+        Dim canAccessVIFSource = False
+        Dim vehicleFile As String =
+            If _
+            (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
+                TbVEH.Text)
+
+        If File.Exists(vehicleFile) Then
+            Try
+                Dim input As IDeclarationInputDataProvider =
+                            _xmlInputReader.CreateDeclaration(vehicleFile, True)
+
+                isVehiclePrimaryBus = input.JobInputData.Vehicle.VehicleCategory.GetVehicleType() Is VehicleCategoryHelper.PrimaryBus
+
+                foundOutIfPrimary = True
+            Catch
+            End Try
+        End If
+
+        If File.Exists(VectoFile) Then
+            Try
+                Dim inputData As IVTPEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(VectoFile),
+                    IVTPEngineeringInputDataProvider)
+
+                VIFinputData = inputData.JobInputData.CompletedVIFInputData
+
+                If Not foundOutIfPrimary Then
+                    isVehiclePrimaryBus = inputData.JobInputData.Vehicle.VehicleCategory.GetVehicleType() Is VehicleCategoryHelper.PrimaryBus
+                End If
+            Catch
+            End Try
+        End If
+
+        completedVIFTxtbox.Enabled = isVehiclePrimaryBus
+
+        If VIFinputData IsNot Nothing Then
+            If VIFinputData.Source IsNot Nothing Then
+                canAccessVIFSource = True
+            End If
+        End If
+
+        completedVIFTxtbox.Text = If(canAccessVIFSource And isVehiclePrimaryBus, VIFinputData.Source, "")
+        completedVIFButton.Enabled = completedVIFTxtbox.Enabled
+    End Sub
+
     'Open file
     Public Sub VECTOload2Form(file As String)
 
@@ -194,7 +243,7 @@ Public Class VectoVTPJobForm
                     Close()
                     MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
                     MainForm.OpenVectoFile(file)
-                Case - 1
+                Case -1
                     Exit Sub
             End Select
         End If
@@ -206,23 +255,28 @@ Public Class VectoVTPJobForm
 
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
-        tbManufacturerRecord.Text =
-            If(Cfg.DeclMode, inputData.JobInputData.ManufacturerReportInputData.Source, "")
+        tbManufacturerRecord.Text = inputData.JobInputData.ManufacturerReportInputData.Source
+        UpdateCompletedVIFElements()
 
         Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
+        Dim busAux As IBusAuxiliariesDeclarationData = inputData.JobInputData.Vehicle.Components.BusAuxiliaries
 
-        PopulateAuxiliaryList(auxInput)
+        If (auxInput Is Nothing) Then
+            PopulateAuxiliaryList(busAux)
+        Else
+            PopulateAuxiliaryList(auxInput)
+        End If
 
-        tbMileage.Text = If(Cfg.DeclMode, inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat(), "")
+        tbMileage.Text = inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat()
 
         If Cfg.DeclMode Then
             tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
             tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
             tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
             Dim coefficientsD As Double() = vectoJob.FanPowerCoefficents.ToArray()
-            If (coefficientsD.Length >= 4) then
+            If (coefficientsD.Length >= 4) Then
                 tbC4.Text = coefficientsD(3).ToGUIFormat()
-            Else 
+            Else
                 tbC4.Text = "1"
             End If
         Else
@@ -236,9 +290,9 @@ Public Class VectoVTPJobForm
             If (coefficients.Length >= 3) Then
                 tbC3.Text = coefficients(2).ToGUIFormat()
             End If
-            If (coefficients.Length >= 4) then
+            If (coefficients.Length >= 4) Then
                 tbC4.Text = coefficients(3).ToGUIFormat()
-            Else 
+            Else
                 tbC4.Text = "1"
             End If
         End If
@@ -274,10 +328,10 @@ Public Class VectoVTPJobForm
     Private Sub PopulateAuxiliaryList(auxInput As IAuxiliariesDeclarationInputData)
 
         LvAux.Items.Clear()
-        If auxInput is Nothing Then
+        If auxInput Is Nothing Then
             Return
         End If
-        
+
         Dim entry As IAuxiliaryDeclarationInputData
         For Each entry In auxInput.Auxiliaries
             'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
@@ -288,6 +342,50 @@ Public Class VectoVTPJobForm
             Catch ex As Exception
             End Try
         Next
+    End Sub
+
+    Private Sub PopulateAuxiliaryList(busAux As IBusAuxiliariesDeclarationData)
+        LvAux.Items.Clear()
+        If busAux Is Nothing Then
+            Return
+        End If
+
+        Try
+            LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.Fan),
+                                               AuxiliaryTypeHelper.ToString(AuxiliaryType.Fan),
+                                               String.Join("; ", busAux.FanTechnology)))
+
+            LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump),
+                                           AuxiliaryTypeHelper.ToString(AuxiliaryType.SteeringPump),
+                                           String.Join("; ", busAux.SteeringPumpTechnology)))
+
+            LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.ElectricSystem),
+                                               AuxiliaryTypeHelper.ToString(AuxiliaryType.ElectricSystem),
+                                               String.Join("; ", busAux.ElectricSupply.AlternatorTechnology)))
+
+            LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.PneumaticSystem),
+                                               AuxiliaryTypeHelper.ToString(AuxiliaryType.PneumaticSystem),
+                                               String.Join("; ", busAux.PneumaticSupply.CompressorSize)))
+
+            Dim hvac As List(Of String) = New List(Of String)
+
+            If busAux.HVACAux.AdjustableCoolantThermostat Then
+                hvac.Add("Adjustable Coolant Thermostat")
+            End If
+
+            If busAux.HVACAux.EngineWasteGasHeatExchanger Then
+                hvac.Add("Engine Waste Gas Heat Exchanger")
+            End If
+
+            If hvac.Count() > 0 Then
+                LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.HVAC),
+                                               AuxiliaryTypeHelper.ToString(AuxiliaryType.HVAC),
+                                               String.Join("; ", hvac)))
+            End If
+
+        Catch ex As Exception
+        End Try
+
     End Sub
 
     Private Function CreateAuxListEntry(auxKey As String, type As String, technology As String) As ListViewItem
@@ -310,8 +408,8 @@ Public Class VectoVTPJobForm
         'Files ------------------------------------------------- -----------------
 
         vectoJob.PathVeh = TbVEH.Text
-        vectoJob.ManufacturerRecord = If(Cfg.DeclMode, tbManufacturerRecord.Text, "")
-
+        vectoJob.ManufacturerRecord = tbManufacturerRecord.Text
+        vectoJob.CompletedVIF = completedVIFTxtbox.Text
 
         For Each lv0 As ListViewItem In LvCycles.Items
             Dim sb As SubPath = New SubPath
@@ -408,6 +506,7 @@ Public Class VectoVTPJobForm
         ToolStripStatusLabelGEN.Text = ""
         _changed = False
         UpdatePic()
+        UpdateCompletedVIFElements()
         _tqDriftLeftTextbox.Text = "0"
         _tqDriftRightTextbox.Text = "0"
     End Sub
@@ -432,6 +531,7 @@ Public Class VectoVTPJobForm
         UpdatePic()
         UpdateNCVs()
         UpdateFanDiameterGUIComponent()
+        UpdateCompletedVIFElements()
         Change()
     End Sub
 
@@ -450,11 +550,18 @@ Public Class VectoVTPJobForm
                 Dim inputData As IDeclarationInputDataProvider =
                         _xmlInputReader.CreateDeclaration(vehicleFile, True)
 
-                Dim auxiliaries As IList(Of IAuxiliaryDeclarationInputData) = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
+                Dim fanTech = ""
 
-                Dim fan As IAuxiliaryDeclarationInputData = auxiliaries.First(Function(aux) aux.Type = AuxiliaryType.Fan)
+                If inputData.JobInputData.Vehicle.Components.AuxiliaryInputData Is Nothing Then
+                    fanTech = inputData.JobInputData.Vehicle.Components.BusAuxiliaries.FanTechnology
+                Else
+                    Dim auxiliaries As IList(Of IAuxiliaryDeclarationInputData) = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries
 
-                Dim fullyElectric As Boolean = DeclarationData.Fan.FullyElectricTechnologies().Contains(fan.Technology.First)
+                    Dim fan As IAuxiliaryDeclarationInputData = auxiliaries.First(Function(aux) aux.Type = AuxiliaryType.Fan)
+                    fanTech = fan.Technology.First
+                End If
+
+                Dim fullyElectric As Boolean = DeclarationData.Fan.FullyElectricTechnologies().Contains(fanTech)
 
                 Label6.Enabled = Not fullyElectric
                 Label7.Enabled = Not fullyElectric
@@ -554,7 +661,13 @@ Public Class VectoVTPJobForm
                 Dim inputData As IDeclarationInputDataProvider =
                         _xmlInputReader.CreateDeclaration(vehicleFile, True)
                 Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
-                PopulateAuxiliaryList(auxInput)
+                Dim busAux As IBusAuxiliariesDeclarationData = inputData.JobInputData.Vehicle.Components.BusAuxiliaries
+
+                If (auxInput Is Nothing) Then
+                    PopulateAuxiliaryList(busAux)
+                Else
+                    PopulateAuxiliaryList(auxInput)
+                End If
             Catch
             End Try
         End If
@@ -804,7 +917,7 @@ Public Class VectoVTPJobForm
         pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-        TbEngTxt.Text = $"{(engine.Displacement.Value()*1000).ToString("0.0")} l {pmax.ToString("#")} kw {engine.Model}"
+        TbEngTxt.Text = $"{(engine.Displacement.Value() * 1000).ToString("0.0")} l {pmax.ToString("#")} kw {engine.Model}"
 
         Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels.First().FuelConsumptionMap)
 
@@ -833,7 +946,7 @@ Public Class VectoVTPJobForm
 
         Dim engineCharacteristics As String =
                 $"Max. Torque: {fullLoadCurve.MaxTorque.Value():F0} Nm; Max. Power: { _
-                (fullLoadCurve.MaxPower.Value()/1000):F1} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: { _
+                (fullLoadCurve.MaxPower.Value() / 1000):F1} kW; n_rated: {fullLoadCurve.RatedSpeed.AsRPM:F0} rpm; n_95h: { _
                 fullLoadCurve.N95hSpeed.AsRPM:F0} rpm"
         lblEngineCharacteristics.Text = engineCharacteristics
     End Sub
@@ -864,18 +977,22 @@ Public Class VectoVTPJobForm
         Dim s0 As Segment = Nothing
         Try
             s0 = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass,
-                                                 0.SI (Of Kilogram),
+                                                 0.SI(Of Kilogram),
                                                  False)
         Catch
+            Try
+                s0 = DeclarationData.PrimaryBusSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.Articulated)
+            Catch
+            End Try
         End Try
         If s0.Found Then
-           HDVclass = s0.VehicleClass
+            HDVclass = s0.VehicleClass
         End If
 
         PicVehicle.Image = ConvPicPath(HDVclass, False) _
         'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-        TbHVCclass.Text = $"HDV Group {HDVclass}"
+        TbHVCclass.Text = $"{HDVclass}"
         TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()   'ConvVehCat(VEH0.VehCat, True)
         TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
         TbAxleConf.Text = vehicle.AxleConfiguration.GetName()   'ConvAxleConf(VEH0.AxleConf)
@@ -928,6 +1045,12 @@ Public Class VectoVTPJobForm
     Private Sub ButtonManR_Click(sender As Object, e As EventArgs) Handles ButtonManR.Click
         If ManRXMLFileBrowser.OpenDialog(FileRepl(tbManufacturerRecord.Text, GetPath(VectoFile))) Then
             tbManufacturerRecord.Text = GetFilenameWithoutDirectory(ManRXMLFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
+    Private Sub completedVIFButton_Click(sender As Object, e As EventArgs) Handles completedVIFButton.Click
+        If CompletedVIFFileBrowser.OpenDialog(FileRepl(completedVIFTxtbox.Text, GetPath(VectoFile))) Then
+            completedVIFTxtbox.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
 End Class

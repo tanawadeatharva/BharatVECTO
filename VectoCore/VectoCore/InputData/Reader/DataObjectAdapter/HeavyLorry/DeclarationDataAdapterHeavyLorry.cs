@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -64,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
             private readonly IDriverDataAdapter _driverDataAdapter = new LorryDriverDataAdapter();
             //protected readonly IVehicleDataAdapter _vehicleDataAdapter = new LorryVehicleDataAdapter();
 			private readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			private readonly IGenericRetarderDataAdapter _retarderDataAdapter = new GenericRetarderDataAdapter();
+			private readonly RetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
 			private readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
 
 			private IAngledriveDataAdapter _angleDriveDataAdapter = new AngledriveDataAdapter();
@@ -79,6 +80,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			protected abstract IPTODataAdapter PtoDataAdapter { get; }
 
 			protected virtual IElectricMachinesDataAdapter ElectricMachinesDataAdapter => throw new NotImplementedException();
+
+			protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
 
 			public virtual DriverData CreateDriverData(Segment segment)
 			{
@@ -137,11 +140,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData,
-				IVehicleInMotionChargingDeclaration imcData, Mission mission,
-				Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission,
+				Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, ovcMode, cycleShareDistanceHighway);
+				return _airdragDataAdapter.CreateAirdragData(vehicleData, mission, segment, ovcMode);
 			}
 
 			public AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
@@ -223,7 +225,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
 			{
-				return _retarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
+				throw new NotImplementedException("Not applicable to Heavy Lorries");
+			}
+
+			FuelCellSystemDeclarationData ILorryDeclarationDataAdapter.CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+			{
+				return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
 			}
 		}
 
@@ -385,6 +392,48 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
+		}
+
+		public class FuelCellHybrid : SerialHybrid
+		{
+			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => new HeavyLorryFCHVAuxiliaryDataAdapter();
+		}
+
+		public class HEV_F2 : FuelCellHybrid
+		{
+			#region Overrides of LorryBase
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+			{
+				GearboxType.AMT,
+				GearboxType.ATPowerSplit,
+				GearboxType.ATSerial,
+				GearboxType.APTN
+			};
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			#endregion
+		}
+
+		public class HEV_F3 : FuelCellHybrid { }
+
+		public class HEV_F4 : FuelCellHybrid { }
+
+		public class HEV_F_IEPC : FuelCellHybrid
+		{
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+			{ 
+				GearboxType.AMT,
+				GearboxType.ATPowerSplit,
+				GearboxType.ATSerial,
+				GearboxType.APTN
+			};
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 		}
 
 		public class HEV_P1 : ParallelHybrid

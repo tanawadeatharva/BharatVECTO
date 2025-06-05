@@ -5,13 +5,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob C:\projects\vecto\code\issue-196-wheel-bearings\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
 	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 	xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
-	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6"
+	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6"
 	>
 	<v2.0:Vehicle xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType" id="VEH-1234">
 		<Manufacturer>TU Graz</Manufacturer>
@@ -373,14 +373,14 @@
 				</v2.0:Signature>
 			</Axlegear>
 			<AxleWheels>
-				<v2.0:Data xsi:type="v2.6:AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data xsi:type="v2.6:AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
 					<v2.6:Axles>
 						<v2.6:Axle axleNumber="1" xsi:type="v2.6:AxleDataDeclarationType">
 							<AxleType>VehicleNonDriven</AxleType>
 							<TwinTyres>false</TwinTyres>
 							<Steered>true</Steered>
 							<Tyre>
-								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+								<v2.6:Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -389,7 +389,7 @@
 									<Dimension>315/70 R22.5</Dimension>
 									<RRCDeclared>0.0055</RRCDeclared>
 									<FzISO>31300</FzISO>
-								</Data>
+								</v2.6:Data>
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
@@ -408,7 +408,7 @@
 							<TwinTyres>true</TwinTyres>
 							<Steered>false</Steered>
 							<Tyre>
-								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+								<v2.6:Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -417,7 +417,7 @@
 									<Dimension>315/70 R22.5</Dimension>
 									<RRCDeclared>0.0063</RRCDeclared>
 									<FzISO>31300</FzISO>
-								</Data>
+								</v2.6:Data>
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>

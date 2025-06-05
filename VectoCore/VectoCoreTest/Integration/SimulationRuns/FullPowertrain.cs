@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) { RunData = runData };
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -467,7 +467,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		{
 			return new AirdragData {
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                         CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};

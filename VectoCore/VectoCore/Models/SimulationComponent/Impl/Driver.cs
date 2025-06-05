@@ -1053,6 +1053,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			try {
+				var forceLineSearch = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked;
+				// in case we search for a braking power but the driver action is to accelerate (and we are in converter gear)
+				// we do not need to search for an operating point at the ICE drag curve, take the first one where the ICE can operate
+				// (as we use line-search and go stepwise up, this is fine)
+				var takeFirstViableSolution =
+					DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && forceLineSearch;
 				DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, deltaPower,
 					deltaPower.Abs() * (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() ? 0.5 : 1),
 					getYValue: result => {
@@ -1072,8 +1078,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					criterion: result => {
 						var response = (ResponseDryRun)result;
+						if (takeFirstViableSolution && !(response.TorqueConverter?.TorqueConverterOperatingPoint?.Creeping ?? true)) {
+							var engRes = response.Engine;
+							var deltaFull = engRes.TotalTorqueDemand - engRes.DynamicFullLoadTorque;
+							var deltaDrag = engRes.TotalTorqueDemand - engRes.DragTorque;
+							var engineOK = deltaDrag.IsGreaterOrEqual(0) && deltaFull.IsSmallerOrEqual(0);
+							if (engineOK) {
+								return 0;
+							}
+						}
 						var delta = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime)
-							? response.DeltaDragLoad
+							? response.DeltaDragLoad * (forceLineSearch ? 1.1 : 1.0) // in case LineSearch is used, increase criteria to force more precision on the solution
 							: response.Gearbox.PowerRequest;
 						return delta.Value();
 					},
@@ -1088,7 +1103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 						return DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
 					},
-					forceLineSearch: DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked,
+					forceLineSearch: forceLineSearch,
 					searcher: this);
 
 				return operatingPoint;

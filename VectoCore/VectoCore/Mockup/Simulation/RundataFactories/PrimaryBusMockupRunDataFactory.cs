@@ -13,6 +13,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -25,8 +26,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
         public PrimaryBusMockupRunDataFactory(IDeclarationInputDataProvider dataProvider,
 			IDeclarationReport report,
 			IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-			IMissionFilter missionFilter) :
-            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter)
+			IMissionFilter missionFilter, IPowertrainBuilder ptBuilder) :
+            base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder)
         { }
 
         #region Overrides of AbstractDeclarationVectoRunDataFactory
@@ -60,11 +61,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
                 case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.BatteryElectricVehicle:
-					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+                case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
+                    return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
-				case VectoSimulationJobType.FCHV:
-                case VectoSimulationJobType.FCHV_IEPC:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -355,7 +356,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				SleeperCab = vehicleData.SleeperCab,
 				//Loading = loading.Value.Item1,
 				VehicleClass = segment.VehicleClass,
-				OffVehicleCharging = vehicleData.OvcHev,
+				OffVehicleCharging = vehicleData.OVC,
 				VehicleCategory = vehicleData.VehicleCategory,
 				ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
 				//ADAS = CreateMockupAdasData(vehicleData),
@@ -381,7 +382,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 SleeperCab = vehicleData.SleeperCab,
                 Loading = loading.Value.Item1,
                 VehicleClass = segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VehicleCategory = vehicleData.VehicleCategory,
                 ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
                 ADAS = CreateMockupAdasData(vehicleData),

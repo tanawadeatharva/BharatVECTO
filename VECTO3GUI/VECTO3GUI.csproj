@@ -198,11 +198,6 @@
     <Compile Include="Model\TempDataObject\AuxiliariesBusComponentData.cs" />
     <Compile Include="Model\TempDataObject\ITempDataObject.cs" />
     <Compile Include="Model\TempDataObject\VehicleBusComponentData.cs" />
-    <Compile Include="Properties\Version.cs">
-      <DependentUpon>Version.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Util\AllowedEntry.cs" />
     <Compile Include="Util\Component.cs" />
     <Compile Include="Util\RelayCommand.cs" />
@@ -667,11 +662,6 @@
   <ItemGroup>
     <Resource Include="Resources\Icon2.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\Version.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Version.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -683,7 +673,7 @@
     <Resource Include="Resources\JRC-About.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

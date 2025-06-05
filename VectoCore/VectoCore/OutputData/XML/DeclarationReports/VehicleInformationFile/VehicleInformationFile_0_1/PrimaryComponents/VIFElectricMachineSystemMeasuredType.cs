@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						voltageLevel.ContinuousTorqueSpeed.AsRPM.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque,
 						voltageLevel.OverloadTorque.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque,
 						voltageLevel.OverloadTestSpeed.AsRPM.ToXMLFormat(2)), new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration,
-						voltageLevel.OverloadTime.ToXMLFormat(2)), GetMaxTorqueCurve(voltageLevel.FullLoadCurve)
+						voltageLevel.OverloadTime.ToXMLFormat(2)), GetMaxTorqueCurve(voltageLevel.FullLoadCurve.First().LoadCurve)
 				);
 				result.Add(entry);
 			}

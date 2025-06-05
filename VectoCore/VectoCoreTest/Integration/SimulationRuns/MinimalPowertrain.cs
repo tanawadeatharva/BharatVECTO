@@ -90,12 +90,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				JobName = "Coach_MinimalPowertrainOverload"
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData() {
-					VehicleData = vehicleData,
-					DriverData = driverData
-				}
-			};
+			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
+				VehicleData = vehicleData,
+				DriverData = driverData
+			}, modData, null);
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy(container));
 			var engine = new CombustionEngine(container, engineData);
@@ -155,9 +153,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData
-			};
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
@@ -237,9 +233,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>()
 			};
 			var modData = new ModalDataContainer(runData, fileWriter, null);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = runData
-			};
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, null);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
@@ -334,7 +328,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		{
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 
                         CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};

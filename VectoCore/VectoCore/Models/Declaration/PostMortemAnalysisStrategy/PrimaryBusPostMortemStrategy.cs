@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				// vehicle has to be almost stopped
 				return true;
 			}
-			
+
 			var maxGradability = GetMaxGradability(container);
 			if (maxGradability.IsSmaller(container.DrivingCycleInfo.RoadGradient)) {
 				// the vehicle cannot go this steep uphill passage...
@@ -52,8 +52,8 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 
 		protected virtual Radian GetMaxGradability(IVehicleContainer container)
 		{
-			var testContainer = new SimplePowertrainContainer(container.RunData);
-			switch (container.PowertrainInfo.VehicleArchitecutre) {
+			ISimpleVehicleContainer testContainer = null;
+            switch (container.PowertrainInfo.VehicleArchitecutre) {
 				//case VectoSimulationJobType.ConventionalVehicle:
 				//	PowertrainBuilder.BuildSimplePowertrain(container.RunData, testContainer);
 				//	break;
@@ -67,9 +67,11 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				//case VectoSimulationJobType.IEPC_S:
 				//	PowertrainBuilder.BuildSimpleIEPCHybridPowertrain(container.RunData, testContainer);
 				//	break;
+                case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
                 case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
-					PowertrainBuilder.BuildSimplePowertrainElectric(container.RunData, testContainer);
+					testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrainElectric(container.RunData);
 					break;
 				default:
 					throw new VectoException($"unhandled powertrain architecture {container.PowertrainInfo.VehicleArchitecutre} to calculate gradability");
@@ -82,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 			return maxSlope;
 		}
 
-		protected virtual Radian SearchSlope(SimplePowertrainContainer container)
+		protected virtual Radian SearchSlope(ISimpleVehicleContainer container)
 		{
 			var simulationInterval = Constants.SimulationSettings.TargetTimeInterval;
 			var absTime = 0.SI<Second>();
@@ -105,7 +107,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 
             var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient, true);
 			var delta = GetDelta(initialResponse as ResponseDryRun, container.VehicleArchitecutre);
-			
+
 			try {
 				gradient = SearchAlgorithm.Search(
 					gradient, delta, 0.1.SI<Radian>(),
@@ -129,6 +131,8 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 					return response.DeltaFullLoad;
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.BatteryElectricVehicle:

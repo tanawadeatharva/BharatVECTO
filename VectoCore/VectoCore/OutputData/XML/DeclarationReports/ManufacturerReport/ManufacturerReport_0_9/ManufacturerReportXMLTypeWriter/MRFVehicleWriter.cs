@@ -32,16 +32,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
+
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetConventionalLorryVehicleOutputGroup().GetElements(inputData),
-
 				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
-				_mrfFactory.GetConventionalLorryComponentsType().GetElement(inputData)
-
-
-
-
-				);
+                new XElement(_mrf + "SimulationToolLicenseNumber", vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetConventionalLorryComponentsType().GetElement(inputData)
+			);
 				
 		}
 
@@ -62,10 +59,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
-				_mrfFactory.GetHEV_Px_IHCP_LorryComponentsType().GetElement(inputData)
-				
-				
-				);
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_Px_IHCP_LorryComponentsType().GetElement(inputData)
+			);
 		}
 
 		#endregion
@@ -81,8 +77,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				//_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
-				_mrfFactory.GetHEV_S2_LorryComponentsType().GetElement(inputData));
+                //_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S2_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -98,7 +95,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S3_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S3_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -114,7 +112,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S4_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -131,10 +130,64 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_IEPC_S_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_IEPC_S_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
+	}
+
+	public class FCHV_F2_LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F2_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetFCHV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F2_LorryComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_F3_LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F3_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F3_LorryComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_F4_LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F4_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F4_LorryComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_IEPC_LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_IEPC_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_IEPC_LorryComponentsType().GetElement(inputData));
+		}
 	}
 
 	public class PevE2LorryVehicleTypeWriter : VehicleTypeWriter
@@ -148,7 +201,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var vehicleData = inputData.JobInputData.Vehicle;
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E2_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E2_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -164,7 +218,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E3_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E3_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -179,7 +234,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E4_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E4_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -195,7 +251,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_IEPC_S_LorryComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_IEPC_S_LorryComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -218,11 +275,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.ManufacturerAddress, vehicle.ManufacturerAddress),
 				_mrfFactory.GetGeneralVehicleOutputGroup().GetElements(vehicle),
 				new XElement(_mrf + XMLNames.CorrectedActualMass, vehicle.CurbMassChassis.ValueAsUnit("kg")),
-				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicle.SleeperCab),
 				new XElement(_mrf + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle),
-				new XElement(_mrf + "VehicleTechnologyExempted", tech),
-				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
-			);
+                new XElement(_mrf + XMLNames.Vehicle_SleeperCab, vehicle.SleeperCab),
+                new XElement(_mrf + "VehicleTechnologyExempted", tech),
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW)),
+				new XElement(_mrf + "SimulationToolLicenseNumber", vehicle.SimulationToolLicenseNumber ?? "N/A")
+            );
 		}
 
 		#endregion
@@ -244,7 +302,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
-				_mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
+                new XElement(_mrf + "SimulationToolLicenseNumber", vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetConventional_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
 
@@ -263,7 +322,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetEngineTorqueLimitationsType().GetElement(inputData),
-				_mrfFactory.GetHEV_Px_IHPC_PrimaryBusComponentsType().GetElement(inputData)
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_Px_IHPC_PrimaryBusComponentsType().GetElement(inputData)
 			);
 		}
 
@@ -280,7 +340,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S2_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S2_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -296,7 +357,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S3_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S3_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -311,7 +373,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_S4_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_S4_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -327,10 +390,63 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetHEV_IEPC_S_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_IEPC_S_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
+	}
+
+	public class FCHV_F2_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F2_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F2_PrimaryBusComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_F3_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F3_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F3_PrimaryBusComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_F4_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_F4_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_F4_PrimaryBusComponentsType().GetElement(inputData));
+		}
+	}
+
+	public class FCHV_IEPC_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+		public FCHV_IEPC_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+				_mrfFactory.GetFCHV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetFCHV_IEPC_PrimaryBusComponentsType().GetElement(inputData));
+		}
 	}
 
 	public class PevE2PrimaryBusVehicleTypeWriter : VehicleTypeWriter
@@ -343,7 +459,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E2_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E2_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -359,7 +476,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E3_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E3_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -375,7 +493,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_E4_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_E4_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -391,7 +510,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		{
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
-				_mrfFactory.GetPEV_IEPC_PrimaryBusComponentsType().GetElement(inputData));
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_IEPC_PrimaryBusComponentsType().GetElement(inputData));
 		}
 
 		#endregion
@@ -411,8 +531,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetExemptedPrimaryBusGeneralVehicleOutputGroup().GetElements(inputData),
 				new XElement(_mrf + "VehicleTechnologyExempted", tech),
-				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW))
-			);
+				new XElement(_mrf + XMLNames.Exempted_SumNetPower, inputData.JobInputData.Vehicle.MaxNetPower1.ValueAsUnit(XMLNames.Unit_kW)),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A")
+            );
 		}
 
 		#endregion
@@ -433,7 +554,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle, 
 				_mrfFactory.GetConventionalCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetConventionalADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
-				_mrfFactory.GetConventional_CompletedBusComponentsType().GetElement(inputData)
+                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetConventional_CompletedBusComponentsType().GetElement(inputData)
 				);
 
 		}
@@ -456,7 +578,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetHEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
-				_mrfFactory.GetHEV_CompletedBusComponentsType().GetElement(inputData)
+                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetHEV_CompletedBusComponentsType().GetElement(inputData)
 			);
 		}
 
@@ -478,7 +601,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return new XElement(_mrf + XMLNames.Component_Vehicle,
 				_mrfFactory.GetPEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
 				_mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
-				_mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
+                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
 			);
 		}
 
@@ -523,8 +647,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					consolidatedVehicleData.NumberPassengerSeatsLowerDeck +
 					consolidatedVehicleData.NumberPassengersStandingLowerDeck),
 				new XElement(_mrf + XMLNames.Vehicle_BodyworkCode, consolidatedVehicleData.VehicleCode.ToXMLFormat()),
-				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry)
-				);
+				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry),
+                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.PrimaryVehicle.Vehicle.SimulationToolLicenseNumber ?? "N/A")
+                );
 			//result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			return result;
 

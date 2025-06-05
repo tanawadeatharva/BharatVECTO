@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -96,6 +97,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public IIEPCEngineeringInputData IEPCEngineeringInputData => null;
 
 		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData => null;
+
+		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => null;
 
 		#endregion
 

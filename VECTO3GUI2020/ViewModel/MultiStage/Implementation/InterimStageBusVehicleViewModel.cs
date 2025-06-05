@@ -109,6 +109,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
+		public bool BatteryOnlyMode { get; }
+
+        public string VehicleMonitoringData { get; }
+
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+
+		public Kilogram H2StorageUsableCapacity { get; }
+
+		public HydrogenStorageTechnology? HydrogenStorageTechnology {  get; }
+
+		public string SimulationToolLicenseNumber { get; }
+
 		protected bool _exemptedVehicle;
 
 		public string Name => "Vehicle";
@@ -656,7 +668,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 					_parameterViewModels[nameof(NumberPassengersStandingUpperDeck)].EditingEnabled = value;
 					_parameterViewModels[nameof(NumberPassengersStandingLowerDeck)].EditingEnabled = value;
 				}
-				
 			}
 		}
 
@@ -846,7 +857,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -1267,6 +1278,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public bool HasErrors =>
 			!string.IsNullOrEmpty(Error) || 
 			(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
+
+		// todo amogoda: tbd (?)
+		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
 		#endregion
 

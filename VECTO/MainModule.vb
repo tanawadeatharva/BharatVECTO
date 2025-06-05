@@ -100,7 +100,8 @@ Module MainModule
                  VehicleClass.Class32c,
                  VehicleClass.Class32d,
                  VehicleClass.Class32e,
-                 VehicleClass.Class32f
+                 VehicleClass.Class32f,
+                 VehicleClass.ClassP31_32
                 Return My.Resources.bus4x2
 
             Case VehicleClass.Class33a,
@@ -114,7 +115,8 @@ Module MainModule
                  VehicleClass.Class34c,
                  VehicleClass.Class34d,
                  VehicleClass.Class34e,
-                 VehicleClass.Class34f
+                 VehicleClass.Class34f,
+                 VehicleClass.ClassP33_34
                 Return My.Resources.bus6x2
 
             Case VehicleClass.Class37a,
@@ -128,7 +130,8 @@ Module MainModule
                  VehicleClass.Class38c,
                  VehicleClass.Class38d,
                  VehicleClass.Class38e,
-                 VehicleClass.Class38f
+                 VehicleClass.Class38f,
+                 VehicleClass.ClassP37_38
                 Return My.Resources.bus8x2
 
             Case Else

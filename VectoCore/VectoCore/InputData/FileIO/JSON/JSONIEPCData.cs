@@ -9,7 +9,6 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
-using Castle.Core.Internal;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -60,12 +59,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IList<IElectricMotorVoltageLevel> VoltageLevels => ReadVoltageLevel(Body[JsonKeys.IEPC_VoltageLevels]);
 		public IList<IDragCurve> DragCurves => ReadDragCurve(Body[JsonKeys.IEPC_DragCurves]);
 		public TableData Conditioning => null;
+		public virtual bool DisengagementClutch => false;
 
-		#endregion
+        #endregion
 
-		#region Implementation of IIEPCEngineeringInputData
+        #region Implementation of IIEPCEngineeringInputData
 
-		public double OverloadRecoveryFactor => Body.GetEx<double>(JsonKeys.IEPC_ThermalOverloadRecoveryFactor);
+        public double OverloadRecoveryFactor => Body.GetEx<double>(JsonKeys.IEPC_ThermalOverloadRecoveryFactor);
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var count = DesignTypeWheelMotor && NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
 			var maxPwr = 0.SI<Watt>();
 			foreach (var entry in VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable()) {
-				var maxTq = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve, count,
+				var maxTq = IEPCFullLoadCurveReader.Create(entry.FullLoadCurve.First().LoadCurve, count,
 					gearRatioUsedForMeasurement.Ratio);
 				if (maxTq.MaxPower > maxPwr) {
 					maxPwr = maxTq.MaxPower;
@@ -124,7 +124,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					OverloadTorque = voltageLevel.GetEx<double>(JsonKeys.IEPC_OverloadTorque).SI<NewtonMeter>(),
 					OverloadTestSpeed = voltageLevel.GetEx<double>(JsonKeys.IEPC_OverloadTorqueSpeed).RPMtoRad(),
 					OverloadTime = voltageLevel.GetValueOrDefault<double>(JsonKeys.IEPC_OverloadTime)?.SI<Second>() ?? 0.SI<Second>(),
-					FullLoadCurve = ReadTableData(voltageLevel.GetEx<string>(JsonKeys.IEPC_FullLoadCurve), "ElectricMotor FullLoadCurve"),
+					FullLoadCurve = new List<IElectricMotorLoadCurve>() {
+						new ElectricMotorLoadCurve() { 
+							Gear = 0, 
+							LoadCurve = ReadTableData(voltageLevel.GetEx<string>(JsonKeys.IEPC_FullLoadCurve), "ElectricMotor FullLoadCurve") 
+						}
+                    },
 					PowerMap = ReadPowerMap(voltageLevel[JsonKeys.IEPC_PowerMaps])
 				});
 			}
@@ -168,6 +173,76 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 	}
 	
+	public class JSONIEPCDataV2 : JSONIEPCData 
+	{
+        public JSONIEPCDataV2(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing)
+        {}
+
+        public override bool DisengagementClutch => Body.ContainsKey(JsonKeys.IEPC_DisengagementClutch) ? Body.GetEx<bool>(JsonKeys.IEPC_DisengagementClutch) : false;
+
+        protected override IList<IElectricMotorVoltageLevel> ReadVoltageLevel(JToken voltageLevels)
+        {
+            var voltageLevelData = new List<IElectricMotorVoltageLevel>();
+            foreach (var voltageLevel in voltageLevels)
+            {
+                voltageLevelData.Add(new ElectricMotorVoltageLevel
+                {
+
+                    VoltageLevel = voltageLevel.GetEx<double>(JsonKeys.IEPC_Voltage).SI<Volt>(),
+                    ContinuousTorque = voltageLevel.GetEx<double>(JsonKeys.IEPC_ContinuousTorque).SI<NewtonMeter>(),
+                    ContinuousTorqueSpeed = voltageLevel.GetEx<double>(JsonKeys.IEPC_ContinuousTorqueSpeed).RPMtoRad(),
+                    OverloadTorque = voltageLevel.GetEx<double>(JsonKeys.IEPC_OverloadTorque).SI<NewtonMeter>(),
+                    OverloadTestSpeed = voltageLevel.GetEx<double>(JsonKeys.IEPC_OverloadTorqueSpeed).RPMtoRad(),
+                    OverloadTime = voltageLevel.GetValueOrDefault<double>(JsonKeys.IEPC_OverloadTime)?.SI<Second>() ?? 0.SI<Second>(),
+                    FullLoadCurve = ReadFullLoadCurves(voltageLevel[JsonKeys.IEPC_FullLoadCurves]),
+                    PowerMap = ReadPowerMap(voltageLevel[JsonKeys.IEPC_PowerMaps])
+                });
+            }
+
+            return voltageLevelData;
+        }
+
+        protected override Watt CalculateRatedPower()
+        {
+            var count = DesignTypeWheelMotor && NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+            var maxPwr = 0.SI<Watt>();
+
+            foreach (var entry in VoltageLevels.OrderBy(x => x.VoltageLevel).AsEnumerable())
+            {
+				foreach (var curve in entry.FullLoadCurve)
+				{
+                    var maxTq = IEPCFullLoadCurveReader.Create(curve.LoadCurve, count, Gears.First(x => x.GearNumber == curve.Gear).Ratio);
+
+                    if (maxTq.MaxPower > maxPwr)
+                    {
+                        maxPwr = maxTq.MaxPower;
+                    }
+                }
+            }
+
+            return maxPwr;
+        }
+
+        protected List<IElectricMotorLoadCurve> ReadFullLoadCurves(JToken loadCurves)
+        {
+            var curves = new List<IElectricMotorLoadCurve>();
+
+			foreach (var loadCurve in loadCurves)
+			{
+                var key = ((JProperty)loadCurve).Name;
+                var value = ((JProperty)loadCurve).Value.Value<string>();
+
+                curves.Add(new ElectricMotorLoadCurve
+                {
+                    Gear = Convert.ToInt32(key),
+                    LoadCurve = ReadTableData(value, "ElectricMotor FullLoadCurve")
+                });
+            }
+
+			return curves;
+		}
+    }
+
 	public class GearEntry : IGearEntry
 	{
 		#region Implementation of IGearEntry

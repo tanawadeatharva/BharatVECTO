@@ -527,9 +527,9 @@ Public Class VehicleForm
 					pnMaxChargingPwr.Enabled = False
 					tbMaxChargingPwr.Text = String.Empty
 				Else
-					cbOvc.Checked = vehicle.OvcHev
-					pnMaxChargingPwr.Enabled = vehicle.OvcHev
-					If vehicle.OvcHev Then
+					cbOvc.Checked = vehicle.OVC
+					pnMaxChargingPwr.Enabled = vehicle.OVC
+					If vehicle.OVC Then
 						tbMaxChargingPwr.Text = vehicle.MaxChargingPower.ConvertToKiloWatt().Value.ToGUIFormat()
 					End If
 				End If
@@ -605,7 +605,6 @@ Public Class VehicleForm
 			    If (vehicle.InMotionCharging.Enabled) Then
 				    cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
 				    tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.Value().ToString()
-				    cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
 				    tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
 			    End If
 		    Else
@@ -1104,7 +1103,7 @@ Public Class VehicleForm
 				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
 			Next
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
-			veh.OvcHev = cbOvc.Checked
+			veh.OVC = cbOvc.Checked
 			veh.MaxChargingPower = tbMaxChargingPwr.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(Of Watt)
 
 			If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse
@@ -1219,7 +1218,6 @@ Public Class VehicleForm
 		            End If
 
 		            veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-		            veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 		            veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 		            veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 		        End If
@@ -1236,7 +1234,6 @@ Public Class VehicleForm
 				End If
 
 				veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-				veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 				veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 				veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 				End If

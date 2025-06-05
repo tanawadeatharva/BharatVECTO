@@ -38,5 +38,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public interface IGearbox : IPowerTrainComponent, IGearboxInfo, IGearboxControl { }
 
-	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl { }
+	public interface ITorqueConverter : ITorqueConverterInfo, ITorqueConverterControl, IUpdateable { }
 }

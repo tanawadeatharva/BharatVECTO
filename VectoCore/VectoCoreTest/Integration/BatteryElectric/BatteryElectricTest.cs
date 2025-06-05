@@ -16,6 +16,7 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -903,7 +904,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			return jobContainer;
 		}
 
-		public static VehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData, string modFileName, 
+		public static IVehicleContainer CreateBatteryElectricPowerTrain(DrivingCycleData cycleData, string modFileName, 
 			FileOutputWriter fileWriter, SummaryDataContainer sumData, double initialBatCharge, int count, double ratio, 
 			bool largeMotor, double pAuxEl, PowertrainPosition pos, Kilogram payload = null, RetarderType retarderType = RetarderType.None)
 		{
@@ -963,10 +964,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 				runData.GearboxData = gearboxData;
 			}
 
-			var container = new VehicleContainer(
-				ExecutionMode.Engineering, modData, sumData) {
-				RunData = runData
-			};
+			var container = VehicleContainer.CreateVehicleContainer(runData, modData, sumData);
 
 
 
@@ -1041,7 +1039,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 		}
 
 		private static IElectricMotor GetElectricMachine(PowertrainPosition pos,
-			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, VehicleContainer container,
+			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, IVehicleContainer container,
 			IElectricSystem es, IElectricMotorControl ctl)
 		{
 			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
@@ -1133,7 +1131,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(
-						3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+						3.2634.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                         CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};
@@ -1219,7 +1217,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 	public class MockEngineInfo : VectoSimulationComponent, IEngineInfo
 	{
-		public MockEngineInfo(VehicleContainer container) : base(container)
+		public MockEngineInfo(IVehicleContainer container) : base(container)
 		{
 		}
 

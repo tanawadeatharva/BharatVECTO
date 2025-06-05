@@ -17,14 +17,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
 
-	public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
+    public class PEVAMTShiftStrategyPolygonCreator : IShiftPolygonCalculator
 	{
 		private ShiftStrategyParameters _shiftStrategyParameters;
 
@@ -54,7 +53,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			{
 				throw new VectoException("ElectricMotorData is required to calculate Shift Polygon!");
 			}
-			var emFld = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
+
+			var voltageLevel = electricMotorData.EfficiencyData.VoltageLevels.First();
+			var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+
 			return ComputeDeclarationShiftPolygon(i, gearboxGears, axlegearRatio, dynamicTyreRadius, electricMotorData,
 				_shiftStrategyParameters.PEV_DownshiftSpeedFactor.LimitTo(0, 1) * emFld.RatedSpeed, _shiftStrategyParameters.PEV_DownshiftMinSpeedFactor * emFld.RatedSpeed);
 		}
@@ -65,8 +67,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			Meter dynamicTyreRadius,
 			ElectricMotorData electricMotorData, PerSecond downshiftMaxSpeed, PerSecond downshiftMinSpeed)
 		{
-			return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
-				electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve, electricMotorData.RatioADC,
+            var voltageLevel = electricMotorData.EfficiencyData.VoltageLevels.First();
+            var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+
+            return DeclarationData.Gearbox.ComputeElectricMotorShiftPolygon(i,
+				emFld, electricMotorData.RatioADC,
 				gearboxGears, axlegearRatio, dynamicTyreRadius, downshiftMaxSpeed, downshiftMinSpeed);
 		}
 	}
@@ -80,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected GearshiftPosition _nextGear;
 
 		private readonly ShiftStrategyParameters _shiftStrategyParameters;
-		private SimplePowertrainContainer TestContainer;
+		private ISimpleVehicleContainer TestContainer;
 		private Gearbox TestContainerGbx;
 		private Battery TestContainerBattery;
 		private BatterySystem TestContainerBatterySystem;
@@ -102,7 +107,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool DriveOffStandstill { get; set; }
 
-		protected TestPowertrain<Gearbox> TestPowertrain;
+		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
+		protected ITestPowertrain<Gearbox> TestPowertrain;
 
 		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
 		{
@@ -120,6 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
 			DataBus = dataBus;
+			PowertrainBuilder = dataBus.SimplePowertrainBuilder;
 			var runData = dataBus.RunData;
 			_shiftStrategyParameters = runData.GearshiftParameters;
 			_shiftPolygonImplementation =
@@ -153,10 +160,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 
 			// create testcontainer
-			var testContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimplePowertrainElectric(runData, testContainer);
+			var testContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
 
-			TestPowertrain = new TestPowertrain<Gearbox>(testContainer, DataBus);
+			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<Gearbox>(testContainer, DataBus);
 			foreach (var motor in testContainer.ElectricMotors.Values)
 			{
 				if ((motor as ElectricMotor).Control is SimpleElectricMotorControl emCtl) {
@@ -169,8 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
-			TestContainer = new SimplePowertrainContainer(runData);
-			PowertrainBuilder.BuildSimplePowertrainElectric(runData, TestContainer);
+			TestContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
@@ -199,8 +204,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		{
 			var retVal = new Dictionary<uint, ShiftPolygon>();
 			for (var i = 0u; i < gearData.Count; i++) {
-				var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-				var contTq = em.Overload.ContinuousTorque;
+				var voltageLevel = em.EfficiencyData.VoltageLevels.First();
+                var emFld = voltageLevel.FullLoadCurve ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[(uint)i + 1];
+                var contTq = em.Overload.ContinuousTorque;
 				var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
 				var limitedEm = new ElectricMotorData() {
 					EfficiencyData = new VoltageLevelData() {
@@ -249,7 +255,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(DataBus.DrivingCycleInfo.TargetSpeed)) {
 				DriveOffStandstill = false;
 			}
-			if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(VoltageLevels.VoltageLevels.First().FullLoadCurve.NP80low)) {
+
+			var voltageLevel = VoltageLevels.VoltageLevels.First();
+
+            if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(voltageLevel.FullLoadCurve?.NP80low ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[gear.Gear].NP80low)) {
 				DriveOffStandstill = false;
 			}
 
@@ -523,7 +532,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return tmpGear;
 			}
 
-			var ratedSpeed = VoltageLevels.VoltageLevels.First().FullLoadCurve.RatedSpeed;
+			var curve = VoltageLevels.VoltageLevels.First().FullLoadCurve ?? (VoltageLevels.VoltageLevels.First() as IEPCVoltageLevelData).FullLoadCurves[currentGear.Gear];
+            var ratedSpeed = curve.RatedSpeed;
 			var maxSpeedNorm = VoltageLevels.MaxSpeed / ratedSpeed;
 			var targetMotor = (_shiftStrategyParameters.PEV_TargetSpeedBrakeNorm * (maxSpeedNorm - 1) + 1) * ratedSpeed;
 

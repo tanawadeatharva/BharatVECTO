@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			// 3) 1C -> 0: disengange when negative T_out and positive T_in
 			var gear1C = Gears.First().Equals(gear);
-			var disengageTOutNegativeAndTInPositive = DataBus.DriverInfo.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) &&
+			var disengageTOutNegativeAndTInPositive = DataBus.DriverInfo.DriverAcceleration < 0 && gear1C && outTorque.IsSmaller(0) &&
 													inTorque.IsGreater(0);
 
 			var disengageTCEngineSpeedLowerIdle = braking && torqueNegative && gear1C &&
@@ -448,8 +448,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(GearshiftParams.TimeBetweenGearshifts);
 
 			if (shiftTimeReached && IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
-				Downshift(absTime, gear);
-				return true;
+				var next_gear = Gears.Predecessor(gear);
+
+				if (!(next_gear.TorqueConverterLocked.Equals(true)) || !(IsAboveUpShiftCurve(next_gear, outTorque / GearboxModelData.Gears[next_gear.Gear].Ratio, outAngularVelocity * GearboxModelData.Gears[next_gear.Gear].Ratio, true)))
+				{
+					Downshift(absTime, gear);
+					return true;
+				}
 			}
 
 			if (shiftTimeReached && DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate) {

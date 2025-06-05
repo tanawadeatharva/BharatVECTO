@@ -32,16 +32,15 @@ namespace VectoMockupTest
 	[TestFixture]
     public class MockUpVectoTest
 	{
+		private const string v27LorryPath = @"TestDataMockup/SchemaVersion2.7/Lorries/";
+		private const string v27PrimaryBusPath = @"TestDataMockup/SchemaVersion2.7/PrimaryBuses/";
 
 		private const string BasePath = @"TestDataMockup\SchemaVersion2.4\Distributed\";
 
 		private const string BasePathMockup = @"TestDataMockup\SchemaVersion2.4\MockupBusTest\";
 
-		private const string XsdPath = @".. /../../../../VectoCore/VectoCore/Resources/XSD";
-
 		private IKernel _vectoKernel;
 		private ISimulatorFactoryFactory _simFactoryFactory;
-		//private ISimulatorFactory _simulatorFactory;
 		private IXMLInputDataReader _inputDataReader;
 
 		#region Heavy Lorry Testfiles
@@ -247,7 +246,8 @@ namespace VectoMockupTest
 			IList<string> filesToBeCleared = new List<string>() {
 				fileWriter.XMLPrimaryVehicleReportName,
 				fileWriter.XMLFullReportName,
-				fileWriter.XMLCustomerReportName
+				fileWriter.XMLCustomerReportName,
+				fileWriter.XMLMonitoringReportName
 			};
 			foreach (var fileName in filesToBeCleared) {
 				if (File.Exists(fileName)) {
@@ -341,14 +341,79 @@ namespace VectoMockupTest
 		[TestCase(HEV_mediumLorry_IHPC, TestName = "HEV_IHPC_MediumLorry")]
 		[TestCase(HEV_mediumLorry_Px_SuperCap, TestName = "HEV_Px_Medium_Lorry_SuperCap")]
 		[TestCase(PEV_mediumLorry_AMT_E2_BatStd, TestName = "PEV_E2_Medium_Lorry_BatteryStd")]
-		public void LorryMockupTest(string fileName, bool mockup = true)
+
+		[TestCase(v27LorryPath + "Conventional_HeavyLorry.xml", TestName = "v27_Conventional_HeavyLorry")]
+        [TestCase(v27LorryPath + "Conventional_HeavyLorry_requiredOnly.xml", TestName = "v27_Conventional_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Conventional_MediumLorry.xml", TestName = "v27_Conventional_MediumLorry")]
+        [TestCase(v27LorryPath + "Conventional_MediumLorry_requiredOnly.xml", TestName = "v27_Conventional_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F2_HeavyLorry.xml", TestName = "v27_FCHV_F2_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F2_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F2_MediumLorry.xml", TestName = "v27_FCHV_F2_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F2_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F3_HeavyLorry.xml", TestName = "v27_FCHV_F3_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F3_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F3_MediumLorry.xml", TestName = "v27_FCHV_F3_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F3_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F4_HeavyLorry.xml", TestName = "v27_FCHV_F4_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F4_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F4_MediumLorry.xml", TestName = "v27_FCHV_F4_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F4_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F4_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_2xFC_HeavyLorry.xml", TestName = "v27_FCHV_IEPC_2xFC_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_HeavyLorry.xml", TestName = "v27_FCHV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_MediumLorry.xml", TestName = "v27_FCHV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "H2_ICE_HeavyLorry.xml", TestName = "v27_H2_ICE_HeavyLorry")]
+        [TestCase(v27LorryPath + "H2_ICE_MediumLorry.xml", TestName = "v27_H2_ICE_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_IHPC_HeavyLorry.xml", TestName = "v27_HEV_IHPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "HEV_IHPC_MediumLorry.xml", TestName = "v27_HEV_IHPC_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_HeavyLorry.xml", TestName = "v27_HEV_P2_HeavyLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_HeavyLorry_requiredOnly.xml", TestName = "v27_HEV_P2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "HEV_P2_MediumLorry.xml", TestName = "v27_HEV_P2_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_MediumLorry_requiredOnly.xml", TestName = "v27_HEV_P2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "HEV_P2_supercap_HeavyLorry.xml", TestName = "v27_HEV_P2_supercap_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_HeavyLorry.xml", TestName = "v27_PEV_E2_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E2_MediumLorry.xml", TestName = "v27_PEV_E2_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E3_HeavyLorry.xml", TestName = "v27_PEV_E3_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E3_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E3_MediumLorry.xml", TestName = "v27_PEV_E3_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E3_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E4_HeavyLorry.xml", TestName = "v27_PEV_E4_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E4_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E4_MediumLorry.xml", TestName = "v27_PEV_E4_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E4_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E4_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_HeavyLorry.xml", TestName = "v27_PEV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_MediumLorry.xml", TestName = "v27_PEV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_multiCurve_HeavyLorry.xml", TestName = "v27_PEV_IEPC_multiCurve_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_stdValues_HeavyLorry.xml", TestName = "v27_PEV_IEPC_stdValues_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_HeavyLorry.xml", TestName = "v27_SHEV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_MediumLorry.xml", TestName = "v27_SHEV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S2_HeavyLorry.xml", TestName = "v27_SHEV_S2_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S2_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S2_MediumLorry.xml", TestName = "v27_SHEV_S2_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S2_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S3_HeavyLorry.xml", TestName = "v27_SHEV_S3_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S3_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S3_MediumLorry.xml", TestName = "v27_SHEV_S3_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S3_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S4_HeavyLorry.xml", TestName = "v27_SHEV_S4_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S4_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S4_MediumLorry.xml", TestName = "v27_SHEV_S4_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S4_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_MediumLorry_requiredOnly")]
+        public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.CreateDeclaration(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumWriter);
-
+			ArchitectureID df;
 			var _simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 			Clearfiles(fileWriter);
@@ -359,8 +424,9 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
 
-			if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
+            if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
 				Assert.IsFalse(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
 			} else {
 				Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
@@ -409,7 +475,16 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "PEV_E2_PrimaryBus_EM-Std")]
 		[TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "PEV_E2_PrimaryBus_BatteryStd")]
 		[TestCase(Conventional_PrimaryBus_DF, TestName = "ConventionalPrimaryBus_DualFuel")]
-		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
+
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus.xml", TestName = "v27_FCHV_F2_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F2_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus.xml", TestName = "v27_FCHV_F3_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F3_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus.xml", TestName = "v27_FCHV_F4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", TestName = "v27_FCHV_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_IEPC_PrimaryBus_requiredOnly")]
+        public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.Create(fileName);
@@ -427,7 +502,8 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter, CifShouldExist:false, PrimaryReportShouldExist:true);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XmlDocumentType.MultistepOutputData), "VIF invalid" );
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
-		}
+            Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
+        }
 
 		
 
@@ -508,7 +584,7 @@ namespace VectoMockupTest
 			// assertions
 			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
-			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false);
+			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(interimFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -564,7 +640,7 @@ namespace VectoMockupTest
 
 			// assertions
 
-			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false);
+			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(fileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -785,25 +861,11 @@ namespace VectoMockupTest
 			bool CifShouldExist = true, 
 			bool VifShouldExist = false, 
 			bool PrimaryMrfShouldExist = false,
-			bool PrimaryReportShouldExist = false)
+			bool PrimaryReportShouldExist = false,
+			bool MonitoringReportShouldExist = true)
 		{
 			var fail = false;
-			if (CifShouldExist) {
-				if (File.Exists(fileWriter.XMLCustomerReportName)) {
-					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
-						XmlDocumentType.CustomerReport);
-				} else {
-					TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
-					fail = true;
-				}
-			} else {
-				var fileName = fileWriter.XMLCustomerReportName;
-				if (File.Exists(fileName)) {
-					fail = true;
-					TestContext.WriteLine($"{fileName} should not exist");
-				}
-			}
-
+			
 			if (MrfShouldExist) {
 				if (File.Exists(fileWriter.XMLFullReportName)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLFullReportName),
@@ -821,7 +883,53 @@ namespace VectoMockupTest
 				}
             }
 
-			var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
+            if (CifShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLCustomerReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
+                        XmlDocumentType.CustomerReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLCustomerReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            if (MonitoringReportShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLMonitoringReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMonitoringReportName),
+                        XmlDocumentType.MonitoringReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLMonitoringReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLMonitoringReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
 			if (PrimaryMrfShouldExist) {
 				if (File.Exists(primaryMrfPath)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(primaryMrfPath), XmlDocumentType.ManufacturerReport);
@@ -856,7 +964,7 @@ namespace VectoMockupTest
 				}
             }
 
-			if (VifShouldExist) {
+            if (VifShouldExist) {
 				if (File.Exists(fileWriter.XMLMultistageReportFileName)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMultistageReportFileName),
 						XmlDocumentType.MultistepOutputData);
@@ -873,7 +981,7 @@ namespace VectoMockupTest
 				}
             }
 
-			if (fail) {
+            if (fail) {
 				Assert.Fail();
 			}
 			
@@ -1033,7 +1141,11 @@ namespace VectoMockupTest
 			false, 
 			true, 
 			TestName="ExemptedPrimaryBus")]
-		public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
+        [TestCase(v27LorryPath + "Exempted_HeavyLorry.xml", false, true, true, false, false, TestName = "v27_Exempted_HeavyLorry")]
+        [TestCase(v27LorryPath + "Exempted_HeavyLorry_requiredOnly.xml", false, true, true, false, false, TestName = "v27_Exempted_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Exempted_MediumLorry.xml", false, true, true, false, false, TestName = "v27_Exempted_MediumLorry")]
+        [TestCase(v27LorryPath + "Exempted_MediumLorry_requiredOnly.xml", false, true, true, false, false, TestName = "v27_Exempted_MediumLorry_requiredOnly")]
+        public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
 			bool checkPrimaryReport)
 		{
 			CopyInputFile(fileName);

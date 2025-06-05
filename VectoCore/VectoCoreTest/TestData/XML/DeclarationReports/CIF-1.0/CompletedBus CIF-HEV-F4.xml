@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cif:VectoCustomerInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputCustomer.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+	<cif:Data xsi:type="FCHV_CompletedBusOutputType" id="CIF-942ad8469d0d4290aa52" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+		<Vehicle xsi:type="FCHV_F4_CompletedBusVehicleType">
+			<VIN>a</VIN>
+			<VehicleCategory>N2</VehicleCategory>
+			<AxleConfiguration>4x2</AxleConfiguration>
+			<TechnicalPermissibleMaximumLadenMass unit="kg">3500</TechnicalPermissibleMaximumLadenMass>
+			<TotalPropulsionPower unit="kW">0</TotalPropulsionPower>
+			<VehicleGroup>String</VehicleGroup>
+			<VehicleGroupCO2>String</VehicleGroupCO2>
+			<Manufacturers>
+				<Step stepCount="0">
+					<Manufacturer>text</Manufacturer>
+					<ManufacturerAddress>text</ManufacturerAddress>
+				</Step>
+				<Step stepCount="1">
+					<Manufacturer>text</Manufacturer>
+					<ManufacturerAddress>text</ManufacturerAddress>
+				</Step>
+			</Manufacturers>
+			<Model>a</Model>
+			<CorrectedActualMass unit="kg">500</CorrectedActualMass>
+			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+			<HybridElectricHDV>true</HybridElectricHDV>
+			<ClassBus>String</ClassBus>
+			<TotalNumberOfPassengers>0</TotalNumberOfPassengers>
+			<FCHVArchitecture>String</FCHVArchitecture>
+			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<DynamicChargingTechnology>String</DynamicChargingTechnology>
+			<ADAS>
+				<PredictiveCruiseControl>true</PredictiveCruiseControl>
+			</ADAS>
+			<FuelCellTotalRatedPower unit="kW">0</FuelCellTotalRatedPower>
+			<TotalStorageCapacity unit="kWh">0</TotalStorageCapacity>
+			<UsableStorageCapacity unit="kWh">0</UsableStorageCapacity>
+			<ElectricMachineSystem>
+				<TotalRatedPropulsionPower unit="kW">0</TotalRatedPropulsionPower>
+				<VoltageLevels>
+					<VoltageLevel>
+						<MaxContinuousPropulsionPower unit="kW">0</MaxContinuousPropulsionPower>
+					</VoltageLevel>
+				</VoltageLevels>
+			</ElectricMachineSystem>
+			<NrOfGears>0</NrOfGears>
+			<AverageRRC>0.0055</AverageRRC>
+			<Axle axleNumber="1">
+				<TyreDimension>9 R22.5</TyreDimension>
+				<FuelEfficiencyClass>A</FuelEfficiencyClass>
+				<TyreCertificationNumber>n.a.</TyreCertificationNumber>
+			</Axle>
+			<Axle axleNumber="2">
+				<TyreDimension>9 R22.5</TyreDimension>
+				<FuelEfficiencyClass>A</FuelEfficiencyClass>
+				<TyreCertificationNumber>n.a.</TyreCertificationNumber>
+			</Axle>
+			<SteeringPump>
+				<Technology>Fixed displacement</Technology>
+			</SteeringPump>
+			<ElectricSystem>
+				<AlternatorTechnology>text</AlternatorTechnology>
+			</ElectricSystem>
+			<PneumaticSystem>
+				<SmartRegenerationSystem>true</SmartRegenerationSystem>
+			</PneumaticSystem>
+			<HVAC>
+				<SystemConfiguration>0</SystemConfiguration>
+				<AuxiliaryHeaterPower unit="kW">0</AuxiliaryHeaterPower>
+				<DoubleGlazing>true</DoubleGlazing>
+			</HVAC>
+		</Vehicle>
+		<InputDataSignaturePrimaryVehicle>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</InputDataSignaturePrimaryVehicle>
+		<ManufacturerRecordSignaturePrimaryVehicle>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</ManufacturerRecordSignaturePrimaryVehicle>
+		<InputDataSignature>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</InputDataSignature>
+		<ManufacturerRecordSignature>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</ManufacturerRecordSignature>
+		<Results>
+			<Status>success</Status>
+			<ExemptedVehicle/>
+		</Results>
+		<ApplicationInformation>
+			<SimulationToolVersion>String</SimulationToolVersion>
+			<Date>2017-01-01T00:00:00Z</Date>
+		</ApplicationInformation>
+	</cif:Data>
+	<cif:Signature>
+		<di:Reference>
+			<di:DigestMethod Algorithm="http://www.altova.com/"/>
+			<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+		</di:Reference>
+	</cif:Signature>
+</cif:VectoCustomerInformation>

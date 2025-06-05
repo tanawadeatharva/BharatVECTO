@@ -114,6 +114,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV14_FCHybrid(json, filename, tolerateMissing);
 				case 15:
 					return new JSONInputDataV15_FCHV_IEPC(json, filename, tolerateMissing);
+				case 16:
+					return new JSONInputDataV16_MultiplePowertrains(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -138,6 +140,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONVehicleDataV12_FCHV(json, filename, job, tolerateMissing);
 				case 13:
 					return new JSONVehicleDataV13_FCHV_IEPC(json, filename, job, tolerateMissing);
+				case 14:
+					return new JSONVehicleDataV14_MultiplePowertrains(json, filename, job, tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}
@@ -262,6 +266,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 1:
 					return new JSONIEPCData(json, filename, tolerateMissing);
+				case 2:
+					return new JSONIEPCDataV2(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
 			}

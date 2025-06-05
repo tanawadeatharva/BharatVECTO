@@ -944,7 +944,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{
 			return new CrosswindCorrectionCdxALookup(
-				  aerodynamicDragArea, 0.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+				  aerodynamicDragArea, 0.SI<SquareMeter>(),
 				  new AirdragDataAdapter().GetDeclarationAirResistanceCurve(
 					  crossWindCorrectionParams,
 					  aerodynamicDragArea,

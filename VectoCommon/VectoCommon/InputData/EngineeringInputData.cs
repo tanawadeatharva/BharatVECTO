@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -55,171 +54,11 @@ namespace TUGraz.VectoCommon.InputData
 		IEngineEngineeringInputData EngineOnly { get; }
 	}
 
-	public enum VectoSimulationJobType
-	{
-		ConventionalVehicle = 1,
-		ParallelHybridVehicle,
-		SerialHybridVehicle,
-		FCHV,
-		FCHV_IEPC,
-		BatteryElectricVehicle,
-		EngineOnlySimulation,
-		IEPC_E,
-		IEPC_S,
-		IHPC
-	}
-
-	public static class VectoSimulationJobTypeHelper
-	{
-		public const string Conventional = "Conventional";
-		public const string Hybrid = "Hybrid";
-		public const string PureElectric = "PureElectric";
-		
-
-		public static bool IsBatteryElectric(this VectoSimulationJobType jobType)
-		{
-			return jobType == VectoSimulationJobType.BatteryElectricVehicle || jobType == VectoSimulationJobType.IEPC_E;
-		}
-
-		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
-		{
-			switch (jobType) {
-				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.ConventionalVehicle:
-					return Conventional;
-				case VectoSimulationJobType.ParallelHybridVehicle:
-				case VectoSimulationJobType.SerialHybridVehicle:
-				case VectoSimulationJobType.IHPC:
-				case VectoSimulationJobType.IEPC_S:
-					return Hybrid;
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.IEPC_E:
-					return PureElectric;
-				case VectoSimulationJobType.FCHV:
-				case VectoSimulationJobType.FCHV_IEPC:
-					throw new NotImplementedException("Relevant for Reports");
-				default:
-					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
-			}
-		}
-
-		public static ArchitectureID GetArchitectureID(this VectoSimulationJobType jobType, PowertrainPosition em)
-		{
-			switch (jobType) {
-				case VectoSimulationJobType.ConventionalVehicle:
-				case VectoSimulationJobType.EngineOnlySimulation:
-					return ArchitectureID.UNKNOWN;
-				case VectoSimulationJobType.ParallelHybridVehicle:
-					return GetPHEVArchitectureId(em);
-
-				case VectoSimulationJobType.SerialHybridVehicle:
-					return GetSHEVArchitecureID(em);
-
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.FCHV:
-					return GetPEVArchId(emPos: em);
-
-				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.IEPC_S:
-				case VectoSimulationJobType.FCHV_IEPC:
-					return GetIepcArchitectureId(jobType, em);
-
-				case VectoSimulationJobType.IHPC:
-					return ArchitectureID.P2;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
-			}
-		}
-		
-		public static bool HasEngine(this VectoSimulationJobType jobType)
-		{
-			switch (jobType) {
-				case VectoSimulationJobType.ConventionalVehicle:
-				case VectoSimulationJobType.ParallelHybridVehicle:
-				case VectoSimulationJobType.SerialHybridVehicle:
-				case VectoSimulationJobType.EngineOnlySimulation:
-				case VectoSimulationJobType.IHPC:
-				case VectoSimulationJobType.IEPC_S:
-					return true;
-				case VectoSimulationJobType.FCHV:
-				case VectoSimulationJobType.FCHV_IEPC:
-				case VectoSimulationJobType.BatteryElectricVehicle:
-				case VectoSimulationJobType.IEPC_E:
-					return false;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
-			}
-		}
-
-		private static ArchitectureID GetIepcArchitectureId(VectoSimulationJobType jobType, PowertrainPosition em)
-		{
-			if (em != PowertrainPosition.IEPC) {
-				throw new ArgumentException(nameof(em));
-			}
-
-			switch (jobType) {
-				case VectoSimulationJobType.IEPC_E:
-				case VectoSimulationJobType.FCHV_IEPC:
-					return ArchitectureID.E_IEPC;
-				case VectoSimulationJobType.IEPC_S:
-					return ArchitectureID.S_IEPC;
-				default:
-					throw new ArgumentException(nameof(jobType));
-			}
-		}
-
-		private static ArchitectureID GetPHEVArchitectureId(PowertrainPosition emPos)
-		{
-			switch (emPos) {
-				case PowertrainPosition.HybridP1:
-					return ArchitectureID.P1;
-				case PowertrainPosition.HybridP2:
-					return ArchitectureID.P2;
-				case PowertrainPosition.HybridP2_5:
-					return ArchitectureID.P2_5;
-				case PowertrainPosition.HybridP3:
-					return ArchitectureID.P3;
-				case PowertrainPosition.HybridP4:
-					return ArchitectureID.P4;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(emPos));
-			}
-		}
-
-		private static ArchitectureID GetSHEVArchitecureID(PowertrainPosition emPos)
-		{
-			switch (emPos) {
-				case PowertrainPosition.BatteryElectricE4:
-					return ArchitectureID.S4;
-				case PowertrainPosition.BatteryElectricE3:
-					return ArchitectureID.S3;
-				case PowertrainPosition.BatteryElectricE2:
-					return ArchitectureID.S2;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(emPos));
-			}
-		}
-
-		private static ArchitectureID GetPEVArchId(PowertrainPosition emPos)
-		{
-			switch (emPos) {
-				case PowertrainPosition.BatteryElectricE4:
-					return ArchitectureID.E4;
-				case PowertrainPosition.BatteryElectricE3:
-					return ArchitectureID.E3;
-				case PowertrainPosition.BatteryElectricE2:
-					return ArchitectureID.E2;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(emPos));
-			}
-		}
-	}
-	
 
 	public interface IHybridStrategyParameters
 	{
 		double EquivalenceFactorDischarge { get; }
-		
+
 		double EquivalenceFactorCharge { get; }
 
 		double MinSoC { get; }
@@ -262,11 +101,11 @@ namespace TUGraz.VectoCommon.InputData
 
         Meter Height { get; }
 
-		
+
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
-		
+
 		double InitialSOC { get; }
 
 		new IVehicleInMotionChargingEngineering InMotionCharging { get; }
@@ -290,7 +129,6 @@ namespace TUGraz.VectoCommon.InputData
 		bool Enabled { get; }
 		double ShareIMCAvailabilityTotalMission { get; }
 		SquareMeter DeltaCdxA { get; }
-		bool IMCOnMotorwayOnly { get; }
     }
 
 	public interface IVehicleComponentsEngineering
@@ -329,6 +167,31 @@ namespace TUGraz.VectoCommon.InputData
 		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 
 		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
+
+		IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
+	}
+
+	public interface IAxlePowertrainEngineeringInputData
+	{
+		int AxleNumber { get; }
+
+		VectoSimulationJobType Type { get; }
+
+		IGearboxEngineeringInputData GearboxInputData { get; }
+
+		IAxleGearInputData AxleGearInputData { get; }
+
+		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		IGearshiftEngineeringInputData GearshiftInputData { get; }
+
+		ElectricMachineEntry<IElectricMotorEngineeringInputData> ElectricMotor { get; }
 	}
 
 	public interface IAxlesEngineeringInputData
@@ -378,7 +241,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData PTOCycleWhileDriving { get; }
 
 	}
-	
+
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>
@@ -681,7 +544,9 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IFuelCellSystemEngineeringInputData
 	{
 		IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; }
-	}
+
+        Meter MaxWindowSize { get; }
+    }
 	public class FuelCellStringEntry<T> where T : class, IFuelCellComponentEngineeringInputData //Generic to reuse for declaration?
 	{
 		public int Count { get; set; }
@@ -807,7 +672,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryEngineeringInputData
 	{
-		
+
 		/// <summary>
 		/// P178
 		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
@@ -815,11 +680,11 @@ namespace TUGraz.VectoCommon.InputData
 		Watt ConstantPowerDemand { get; }
 
 		Watt PowerDemandICEOffDriving { get; }
-		
+
 		Watt PowerDemandICEOffStandstill { get; }
 
 
 		Watt ElectricPowerDemand { get; }
 	}
-	
+
 }

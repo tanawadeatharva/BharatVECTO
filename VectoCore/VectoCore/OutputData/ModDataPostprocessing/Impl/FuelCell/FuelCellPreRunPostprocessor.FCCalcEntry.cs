@@ -91,11 +91,21 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 			/// Battery losses from P_Bat_T
 			/// </summary>
 			public Watt P_Bat_loss { get; set; }
-			
+
+			public Watt P_deficit => P_Bat_T - P_el_dem - P_FC_raw;
+
 			/// <summary>
 			/// Power provided by fuel cell including battery losses
 			/// </summary>
-			public Watt P_FC_corr => P_FC.IsEqual(0) ? P_FC : P_FC + P_Bat_loss;
+			public Watt P_FC_corr 
+			{ 
+				get 
+				{ 
+					var extraPower = (P_max_discharge.IsEqual(P_Bat_T) && (P_deficit > 0)) ? P_deficit : 0.SI<Watt>();
+
+					return P_FC.IsEqual(0) ? P_FC : P_FC + P_Bat_loss + extraPower; 
+				} 
+			}
 
 			/// <summary>
 			/// Fuel Cell power demand
@@ -156,7 +166,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 											"CanChangeFCPower, " +
 											"FCPowerFinal [kW]," +
 											"delta_P_FCS [kW]," +
-											"P_max_charge_bat [kW],";
+											"P_max_charge_bat [kW]," +
+                                            "P_max_discharge [kW]," +
+                                            "P_deficit [kW]";
 			#region Overrides of Object
 			public override string ToString()
 			{
@@ -177,7 +189,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
                         (CanChangeFCPower ? "1" : "0") + "," +
 						$"{FCPowerFinal?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}, " +
 						$"{delta_P_FCS?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}," + 
-						$"{P_max_charging?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"},";
+						$"{P_max_charging?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}," +
+						$"{P_max_discharge?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}," +
+						$"{P_deficit?.ConvertToKiloWatt()?.ToXMLFormat() ?? "-"}";
 			}
 			#endregion
 			/// <summary>

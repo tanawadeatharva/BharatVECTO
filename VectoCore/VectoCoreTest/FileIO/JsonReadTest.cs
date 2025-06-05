@@ -562,6 +562,33 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		 	Assert.IsTrue(exception.Message.Contains(keyword));
 		}
 
+		[
+			TestCase(@"MultiplePowertrains/MultipleBEV_E2_E3/MultipleBEV.vecto", TestName="JSON_job_Multiple_powertrains_E2_E3")
+		]
+		public void JSON_Read_MultiplePowertrains(string jobfile)
+		{
+			var testDir = @"TestData/Generic Vehicles/Engineering Mode";
+			var filename = Path.Combine(testDir, jobfile);
+
+			var inputProvider = (IEngineeringInputDataProvider)JSONInputDataFactory.ReadJsonJob(filename);
+
+			var axlePts = inputProvider.JobInputData.Vehicle.Components.AxlePowertrainEngineeringInputData;
+
+			Assert.NotNull(axlePts);
+			Assert.IsTrue(axlePts.Count() > 0);
+
+			Assert.IsTrue(axlePts[0].AxleNumber == 1);
+			Assert.IsTrue(axlePts[0].Type == VectoSimulationJobType.BatteryElectricVehicle);
+			Assert.NotNull(axlePts[0].GearboxInputData);
+			Assert.NotNull(axlePts[0].AxleGearInputData);
+			Assert.NotNull(axlePts[0].TorqueConverterInputData);
+			Assert.NotNull(axlePts[0].GearshiftInputData);
+			Assert.NotNull(axlePts[0].AngledriveInputData);
+			Assert.NotNull(axlePts[0].RetarderInputData);
+			Assert.NotNull(axlePts[0].PTOTransmissionInputData);
+			Assert.NotNull(axlePts[0].ElectricMotor);
+		}
+
 		[TestCase]
 		public void JSON_Read_HeavyBus()
 		{

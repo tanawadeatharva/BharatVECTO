@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!-- Version Information (only needed if it differs from Global VECTO Version)-->
-    <MainProductVersion>1.0.0</MainProductVersion>
-    <VersionPrefix>$(MainProductVersion).$([System.DateTime]::UtcNow.Subtract($([System.DateTime]::new(2015,1,1))).Days)</VersionPrefix>
     <OutputType>WinExe</OutputType>
     <RootNamespace>VECTO3GUI2020</RootNamespace>
     <AssemblyName>VECTOMultistep</AssemblyName>
@@ -12,7 +10,7 @@
     <PublishTrimmed>false</PublishTrimmed>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
-     
+
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
@@ -50,8 +48,6 @@
 			</ItemGroup>
 		</When>
 	</Choose>-->
-
-
 
   <ItemGroup>
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />

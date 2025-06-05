@@ -543,4 +543,49 @@
   <data name="Vehicle_Axles_Friction" xml:space="preserve">
     <value>WheelEndFriction</value>
   </data>
+  <data name="Vehicle_AxlePowertrains" xml:space="preserve">
+    <value>AxlePowertrains</value>
+  </data>
+  <data name="Vehicle_AxlePowertrain_AxleNumber" xml:space="preserve">
+    <value>AxleNumber</value>
+  </data>
+  <data name="Vehicle_TCU" xml:space="preserve">
+    <value>TCU</value>
+  </data>
+  <data name="Vehicle_ElectricMotor" xml:space="preserve">
+    <value>ElectricMotor</value>
+  </data>
+  <data name="Vehicle_EM_MechEff" xml:space="preserve">
+    <value>MechanicalEfficiency</value>
+  </data>
+  <data name="Vehicle_EM_MechTransLossMap" xml:space="preserve">
+    <value>MechanicalTransmissionLossMap</value>
+  </data>
+  <data name="Vehicle_EM_MotorFile" xml:space="preserve">
+    <value>MotorFile</value>
+  </data>
+  <data name="Vehicle_EM_Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Vehicle_EM_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+  <data name="Vehicle_EM_RatioPerGear" xml:space="preserve">
+    <value>RatioPerGear</value>
+  </data>
+  <data name="Vehicle_AxlePowertrain_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="VTP_CompletedVIF" xml:space="preserve">
+    <value>CompletedVIF</value>
+  </data>
+  <data name="FuelCell_maxWindowSize" xml:space="preserve">
+    <value>MaxWindowSize</value>
+  </data>
+  <data name="IEPC_FullLoadCurves" xml:space="preserve">
+    <value>FullLoadCurves</value>
+  </data>
+  <data name="IEPC_DisengagementClutch" xml:space="preserve">
+    <value>DisengagementClutch</value>
+  </data>
 </root>

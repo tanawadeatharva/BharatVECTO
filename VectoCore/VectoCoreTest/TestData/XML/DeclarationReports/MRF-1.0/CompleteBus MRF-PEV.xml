@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mrf:VectoOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
+	<mrf:Data xsi:type="PEVCompletedBusManufacturerOutputDataType" id="MRF-Lorry_P2">
+		<Vehicle>
+			<Manufacturers>
+				<Step Count="1">
+					<Manufacturer>a</Manufacturer>
+					<ManufacturerAddress>token</ManufacturerAddress>
+				</Step>
+				<Step Count="2">
+					<Manufacturer>b</Manufacturer>
+					<ManufacturerAddress>c</ManufacturerAddress>
+				</Step>
+			</Manufacturers>
+			<Model>a</Model>
+			<VIN>a</VIN>
+			<VehicleCategory>N2</VehicleCategory>
+			<AxleConfiguration>4x2</AxleConfiguration>
+			<TechnicalPermissibleMaximumLadenMass unit="kg">3500</TechnicalPermissibleMaximumLadenMass>
+			<VehicleGroup>String</VehicleGroup>
+			<VehicleGroupCO2>a</VehicleGroupCO2>
+			<CorrectedActualMass unit="kg">500</CorrectedActualMass>
+			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+			<HybridElectricHDV>false</HybridElectricHDV>
+			<ClassBus>I</ClassBus>
+			<NumberPassengersUpperDeck>0</NumberPassengersUpperDeck>
+			<NumberPassengersLowerDeck>0</NumberPassengersLowerDeck>
+			<BodyworkCode>CA</BodyworkCode>
+			<LowEntry>true</LowEntry>
+			<HeightIntegratedBody>0</HeightIntegratedBody>
+			<VehicleLength>0</VehicleLength>
+			<VehicleWidth>0</VehicleWidth>
+			<DoorDriveTechnology>electric</DoorDriveTechnology>
+			<ADAS>
+				<PredictiveCruiseControl>true</PredictiveCruiseControl>
+			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
+			<Components>
+				<AirDrag>
+					<CertificationMethod>measured</CertificationMethod>
+					<CertificationNumber>asdf</CertificationNumber>
+					<CFDMethodLicenseNumber>xxx</CFDMethodLicenseNumber>
+					<DeltaCdxACFD>0.00</DeltaCdxACFD>
+					<CdxA>1.00</CdxA>
+				</AirDrag>
+				<Auxiliaries>
+					<ElectricSystem>
+						<DayRunningLightsLED>true</DayRunningLightsLED>
+						<HeadLightsLED>true</HeadLightsLED>
+						<PositionLightsLED>true</PositionLightsLED>
+						<BrakeLightsLED>true</BrakeLightsLED>
+						<InteriorLightsLED>true</InteriorLightsLED>
+					</ElectricSystem>
+					<HVACSystem>
+						<SystemConfiguration>text</SystemConfiguration>
+						<HeatPumpTypeDriverCompartment>
+							<Cooling>none</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypeDriverCompartment>
+						<HeatPumpTypePassengerCompartment>
+							<Cooling>none</Cooling>
+							<Heating>none</Heating>
+						</HeatPumpTypePassengerCompartment>
+						<DoubleGlazing>true</DoubleGlazing>
+						<AdjustableAuxiliaryHeater>true</AdjustableAuxiliaryHeater>
+						<SeparateAirDistributionDucts>true</SeparateAirDistributionDucts>
+						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
+						<WaterElectricHeater>true</WaterElectricHeater>
+						<AirElectricHeater>true</AirElectricHeater>
+						<OtherHeatingTechnology>true</OtherHeatingTechnology>
+					</HVACSystem>
+				</Auxiliaries>
+			</Components>
+		</Vehicle>
+		<InputDataSignature>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</InputDataSignature>
+		<Results>
+			<Status>success</Status>
+			<Result xsi:type="ResultErrorType" status="error">
+				<Mission>asion</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="t">3.1415926535897900073734945</TotalVehicleMass>
+					<Payload unit="t">3.1415926535897900073734945</Payload>
+				</SimulationParameters>
+				<VehicleGroup>String</VehicleGroup>
+				<Error/>
+				<ErrorDetails/>
+			</Result>
+		</Results>
+		<ApplicationInformation>
+			<SimulationToolVersion>String</SimulationToolVersion>
+			<Date>2017-01-01T00:00:00Z</Date>
+		</ApplicationInformation>
+	</mrf:Data>
+	<mrf:Signature>
+		<di:Reference>
+			<di:DigestMethod Algorithm="http://www.altova.com/"/>
+			<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+		</di:Reference>
+	</mrf:Signature>
+</mrf:VectoOutput>

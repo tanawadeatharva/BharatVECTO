@@ -143,30 +143,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			};
 		}
 
-		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed)
+		public NewtonMeter FullGenerationTorque(Volt voltage, PerSecond avgSpeed, uint gear)
 		{
 			var (vLow, vHigh) = GetSection(voltage);
 
 			if (vLow.Voltage.IsEqual(vHigh.Voltage)) {
-				return vLow.FullGenerationTorque(avgSpeed);
+				return vLow.FullGenerationTorque(avgSpeed, gear);
 			}
 
 			return VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage,
-				vLow.FullGenerationTorque(avgSpeed),
-				vHigh.FullGenerationTorque(avgSpeed), voltage);
+				vLow.FullGenerationTorque(avgSpeed, gear),
+				vHigh.FullGenerationTorque(avgSpeed, gear), voltage);
 		}
 
-		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed)
+		public NewtonMeter FullLoadDriveTorque(Volt voltage, PerSecond avgSpeed, uint gear)
 		{
 			var (vLow, vHigh) = GetSection(voltage);
 
 			if (vLow.Voltage.IsEqual(vHigh.Voltage)) {
-				return vLow.FullLoadDriveTorque(avgSpeed);
+				return vLow.FullLoadDriveTorque(avgSpeed, gear);
 			}
 
 			return VectoMath.Interpolate(vLow.Voltage, vHigh.Voltage,
-				vLow.FullLoadDriveTorque(avgSpeed),
-				vHigh.FullLoadDriveTorque(avgSpeed), voltage);
+				vLow.FullLoadDriveTorque(avgSpeed, gear),
+				vHigh.FullLoadDriveTorque(avgSpeed, gear), voltage);
 		}
 
 		protected (ElectricMotorVoltageLevelData, ElectricMotorVoltageLevelData) GetSection(Volt voltage)
@@ -208,12 +208,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return EfficiencyMap.LookupTorque(electricPower, avgSpeed, maxEmTorque);
 		}
 
-		public virtual NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed)
+		public virtual NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed, uint gear)
 		{
 			return FullLoadCurve.FullLoadDriveTorque(avgSpeed);
 		}
 
-		public virtual NewtonMeter FullGenerationTorque(PerSecond avgSpeed)
+		public virtual NewtonMeter FullGenerationTorque(PerSecond avgSpeed, uint gear)
 		{
 			return FullLoadCurve.FullGenerationTorque(avgSpeed);
 		}
@@ -224,8 +224,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ValidateObject]
 		public Dictionary<uint, EfficiencyMap> EfficiencyMaps {  get; set; }
 
+        public Dictionary<uint, ElectricMotorFullLoadCurve> FullLoadCurves { get; set; } = new Dictionary<uint, ElectricMotorFullLoadCurve>();
 
-		public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(FullLoadCurve.MaxSpeed, EfficiencyMaps.Values.Min(x => x.MaxSpeed)));
+        public override PerSecond MaxSpeed => _maxSpeed ?? (_maxSpeed = VectoMath.Min(
+			FullLoadCurve?.MaxSpeed ?? FullLoadCurves.Min(x => x.Value.MaxSpeed), EfficiencyMaps.Values.Min(x => x.MaxSpeed)));
 
 		public override EfficiencyMap.EfficiencyResult LookupElectricPower(PerSecond avgSpeed, NewtonMeter torque, uint gear, bool allowExtrapolation)
 		{
@@ -237,7 +239,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return EfficiencyMaps[gear].LookupTorque(electricPower, avgSpeed, maxEmTorque);
 		}
 
-	}
+        public override NewtonMeter FullGenerationTorque(PerSecond avgSpeed, uint gear)
+        {
+            return (FullLoadCurves.Count == 0)
+				? base.FullGenerationTorque(avgSpeed, gear)
+				: FullLoadCurves[gear].FullGenerationTorque(avgSpeed);
+        }
+
+        public override NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed, uint gear)
+        {
+            return (FullLoadCurves.Count == 0)
+				? base.FullLoadDriveTorque(avgSpeed, gear)
+				: FullLoadCurves[gear].FullLoadDriveTorque(avgSpeed);
+        }
+    }
 
 	public class IHPCVoltageLevelData : IEPCVoltageLevelData
 	{
@@ -247,6 +262,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class OverloadData
 	{
 		public NewtonMeter ContinuousTorque { get; internal set; }
+
+		public NewtonMeter ContinuousTorqueGen { get; internal set; }
+
+		public Watt ContinuousPower { get; internal set; }
 
 		public Joule OverloadBuffer { get; internal set; }
 

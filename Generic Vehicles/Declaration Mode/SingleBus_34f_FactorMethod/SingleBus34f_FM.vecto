@@ -1,0 +1,14 @@
+{
+  "Header": {
+    "CreatedBy": "Guillaume Alix, JRC, Ispra",
+    "Date": "2024-11-25T10:18:14.356896Z",
+    "AppVersion": "Vecto3GUI2020",
+    "FileVersion": 10
+  },
+  "Body": {
+    "PrimaryVehicle": "primary_heavyBus group_P33_34_SmartPS_FM.xml",
+    "InterimStep": "vecto_vehicle-completed_heavyBus_34f_FM.xml",
+    "Completed": "true",
+    "RunSimulation": "true"
+  }
+}

@@ -44,13 +44,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		protected readonly List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
 
         public CrosswindCorrectionCdxALookup(SquareMeter airDragArea, SquareMeter deltaAirDragAreaIMC, 
-			SquareMeter deltaAirDragAreaIMCHighway,
 			List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,
 			CrossWindCorrectionMode correctionMode)
 		{
 			AirDragArea = airDragArea;
 			DeltaAirDragAreaIMC = deltaAirDragAreaIMC;
-			DeltaAirDragAreaIMCHighway = deltaAirDragAreaIMCHighway;
 			CorrectionMode = correctionMode;
 			Entries = entries;
 		}
@@ -58,8 +56,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public CrossWindCorrectionMode CorrectionMode { get; }
 
 		public SquareMeter AirDragArea { get; }
-
-		public SquareMeter DeltaAirDragAreaIMCHighway { get; }
 
 		public SquareMeter DeltaAirDragAreaIMC { get; }
 
@@ -76,9 +72,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var cdA_Base = EffectiveAirDragArea(vAverage);
 
 			var cdA = cdA_Base + DeltaAirDragAreaIMC;
-			if (positionInCycle.Highway) {
-				cdA += DeltaAirDragAreaIMCHighway;
-			}
 			// compute the average force within the current simulation interval
 			// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // P_avg = 1/T * Integral P(t) dt
 			// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4) // a = (v2-v1)/dt

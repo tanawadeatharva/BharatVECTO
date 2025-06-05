@@ -1370,7 +1370,21 @@ namespace TUGraz.VectoCommon.Utils
 		public double AsMilliOhm => Val * 1000;
 	}
 
-	public class Farad : SIBase<Farad>
+	public class SpecificResistance : SIBase<SpecificResistance>
+	{
+		private static readonly int[] Units = { 1, 2, -3 + 1, -2 + 1, 0, 0, 0 };
+
+        private SpecificResistance(double val) : base(val, Units) { }
+
+		public override string UnitString => "ΩAs";
+
+		public static Ohm operator /(SpecificResistance spr, AmpereSecond amps)
+		{
+			return SIBase<Ohm>.Create(spr.Val / amps.Value());
+		}
+	}
+
+    public class Farad : SIBase<Farad>
 	{
 		private static readonly int[] Units = { -1, -2, 4, 2, 0, 0, 0 };
 
@@ -1680,7 +1694,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unitFactor"></param>
 		/// <param name="units">The units.</param>
-		//[DebuggerHidden]
+		[DebuggerHidden]
 		protected SI(double val, double unitFactor, int[] units)
 		{
 			Val = val;
@@ -1695,11 +1709,18 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("Infinity [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
 			}
 		}
+
 		[DebuggerHidden]
 		protected SI(double val, int[] units) : this(val, 1, units) { }
 
+
 		[DebuggerHidden]
-		public SI(UnitInstance si, double val = 0) : this(val * si.Factor, si.GetSIUnits()) { }
+		protected SI(decimal val, int[] units) : this((double)val, 1, units) { }
+
+		[DebuggerHidden]
+		public SI(UnitInstance si, double val = 0) : this((decimal)val * (decimal)si.Factor, si.GetSIUnits())
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SI"/> class which copies the units from an already existing SI.
@@ -1707,7 +1728,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="unit">The unit.</param>
 		[DebuggerHidden]
-		private SI(double val, SI unit) : this(val, unit.UnitFactor,unit._units) { }
+		private SI(double val, SI unit) : this(val, unit.UnitFactor, unit._units) { }
 
 		/// <summary>
 		/// Casts the SI Unit to the concrete unit type (if the units allow such an cast).

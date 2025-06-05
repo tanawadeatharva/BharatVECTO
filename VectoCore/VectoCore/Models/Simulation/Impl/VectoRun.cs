@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var runAgain = _followUpCreator?.RunAgain((data) => {
 					
 					Container.ModalData.Reset(true);
-					Container = PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
+					Container = _followUpCreator.PowertrainBuilder.Build(data, Container.ModalData, Container.SumData);
 					AbsTime = 0.SI<Second>();
 					Container.AbsTime = AbsTime;
 					CyclePort = Container.GetCycleOutPort();
@@ -221,12 +221,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Run();
 				},
 				this,
-				(options) => {
-					if (options.WriteModAndSumData) {
-						Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
+				(preRunOptions) => {
+					Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
+					if (preRunOptions.WriteModAndSumData)
+					{
 						Container.FinishSingleSimulationRun();
-                    }
+					}
 				}) ?? false;
+
 			if (!runAgain) {
 				Container.FinishSimulationRun();
 				WritingResultsDone = true;

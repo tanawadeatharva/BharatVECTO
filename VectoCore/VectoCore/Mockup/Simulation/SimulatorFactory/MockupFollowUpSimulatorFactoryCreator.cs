@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
@@ -31,10 +33,10 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 
 		#region Overrides of InterimAfterPrimaryFactoryCreator
 
-		public override ISimulatorFactory GetNextFactory()
+		public override ISimulatorFactory GetNextFactory(IDictionary<int, JobContainer.ProgressEntry> progressEntries)
 		{
 			//throw new NotImplementedException();
-			return base.GetNextFactory();
+			return base.GetNextFactory(progressEntries);
 		}
 
 		#endregion
@@ -60,9 +62,9 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 
 		#region Overrides of CompletedAfterInterimPrimaryFactoryCreator
 
-		public override ISimulatorFactory GetNextFactory()
+		public override ISimulatorFactory GetNextFactory(IDictionary<int, JobContainer.ProgressEntry> progressEntries)
 		{
-			return base.GetNextFactory();
+			return base.GetNextFactory(progressEntries);
 		}
 
 		#endregion

@@ -9,8 +9,8 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
 {
-	public abstract partial class DeclarationModeHeavyLorryRunDataFactory
+    public abstract partial class DeclarationModeHeavyLorryRunDataFactory
 	{
 		public abstract class LorryBase : AbstractDeclarationVectoRunDataFactory
 		{
@@ -28,7 +28,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			public IDeclarationReport Report { get; }
 
 			protected LorryBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, cycleFactory, missionFilter, false)
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, cycleFactory, missionFilter, false, ptBuilder)
 			{
 				DataAdapter = declarationDataAdapter;
 				InputDataProvider = dataProvider;
@@ -75,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 				
 				CheckSuperCap(vehicle);
-				AngleDriveAllowed(vehicle);
+				
 				var simulationRunData = new VectoRunData
 				{
 					Loading = loading.Key,
@@ -104,7 +107,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			/// </summary>
 			protected void CheckSuperCap(IVehicleDeclarationInputData vehicle)
 			{
-				if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OvcHev) {
+				if (vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.OVC) {
 					if (vehicle.Components.ElectricStorage.ElectricStorageElements.Any(e =>
 							e.REESSPack.StorageType == REESSType.SuperCap)) {
 						throw new VectoException("Super caps are not allowed for OVC-HEVs or PEVs");
@@ -174,14 +177,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			protected abstract bool AxleGearRequired();
-
-			protected abstract void AngleDriveAllowed(IVehicleDeclarationInputData inputData);
 		}
 
 		public class Conventional : LorryBase
 		{
 			public Conventional(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of LorryBase
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -228,7 +232,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				simulationRunData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, InputDataProvider.JobInputData.Vehicle);
 
 				simulationRunData.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, ovcMode, simulationRunData.Cycle.ShareDistanceHighway);
+					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 
 				simulationRunData.EngineData =
 					DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode,
@@ -291,11 +295,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				return true;
 			}
 
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
-			}
-
 			#endregion
 		}
 
@@ -313,11 +312,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			#endregion
 
 			public BatteryElectric(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
-			}
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
 			protected override IEnumerable<VectoRunData> GetNextRun()
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				var result = CreateCommonRunData(Vehicle, mission, loading, _segment);
 				result.AirdragData =
-					DataAdapter.CreateAirdragData(Vehicle.Components.AirdragInputData, Vehicle.InMotionCharging, mission, _segment, ovcMode, result.Cycle.ShareDistanceHighway);
+					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 				result.DriverData = DriverData;
 
 				DataAdapter.CreateREESSData(
@@ -426,23 +426,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
             #endregion
 
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type == AngledriveType.SeparateAngledrive)
-				{
-					throw new VectoException("Angledrive not allowed in pure electric vehicles");
-				}
-			}
         }
 
 		public class PEV_E2 : BatteryElectric
 		{
 			public PEV_E2(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
-				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory, IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter)
-			{
-
-			}
+				// the following parameters are injected
+				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 
 			#region Overrides of BatteryElectric
@@ -476,26 +469,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class PEV_E3 : BatteryElectric
 		{
 			public PEV_E3(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class PEV_E4 : BatteryElectric
 		{
 			public PEV_E4(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 		}
 
 		public class PEV_E_IEPC : BatteryElectric
 		{
 			public PEV_E_IEPC(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report,
-				declarationDataAdapter, cycleFactory, missionFilter:missionFilter)
-			{
-
-			}
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report,
+					declarationDataAdapter, cycleFactory, missionFilter: missionFilter, ptBuilder) { }
 
 			protected override bool AxleGearRequired()
 			{
@@ -554,8 +550,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 		public class Exempted : LorryBase
 		{
 			public Exempted(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+				// the following parameters are injected
 				ILorryDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
-				IMissionFilter missionFilter) : base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter) { }
+				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+				: base(dataProvider, report, declarationDataAdapter, cycleFactory, missionFilter, ptBuilder) { }
 
 			#region Overrides of AbstractDeclarationVectoRunDataFactory
 
@@ -616,15 +614,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			#endregion
 
-
-			#region Overrides of LorryBase
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
-			}
-
-			#endregion
 		}
 		
 	}

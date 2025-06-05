@@ -17,6 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public static readonly XNamespace V21 = DeclarationDefinition + ":v2.1";
 		public static readonly XNamespace V23 = DeclarationDefinition + ":v2.3";
 		public static readonly XNamespace V24 = DeclarationDefinition + ":v2.4";
+		public static readonly XNamespace V27 = DeclarationDefinition + ":v2.7";
 		public static readonly XNamespace V20 = DeclarationDefinition + ":v2.0";
 		public static readonly XNamespace V10 = DeclarationDefinition + ":v1.0";
 		//public static readonly XNamespace V28 = DeclarationDefinition + ":DEV:v2.8";

@@ -1,5 +1,222 @@
 # Changelog
 
+
+
+**VECTO v5.0.0-RC (05-06-2025)**
+
+
+- Features
+
+    * CodeEU n.a.: Readers for v2.7 vehicle XSD, and support for fuel cell vehicles. (vecto/vecto!341)
+    * CodeEU n.a.: Read monitoring data from job (vecto/vecto!345)
+    * CodeEU #1002: 3rd amendment mrf cif xml schemas (vecto/vecto!340)
+    * CodeEU n.a.: MRF v1.0 vehicle (lorries and FCHV primary buses) writers (vecto/vecto!354)
+    * CodeEU n.a.: CIF v1.0 vehicle part (v2.4 vehicles and v2.7 lorries) (vecto/vecto!355)
+    * CodeEU n.a.: Use monitoring data from job to write report (vecto/vecto!360)
+    * CodeEU n.a.: In motion charging postprocessing (vecto/vecto!344)
+    * CodeEU n.a.: Disable (for RC & official) v27 vehicles except H2-ICE & FCHV lorries (vecto/vecto!375)
+    * CodeEU n.a.: Readers for v2.7 buses, improved reader tests. (vecto/vecto!382)
+    * CodeEU n.a.: HEV - Get Best dSOC in vsum (vecto/vecto!383)
+    * CodeEU 968: Forbid AT upshift for reduced dt before brake (vecto/vecto!381)
+    * CodeEU n.a.: New (v2.7) XSD for vehicles (vecto/vecto!334)
+    * CodeEU n.a.: Partial implementation for new vehicle battery (vecto/vecto!337)
+    * CodeEU n.a.: EM-IEPC Thermal Derating - Tq_max and Buffer Mods - Post VECTO-4.3.4 Feed-Back (vecto/vecto!378)
+
+- Bug Fixes
+
+    * CodeEU n.a.: Non-https link in manual (vecto/vecto!339)
+    * CodeEU n.a.: V2.7 reader & XSD (vecto/vecto!342)
+    * CodeEU n.a.: Updated XSLT file and hashing code for new vehicles and components. (vecto/vecto!338)
+    * CodeEU #1007: Lock StoredResults list before accessing it to avoid race condition (vecto/vecto!343)
+    * CodeEU n.a.: V27 vehicle issues (vecto/vecto!346)
+    * CodeEU n.a.: 882 merge artifacts (vecto/vecto!347)
+    * CodeEU n.a.: FCHV angledrive input (vecto/vecto!348)
+    * CodeEU n.a.: Modify schema so that results can be written compatible with results for 2nd amendment: (vecto/vecto!349)
+    * CodeEU n.a.: Restore deleted code in monitoring report (vecto/vecto!350)
+    * CodeEU n.a.: Typo in MRF Inject module (vecto/vecto!351)
+    * CodeEU n.a.: Proper namespace for VIF IEPC sub-element (vecto/vecto!352)
+    * CodeEU n.a.: Mockup tests run successfully (vecto/vecto!353)
+    * CodeEU #1002: Correcting errors in XML schema (and sample files): no engine output in... (vecto/vecto!356)
+    * CodeEU n.a.: Bugfixes/updates for the Monitoring report and testing via the MockupTests. (vecto/vecto!357)
+    * CodeEU n.a.: Replace U+2013 by regular dashes (vecto/vecto!359)
+    * CodeEU n.a.: Added missing IMC testdata (vecto/vecto!361)
+    * CodeEU n.a.: Retarder compulsory in all MRF vehicle components. (vecto/vecto!362)
+    * CodeEU n.a.: Add further condition to decide which results to write in case the input data is a Multistep bus (vecto/vecto!363)
+    * CodeEU n.a.: Check Articulated in json vehicle (vecto/vecto!365)
+    * CodeEU n.a.: Segment in Bus AirDrag data creation (vecto/vecto!364)
+    * CodeEU n.a.: FCHV pre-run execution (vecto/vecto!366)
+    * CodeEU n.a.: Write ZeroCO2EmissionsRange and HydrogenRange to H2-ICE reports. (vecto/vecto!367)
+    * CodeEU n.a.: Remove wrong angledrive restrictions (vecto/vecto!369)
+    * CodeEU n.a.: Set vectorundata in completed bus results, (vecto/vecto!368)
+    * CodeEU n.a.: Simulate OVC for FCHVs (vecto/vecto!370)
+    * CodeEU n.a.: FCHV H2 range in reports (vecto/vecto!371)
+    * CodeEU n.a.: Architecture in some MRF v1.0 tests (vecto/vecto!372)
+    * CodeEU n.a.: H2 properties check in exempted vehicle input (vecto/vecto!373)
+    * CodeEU n.a.: FCHV input classes inheritance (vecto/vecto!374)
+    * CodeEU n.a.: Standard values enum entry for v2.6 (vecto/vecto!376)
+    * CodeEU n.a.: Add Driving Actions for IEPC gearshift (vecto/vecto!377)
+    * CodeEU n.a.: Of v2.7, allow only IMC, H2-ICE conventional, FCHV Lorries (vecto/vecto!384)
+    * CodeEU n.a.: Disable reading data from external csv (vecto/vecto!385)
+    * CodeEU n.a.: OVC results (vecto/vecto!387)
+    * CodeEU n.a.: Ignore FCHV pre-run in best deltaSoC calculation (vecto/vecto!388)
+    * CodeEU 972: Take battery limit into account for EM overload - REESS Empty (vecto/vecto!380)
+    * CodeEU 994: ReEngage1C tolerance in AT (vecto/vecto!379)
+    * CodeEU 886, 888, 889: Add Driving Actions for IEPC gearshift (vecto/vecto!377)
+    * CodeEU n.a.: Updated Monitoring Report XSD (FCHV, Multiple powertrains) (vecto/vecto!335)
+
+- Drop
+
+    * CodeEU n.a.: MaxChargingPower requirement for OVC in v2.7 (vecto/vecto!358)
+
+
+
+**VECTO 0.11.4-DEV (02.04.2025)**
+
+* Features
+  - CodeEU #855: IEPC with multiple load curves (!321)
+  - H2 ICE vehicles in declaration mode (!325)
+
+* Fixes
+  - Add max-windows-size to fuel cell (!312)
+  - Electric system power demand compensation for FCS (!313)
+  - Add error message for unknown completed vehicle missions (!330)
+  - Segment lookup method (!331)
+  - FullLoadCurves proper initialization (!332)
+  - Manage 'GetTruckSegment' exception behavior (!333)
+
+
+
+**VECTO v4.3.3 Official Release (04-03-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU #950: Check if XML element is signed (#950) (vecto/vecto!314)
+    * CodeEU #954: NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+    * fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+    * fix: secure XML loading against external entity injection (vecto/vecto!319)
+    * fix: correct interim supercap reader type (vecto/vecto!320)
+    * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+    
+- Documentation
+
+    * CodeEU n.a.: Update XSD parameter IDs documentation (vecto/vecto!327)
+
+
+
+**VECTO v4.3.3 Official Release (03-03-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU #950: Check if XML element is signed (#950) (vecto/vecto!314)
+    * CodeEU #954: NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+    * fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+    * fix: secure XML loading against external entity injection (vecto/vecto!319)
+    * fix: correct interim supercap reader type (vecto/vecto!320)
+    * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+
+
+
+**VECTO v4.3.2-RC (06-02-2025)**
+
+- Features
+
+    * CodeEU #872: New battery and supercap readers (vecto/vecto!309)
+
+- Bug Fixes
+
+    * CodeEU #861, #832, #880: ATShiftStrategyOptimized - No UpshiftFomL if not locked (vecto/vecto!301)
+    * CodeEU #883: Forbid downshift to locked gear in APT-S if it generates direct upshift condition (vecto/vecto!307)
+    * CodeEU #890: Add condition to write BusAuxiliaries output data in vsum (vecto/vecto!306)
+    * Allow old XMLs for battery and supercap in development only (vecto/vecto!311)
+    * Correct binding for supercap input data class; use correct xml data type in xml component reader for supercap (vecto/vecto!310)
+
+
+
+
+**VECTO v4.2.7 Official Release (09-01-2025)**
+
+* Bug Fixes
+    - Track release_notes.md for release
+    - CodeEU #858: Convert steering pump tech (vecto/vecto!303)
+    - Converter Tool: ngTankSystem for dual fuel (vecto/vecto!304)
+    - CodeEU #836: Restrictions on IEPC gear and MaxTorqueCurve XSD attributes (vecto/vecto!302)
+
+
+
+**VECTO v4.2.6-RC (06-12-2024)**
+
+
+- Features
+
+    * Support Gitlab issue pattern (vecto/vecto!272)
+    * CodeEU #854: Verify primary bus VIF hash against Job (vecto/vecto!295)
+    * CodeEU #833, #834, #835, #836, #837: Add 3rd amendment XSD definitions (vecto/vecto!291)
+    * CodeEU #838: Include Engine into v2.6 (vecto/vecto!297)
+
+- Bug Fixes
+
+    * Homogenize versions across tools (vecto/vecto!270)
+    * CodeEU #807: Produce same data from ADC loss map (#807) (vecto/vecto!278)
+    * Authors and readme metadata content (vecto/vecto!277)
+    * CodeEU #809: Writing engine information in MRF (#809) (vecto/vecto!275)
+    * CodeEU #842, #840, #841, #839, #798: Driver model: in case of an APT vehicle where the driving action is Brake... (vecto/vecto!287)
+    * CodeEU #812, #788: Conversion of doubles for SI (vecto/vecto!283)
+    * CodeEU #750, #758, #769, #816, #821, #829: Avoid wrong upshift and downshift for light SMT vehicles (vecto/vecto!290)
+    * CodeEU #844, #705, #530: During a coasting action (look-ahead coasting) a gear hunting occurs in the... (vecto/vecto!289)
+    * CodeEU #784: Override DoWriteModalResult for VTP (vecto/vecto!294)
+    * CodeEU #495, #642, #739: Add SMT downshift condition - DroppedSpd>DisengSpd (vecto/vecto!293)
+
+
+**VECTO v4.2.5 Official Release (02-10-2024)**
+
+- Hot Fixes
+  - Missing Build.props DefineConstants (!268)
+  - Version 4th number read from Build.props (!269)
+
+**VECTO v4.2.3 Official Release (01-10-2024)**
+
+- Enhancements
+  - CodeEU #799: Adapt VECTO for the new CI updates (!263)
+
+- Bug Fixes
+  - CodeEU #794: Added missing monitoring report file (!265)
+  - CodeEU #780: Update weights for bus subgroups (!264)
+
+**VECTO-4.2.2-RC**
+
+**Build 3539 (2024-09-09)**
+
+- Bugfixes
+   * CodeEU-710: Hashing tool check fail with VECTO version 3330
+   * CodeEU-711: Hashing tool check fail with VECTO 4.1.3.3415
+   * CodeEU-712: VECTO VTP error
+   * CodeEU-754: "Failed to find operating point"; "Failed to find mechanic power for given electric power" in E2 vehicle
+   * CodeEU-727: Failure in simulating HEV in different VECTO versions
+   * CodeEU-749: Double summary for electric vehicles
+   * CodeEU-542: IVECO confidential : BUG REPORT : CRW LE T7D VOITH NXT 5.63
+   * CodeEU-663: IHPC: Failed to find operating point
+   * CodeEU-634: Article 10(2) issue - VIN YS2G6X20002202570
+   * CodeEU-671: IHPC: simulation abort due to unexpected response
+
+**VECTO-4.2.1**
+
+**Build 3469 (2024-07-01)**
+
+- Features
+   * CodeEU-726: Build an XML converter tool for older VECTO jobs
+
+- Bugfixes
+   * CodeEU-719: the six new tyre dimensions from line 126 onwards to the latest “wheels.csv” file in the VECTO repository
+   * CodeEU-717: VECTO-4.2.0.3448-RC - Buses AMT Gearbox Type with 1% higher C02 in primary results
+   * CodeEU-724: Error in Primary Bus Simulation: Object reference not set to an instance of an object
+   * CodeEU-716: VECTO-4.2.0.3448-RC - Buses Result Summary section missing in RLST_Customer.xml
+   * CodeEU-694: Primary and Completed heavybus FCV article 9 exempted hashcode mismatch.
+   * CodeEU-735: SMT strategy different between engineering and declaration mode
+   * CodeEU-736: Existing customer reports (CIF) fail validation
+   * CodeEU-737: Missing data from XML report
+
 **VECTO-4.2.0-RC**
 
 **Build 3448 (2024-06-10)**
@@ -223,7 +440,7 @@
 
 ***Build 3078 (2023-06-06) RELEASE CANDIDATE***
 
-- First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.   
+- First fully functional tool version according to the provisions of the 2nd amendment of Regulation (EU) 2017/2400.  
 - Changes
    - Dropped support for .Net Framework 4.5 (EOL 04/2022)
    - Multi-target build. Supported .Net versions: .Net Framework 4.8, .Net 6.0
@@ -232,9 +449,9 @@
    - New generic vehicles (XML)
 - Known issues
    - Elements not yet implemented
-       - Battery connectors / junction box not included define and implement generic additional resistances (i.e. loss factors) 
+       - Battery connectors / junction box not included define and implement generic additional resistances (i.e. loss factors)
        - Technical elements as resulting from the revision of the CO2 Standards to be added
-          - Sub-group allocation for the for the newly covered vehicle groups 
+          - Sub-group allocation for the for the newly covered vehicle groups
           - Generation of weighted results for vocational vehicles
           - Anything related to ZEV definition?
    - Elements still under discussion
@@ -262,11 +479,11 @@
 
 ***Handling of exempted vehicles***
 
-- Axle configuration and sleeper cab are optional input parameters for exempted vehicles (XML schema 1.0 and 2.2.1). 
+- Axle configuration and sleeper cab are optional input parameters for exempted vehicles (XML schema 1.0 and 2.2.1).
     * OEMs are recommended to provide these parameters for exempted vehicles.
-    * If the axle configuration is provided as input parameter, the MRF contains the vehicle group. 
+    * If the axle configuration is provided as input parameter, the MRF contains the vehicle group.
     * The sleeper cab input parameter is also part of the MRF if provided as input.
-- Input parameters MaxNetPower1/2 are optional input parameters for all exempted vehicles. 
+- Input parameters MaxNetPower1/2 are optional input parameters for all exempted vehicles.
     * If provided in the input these parameters are part of the MRF for all exempted vehicle types
     * It is recommended that those parameters are used to specify the rated power also for PEV (pure electric vehicles)
 
@@ -301,7 +518,7 @@
 
 ***Build 2024 (2020-07-17) RELEASE CANDIDATE***
 
-- Bugfixes 
+- Bugfixes
     * [VECTO-1288] - Simulation Abort UD RL
     * [VECTO-1327] - Simulation abort Construction RefLoad: unexpected response ResponseOverload
     * [VECTO-1266] - Gear 4 Loss-Map was extrapolated
@@ -345,7 +562,7 @@
 
 - Improvement
     * [VECTO-1194] - Handling input parameter 'vocational' for groups other than 4, 5, 9, 10
-    * [VECTO-1147] - Updating declaration mode cycles values in user manual 
+    * [VECTO-1147] - Updating declaration mode cycles values in user manual
     * [VECTO-1207] - run VECTO in 64bit mode by default
 
 - Bugfixes
@@ -447,7 +664,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-797] - VECTO abort with AT transmission and TC table value
     * [VECTO-798] - VECTO abort with certified AT transmission data and certified TC data
     * [VECTO-807] - VECTO errors in vehicle class 1/2/3
-    * [VECTO-827] - Torque converter inertia 
+    * [VECTO-827] - Torque converter inertia
     * [VECTO-838] - APT: ResponseOverload
     * [VECTO-843] - AT Transmissions problem on VECTO 3.3.1.1463
     * [VECTO-844] - Error with AT gearbox model
@@ -474,7 +691,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
     * [VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation
     * [VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG
- 
+
 
 ***Build 1463 (2019-01-03) RELEASE CANDIDATE***
 
@@ -497,7 +714,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
  - Changes/Improvements
     * [VECTO-799] - Remove TUG Logos from Simulation Tool, Hashing Tool
     * [VECTO-808] - Add Moitoring Report
-    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox 
+    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox
     * [VECTO-757] - Correct contact mail address in Hashing Tool
     * [VECTO-779] - Update Construction Cycle - shorter stop times
     * [VECTO-783] - Rename columns in segmentation table and GUI
@@ -585,7 +802,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-687] - Saving a Engine-Only Job is not possible
     * [VECTO-695] - Bug in vectocmd.exe - process does not terminate
     * [VECTO-699] - Output in manufacturer report and customer report (VECTO) uses different units than described in legislation
-    * [VECTO-700] - errorr in simulation with 0 stop time at the beginning of the cycle 
+    * [VECTO-700] - errorr in simulation with 0 stop time at the beginning of the cycle
 
 
 **VECTO 3.2.1**
@@ -604,7 +821,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     * [VECTO-640] - Exceeded max. iterations: driving fully-loaded vehicle steep uphill. fixed by allowing full-stop and drive off again
     * [VECTO-633] - unable to start VTP Mode simulation
     * [VECTO-645] - Encountered error while validating Vecto output (generated by API) through Hashing tool for vehicle without retarder
-   
+
 
 
 ***Build 1079 (2017-12-15)***
@@ -665,12 +882,12 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     + [VECTO-566] - Vehicle height not correctly read (engineering mode)
     + [VECTO-545] - Update documentation on Settings dialog
 
-	
+
 ***Build 940 (2017-07-28)***
 
 - Bugfixes:
     + [VECTO-546] - GearboxCertificationOptionType Option 2 not accepted by VECTO
-    + [VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum 
+    + [VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum
     + [VECTO-548] - online user manual
     + [VECTO-549] - Inconsistent (and wrong) decimal separator in XML output (manufacturer report)
     + [VECTO-551] - Average Tyre RRC not in Customer Information File output
@@ -795,7 +1012,7 @@ Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
     + [VECTO-391] Gearbox output speed and output torque added to .vmod files
     + [VECTO-386] Gearbox window: disable input fields not applicable for the selected gearbox type
 - Bugfixes:
-    + [VECTO-401] Computation of n_95h etc. fails if engine’s max torque is constant 0 
+    + [VECTO-401] Computation of n_95h etc. fails if engine’s max torque is constant 0
 Lookup of Airdrag parameters in declaration mode
     + [VECTO-378] Improved file-handling in AAUX module
 

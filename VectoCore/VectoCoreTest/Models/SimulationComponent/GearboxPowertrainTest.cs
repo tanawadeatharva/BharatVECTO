@@ -33,6 +33,7 @@ using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -58,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"1000,  60,  2.95016969027809, 0",
 			});
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
-				0.SI<Kilogram>());
+				0.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(4u, container.GearboxInfo.Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				" 1000,  60, 2.95016969027809,      0",
 			});
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
-				19300.SI<Kilogram>());
+				19300.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(4u, container.GearboxInfo.Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);
@@ -122,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				" 100, 85, 2.95016969027809,     0",
 			});
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
-				19300.SI<Kilogram>());
+				19300.SI<Kilogram>()) as VehicleContainer;
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(12u, container.GearboxInfo.Gear.Gear);
 			Assert.IsInstanceOf<ResponseSuccess>(retVal);

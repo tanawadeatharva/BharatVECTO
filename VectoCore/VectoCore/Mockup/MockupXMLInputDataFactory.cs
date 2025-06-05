@@ -17,8 +17,8 @@ namespace TUGraz.VectoMockup
 		private readonly HashSet<string> _supportedNamespaces = new HashSet<string>() {
 			prefix + "DeclarationDefinitions:v2.4",
 			prefix + "VectoOutputMultistep:v0.1",
-			
-		};
+			prefix + "DeclarationDefinitions:v2.7"
+        };
 
 		#region Overrides of XMLInputDataFactory
 

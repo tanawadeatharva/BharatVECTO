@@ -26,9 +26,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IXmlTypeWriter GetExempted_LorryVehicleType();
 
-
-
-
+		IXmlTypeWriter GetFCHV_F2_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_F3_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_F4_LorryVehicleType();
+		IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType();
 
 		IXmlTypeWriter GetConventional_PrimaryBusVehicleType();
 		IXmlTypeWriter GetHEV_Px_IHPC_PrimaryBusVehicleType();
@@ -36,6 +37,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetHEV_S3_PrimaryBusVehicleType();
 		IXmlTypeWriter GetHEV_S4_PrimaryBusVehicleType();
 		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusVehicleType();
+		IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType();
+		IXmlTypeWriter GetFCHV_F3_PrimaryBusVehicleType();
+		IXmlTypeWriter GetFCHV_F4_PrimaryBusVehicleType();
+		IXmlTypeWriter GetFCHV_IEPC_PrimaryBusVehicleType();
 		IXmlTypeWriter GetPEV_E2_PrimaryBusVehicleType();
 		IXmlTypeWriter GetPEV_E3_PrimaryBusVehicleType();
 		IXmlTypeWriter GetPEV_E4_PrimaryBusVehicleType();
@@ -56,6 +61,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetHEV_S3_LorryComponentsType();
 		IXmlTypeWriter GetHEV_S4_LorryComponentsType();
 		IXmlTypeWriter GetHEV_IEPC_S_LorryComponentsType();
+		IXmlTypeWriter GetFCHV_F2_LorryComponentsType();
+		IXmlTypeWriter GetFCHV_F3_LorryComponentsType();
+		IXmlTypeWriter GetFCHV_F4_LorryComponentsType();
+		IXmlTypeWriter GetFCHV_IEPC_LorryComponentsType();
 		IXmlTypeWriter GetPEV_E2_LorryComponentsType();
 		IXmlTypeWriter GetPEV_E3_LorryComponentsType();
 		IXmlTypeWriter GetPEV_E4_LorryComponentsType();
@@ -66,6 +75,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetHEV_S3_PrimaryBusComponentsType();
 		IXmlTypeWriter GetHEV_S4_PrimaryBusComponentsType();
 		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusComponentsType();
+		IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType();
+		IXmlTypeWriter GetFCHV_F3_PrimaryBusComponentsType();
+		IXmlTypeWriter GetFCHV_F4_PrimaryBusComponentsType();
+		IXmlTypeWriter GetFCHV_IEPC_PrimaryBusComponentsType();
 		IXmlTypeWriter GetPEV_E2_PrimaryBusComponentsType();
 		IXmlTypeWriter GetPEV_E3_PrimaryBusComponentsType();
 		IXmlTypeWriter GetPEV_E4_PrimaryBusComponentsType();
@@ -80,14 +93,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		IReportOutputGroup GetGeneralLorryVehicleOutputGroup();
 		IReportOutputGroup GetHEV_VehicleSequenceGroup();
+		IReportOutputGroup GetFCHV_VehicleSequenceGroup();
 		IReportOutputGroup GetPEV_VehicleSequenceGroup();
 		IReportOutputGroup GetConventionalLorryVehicleOutputGroup();
 		IReportOutputGroup GetHEV_lorryVehicleOutputGroup();
-		IReportOutputGroup GetPEV_lorryVehicleOutputGroup();
+		IReportOutputGroup GetFCHV_lorryVehicleOutputGroup();
+        IReportOutputGroup GetPEV_lorryVehicleOutputGroup();
 		IReportOutputGroup GetHEV_lorryVehicleOutputSequenceGroup();
 		IReportOutputGroup GetPrimaryBusGeneralVehicleOutputGroup();
 		IReportOutputGroup GetExemptedPrimaryBusGeneralVehicleOutputGroup();
 		IReportOutputGroup GetHEV_PrimaryBusVehicleOutputGroup();
+		IReportOutputGroup GetFCHV_PrimaryBusVehicleOutputGroup();
 
 
 		IXmlTypeWriter GetEngineTorqueLimitationsType();
@@ -96,8 +112,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetTorqueConverterType();
 		IXmlTypeWriter GetAngleDriveType();
 		IXmlTypeWriter GetTransmissionType();
-		IXmlTypeWriter GetElectricMachinesType();
-		IXmlTypeWriter GetAxleGearType();
+		IXmlTypeWriter GetElectricMachineType();
+        IXmlTypeWriter GetElectricMachineGenType();
+        IXmlTypeWriter GetAxleGearType();
 		IXmlTypeWriter GetAxleWheelsType();
 		IMRFAdasType GetConventionalADASType();
 		IMRFAdasType GetHEVADASType();
@@ -105,10 +122,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetIEPCSpecifications();
 		IXmlTypeWriter GetREESSSpecificationsType();
 		IMrfAirdragType GetAirdragType();
+		IXmlTypeWriter GetFuelCellSystemType();
 
 
 		IMRFLorryAuxiliariesType GetConventionalLorryAuxType();
 		IMRFLorryAuxiliariesType GetHEV_LorryAuxiliariesType();
+		IMRFLorryAuxiliariesType GetFCHV_LorryAuxiliariesType();
 
 		IMRFLorryAuxiliariesType GetPEV_LorryAuxiliariesType();
 
@@ -116,15 +135,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_Conventional();
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_P();
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_S();
+		IMRFBusAuxiliariesType GetPrimaryBusAuxType_HEV_F();
 		IMRFBusAuxiliariesType GetPrimaryBusAuxType_PEV();
 		IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_Conventional_HEV_Px();
 		IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_HEV_S();
 		IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_PEV_IEPC();
+		IMRFBusAuxiliariesType GetPrimaryBusPneumaticSystemType_HEV_F();
 
 		IMRFBusAuxiliariesType GetPrimaryBusElectricSystemType_Conventional_HEV();
 
 		IMRFBusAuxiliariesType GetPrimaryBusElectricSystemType_PEV();
 		IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_Conventional_HEV();
+		IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_FCHV();
 		IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_PEV();
 
 		IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType();

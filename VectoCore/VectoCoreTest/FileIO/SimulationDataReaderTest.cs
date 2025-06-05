@@ -43,6 +43,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -73,7 +74,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			}
 
 			var dataAdapter = new DeclarationDataAdapterHeavyLorry.Conventional();
-			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null, dataAdapter, _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>());
+			var reader = new DeclarationModeHeavyLorryRunDataFactory.Conventional(declarationProvider, null,
+				dataAdapter, _kernel.Get<IDeclarationCycleFactory>(), _kernel.Get<IMissionFilter>(),
+				_kernel.Get<IPowertrainBuilder>());
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

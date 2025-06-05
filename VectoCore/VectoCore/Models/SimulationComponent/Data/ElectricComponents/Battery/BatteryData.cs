@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			Batteries = new List<Tuple<int, BatteryData>>();
 		}
 
-		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
+        public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
 
@@ -209,6 +209,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			var idx = FindIndex(soc);
 			return VectoMath.Interpolate(Entries[idx - 1].SOC, Entries[idx].SOC, Entries[idx - 1].BatteryVolts,
 				Entries[idx].BatteryVolts, soc);
+		}
+
+		public bool ContainsSoC(double soc)
+		{
+			return Entries.Any(x => x.SOC.IsEqual(soc));
 		}
 
 		protected int FindIndex(double soc)
