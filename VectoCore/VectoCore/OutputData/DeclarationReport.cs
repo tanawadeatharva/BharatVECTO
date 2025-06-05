@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -43,7 +41,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData
@@ -221,7 +218,8 @@ namespace TUGraz.VectoCore.OutputData
 	public abstract class DeclarationReport<T> : IDeclarationReport where T : class, IResultEntry, new()
 	{
 		
-		private readonly List<Tuple<MissionType, LoadingType, T>> ResultsInternal = new List<Tuple<MissionType, LoadingType, T>>();
+		private readonly List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)> ResultsInternal =
+			new List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)>();
 
 		
 		/// <summary>
@@ -253,15 +251,15 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void AddResult(VectoRunData runData,
-			IModalDataContainer modData)
+		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
 			//return;
 			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T();
 				entry.Initialize(runData, modData);
-				lock (ResultsInternal) {
-					ResultsInternal.Add(Tuple.Create(entry.Mission, entry.LoadingType, entry));
+				lock (ResultsInternal)
+				{
+					ResultsInternal.Add((entry.Mission, entry.LoadingType, runData.JobType, entry));
 				}
 
 				DoStoreResult(entry, runData, modData);
@@ -274,15 +272,16 @@ namespace TUGraz.VectoCore.OutputData
 			get
 			{
 				lock (ResultsInternal) {
-					return ResultsInternal.GroupBy(x => Tuple.Create(x.Item1, x.Item2, x.Item3.VehicleClass, x.Item3.OVCMode),
-							x => x.Item3,
-							(grp, results) => {
-								var myResults = results.ToList();
-								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(myResults);
-								if (bestResult < 0 || bestResult >= myResults.Count) {
-									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {myResults.Count}");
+					return ResultsInternal.GroupBy(
+							r => (r.missionType, r.loading, vehicleClass: r.entry.VehicleClass, ovcMode: r.entry.OVCMode, r.simulationType),
+							r => r.entry,
+							(group, results) => {
+								var simResults = results.ToList();
+								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.simulationType);
+								if (bestResult < 0 || bestResult >= simResults.Count) {
+									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {simResults.Count}");
 								}
-								return myResults[bestResult];
+								return simResults[bestResult];
 							});
 				}
             }
@@ -292,7 +291,10 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			get
 			{
-				return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
+				return Results
+					.OrderBy(x => x.VehicleClass)
+					.ThenBy(x => x.FuelMode)
+					.ThenBy(x => x.Mission)
 					.ThenBy(x => x.LoadingType);
             }
 		}

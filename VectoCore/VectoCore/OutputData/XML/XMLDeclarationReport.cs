@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				MaxChargingPower = runData.MaxChargingPower;
 				BatteryData = runData.BatteryData;
 				OVCMode = runData.OVCMode;
+				OVCIteration = runData.Iteration;
 				VectoRunData = runData;
 			}
 
@@ -229,6 +230,7 @@ namespace TUGraz.VectoCore.OutputData.XML
             public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
 				OVCMode = runData.OVCMode;
+				OVCIteration = runData.Iteration;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
