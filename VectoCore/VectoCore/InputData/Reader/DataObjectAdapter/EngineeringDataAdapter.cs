@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			{
 				if (string.IsNullOrEmpty(_jobFilePath))
 				{
-					return DebugOutputDataWriter.JobFile;
+					return DebugOutputDataWriter?.JobFile;
 				}
 				return _jobFilePath;
 			}
