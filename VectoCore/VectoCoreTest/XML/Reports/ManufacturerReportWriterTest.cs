@@ -228,13 +228,15 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 			var ihpc = (dataProvider.JobInputData.Vehicle.Components?.ElectricMachines?.Entries)?.Count(electric =>
 				electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (dataProvider.JobInputData.Vehicle.Components?.IEPC != null);
+
 			var report = _mrfFactory.GetManufacturerReport(
 				dataProvider.JobInputData.Vehicle.VehicleCategory,
 				dataProvider.JobInputData.JobType,
 				dataProvider.JobInputData.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.Vehicle.ExemptedVehicle,
+                dataProvider.JobInputData.Vehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
+
 			return report;
 		}
 
@@ -251,13 +253,15 @@ namespace TUGraz.VectoCore.Tests.XML.Reports
 
 			var ihpc = (dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (dataProvider.JobInputData.PrimaryVehicle.Vehicle.Components.IEPC != null);
+			
 			var report = _mrfFactory.GetManufacturerReport(
 				dataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				dataProvider.JobInputData.JobType,
 				dataProvider.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID,
-				dataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
+                dataProvider.JobInputData.PrimaryVehicle.Vehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
+
 			return report;
 		}
 

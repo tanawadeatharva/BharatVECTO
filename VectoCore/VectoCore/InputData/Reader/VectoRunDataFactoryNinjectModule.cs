@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			#region SingleBus
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Conventional>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ConventionalVehicle,
-					ArchitectureID.UNKNOWN));
+					ArchitectureID.UNKNOWN ));
 			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.HEV_S2>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.SerialHybridVehicle,
 					ArchitectureID.S2));

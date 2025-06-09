@@ -528,10 +528,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
+
 			CustomerRpt = _cifFactory.GetCustomerReport(vehicleData.VehicleCategory,
 				vehicleData.VehicleType,
 				vehicleData.ArchitectureID,
-				vehicleData.ExemptedVehicle,
+                vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
 

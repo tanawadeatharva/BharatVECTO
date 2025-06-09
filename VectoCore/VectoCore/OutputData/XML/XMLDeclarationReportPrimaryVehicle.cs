@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			VehicleInformationFile = _vifFactory.GetVIFReport(vehicleData.VehicleCategory,
 				vehicleData.VehicleType,
 				vehicleData.ArchitectureID,
-				vehicleData.ExemptedVehicle,
+                vehicleData.ExemptedVehicle,
 				iepc,
 				ihpc);
 
