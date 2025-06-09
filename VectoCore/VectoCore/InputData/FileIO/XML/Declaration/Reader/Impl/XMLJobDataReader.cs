@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
         protected void CheckH2Properties(IVehicleDeclarationInputData vehicle)
         {
-            if (vehicle.Components.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
+            if (vehicle.Components?.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
             {
                 if (vehicle.H2StorageUsableCapacity == null)
                 {
