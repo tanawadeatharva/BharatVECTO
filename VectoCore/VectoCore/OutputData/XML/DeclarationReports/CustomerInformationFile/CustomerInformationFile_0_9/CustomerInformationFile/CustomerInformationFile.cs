@@ -115,7 +115,43 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class FCHV_F2_Lorry_CIF : CustomerInformationFile
+	public class Multiple_FCHV_Lorry_CIF : CustomerInformationFile
+	{
+        public Multiple_FCHV_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+        public override string OutputDataType => "FCHV_Fx_LorryOutputType";
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.GetMultiple_FCHV_LorryVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class Multiple_PEV_Lorry_CIF : CustomerInformationFile
+    {
+        public Multiple_PEV_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+        public override string OutputDataType => "PEV_Ex_LorryOutputType";
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.GetMultiple_PEV_LorryVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class Multiple_SHEV_Lorry_CIF : CustomerInformationFile
+    {
+        public Multiple_SHEV_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
+
+        public override string OutputDataType => "HEV_Sx_LorryOutputType";
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.GetMultiple_SHEV_LorryVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class FCHV_F2_Lorry_CIF : CustomerInformationFile
 	{
 		public override string OutputDataType => "FCHV_Fx_LorryOutputType";
 		public FCHV_F2_Lorry_CIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }

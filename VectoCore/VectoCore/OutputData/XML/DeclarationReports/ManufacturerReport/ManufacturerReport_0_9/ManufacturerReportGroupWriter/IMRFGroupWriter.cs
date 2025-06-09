@@ -22,4 +22,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		IList<XElement> GetElements(IMultistepBusInputDataProvider multiStageInputDataProvider);
 	}
+
+	public interface IAxlePowertrainReportOutputGroup
+	{
+        IList<XElement> GetElements(IAxlePowertrainDeclarationInputData axlePt);
+    }
 }
