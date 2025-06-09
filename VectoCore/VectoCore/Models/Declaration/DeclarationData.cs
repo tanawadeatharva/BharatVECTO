@@ -1953,12 +1953,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					D38_utilityFactor * cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
 					(1 - D38_utilityFactor) * csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
 				.ToDictionary(x => x.Item1, x => x.Item2);
-			
-			var fcPerMeter = cdResult.FuelData.Select(f => Tuple.Create(f,
-					(cdResult.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance) * cdResult.WeightingFactor))
-				.ToDictionary(x => x.Item1, x => x.Item2);
 
-			var retVal = new WeightedResult() {
+            var fcPerMeter = cdResult.FuelData.Select(fd => (fuelData: fd,
+                    fcPerMeterWeighted: D38_utilityFactor * cdResult.FuelConsumptionFinal(fd.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance +
+                    (1 - D38_utilityFactor) * csResult.FuelConsumptionFinal(fd.FuelType).TotalFuelConsumptionCorrected / csResult.Distance))
+                .ToDictionary(r => r.fuelData, r => r.fcPerMeterWeighted);
+
+            var retVal = new WeightedResult() {
 				Status = VectoRun.Status.Success,
 				JobType = cdResult.VectoRunData.JobType,
 				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
