@@ -4463,7 +4463,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
-            
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -4545,6 +4548,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -4622,6 +4628,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -4708,6 +4717,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -4788,6 +4800,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -4870,6 +4885,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -4947,6 +4965,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -5033,6 +5054,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -5113,6 +5137,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -5204,6 +5231,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -5289,6 +5319,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("HEV Heavy Lorry Px", vehicle.Model);
@@ -5369,6 +5402,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -5459,6 +5495,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -7709,6 +7748,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("PEV Heavy Lorry E2", vehicle.Model);
@@ -7784,6 +7826,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("PEV Heavy Lorry E2", vehicle.Model);
@@ -7855,6 +7900,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+            
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -7932,6 +7980,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("PEV Heavy Lorry E2", vehicle.Model);
@@ -8003,6 +8054,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -8079,6 +8133,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("PEV Heavy Lorry E2", vehicle.Model);
@@ -8148,6 +8205,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
@@ -8223,6 +8283,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("TU Graz", vehicle.Manufacturer);
             Assert.AreEqual("Inffeldgasse 19", vehicle.ManufacturerAddress);
             Assert.AreEqual("PEV Heavy Lorry E2", vehicle.Model);
@@ -8292,6 +8355,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("Generic Truck Manufacturer", vehicle.Manufacturer);
             Assert.AreEqual("Street, ZIP City", vehicle.ManufacturerAddress);
@@ -8380,6 +8446,9 @@ namespace TUGraz.VectoCore.Tests.XML
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
 
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
+
             Assert.AreEqual("Generic Truck Manufacturer", vehicle.Manufacturer);
             Assert.AreEqual("Street, ZIP City", vehicle.ManufacturerAddress);
             Assert.AreEqual("Generic Model", vehicle.Model);
@@ -8462,6 +8531,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("Generic Truck Manufacturer", vehicle.Manufacturer);
             Assert.AreEqual("Street, ZIP City", vehicle.ManufacturerAddress);
@@ -8554,6 +8626,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
             var axlePt1 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 1);
             var axlePt2 = vehicle.Components.AxlePowertrainInputData.First(x => x.AxleNumber == 2);
+
+            Assert.AreEqual(vehicle.ArchitectureID, axlePt1.Architecture);
+            Assert.AreEqual(vehicle.ArchitectureIDPwt2, axlePt2.Architecture);
 
             Assert.AreEqual("Generic Truck Manufacturer", vehicle.Manufacturer);
             Assert.AreEqual("Street, ZIP City", vehicle.ManufacturerAddress);

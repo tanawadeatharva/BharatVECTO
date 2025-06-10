@@ -295,7 +295,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
         int AxleNumber { get; }
 
-        VectoSimulationJobType Type { get; }
+        ArchitectureID Architecture { get; }
 
         IGearboxDeclarationInputData GearboxInputData { get; }
 
