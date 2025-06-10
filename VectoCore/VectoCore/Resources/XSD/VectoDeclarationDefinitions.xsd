@@ -15,4 +15,5 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.5" schemaLocation="VectoDeclarationDefinitions.2.5.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" schemaLocation="VectoDeclarationDefinitions.2.6.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7" schemaLocation="VectoDeclarationDefinitions.2.7.xsd"/>
 </xs:schema>

@@ -145,8 +145,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
 					return new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
 				case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
-					throw new NotImplementedException();
-				case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
+					return new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+                case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
 					return _internalFactory.CreateEngineOnlyRunDataFactory(EngineOnlyVectoRunDataFactory.Name, engDataProvider);
 				case IEngineeringInputDataProvider engDataProvider:
 					return _internalFactory.CreateEngineeringRunDataFactory(EngineeringModeVectoRunDataFactory.Name, engDataProvider);

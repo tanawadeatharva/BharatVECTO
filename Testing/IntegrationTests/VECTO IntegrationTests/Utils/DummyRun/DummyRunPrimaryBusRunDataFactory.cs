@@ -109,7 +109,7 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
                     {
                         continue;
                     }
-                    if (vehicle.OvcHev)
+                    if (vehicle.OVC)
                     {
                         simulationRunData.OVCMode = OvcHevMode.ChargeDepleting;
                         yield return simulationRunData;
@@ -270,9 +270,9 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
         var xmlVehicle = vehicle as IXMLDeclarationVehicleData;
         return new RetarderData()
         {
-            Type = xmlVehicle.RetarderType,
+            Type = xmlVehicle.GetRetarderType(),
 
-            Ratio = xmlVehicle.RetarderType.IsDedicatedComponent() ? xmlVehicle.RetarderRatio : 0,
+            Ratio = xmlVehicle.GetRetarderType().IsDedicatedComponent() ? xmlVehicle.GetRetarderRatio() : 0,
         };
     }
 
@@ -414,7 +414,7 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
             SleeperCab = vehicleData.SleeperCab,
             //Loading = loading.Value.Item1,
             VehicleClass = segment.VehicleClass,
-            OffVehicleCharging = vehicleData.OvcHev,
+            OffVehicleCharging = vehicleData.OVC,
             VehicleCategory = vehicleData.VehicleCategory,
             ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
 
@@ -439,7 +439,7 @@ public class DummyRunPrimaryBusRunDataFactory : DeclarationModePrimaryBusRunData
             SleeperCab = vehicleData.SleeperCab,
             Loading = loading.Value.Item1,
             VehicleClass = segment.VehicleClass,
-            OffVehicleCharging = vehicleData.OvcHev,
+            OffVehicleCharging = vehicleData.OVC,
             VehicleCategory = vehicleData.VehicleCategory,
             ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
             ADAS = CreateDummyAdasData(vehicleData),

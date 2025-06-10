@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Mockup;
 using TUGraz.VectoCore.Mockup.Simulation.RundataFactories;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
@@ -37,62 +38,43 @@ namespace TUGraz.VectoMockup.Ninject
 			Rebind<IXMLInputDataReader>().To<MockupXMLInputDataFactory>();
 			Rebind<IResultsWriterFactory>().To<MockupReportResultsFactory>().InSingletonScope();
 
-			Rebind<IModalDataPostProcessor>().To<MockupPostProcessing>()
+			Rebind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>();
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.BatteryElectricVehicle.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.IEPC_E.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.MultiplePowertrains.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.SerialHybridVehicle.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.IEPC_S.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.FCHV.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.FCHV_IEPC.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.ParallelHybridVehicle.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.IHPC.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.EngineOnlySimulation.ToString());
+
+			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.ConventionalVehicle.ToString());
         }
 
 		#endregion
 	}
 
-	public class MockupPostProcessing : IModalDataPostProcessor
-	{
-		#region Implementation of IModalDataPostProcessor
-
-		public ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
-		{
-			return new NoCorrection();
-		}
-
-		#endregion
-	}
-
-	public class NoCorrection : ICorrectedModalData
-	{
-		#region Implementation of ICorrectedModalData
-
-		public WattSecond WorkESSMissing { get; }
-		public WattSecond WorkWHREl { get; }
-		public WattSecond WorkWHRElMech { get; }
-		public WattSecond WorkWHRMech { get; }
-		public WattSecond WorkWHR { get; }
-		public WattSecond WorkBusAuxPSCorr { get; }
-		public WattSecond WorkBusAux_elPS_SoC_ElRange { get; }
-		public WattSecond WorkBusAux_elPS_SoC_Corr { get; }
-		public WattSecond WorkBusAux_elPS_Corr_mech { get; }
-		public WattSecond WorkBusAuxESMech { get; }
-		public WattSecond WorkBusAuxHeatPumpHeatingElMech { get; }
-		public WattSecond WorkBusAuxHeatPumpHeatingMech { get; }
-		public WattSecond WorkBusAuxElectricHeater { get; }
-		public WattSecond WorkBusAuxCorr { get; }
-		public WattSecond EnergyDCDCMissing { get; }
-		public Joule AuxHeaterDemand { get; }
-		public NormLiter CorrectedAirDemand { get; }
-		public NormLiter DeltaAir { get; }
-		public IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)
-		{
-			throw new NotImplementedException();
-		}
-
-		public KilogramPerMeter KilogramCO2PerMeter { get; }
-		public Dictionary<FuelType, IFuelConsumptionCorrection> FuelCorrection { get; }
-		public Kilogram CO2Total { get; }
-		public Joule FuelEnergyConsumptionTotal { get; }
-		public WattSecond ElectricEnergyConsumption_SoC { get; set; }
-		public WattSecond ElectricEnergyConsumption_SoC_Corr { get; }
-		public WattSecondPerMeter ElectricEnergyConsumption_SoC_PerMeter { get; }
-		public WattSecond ElectricEnergyConsumption_Final { get; set; }
-		public WattSecondPerMeter ElectricEnergyConsumption_Final_PerMeter { get; }
-
-		#endregion
-	}
 }

@@ -535,7 +535,7 @@ Public Class VectoJob
         If vectoJob.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.SerialHybridVehicle) _
            AndAlso (vehicleInputData.Components.ElectricMachines Is Nothing OrElse vehicleInputData.Components.ElectricMachines.Entries.Count = 0) Then _
             result.Add(New ValidationResult("Electric machine is missing in vehicle"))
-        If Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E) AndAlso engineInputData Is Nothing Then _
+        If vectoJob.JobType.HasEngine() AndAlso engineInputData Is Nothing Then _
             result.Add(New ValidationResult("Engine File is missing or invalid"))
         If (vectoJob.JobType = VectoSimulationJobType.ConventionalVehicle OrElse vectoJob.JobType = VectoSimulationJobType.ParallelHybridVehicle) _
              AndAlso gearboxInputData Is Nothing Then _
@@ -573,7 +573,7 @@ Public Class VectoJob
                 If vehicleInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
                 End If
-                If Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E) AndAlso engineInputData.SavedInDeclarationMode Then
+                If vectoJob.JobType.HasEngine() AndAlso engineInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Engine File is not in Engineering Mode"))
                 End If
                 If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle _ 

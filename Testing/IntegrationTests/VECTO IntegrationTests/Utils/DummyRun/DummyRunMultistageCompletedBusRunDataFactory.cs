@@ -152,7 +152,7 @@ internal class DummyRunMultistageCompletedBusRunDataFactory : DeclarationModeCom
     private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
     {
         var InputDataProvider = DataProvider.MultistageJobInputData;
-        var ovc = PrimaryVehicle.OvcHev;
+        var ovc = PrimaryVehicle.OVC;
         foreach (var mission in _segment.Missions)
         {
             foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))

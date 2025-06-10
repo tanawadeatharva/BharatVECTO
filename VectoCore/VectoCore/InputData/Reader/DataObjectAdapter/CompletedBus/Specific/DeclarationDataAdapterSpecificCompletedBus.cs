@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 					vehicleLength, numSteeredAxles, jobType);
 			}
 
-			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission,
+				Segment segment, OvcHevMode ovcMode)
 			{
 				return AirdragDataAdapter.CreateAirdragData(completedVehicle, mission);
 			}

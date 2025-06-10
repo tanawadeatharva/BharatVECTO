@@ -20,14 +20,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IResultGroupWriter GetLorryConvSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
-        IResultGroupWriter GetLorryPEVSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryFCHVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryFCHVOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryPEVSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+        IResultGroupWriter GetLorryPEVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetLorryErrorResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetBusConvSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusHEVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusHEVOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
-        IResultGroupWriter GetBusPEVSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetBusFCHVNonOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetBusFCHVOVCSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetBusPEVSuccessResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetBusErrorResultWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
@@ -41,21 +46,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IResultGroupWriter GetLorryHEVOVCResultWriterChargeDepleting(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVOVCResultWriterChargeSustaining(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryHEVOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryFCHVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryFCHVOVCResultWriterChargeDepleting(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetLorryFCHVOVCResultWriterChargeSustaining(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetLorryPEVTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
 		IResultGroupWriter GetVehiclePerformanceLorry(ICommonResultsWriterFactory factory, XNamespace ns);
 
 		IResultGroupWriter GetVehiclePerformancePEVLorry(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetVehiclePerformanceFCHVLorry(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetBusConvTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusHEVNonOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusHEVOVCResultWriterChargeDepleting(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusHEVOVCResultWriterChargeSustaining(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetBusFCHVOVCResultWriterChargeDepleting(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetBusFCHVOVCResultWriterChargeSustaining(ICommonResultsWriterFactory factory, XNamespace ns);
+
         IResultGroupWriter GetBusHEVOVCTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IResultGroupWriter GetBusPEVTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
 		IResultGroupWriter GetVehiclePerformanceBus(ICommonResultsWriterFactory factory, XNamespace ns);
 		IResultGroupWriter GetVehiclePerformancePEVBus(ICommonResultsWriterFactory factory, XNamespace ns);
+		IResultGroupWriter GetVehiclePerformanceFCHVBus(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IFuelConsumptionWriter GetFuelConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
         IElectricEnergyConsumptionWriter GetElectricEnergyConsumptionLorry(ICommonResultsWriterFactory factory, XNamespace ns);
@@ -65,11 +78,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         IReportResultsSummaryWriter GetLorryConvSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryHEVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IReportResultsSummaryWriter GetLorryFCHVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IReportResultsSummaryWriter GetLorryFCHVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetLorryPEVSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+        IReportResultsSummaryWriter GetLorryPEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IReportResultsSummaryWriter GetBusConvSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetBusHEVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetBusHEVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IReportResultsSummaryWriter GetBusFCHVNonOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IReportResultsSummaryWriter GetBusFCHVOVCSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
         IReportResultsSummaryWriter GetBusPEVSummaryWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
         IResultGroupWriter GetBusSimulationParameterWriter(ICommonResultsWriterFactory factory, XNamespace ns);
@@ -86,7 +104,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         IElectricRangeWriter GetElectricRangeWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 
-		IResultSequenceWriter GetErrorDetailsWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+		IHydrogenRangeWriter GetHydrogenRangeWriter(ICommonResultsWriterFactory factory, XNamespace ns);
+
+        IResultSequenceWriter GetErrorDetailsWriter(ICommonResultsWriterFactory factory, XNamespace ns);
 	}
 
 	public interface IResultsWriter
@@ -159,4 +179,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 	}
 
+	public interface IHydrogenRangeWriter
+	{
+		XElement[] GetElements(IResultEntry weightedResult);
+
+		XElement[] GetElements(IWeightedResult weightedResult);
+
+	}
 }

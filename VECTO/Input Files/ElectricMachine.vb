@@ -254,22 +254,22 @@ Public Class ElectricMachine
             Return New List(Of IElectricMotorVoltageLevel) From {
                 New ElectricMotorVoltageLevel() With {
                     .VoltageLevel = VoltageLevelLow.SI(Of Volt),
-                    .ContinuousTorque=ContTqlo.si(of NewtonMeter),
-                    .ContinuousTorqueSpeed=RatedSpeedLo.RPMtoRad(),
-                    .OverloadTorque=OvlTqLo.SI(of NewtonMeter),
-                    .OverloadTestSpeed=OvlSpeedLo.RPMtoRad(),
+                    .ContinuousTorque = ContTqLo.SI(Of NewtonMeter),
+                    .ContinuousTorqueSpeed = RatedSpeedLo.RPMtoRad(),
+                    .OverloadTorque = OvlTqLo.SI(Of NewtonMeter),
+                    .OverloadTestSpeed = OvlSpeedLo.RPMtoRad(),
                     .OverloadTime = PeakPowerTimeLo.SI(Of Second),
-                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
-                    .FullLoadCurve = FullLoadCurveLow},
+                    .PowerMap = New List(Of IElectricMotorPowerMap) From {New JSONElectricMotorPowerMap With {.PowerMap = EfficiencyMapLow, .Gear = 0}},
+                    .FullLoadCurve = New List(Of IElectricMotorLoadCurve) From {New ElectricMotorLoadCurve With {.LoadCurve = FullLoadCurveLow, .Gear = 0}}},
                 New ElectricMotorVoltageLevel() With {
                     .VoltageLevel = VoltageLevelHigh.SI(Of Volt),
-                    .ContinuousTorque=ContTqHi.si(of NewtonMeter),
-                    .ContinuousTorqueSpeed=RatedSpeedHi.RPMtoRad(),
-                    .OverloadTorque=OvlTqHi.SI(of NewtonMeter),
-                    .OverloadTestSpeed=OvlSpeedHi.RPMtoRad(),
+                    .ContinuousTorque = ContTqHi.SI(Of NewtonMeter),
+                    .ContinuousTorqueSpeed = RatedSpeedHi.RPMtoRad(),
+                    .OverloadTorque = OvlTqHi.SI(Of NewtonMeter),
+                    .OverloadTestSpeed = OvlSpeedHi.RPMtoRad(),
                     .OverloadTime = PeakPowerTimeHi.SI(Of Second),
-                    .PowerMap = new List(Of IElectricMotorPowerMap) From { new JSONElectricMotorPowerMap With { .PowerMap = EfficiencyMapLow, .Gear = 0 }},
-                    .FullLoadCurve = FullLoadCurveHi}
+                    .PowerMap = New List(Of IElectricMotorPowerMap) From {New JSONElectricMotorPowerMap With {.PowerMap = EfficiencyMapLow, .Gear = 0}},
+                    .FullLoadCurve = New List(Of IElectricMotorLoadCurve) From {New ElectricMotorLoadCurve With {.LoadCurve = FullLoadCurveLow, .Gear = 0}}}
                 }
         End Get
     End Property

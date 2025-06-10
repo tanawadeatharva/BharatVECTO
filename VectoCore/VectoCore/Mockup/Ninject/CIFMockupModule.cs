@@ -71,9 +71,29 @@ namespace TUGraz.VectoMockup.Ninject
         public IXmlTypeWriter GetHEV_IEPC_LorryVehicleType()
         {
             return _cifFactory.GetHEV_IEPC_LorryVehicleType();
-        }
+		}
 
-        public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
+		public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F2_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_F3_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F3_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_F4_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F4_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_IEPC_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
         {
             return _cifFactory.GetPEV_E2_LorryVehicleType();
         }
@@ -249,6 +269,11 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetREESSGroup();
         }
 
+		public IReportOutputGroup GetFuelCellGroup()
+		{
+            return _cifFactory.GetFuelCellGroup();
+        }
+
         public IReportOutputGroup GetPEV_LorryVehicleTypeGroup()
         {
             return _cifFactory.GetPEV_LorryVehicleTypeGroup();
@@ -314,6 +339,21 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetIEPCTransmissionGroup();
 		}
 
+        public IReportOutputGroup GetFuelCell_LorryVehicleSequenceGroupWriter()
+		{
+            return _cifFactory.GetFuelCell_LorryVehicleSequenceGroupWriter();
+		}
+
+		public IReportOutputGroup GetFCHV_LorryVehicleTypeGroup()
+		{
+            return _cifFactory.GetFCHV_LorryVehicleTypeGroup();
+		}
+
+		public IReportOutputGroup GetFCHVLorryVehicleSequenceGroupWriter()
+		{
+            return _cifFactory.GetFCHVLorryVehicleSequenceGroupWriter();
+		}
+
 		#endregion
-    }
+	}
 }

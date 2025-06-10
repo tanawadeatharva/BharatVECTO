@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
-			
+			CurrentState.SimulationDistance = 0.SI<Meter>();
 
 			return NextComponent.Request(absTime, dt, Left.VehicleTargetSpeed, CurrentState.Gradient);
 		}
@@ -332,6 +332,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.SimulationDistance = ds;
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient(ds);
+			CurrentState.Highway = Left.Highway; // && Right.Highway;
 
 			var retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 			if (retVal is ResponseFailTimeInterval r) { 
@@ -357,6 +358,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>()
 				: null;
 			container[ModalResultField.altitude] = CurrentState.Altitude;
+			container[ModalResultField.Highway] = CurrentState.Highway ? 1 : 0;
 
 			if (IdleController != null) {
 				IdleController.CommitSimulationStep(time, simulationInterval, container);
@@ -603,6 +605,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public bool RequestToNextSamplePointDone;
 
 			public Meter SimulationDistance;
+
+			public bool Highway;
 		}
 
 		public void Dispose()

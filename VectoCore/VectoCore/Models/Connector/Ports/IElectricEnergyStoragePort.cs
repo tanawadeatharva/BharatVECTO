@@ -60,4 +60,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 
 	}
+	
+	public interface IFuelCellPort
+	{
+		Watt Initialize();
+		Watt PowerDemand(Second absTime, Second dt, Watt maxPower, bool dryRun);
+	}
 }

@@ -62,11 +62,11 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 			foreach (var voltageLevel in voltageLevels) {
 
-				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve);
+				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve.First().LoadCurve);
 				
 				var ihpcVoltageLevel = new IHPCVoltageLevelData {
 					Voltage = voltageLevel.VoltageLevel,
-					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel.FullLoadCurve),
+					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel.FullLoadCurve.First().LoadCurve),
 					EfficiencyMaps = GetEfficiencyMaps(ratedPoint, normalizedMap, gearboxData,count)
 				};
 

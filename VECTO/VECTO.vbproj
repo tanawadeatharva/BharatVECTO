@@ -94,6 +94,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Reference Include="Microsoft.VisualBasic" />
+	</ItemGroup>
+
+	<ItemGroup>
 	<Compile Update="My Project\Application.Designer.vb">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>

@@ -260,17 +260,20 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericCrosswind = GetCrosswindCorrection("CoachBus", genericDragArea, genericVehicleHeight);
 			var specificCrosswind = GetCrosswindCorrection("CoachBus", specificDragArea, specificVehicleHeight);
 
-			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(),
-				21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			var cyclePos = new DrivingCycleData.DrivingCycleEntry() {
+				Highway = false
+			};
+			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(cyclePos, 20.KMPHtoMeterPerSecond(),
+				21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
 			var currentGenericValue = genericAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(
-				20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				cyclePos, 20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
-			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
-				22.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(cyclePos, 21.KMPHtoMeterPerSecond(),
+				22.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
-			var currentSpecificValue = specificAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
-				22.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			var currentSpecificValue = specificAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(cyclePos, 21.KMPHtoMeterPerSecond(),
+				22.KMPHtoMeterPerSecond(), Physics.AirDensity).AirdragForce.Value();
 
 
 			Assert.AreEqual(CrossWindCorrectionMode.DeclarationModeCorrection, genericAirdragData.CrossWindCorrectionMode);
@@ -941,7 +944,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{
 			return new CrosswindCorrectionCdxALookup(
-				  aerodynamicDragArea,
+				  aerodynamicDragArea, 0.SI<SquareMeter>(),
 				  new AirdragDataAdapter().GetDeclarationAirResistanceCurve(
 					  crossWindCorrectionParams,
 					  aerodynamicDragArea,

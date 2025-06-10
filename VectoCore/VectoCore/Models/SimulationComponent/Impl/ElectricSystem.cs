@@ -31,6 +31,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public IList<IElectricChargerPort> Charger { get; }
 
+		public IFuelCellPort FuelCell { get; private set; } = null;
+
         protected IElectricEnergyStorage Battery;
         private readonly BatterySystemData ModelData;
 
@@ -52,13 +54,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
         {
             powerDemand = powerDemand ?? 0.SI<Watt>();
+			var propellingDemand = VectoMath.Min(powerDemand, 0.SI<Watt>()); //Propelling demand is negative
+            var maxFcPower = VectoMath.Max(Battery.MaxChargePower(dt) - propellingDemand, 0.SI<Watt>());
+
             var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
             var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
+			var fcPower = FuelCell?.PowerDemand(absTime, dt, maxFcPower, dryRun) ?? 0.SI<Watt>();
+
             var currentEst = powerDemand / Battery.InternalVoltage;
             var connectorLoss = currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) * currentEst;
-            var totalPowerDemand = powerDemand + chargePower - auxDemand - connectorLoss;
-
-            var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
+            var totalPowerDemand = powerDemand + chargePower + fcPower - auxDemand - connectorLoss;
+			var maxBatteryPowerDemand = (FuelCell != null) ? VectoMath.Max(totalPowerDemand, Battery.MaxDischargePower(dt)) : totalPowerDemand;
+            var batResponse = Battery.MainBatteryPort.Request(absTime, dt, maxBatteryPowerDemand, dryRun);
 
             var response = dryRun
                 ? (AbstractElectricSystemResponse)new ElectricSystemDryRunResponse(this)
@@ -75,7 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 CurrentState.SetState(powerDemand, auxDemand, chargePower, connectorLoss, batResponse.PowerDemand);
             }
 
-            response.AbsTime = absTime;
+			response.MaxNominalFCRatedPower = (FuelCell != null) ? (FuelCell as FuelCellSystem).FuelCellStrings.Sum(x => x.FuelCells.Sum(y => y.MaxPower)) : null;
+			response.AbsTime = absTime;
             response.SimulationInterval = dt;
             response.RESSResponse = batResponse;
             response.RESSPowerDemand = totalPowerDemand;
@@ -112,6 +120,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         #endregion
+
+		public void Connect(IFuelCellPort fuelCell)
+		{
+			if (FuelCell != null) {
+				throw new VectoException("Fuel cell is already connected to ES");
+
+			}
+
+			FuelCell = fuelCell;
+		}
+
 
         #region Implementation of IBatteryAuxOutProvider
 

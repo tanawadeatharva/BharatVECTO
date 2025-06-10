@@ -128,12 +128,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		}
 
 		public override bool HybridElectricHDV => true;
-
 	}
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationPevHeavyLorryE2DataProviderV24 : AbstractXMLVehicleDataProviderV24
+	public class XMLDeclarationPevHeavyLorryDataProviderV24 : AbstractXMLVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		public new const string XSD_TYPE = "Vehicle_PEV_HeavyLorryDeclarationType";
@@ -145,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationPevHeavyLorryE2DataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
+		public XMLDeclarationPevHeavyLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(jobData, xmlNode, sourceFile) { }
 
 
@@ -159,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override CubicMeter CargoVolume => null;
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		#endregion
 
@@ -189,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		#endregion
 
@@ -231,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public override IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 		public override TableData BoostingLimitations => null;
 
 		#endregion
@@ -242,7 +241,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		}
 
 		public override bool HybridElectricHDV => true;
-
 	}
 
 	// ---------------------------------------------------------------------------------------

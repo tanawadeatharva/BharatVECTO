@@ -412,7 +412,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationEngineDataProviderV26 : XMLDeclarationEngineDataProviderV23
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationEngineDataProviderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) 
+		{ }
+
+    }
 
 	public class XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV01 : XMLDeclarationEngineDataProviderV23
 	{
@@ -428,7 +439,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IList<IEngineModeDeclarationInputData> EngineModes =>
 			_engineModes ??
-			(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLSingleFuelEngineMode(BaseNode) });
+			(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLDeclarationEngineDataProviderV10.XMLSingleFuelEngineMode(BaseNode) });
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}

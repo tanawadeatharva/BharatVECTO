@@ -430,6 +430,96 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCell_Count {
+            get {
+                return ResourceManager.GetString("FuelCell_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellSystemFile.
+        /// </summary>
+        internal static string FuelCell_File {
+            get {
+                return ResourceManager.GetString("FuelCell_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellSystems.
+        /// </summary>
+        internal static string FuelCell_FuelCells {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompositeFuelCellSystem.
+        /// </summary>
+        internal static string FuelCell_FuelCellSystem {
+            get {
+                return ResourceManager.GetString("FuelCell_FuelCellSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MassFlowMap.
+        /// </summary>
+        internal static string FuelCell_MassFlowMap {
+            get {
+                return ResourceManager.GetString("FuelCell_MassFlowMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxElectricPower.
+        /// </summary>
+        internal static string FuelCell_MaxPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxWindowSize.
+        /// </summary>
+        internal static string FuelCell_maxWindowSize {
+            get {
+                return ResourceManager.GetString("FuelCell_maxWindowSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinElectricPower.
+        /// </summary>
+        internal static string FuelCell_MinPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OnOffHysteresis.
+        /// </summary>
+        internal static string FuelCell_OnOffHysteresis {
+            get {
+                return ResourceManager.GetString("FuelCell_OnOffHysteresis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string FuelCells_Count {
+            get {
+                return ResourceManager.GetString("FuelCells_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EaryShiftUp.
         /// </summary>
         internal static string Gearbox_EarlyShiftUp {
@@ -691,6 +781,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisengagementClutch.
+        /// </summary>
+        internal static string IEPC_DisengagementClutch {
+            get {
+                return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DragCurves.
         /// </summary>
         internal static string IEPC_DragCurves {
@@ -705,6 +804,15 @@ namespace TUGraz.VectoCore {
         internal static string IEPC_FullLoadCurve {
             get {
                 return ResourceManager.GetString("IEPC_FullLoadCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullLoadCurves.
+        /// </summary>
+        internal static string IEPC_FullLoadCurves {
+            get {
+                return ResourceManager.GetString("IEPC_FullLoadCurves", resourceCulture);
             }
         }
         
@@ -997,6 +1105,42 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AxleNumber.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrain_AxleNumber {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrain_AxleNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrain_Type {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrain_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxlePowertrains.
+        /// </summary>
+        internal static string Vehicle_AxlePowertrains {
+            get {
+                return ResourceManager.GetString("Vehicle_AxlePowertrains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WheelEndFriction.
+        /// </summary>
+        internal static string Vehicle_Axles_Friction {
+            get {
+                return ResourceManager.GetString("Vehicle_Axles_Friction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inertia.
         /// </summary>
         internal static string Vehicle_Axles_Inertia {
@@ -1092,6 +1236,69 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_DynamicTyreRadius {
             get {
                 return ResourceManager.GetString("Vehicle_DynamicTyreRadius", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ElectricMotor.
+        /// </summary>
+        internal static string Vehicle_ElectricMotor {
+            get {
+                return ResourceManager.GetString("Vehicle_ElectricMotor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalEfficiency.
+        /// </summary>
+        internal static string Vehicle_EM_MechEff {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MechEff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalTransmissionLossMap.
+        /// </summary>
+        internal static string Vehicle_EM_MechTransLossMap {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MechTransLossMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MotorFile.
+        /// </summary>
+        internal static string Vehicle_EM_MotorFile {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_MotorFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        internal static string Vehicle_EM_Position {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ratio.
+        /// </summary>
+        internal static string Vehicle_EM_Ratio {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RatioPerGear.
+        /// </summary>
+        internal static string Vehicle_EM_RatioPerGear {
+            get {
+                return ResourceManager.GetString("Vehicle_EM_RatioPerGear", resourceCulture);
             }
         }
         
@@ -1231,6 +1438,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TCU.
+        /// </summary>
+        internal static string Vehicle_TCU {
+            get {
+                return ResourceManager.GetString("Vehicle_TCU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VehCat.
         /// </summary>
         internal static string Vehicle_VehicleCategory {
@@ -1245,6 +1461,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_VehicleFile {
             get {
                 return ResourceManager.GetString("Vehicle_VehicleFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompletedVIF.
+        /// </summary>
+        internal static string VTP_CompletedVIF {
+            get {
+                return ResourceManager.GetString("VTP_CompletedVIF", resourceCulture);
             }
         }
     }

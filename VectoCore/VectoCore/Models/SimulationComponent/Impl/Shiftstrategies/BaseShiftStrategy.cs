@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				((Container.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
 				Container.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * Container.VehicleInfo.VehicleSpeed;
+			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed).AirdragForce * Container.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = Container.VehicleInfo.RollingResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
 			var gearboxLoss = GearboxModelData.Gears[gear.Gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
 				maxEnginePower / nextEngineSpeed * GearboxModelData.Gears[gear.Gear].Ratio).Value * nextEngineSpeed;

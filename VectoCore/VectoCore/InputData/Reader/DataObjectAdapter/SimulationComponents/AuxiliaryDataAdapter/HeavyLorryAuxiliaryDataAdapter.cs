@@ -32,13 +32,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		
 
 		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
-			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
-			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles,
+			IAuxiliariesDeclarationInputData auxInputData,
+			IBusAuxiliariesDeclarationData busAuxData,
+			MissionType mission,
+			VehicleClass hdvClass,
+			Meter vehicleLength,
+			int? numSteeredAxles,
 			VectoSimulationJobType jobType)
 		{
 			var retVal = new List<VectoRunData.AuxData>();
 
-			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes)) {
+			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes) && jobType != VectoSimulationJobType.FCHV && jobType != VectoSimulationJobType.FCHV_IEPC)
+			{
 				var error = string.Format(
 					"In Declaration Mode exactly {0} Auxiliaries must be defined for {2} vehicles: {1}",
 					AuxiliaryTypes.Count, string.Join(", ", AuxiliaryTypes.Select(aux => aux.ToString())), errorStringVehicleType);
@@ -53,6 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			foreach (var auxType in AuxiliaryTypes)
 			{
 				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
+
 				if (auxData == null)
 				{
 					throw new VectoException("Auxiliary {0} not found.", auxType);
@@ -103,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				DemandType = AuxiliaryDemandType.Dynamic,
 				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
-				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, jobType, mission),
 			};
 
 			auxDataList.Add(aux);
@@ -275,5 +281,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		};
 
 		protected override string errorStringVehicleType => "battery electric";
+	}
+
+	public class HeavyLorryFCHVAuxiliaryDataAdapter : HeavyLorryAuxiliaryDataAdapter
+	{
+		protected internal override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
+			AuxiliaryType.HVAC,
+			AuxiliaryType.PneumaticSystem,
+			AuxiliaryType.SteeringPump
+		};
+
+		protected override string errorStringVehicleType => "FCHV";
 	}
 }

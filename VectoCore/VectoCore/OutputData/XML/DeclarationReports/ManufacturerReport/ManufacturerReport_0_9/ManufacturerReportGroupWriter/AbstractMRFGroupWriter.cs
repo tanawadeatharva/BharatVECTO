@@ -12,9 +12,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
     public abstract class AbstractReportOutputGroup : IReportOutputGroup
     {
 		protected readonly IManufacturerReportFactory _mrfFactory;
-		protected XNamespace _mrf = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9";
+		protected XNamespace _mrf = AbstractManufacturerReport.Namespace;
 
-		protected AbstractReportOutputGroup(IManufacturerReportFactory mrfFactory)
+
+        protected AbstractReportOutputGroup(IManufacturerReportFactory mrfFactory)
 		{
 			_mrfFactory = mrfFactory;
 

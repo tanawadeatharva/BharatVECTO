@@ -1,0 +1,16 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2023-09-28T13:29:03.6322519Z",
+    "AppVersion": "3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "Manufacturer": "Fuel Cell Manufacturer",
+    "Model": "Generic Fuel Cell",
+    "MinElectricPower": 10.0,
+    "MaxElectricPower": 100.0,
+    "MassFlowMap": "GenericFuelCellMassflowMap_100kW.vfcm"
+  }
+}

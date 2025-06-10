@@ -15,6 +15,7 @@ Public Class IEPCInputData
     Private _model As String
     Private _inertia As KilogramSquareMeter
     Private _wheelMotorMeasured As Boolean
+    Private _disengagementClutch As Boolean
     Private _nrDesignTypeWheelMotor As Integer?
     Private _differentialIncluded As Boolean
     Private _overloadRecoverFactor As Double
@@ -70,7 +71,7 @@ Public Class IEPCInputData
         If Not File.Exists(tmp.FullPath) Then 
             Throw New VectoException("Full-Load Curve is missing or invalid")
         Else
-            level.FullLoadCurve = VectoCSVFile.Read(tmp.FullPath)
+            level.FullLoadCurve = New List(Of IElectricMotorLoadCurve) From {New ElectricMotorLoadCurve With {.LoadCurve = VectoCSVFile.Read(tmp.FullPath), .Gear = 0}}
         End If
         level.PowerMap = GetPowerMap(powerMap)
         
@@ -211,6 +212,12 @@ Public Class IEPCInputData
     Public ReadOnly Property DesignTypeWheelMotor As Boolean Implements IIEPCDeclarationInputData.DesignTypeWheelMotor
         Get
             Return _wheelMotorMeasured
+        End Get
+    End Property
+
+    Public ReadOnly Property DisengagementClutch As Boolean Implements IIEPCDeclarationInputData.DisengagementClutch
+        Get
+            Return _disengagementClutch
         End Get
     End Property
 

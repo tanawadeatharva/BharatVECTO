@@ -1418,7 +1418,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 },
                 AirdragData = new AirdragData() {
                     CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
-                    CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(4.SI<SquareMeter>(), new[] {
+                    CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(4.SI<SquareMeter>(), 0.SI<SquareMeter>(), new[] {
                         new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry() {
                             Velocity = 0.KMPHtoMeterPerSecond(),
                             EffectiveCrossSectionArea = 4.SI<SquareMeter>()
@@ -1426,8 +1426,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                         new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry() {
                             Velocity = 100.KMPHtoMeterPerSecond(),
                             EffectiveCrossSectionArea = 4.SI<SquareMeter>()
-                        }
-                    }.ToList(), CrossWindCorrectionMode.DeclarationModeCorrection)
+                        },
+					}.ToList(), CrossWindCorrectionMode.DeclarationModeCorrection)
                 },
                 AxleGearData = new AxleGearData() {
                     AxleGear = new TransmissionData() {

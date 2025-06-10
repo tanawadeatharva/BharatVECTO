@@ -34,6 +34,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
@@ -49,22 +50,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IXMLDeclarationVehicleData Vehicle;
+        private int? _axleNumber;
 
-		public XMLDeclarationRetarderDataProviderV10(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+        public XMLDeclarationRetarderDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile, int? axleNumber = null) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-		}
+            _axleNumber = axleNumber;
+        }
 
 		#region Implementation of IRetarderInputData
 
-		public virtual RetarderType Type => Vehicle.RetarderType;
+		public virtual RetarderType Type => Vehicle.GetRetarderType(AxleNumber.Value);
 
-		public virtual double Ratio => Vehicle.RetarderRatio;
+		public virtual double Ratio => Vehicle.GetRetarderRatio(AxleNumber.Value);
 
-		public virtual TableData LossMap =>
+        private int? AxleNumber =>
+            _axleNumber ?? (_axleNumber = int.Parse(GetAttribute(BaseNode?.ParentNode, "axleNumber") ?? $"{Constants.NOT_IN_AXLE_POWERTRAIN}"));
+
+        public virtual TableData LossMap =>
 			ReadTableData(
 				XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
 				AttributeMappings.RetarderLossmapMapping);

@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace _v21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
 		protected XNamespace _v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
 		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
+		protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
 		protected XNamespace _v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 
 		protected XElement Vehicle { get; set; }
@@ -54,21 +55,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			Results = _resultFactory.GetVIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetVIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 
 		}
 
-		
-		public void WriteResult(IResultEntry result)
+		protected virtual string GetVehicleXMLType(VectoRunData modelData)
+		{
+			return modelData.VehicleData.InputData.XMLSource.Name;
+		}
+
+        public void WriteResult(IResultEntry result)
 		{
 			_results.Add(result);
 		}
 
 		public virtual void GenerateReport(XElement fullReportHash)
 		{
+			// todo amogoda: vif - generate report for v2.7 and VIF v0.2.
 			var retVal = new XDocument(new XElement(VIF + XMLNames.VectoOutputMultistep,
 				new XAttribute(XNamespace.Xmlns + "di", _di),
 				new XAttribute(XNamespace.Xmlns + "xsi", _xsi.NamespaceName),
@@ -78,6 +84,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XAttribute(XNamespace.Xmlns + "v2.1", _v21),
 				new XAttribute(XNamespace.Xmlns + "v2.3", _v23),
 				new XAttribute(XNamespace.Xmlns + "v2.4", _v24),
+				//new XAttribute(XNamespace.Xmlns + "v2.7", _v27),
 				new XAttribute(_xsi + "schemaLocation", $"{_tns.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
 				new XAttribute("xmlns", _tns),
 

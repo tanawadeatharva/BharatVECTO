@@ -6,17 +6,18 @@ using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery {
 
-	public class BatterySystemData
+	public class BatterySystemData : ICloneable
 	{
 		public BatterySystemData()
 		{
 			Batteries = new List<Tuple<int, BatteryData>>();
 		}
 
-		public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
+        public List<Tuple<int, BatteryData>> Batteries { get; internal set; }
 
 		public double InitialSoC { get; internal set; }
 
@@ -47,9 +48,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 					(current, s) => current + Batteries.Where(x => x.Item1 == s).Min(x => x.Item2.UseableStoredEnergy));
 			}
 		}
+
+		public bool ChargeSustainingBatterySystem
+		{
+			get { return Batteries.All(b => b.Item2.ChargeDepletingBattery); } 
+			set { Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = value); }
+		}
+
+		#region Implementation of ICloneable
+
+		object ICloneable.Clone()
+		{
+			return Clone();
+		}
+
+		public BatterySystemData Clone()
+		{
+			var cloned = new BatterySystemData()
+			{
+				InitialSoC = this.InitialSoC,
+				ConnectionSystemResistance = this.ConnectionSystemResistance,
+			};
+
+			foreach (var b in Batteries)
+			{
+				cloned.Batteries.Add(Tuple.Create(b.Item1, b.Item2.Clone()));
+			}
+
+			return cloned;
+        }
+
+		#endregion
 	}
 
-	public class BatteryData
+	public class BatteryData : ICloneable
 	{
 		private WattSecond _totaltoredEnergy;
 		private WattSecond _useableStoredEnergy;
@@ -66,11 +98,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 		[SIRange(0, 1e9)]
 		public InternalResistanceMap InternalResistance { get; internal set; }
 
-		public AmpereSecond Capacity { get; internal set; }
+		private AmpereSecond _capacity;
+
+		public AmpereSecond Capacity
+		{
+			get => _capacity;
+			internal set
+			{
+				_capacity = value;
+				_totaltoredEnergy = null;
+				_useableStoredEnergy = null;
+			}
+		}
 
 		public MaxCurrentMap MaxCurrent { get; internal set; }
 		public int BatteryId { get; internal set; }
 
+		/// <summary>
+		/// Infinity Battery
+		/// </summary>
 		public bool ChargeDepletingBattery { get; internal set; }
 
 		public WattSecond TotalStoredEnergy => _totaltoredEnergy ?? (_totaltoredEnergy = CalculateBatteryEnergy(0, 1));
@@ -99,6 +145,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			}
 			return retVal;
 		}
+
+		#region Implementation of ICloneable
+
+		object ICloneable.Clone()
+		{
+			return this.Clone();
+		}
+
+		public BatteryData Clone()
+		{
+			return new BatteryData() {
+				BatteryId = this.BatteryId,
+				ChargeDepletingBattery = this.ChargeDepletingBattery,
+				MinSOC = this.MinSOC,
+				MaxSOC = this.MaxSOC,
+				Capacity = this.Capacity,
+				InputData = this.InputData,
+
+				InternalResistance = this.InternalResistance,
+				MaxCurrent = this.MaxCurrent,
+				SOCMap = this.SOCMap,
+			};
+		}
+
+		#endregion
 	}
 
 	public class SuperCapData
@@ -138,6 +209,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Ba
 			var idx = FindIndex(soc);
 			return VectoMath.Interpolate(Entries[idx - 1].SOC, Entries[idx].SOC, Entries[idx - 1].BatteryVolts,
 				Entries[idx].BatteryVolts, soc);
+		}
+
+		public bool ContainsSoC(double soc)
+		{
+			return Entries.Any(x => x.SOC.IsEqual(soc));
 		}
 
 		protected int FindIndex(double soc)

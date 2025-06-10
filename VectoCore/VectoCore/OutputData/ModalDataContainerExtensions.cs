@@ -185,6 +185,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
 		}
 
+		public static WattSecond WorkWheelEnd(this IModalDataContainer data)
+		{ 
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheelEnd_saving);
+		}
+
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
@@ -286,7 +291,13 @@ namespace TUGraz.VectoCore.OutputData
 			return -data.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, x => x.IsSmaller(0));
 		}
 
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
+		public static double BatteryEfficiencyDischarge(this IModalDataContainer data)
+		{
+			return data.WorkREESSDischargeTerminal() / data.WorkREESSDischargeInternal();
+		}
+
+
+        public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			if (data.Duration == 0.SI<Second>())
 			{
@@ -598,7 +609,11 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ES_Conn_loss);
 		}
 
-
+		/// <summary>
+		/// SOC(end) - SOC(start)
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
         public static double REESSDeltaSoc(this IModalDataContainer data)
 		{
 			return data.REESSEndSoC() - data.REESSStartSoC();

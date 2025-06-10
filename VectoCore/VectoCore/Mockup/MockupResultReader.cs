@@ -114,7 +114,7 @@ namespace TUGraz.VectoMockup
 					ovc = false; //TODO implement
 					jobType = mst.JobInputData.JobType; //runData.InputData.JobInputData.JobType;
 				} else {
-					ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
+					ovc = runData.InputData.JobInputData.Vehicle.OVC;
 					jobType = runData.InputData.JobInputData.JobType;
 				}
 
@@ -127,7 +127,7 @@ namespace TUGraz.VectoMockup
 					return ovc ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC)) {
 					return "PEV";
 				}
 

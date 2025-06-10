@@ -120,6 +120,7 @@ Public Class MainForm
         VehicleFileBrowser = New FileBrowser("vveh")
         VehicleXMLFileBrowser = New FileBrowser("vveh_xml")
         ManRXMLFileBrowser = New FileBrowser("xml")
+        CompletedVIFFileBrowser = New FileBrowser("xml")
         FuelConsumptionMapFileBrowser = New FileBrowser("vmap")
         DrivingCycleFileBrowser = New FileBrowser("vdri")
         FullLoadCurveFileBrowser = New FileBrowser("vfld")
@@ -144,6 +145,10 @@ Public Class MainForm
         IEPCDragFileBrowser = new FileBrowser("viepcd")
         IEPCPowerMapFileBrowser = New FileBrowser("viepco")
         REESSFileBrowser = New FileBrowser("vreess")
+        FuelCellComponentFileBrowser = New FileBrowser("vfcc")
+        MassFlowMapFileBrowser = New FileBrowser("vfcm")
+
+
         EmADCLossMapFileBrowser = New FileBrowser("vtlm")
         DriverDecisionFactorVelocityDropFileBrowser = New FileBrowser("DfVelocityDrop")
         DriverDecisionFactorTargetSpeedFileBrowser = New FileBrowser("DfTargetSpeed")
@@ -173,6 +178,7 @@ Public Class MainForm
         VehicleFileBrowser.Extensions = New String() {"vveh"}
         VehicleXMLFileBrowser.Extensions = New String() {"xml"}
         ManRXMLFileBrowser.Extensions = New String() {"xml"}
+        CompletedVIFFileBrowser.Extensions = New String() {"xml"}
         FuelConsumptionMapFileBrowser.Extensions = New String() {"vmap"}
         DrivingCycleFileBrowser.Extensions = New String() {"vdri"}
         FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
@@ -208,6 +214,9 @@ Public Class MainForm
 
         ModalResultsFileBrowser.Extensions = New String() {"vmod"}
 
+        FuelCellComponentFileBrowser.Extensions = New String() {"vfcc"}
+        MassFlowMapFileBrowser.Extensions = New String() {"vfcm"}
+
         IHPCFileBrowser.Extensions = New String(){"vem"}
         IHPCPowerMapFileBrowser.Extensions = New String(){"vemo"}
         IHPCFullLoadCurveFileBrowser.Extensions = New String(){"vemp"}
@@ -226,6 +235,7 @@ Public Class MainForm
         VehicleFileBrowser.Close()
         VehicleXMLFileBrowser.Close()
         ManRXMLFileBrowser.Close()
+        CompletedVIFFileBrowser.Close()
         FuelConsumptionMapFileBrowser.Close()
         DrivingCycleFileBrowser.Close()
         FullLoadCurveFileBrowser.Close()
@@ -243,6 +253,8 @@ Public Class MainForm
         TorqueConverterShiftPolygonFileBrowser.Close()
         CrossWindCorrectionFileBrowser.Close()
         ModalResultsFileBrowser.Close()
+        FuelCellComponentFileBrowser.Close()
+        MassFlowMapFileBrowser.Close()
     End Sub
 
 #End Region
@@ -809,7 +821,7 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes Vecto 4.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto DEV.pdf")
     End Sub
 
     Private Sub OpenFileExternal(filename As String)
@@ -1042,10 +1054,7 @@ lbFound:
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                            
-                                Using reader As XmlReader = XmlReader.Create(jobFile)
-                                    input = xmlInputReader.CreateDeclaration(reader)
-                                End Using
+                                input = xmlInputReader.CreateDeclaration(jobFile)
                             Case XMLNames.VectoOutputMultistep
                                 Using reader As XmlReader = XmlReader.Create(jobFile)
                                     Dim vifInput = DirectCast(xmlInputReader.Create(reader), IMultistepBusInputDataProvider)
@@ -1405,8 +1414,13 @@ lbFound:
     'Open Job Editor and open file (or new file)
     Friend Sub OpenVECTOeditor(filePathOrType As String, Optional jobType As VectoSimulationJobType = Nothing)
         If filePathOrType = "<New>" Then
-            ShowVectoJobForm(jobType)
-            VectoJobForm.VectoNew()
+            Try
+                ShowVectoJobForm(jobType)
+                VectoJobForm.VectoNew()
+            Catch ex As VectoException
+                MsgBox(ex.Message,MsgBoxStyle.OkOnly, "Error creating new Vecto job")
+                Exit Sub
+            End Try
         ElseIf filePathOrType = "<VTP>" Then
             ShowVectoEPTPJobForm()
             VectoVTPJobForm.VectoNew()
@@ -2234,7 +2248,7 @@ lbFound:
         OpenVECTOeditor("<New>", VectoSimulationJobType.IEPC_E)
     End Sub
 
-    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click 
+    Private Sub JobEditorIHPCVehicleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobEditorIHPCVehicleToolStripMenuItem.Click
         OpenVECTOeditor("<New>", VectoSimulationJobType.IHPC)
     End Sub
 
@@ -2244,5 +2258,13 @@ lbFound:
 
     Private Sub tbInitSOCinPercent_TextChanged(sender As Object, e As EventArgs) 
         
+    End Sub
+
+    Private Sub JobEditorFCHVehicle_Click(sender As Object, e As EventArgs) Handles JobEditorFCHVehicle.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.FCHV)
+    End Sub
+
+    Private Sub JobEditorFCHV_IEPC_Vehicle_Click(sender As Object, e As EventArgs) Handles JobEditorFCHV_IEPC_Vehicle.Click
+        OpenVECTOeditor("<New>", VectoSimulationJobType.FCHV_IEPC)
     End Sub
 End Class

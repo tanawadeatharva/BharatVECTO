@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -78,6 +79,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			protected abstract IPTODataAdapter PtoDataAdapter { get; }
 
 			protected virtual IElectricMachinesDataAdapter ElectricMachinesDataAdapter => throw new NotImplementedException();
+
+			protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
 
 			public virtual DriverData CreateDriverData(Segment segment)
 			{
@@ -136,8 +139,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			}
 
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission,
-				Segment segment)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission,
+				Segment segment, OvcHevMode ovcMode)
 			{
 				return AirdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
@@ -208,7 +211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 				IElectricMachinesDeclarationInputData electricMachines,
-				IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+				IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
 				GearList gears = null)
 			{
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage,
@@ -224,6 +227,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
 			{
 				throw new NotImplementedException("Not applicable to Heavy Lorries");
+			}
+
+			FuelCellSystemDeclarationData ILorryDeclarationDataAdapter.CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+			{
+				return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
 			}
 		}
 
@@ -385,6 +393,48 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 
+		}
+
+		public class FuelCellHybrid : SerialHybrid
+		{
+			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+
+			protected override IAuxiliaryDataAdapter AuxDataAdapter => new HeavyLorryFCHVAuxiliaryDataAdapter();
+		}
+
+		public class HEV_F2 : FuelCellHybrid
+		{
+			#region Overrides of LorryBase
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+			{
+				GearboxType.AMT,
+				GearboxType.ATPowerSplit,
+				GearboxType.ATSerial,
+				GearboxType.APTN
+			};
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			#endregion
+		}
+
+		public class HEV_F3 : FuelCellHybrid { }
+
+		public class HEV_F4 : FuelCellHybrid { }
+
+		public class HEV_F_IEPC : FuelCellHybrid
+		{
+			protected override GearboxType[] SupportedGearboxTypes => new[]
+			{ 
+				GearboxType.AMT,
+				GearboxType.ATPowerSplit,
+				GearboxType.ATSerial,
+				GearboxType.APTN
+			};
+
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+
+			protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } = new ElectricMachinesDataAdapter();
 		}
 
 		public class HEV_P1 : ParallelHybrid

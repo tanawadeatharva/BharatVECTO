@@ -830,7 +830,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 				});
 			
 			var avgVoltage = 200.SI<Volt>();
-			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits = new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>();
+			var torqueLimits = new Dictionary<EMPlacement, IList<Tuple<Volt, TableData>>>();
 			
 			var electricMachinesData = emDataAdapter.CreateElectricMachines(emsInputData.Object, torqueLimits:torqueLimits, 
 				avgVoltage, null);

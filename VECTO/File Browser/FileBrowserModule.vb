@@ -24,7 +24,8 @@ Public Module FileBrowserModule
 	Public TextFileBrowser As FileBrowser
 	Public VehicleFileBrowser As FileBrowser
 	Public VehicleXMLFileBrowser As FileBrowser
-    public ManRXMLFileBrowser As FileBrowser
+	Public ManRXMLFileBrowser As FileBrowser
+	Public CompletedVIFFileBrowser As FileBrowser
 	Public DrivingCycleFileBrowser As FileBrowser
 	Public PTODrivingCycleStandstillFileBrowser As FileBrowser
 	Public PTODrivingCycleDrivingFileBrowser As FileBrowser
@@ -68,8 +69,9 @@ Public Module FileBrowserModule
 
     Public ElectricMotorFileBrowser As FileBrowser
     Public REESSFileBrowser As FileBrowser
-
-	public EmADCLossMapFileBrowser As FileBrowser
+	Public FuelCellComponentFileBrowser As FileBrowser
+	Public MassFlowMapFileBrowser As FileBrowser
+	Public EmADCLossMapFileBrowser As FileBrowser
 	Public IEPCFileBrowser As FileBrowser
 	Public IEPCFLCFileBrowser As FileBrowser
 	Public IEPCDragFileBrowser As FileBrowser

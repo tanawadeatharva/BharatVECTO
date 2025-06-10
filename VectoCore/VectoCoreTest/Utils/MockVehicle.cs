@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Reflection.Metadata.Ecma335;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -38,6 +39,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -79,9 +81,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public CubicMeter CargoVolume { get;  set; }
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		public AirDragLossResult AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			return 0.SI<Newton>();
+			return new AirDragLossResult(0.SI<Watt>(), 0.SI<SquareMeter>(), (previousVelocity + nextVelocity) / 2.0);
 		}
 
 		public Newton RollingResistance(Radian gradient)

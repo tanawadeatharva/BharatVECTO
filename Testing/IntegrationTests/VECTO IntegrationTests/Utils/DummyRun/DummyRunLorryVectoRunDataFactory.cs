@@ -124,7 +124,7 @@ public class DummyRunLorryVectoRunDataFactory : DeclarationModeHeavyLorryRunData
                 foreach (var loading in mission.Loadings)
                 {
                     var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
-                    if (vehicle.OvcHev)
+                    if (vehicle.OVC)
                     {
                         simulationRunData.OVCMode = OvcHevMode.ChargeDepleting;
                         yield return simulationRunData;
@@ -294,7 +294,7 @@ public class DummyRunLorryVectoRunDataFactory : DeclarationModeHeavyLorryRunData
             SleeperCab = vehicleData.SleeperCab,
             VehicleClass = _segment.VehicleClass,
             VehicleCategory = VehicleCategory.RigidTruck,
-            OffVehicleCharging = vehicleData.OvcHev,
+            OffVehicleCharging = vehicleData.OVC,
             VocationalVehicle = vehicleData.VocationalVehicle,
             AxleData = vehicleData.ExemptedVehicle ? null : vehicleData.Components.AxleWheels.AxlesDeclaration.Select((x, idx) => new Axle()
             {

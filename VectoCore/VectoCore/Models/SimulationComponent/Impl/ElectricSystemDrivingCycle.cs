@@ -128,6 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange => null;
+
 		public void FinishSimulation()
 		{
 			Data.Finish();

@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 1);
 
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1); 
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 1); 
 			
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;//ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;

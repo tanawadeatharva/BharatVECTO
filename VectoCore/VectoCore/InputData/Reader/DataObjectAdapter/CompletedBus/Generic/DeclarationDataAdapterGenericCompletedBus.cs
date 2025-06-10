@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 {
     public abstract class DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration
 	{
-		public abstract class CompletedBusDeclarationBase : IGenericCompletedBusDeclarationDataAdapter
+		public abstract class CompletedBusDeclarationBase : BaseSimulationDataAdapter, IGenericCompletedBusDeclarationDataAdapter
 		{
 			[Inject]
 			public IShiftStrategyFactory ShiftStrategyFactory { get; private set; }
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 					loading.Value.Item2, allowVocational);
 			}
 
-			public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			public AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
 				return AirdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
 			}
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				return RetarderDataAdapter.CreateGenericRetarderData(retarderData, vectoRun);
 			}
 
-			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
 				Volt averageVoltage, GearList gears = null)
 			{
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);

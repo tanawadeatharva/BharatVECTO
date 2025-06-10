@@ -116,4 +116,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			auxNode, vehicle)
 		{ }
 	}
+
+    public class XMLDeclarationAuxiliaryLorryDataProviderV27 : XMLAuxiliaryDeclarationDataProviderV20
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+        public const string XSD_CONVENTIONAL_TYPE = "AUX_Component_Conventional_Lorry_Type";
+        public const string XSD_PHEV_TYPE = "AUX_Component_HEV-P_Lorry_Type";
+        public const string XSD_SHEV_TYPE = "AUX_Component_SHEV_Lorry_Type";
+        public const string XSD_PEV_TYPE = "AUX_Component_PEV_Lorry_Type";
+		public const string XSD_FCHV_TYPE = "AUX_Component_FCHV_LorryType";
+
+        public static readonly string QUALIFIED_XSD_TYPE_CONVENTIONAL = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_CONVENTIONAL_TYPE);
+        public static readonly string QUALIFIED_XSD_TYPE_PHEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PHEV_TYPE);
+        public static readonly string QUALIFIED_XSD_TYPE_SHEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_SHEV_TYPE);
+        public static readonly string QUALIFIED_XSD_TYPE_PEV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_PEV_TYPE);
+        public static readonly string QUALIFIED_XSD_TYPE_FCHV = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_FCHV_TYPE);
+
+        public XMLDeclarationAuxiliaryLorryDataProviderV27(XmlNode auxNode, IXMLDeclarationVehicleData vehicle) : 
+			base(auxNode, vehicle)
+        { }
+    }
 }

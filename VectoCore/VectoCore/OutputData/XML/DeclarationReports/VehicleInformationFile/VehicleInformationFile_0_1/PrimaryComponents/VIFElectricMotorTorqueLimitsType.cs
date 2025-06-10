@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var electricMachine = new List<XElement>();
 			foreach (var entry in elTorqueLimits) {
 				electricMachine.Add(new XElement(_v24 + XMLNames.Component_ElectricMachine,
-					new XElement(_v24 + XMLNames.ElectricMachine_Position, entry.Key.ToXmlFormat()),
+					new XElement(_v24 + XMLNames.ElectricMachine_Position, entry.Key.Position.ToXmlFormat()),
 					GetVoltageLevels(entry.Value)));
 			}
 

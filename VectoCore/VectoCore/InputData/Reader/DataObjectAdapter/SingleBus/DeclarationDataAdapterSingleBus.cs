@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog.Fluent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 {
     public abstract class DeclarationDataAdapterSingleBus
 	{
-		public abstract class SingleBusBase : ISingleBusDeclarationDataAdapter
+		public abstract class SingleBusBase : BaseSimulationDataAdapter, ISingleBusDeclarationDataAdapter
 		{
 			[Inject]
 			public IShiftStrategyFactory ShiftStrategyFactory { get; private set; }
@@ -89,9 +90,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			#region Implementation of ISingleBusDeclarationDataAdapter
 
-			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission)
+			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission);
+				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission, segment, ovcMode);
 			}
 
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle,
@@ -178,7 +179,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 				return ElectricMachinesDataAdapter.CreateIEPCElectricMachines(iepc, averageVoltage);
             }
 
-			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
 				Volt averageVoltage, GearList gears = null)
 			{
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);

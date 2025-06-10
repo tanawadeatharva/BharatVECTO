@@ -27,7 +27,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 					: null,
 				ElectricEnergyConsumptionWriter?.GetElement(entry),
 				CO2Writer?.GetElements(entry),
-				ElectricRangeWriter?.GetElements(entry)
+				ElectricRangeWriter?.GetElements(entry),
+				HydrogenRangeWriter?.GetElements(entry)
 			);
 		}
 
@@ -43,6 +44,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected abstract IElectricRangeWriter ElectricRangeWriter { get; }
 
+        protected virtual IHydrogenRangeWriter HydrogenRangeWriter=> _factory.GetHydrogenRangeWriter(_factory, TNS);
+		
     }
 
     public class LorryConvTotalWriter : NonOVCTotalWriterBase
@@ -62,8 +65,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override IElectricRangeWriter ElectricRangeWriter => null;
 
-        #endregion
-    }
+		#endregion
+	}
 
     public class LorryHEVNonOVCTotalWriter : NonOVCTotalWriterBase
     {
@@ -82,7 +85,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         protected override IElectricRangeWriter ElectricRangeWriter => null;
 
-        #endregion
+		#endregion
     }
 
     public class LorryPEVTotalWriter : NonOVCTotalWriterBase
@@ -127,6 +130,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 GetElectricConsumption(entry),
                 GetCO2(entry),
                 _factory.GetElectricRangeWriter(_factory, TNS).GetElements(total),
+				HydrogenRangeWriter?.GetElements(total),
                 new XElement(TNS + "UtilityFactor", entry.Weighted.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? double.NaN.ToString() : total.UtilityFactor.ToXMLFormat(3))
             );
         }
@@ -138,6 +142,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected abstract XElement GetElectricConsumption(IOVCResultEntry entry);
 
         protected abstract XElement[] GetCO2(IOVCResultEntry entry);
+
+		protected virtual IHydrogenRangeWriter HydrogenRangeWriter => _factory.GetHydrogenRangeWriter(_factory, TNS);
 
     }
 
@@ -166,6 +172,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     }
 
 
+	public class NoTotalWriter : AbstractResultGroupWriter
+    {
+		public NoTotalWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+		public override XElement GetElement(IResultEntry entry)
+		{
+			return null;
+		}
+
+	}
+
     // ---- bus
 
     public class BusConvTotalWriter : NonOVCTotalWriterBase
@@ -180,7 +197,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
         protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
         protected override IElectricRangeWriter ElectricRangeWriter => null;
-
+		
         #endregion
     }
     
@@ -195,7 +212,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => null;
         protected override ICO2Writer CO2Writer => _factory.GetCO2ResultBus(_factory, TNS);
         protected override IElectricRangeWriter ElectricRangeWriter => null;
-
+		
         #endregion
     }
 
@@ -211,7 +228,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
         protected override ICO2Writer CO2Writer => _factory.GetCO2ResultPEVBus(_factory, TNS);
         protected override IElectricRangeWriter ElectricRangeWriter => _factory.GetElectricRangeWriter(_factory, TNS);
-
+		
         #endregion
     }
 

@@ -9,7 +9,7 @@
 	<!--
 Changelog:
 	03.02.2022: First version uploaded to CITnet
-	14.03.2022: Correcting ElectricMotorTorqueLimits 
+	14.03.2022: Correcting ElectricMotorTorqueLimits
                    before: ElectricMotorTorqueLimits element was allowed two times for HEV-S, and each element allowed to specify multiple electric machines
                    now: ElectricMotorTorqueLimits is allowed only once, torque limits can be defined for up to 2 EM in case of HEV-S
     12.04.2022: Remove TorqueLimits element on vehicle level for PEV, HEV-S, HEV-IEPC-S
@@ -18,13 +18,14 @@ Changelog:
 	17.08.2022: Changed datatype of ChassisConfiguration, AxleConfiguration and LegislativeCategory for Vehicle_Exempted_MediumLorryDeclarationType
 	16.11.2022: 	- Removed trailing white spaces from PSTechnologies and SPTechnologies
 				- changed Small + elec. driven + ESS to Small + AMS + elec. driven
-    13.06.2023: Changed rated current, rated voltage, rated capacity (bus aux smart electrics) from datatype xs:integer to xs:int 	
+    13.06.2023: Changed rated current, rated voltage, rated capacity (bus aux smart electrics) from datatype xs:integer to xs:int
 	19.10.2023: remove erroneous lorry PS technology entry
 	09.02.2024: added missing technology for exempted vehicles 'Multiple power­trains Article 9 exempted'
-	29.03.2024: the entry "Multiple powertrains Article 9 exempted" added on Feb. 9. contains a non-visible character. 
+	29.03.2024: the entry "Multiple powertrains Article 9 exempted" added on Feb. 9. contains a non-visible character.
                 added another entry for the same technology without the non-visible character.
 	10.04.2024: change "Fuel cell vehicle" to "FCV Article 9 exempted" according to regulation
 	19.04.2024: restore wrong exempted techs along with correct ones.
+	22.10.2024: removed wrong exempted techs.
 	-->
 	<xs:complexType name="Abstract_ADAS_ConventionalType" abstract="true">
 		<xs:complexContent>
@@ -1800,14 +1801,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -1865,14 +1862,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
@@ -1905,14 +1898,10 @@ Changelog:
 								<xs:enumeration value="PEV Article 9 exempted"/>
 								<xs:enumeration value="HV Article 9 exempted"/>
 								<xs:enumeration value="FCV Article 9 exempted"/>
-								<xs:enumeration value="Fuel cell vehicle"/>
 								<xs:enumeration value="H2 ICE Article 9 exempted"/>
-								<xs:enumeration value="H2 ICE"/>
 								<xs:enumeration value="Dual fuel vehicle Article 9 exempted"/>
 								<xs:enumeration value="In-motion charging Article 9 exempted"/>
-								<xs:enumeration value="Multiple power­trains Article 9 exempted"/>
 								<xs:enumeration value="Multiple powertrains Article 9 exempted"/>
-								<xs:enumeration value="Other technology Article 9 exempted"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>

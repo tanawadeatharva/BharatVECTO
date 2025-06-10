@@ -186,7 +186,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile
             </vif0.1:Data>
           </vif0.1:AxleWheels>
           <vif0.1:Auxiliaries>
-            <vif0.1:Data xmlns:aux="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xsi:type="AuxiliaryDataPIFType">
+            <vif0.1:Data xmlns:aux="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6" xsi:type="AuxiliaryDataPIFType">
               <vif0.1:Fan>
                 <vif0.1:Technology>Hydraulic driven - Constant displacement pump</vif0.1:Technology>
               </vif0.1:Fan>

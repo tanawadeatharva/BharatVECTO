@@ -108,7 +108,7 @@ Public Class GearboxForm
                     .Where(Function(type)  type = GearboxType.IHPC ) _
                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
-            Case VectoSimulationJobType.IEPC_E,VectoSimulationJobType.IEPC_S
+            Case VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV_IEPC
                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                     .Cast(Of GearboxType)() _
                     .Where(Function(type)  type = GearboxType.IEPC) _
@@ -126,7 +126,7 @@ Public Class GearboxForm
                     .Where(Function(type) type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC ) _
                     .Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
-            Case VectoSimulationJobType.BatteryElectricVehicle
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV
                 CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
                     .Cast(Of GearboxType)() _
                     .Where(Function(type)  type = GearboxType.AMT OrElse type.AutomaticTransmission() and not type = GearboxType.IHPC  ) _
@@ -1000,7 +1000,7 @@ Public Class GearboxForm
     Private sub DrawEmFld(em As ElectricMachineEntry(Of IElectricMotorEngineeringInputData), chart As chart)
         
         Dim s As Series
-        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve.First().LoadCurve, em.Count)
 
 
         s = New Series
@@ -1028,8 +1028,8 @@ Public Class GearboxForm
         if (em Is nothing) then 
             return
         End If
-        
-         Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve, em.Count)
+
+        Dim emFld = ElectricFullLoadCurveReader.Create(em.ElectricMachine.VoltageLevels.First().FullLoadCurve.First().LoadCurve, em.Count)
         If VectoJobForm.Visible Then
             'If FLD0.Init(VectoJobForm.n_idle) Then
 

@@ -59,7 +59,9 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
 					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
                 case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.BatteryElectricVehicle:
-					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+                case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
+                    return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
 				default:
@@ -214,9 +216,9 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
             var xmlVehicle = vehicle as IXMLDeclarationVehicleData;
             return new RetarderData()
             {
-                Type = xmlVehicle.RetarderType,
+                Type = xmlVehicle.GetRetarderType(),
 
-                Ratio = xmlVehicle.RetarderType.IsDedicatedComponent() ? xmlVehicle.RetarderRatio : 0,
+                Ratio = xmlVehicle.GetRetarderType().IsDedicatedComponent() ? xmlVehicle.GetRetarderRatio() : 0,
             };
         }
 
@@ -352,7 +354,7 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
 				SleeperCab = vehicleData.SleeperCab,
 				//Loading = loading.Value.Item1,
 				VehicleClass = segment.VehicleClass,
-				OffVehicleCharging = vehicleData.OvcHev,
+				OffVehicleCharging = vehicleData.OVC,
 				VehicleCategory = vehicleData.VehicleCategory,
 				ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
 				//ADAS = CreateMockupAdasData(vehicleData),
@@ -378,7 +380,7 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
                 SleeperCab = vehicleData.SleeperCab,
                 Loading = loading.Value.Item1,
                 VehicleClass = segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VehicleCategory = vehicleData.VehicleCategory,
                 ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
                 ADAS = CreateMockupAdasData(vehicleData),

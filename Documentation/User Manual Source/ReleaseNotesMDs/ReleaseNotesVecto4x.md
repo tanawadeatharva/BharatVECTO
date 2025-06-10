@@ -6,7 +6,71 @@
 
 
 
-# VECTO v4.2.6 Official Release (07-01-2025)
+# VECTO v4.3.3 Official Release (04-03-2025)
+
+
+## Bug Fixes
+
+- Check if XML element is signed (#950) (vecto/vecto!314)
+
+- NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+
+- fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+
+- fix: secure XML loading against external entity injection (vecto/vecto!319)
+
+- fix: correct interim supercap reader type (vecto/vecto!320)
+
+- fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+
+## Documentation
+
+- Update XSD parameter IDs documentation (vecto/vecto!327)
+
+
+
+
+# VECTO v4.3.3 Official Release (03-03-2025)
+
+
+## Bug Fixes
+
+- Check if XML element is signed (#950) (vecto/vecto!314)
+
+- NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+
+- fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+
+- fix: secure XML loading against external entity injection (vecto/vecto!319)
+
+- fix: correct interim supercap reader type (vecto/vecto!320)
+
+- fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+
+
+
+
+# VECTO v4.3.2-RC (06-02-2025)
+
+## Features
+
+- New battery and supercap readers (vecto/vecto!309)
+
+## Bug Fixes
+
+- ATShiftStrategyOptimized - No UpshiftFomL if not locked (vecto/vecto!301)
+
+- Forbid downshift to locked gear in APT-S if it generates direct upshift condition (vecto/vecto!307)
+
+- Add condition to write BusAuxiliaries output data in vsum (vecto/vecto!306)
+
+- Allow old XMLs for battery and supercap in development only (vecto/vecto!311)
+
+- Correct binding for supercap input data class; use correct xml data type in xml component reader for supercap (vecto/vecto!310)
+
+
+
+# VECTO v4.2.7 Official Release (09-01-2025)
 
 ## Bug Fixes
 
@@ -14,15 +78,6 @@
 - CodeEU #858: Convert steering pump tech (vecto/vecto!303)
 - Converter Tool: ngTankSystem for dual fuel (vecto/vecto!304)
 - CodeEU #836: Restrictions on IEPC gear and MaxTorqueCurve XSD attributes (vecto/vecto!302)
-
-
-
-# VECTO v4.2.6 Official Release (07-01-2025)
-
-
-## Bug Fixes
-
-- CodeEU #858: Convert steering pump tech (vecto/vecto!303)
 
 
 

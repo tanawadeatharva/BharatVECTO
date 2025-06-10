@@ -737,6 +737,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<WattSecondPerCubicMeterMeter>.Create(wattSecond.Val / m3.Value());
 		}
+
+		public static WattSecond operator *(WattSecondPerMeter wpm, Meter m)
+		{
+			return SIBase<WattSecond>.Create(wpm.Val * m.Value());
+		}
 	}
 
 	public class WattSecondPerCubicMeterMeter : SIBase<WattSecondPerCubicMeterMeter>
@@ -801,6 +806,17 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Watt>.Create(wpcm.Val * cm.Value());
 		}
+	}
+
+	public class WattPerSecond : SIBase<WattPerSecond>
+	{
+		private static readonly int[] Units = { 1, 2, -4, 0, 0, 0, 0 };
+
+		private WattPerSecond(double val) : base(val, Units)
+		{
+
+		}
+		public override string UnitString => "W/s";
 	}
 
 	/// <summary>
@@ -1354,7 +1370,21 @@ namespace TUGraz.VectoCommon.Utils
 		public double AsMilliOhm => Val * 1000;
 	}
 
-	public class Farad : SIBase<Farad>
+	public class SpecificResistance : SIBase<SpecificResistance>
+	{
+		private static readonly int[] Units = { 1, 2, -3 + 1, -2 + 1, 0, 0, 0 };
+
+        private SpecificResistance(double val) : base(val, Units) { }
+
+		public override string UnitString => "ΩAs";
+
+		public static Ohm operator /(SpecificResistance spr, AmpereSecond amps)
+		{
+			return SIBase<Ohm>.Create(spr.Val / amps.Value());
+		}
+	}
+
+    public class Farad : SIBase<Farad>
 	{
 		private static readonly int[] Units = { -1, -2, 4, 2, 0, 0, 0 };
 

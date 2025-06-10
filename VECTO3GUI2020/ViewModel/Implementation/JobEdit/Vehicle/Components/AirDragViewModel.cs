@@ -27,13 +27,6 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 			set => SetProperty(ref _commonComponentViewModel, value);
 		}
 
-
-
-
-
-
-
-
         public AirDragViewModel(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory)
 		{
 			LabelVisible = true;
@@ -58,7 +51,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		protected SquareMeter _airDragArea;
 		protected SquareMeter _transferredAirDragArea;
 		protected SquareMeter _airDragArea_0;
-		private bool _isReadOnly;
+		protected SquareMeter _deltaCdxA_CFD;
+		protected SquareMeter _deltaCdxA_declared;
+		protected SquareMeter _deltaTransferredCdxA;
+		protected string _licenseNumberCFDMethod;
+        private bool _isReadOnly;
 		private bool _labelVisible;
 
 		public DataSource DataSource
@@ -128,6 +125,30 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		{
 			get => _airDragArea_0;
 			set => SetProperty(ref _airDragArea_0, value);
+		}
+
+		public virtual SquareMeter DeltaCdxA_CFD
+		{
+			get => _deltaCdxA_CFD;
+			set => SetProperty(ref _deltaCdxA_CFD, value);
+		}
+
+		public virtual SquareMeter DeltaCdxA_declared
+		{
+			get => _deltaCdxA_declared;
+			set => SetProperty(ref _deltaCdxA_declared, value);
+		}
+
+		public virtual SquareMeter DeltaTransferredCdxA
+		{
+			get => _deltaTransferredCdxA;
+			set => SetProperty(ref _deltaTransferredCdxA, value);
+		}
+
+		public virtual string LicenseNumberCFDMethod
+		{
+			get => _licenseNumberCFDMethod;
+			set => SetProperty(ref _licenseNumberCFDMethod, value);
 		}
 
         #endregion

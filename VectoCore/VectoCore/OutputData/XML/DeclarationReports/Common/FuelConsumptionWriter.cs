@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
@@ -24,10 +25,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
         {
 			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
-				return GetElementIgnore(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
-					entry.CargoVolume, entry.PassengerCount);
+				return GetElementIgnore(
+					fc.TotalFuelConsumptionCorrected,
+					fc.Fuel,
+					entry.Distance,
+					entry.Payload,
+					entry.CargoVolume,
+					entry.PassengerCount);
 			}
-			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+
+			bool isZeroConsumptionEntry = fc.Fuel.FuelType == FuelType.H2FC && entry.OVCMode == OvcHevMode.ChargeDepleting;
+			return GetElement(
+				isZeroConsumptionEntry ? 0.SI<Kilogram>() : fc.TotalFuelConsumptionCorrected,
+				fc.Fuel,
+				entry.Distance,
+				entry.Payload,
+				entry.CargoVolume,
+				entry.PassengerCount);
         }
 
 		public XElement[] GetElements(IWeightedResult entry)

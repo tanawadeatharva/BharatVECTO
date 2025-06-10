@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		CubicMeter CargoVolume { get; }
 
-		Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity);
+		AirDragLossResult AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity);
 
 		Newton RollingResistance(Radian gradient);
 

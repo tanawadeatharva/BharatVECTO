@@ -110,7 +110,7 @@
 		<ItemGroup Condition="'$(Configuration)'=='Deploy'">
 			<!-- All files for the VECTO starters -->
 			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\Deploy\net48\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistep.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistepStart\bin\Release\net48\VECTOMultistep.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
@@ -118,7 +118,7 @@
 		<ItemGroup Condition="'$(Configuration)'=='MockupDeploy'">
 			<!-- All files for the VECTO starters -->
 			<VectoStart Include="$(SolutionDir)Tools\VECTOStart\bin\MockupDeploy\net48\VECTO.exe" />
-			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistageStart\bin\Release\net48\VECTOMultistep.exe" />
+			<VectoStart Include="$(SolutionDir)Tools\VECTOMultistepStart\bin\Release\net48\VECTOMultistep.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingCmdStart\bin\Release\net48\hashingcmd.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\HashingToolStart\bin\Release\net48\HashingTool.exe" />
 			<VectoStart Include="$(SolutionDir)Tools\VECTOConsoleStart\bin\Release\net48\vectocmd.exe" />
@@ -181,6 +181,7 @@
 			<!-- <UserManual Include="$(SolutionDir)Documentation\XML\VectoParameters.html"/> -->
 			<UserManual Include="$(SolutionDir)Documentation\User Manual Source\JIRA Quick Start Guide.pdf"/>
 			<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
+			<UserManual Include="$(SolutionDir)Documentation\OVC_IMC.xlsx"/>
 			<UserManual Include="$(SolutionDir)Documentation\XML\Documentation_OfficialResults_2ndAmendment_20230425.xlsx"/>
 			<ParameterDocu Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\*.*"/>
 			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>

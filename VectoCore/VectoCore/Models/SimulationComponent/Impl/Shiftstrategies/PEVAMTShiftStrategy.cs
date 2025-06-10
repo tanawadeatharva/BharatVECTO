@@ -25,9 +25,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
     public class PEVAMTShiftStrategy : LoggingObject, IShiftStrategy
 	{
+
 		public const string Name = "AMT - EffShift (BEV)";
 		
 		protected IVehicleContainer DataBus;
+
 		protected readonly GearboxData GearboxModelData;
 
 		protected IGearbox _gearbox;
@@ -144,7 +146,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				DataBus.VehicleInfo.VehicleSpeed.IsGreaterOrEqual(DataBus.DrivingCycleInfo.TargetSpeed)) {
 				DriveOffStandstill = false;
 			}
-			if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(VoltageLevels.VoltageLevels.First().FullLoadCurve.NP80low)) {
+
+			var voltageLevel = VoltageLevels.VoltageLevels.First();
+
+            if (DriveOffStandstill && response.ElectricMotor.AngularVelocity.IsGreater(voltageLevel.FullLoadCurve?.NP80low ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves[gear.Gear].NP80low)) {
 				DriveOffStandstill = false;
 			}
 
@@ -434,10 +439,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return tmpGear;
 			}
 
-
-
-			var ratedSpeed = electricMotor.RatedSpeedDt;
-			var maxSpeedNorm = maxEmSpeedDt / ratedSpeed;
+			var curve = VoltageLevels.VoltageLevels.First().FullLoadCurve ?? (VoltageLevels.VoltageLevels.First() as IEPCVoltageLevelData).FullLoadCurves[currentGear.Gear];
+            var ratedSpeed = curve.RatedSpeed;
+			var maxSpeedNorm = VoltageLevels.MaxSpeed / ratedSpeed;
 			var targetMotor = (_shiftStrategyParameters.PEV_TargetSpeedBrakeNorm * (maxSpeedNorm - 1) + 1) * ratedSpeed;
 
 			if (candidates.Any(x => x.Value > targetMotor && x.Value < maxEmSpeedDt)) {

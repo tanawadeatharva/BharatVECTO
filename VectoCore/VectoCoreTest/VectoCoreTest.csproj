@@ -29,6 +29,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="ScottPlot" Version="4.1.68" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,69 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\AMT.vgbx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Axle_4x2_Tractor.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Default.vrlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vecto">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc.vveh">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vecto">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\FCHV_singleFc_300kW_fc.vveh">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Gear.vtlm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatr">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh.vbatv">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericBattery_80kWh_750V.vbat">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericDrag_400kW_1550Nm.vemd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\GenericFuelCellComponent_300kW.vfcc">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vem">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemo">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Generic_EM_400kW_1550Nm.vemp">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\MaxCurrent.vimax">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\GenericVehicleE2 - FCHV\Truck.vacc">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="TestData\H2_FCV\PostProcessing\LongHaul_short.vdri">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="TestData\Hybrids\Battery\GenericBattery_JB_Connector_included.vbat">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -69,6 +133,21 @@
     <None Update="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\HeavyLorry\PEV_heavyLorry_E3_realistic_TorqueLimits.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Integration\IMC\HEV_completedBus_2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Integration\IMC\PEV_completedBus_2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Integration\IMC\PEV_primaryBus_AMT_E2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Integration\IMC\PrimaryCoach_P2_HEV_AMT_OVC.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Integration\IMC\PrimaryCoach_S2_Base_AMT.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\XML\XMLReaderDeclaration\SchemaVersion2.4\Distributed\HeavyLorry\HEV-S_heavyLorry_S3_ovc.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -87,10 +166,12 @@
       <Folder Include="InputData\DeclarationDataAdapterTest\" />
     <Folder Include="Integration\Declaration\PrimaryBus\" />
     <Folder Include="Models\Declaration\BusAux\" />
+    <Folder Include="TestData\IMC\Declaration\" />
     <Folder Include="TestData\Integration\DeclarationMode\2nd_AmendmDeclMode\CompletedBus\VIF\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="TestData\Integration\IMC\" />
     <Folder Include="TestData\XML\XMLVIFBusReport\" />
   </ItemGroup>
 	<!--<Choose>

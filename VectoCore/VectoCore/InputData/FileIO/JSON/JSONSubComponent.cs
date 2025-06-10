@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -9,8 +10,10 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -57,6 +60,104 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// ###################################################################
 	// ###################################################################
+
+	internal class JSONAxlePowertrainInputData : IAxlePowertrainEngineeringInputData
+	{
+		private JToken _axlePt;
+		private string _basePath;
+		private IGearboxEngineeringInputData _gearbox;
+		private IGearshiftEngineeringInputData _gearShift;
+		private ElectricMachineEntry<IElectricMotorEngineeringInputData> _electricMotor;
+
+		public JSONAxlePowertrainInputData(JToken axlePt, string basePath)
+		{
+			_axlePt = axlePt;
+			_basePath = basePath;
+			
+			if (AxleNumber == int.MinValue)
+			{
+				throw new VectoException(
+					$"{JsonKeys.Vehicle_AxlePowertrain_AxleNumber} not defined in {JsonKeys.Vehicle_AxlePowertrains}");
+			}
+
+			if (Type == VectoSimulationJobType.MultiplePowertrains)
+			{
+				throw new VectoException(
+					$"{JsonKeys.Vehicle_AxlePowertrain_Type} bad or missing in {JsonKeys.Vehicle_AxlePowertrains}");
+			}
+		}
+
+		public virtual int AxleNumber => (_axlePt[JsonKeys.Vehicle_AxlePowertrain_AxleNumber] == null)
+			? int.MinValue
+			: _axlePt.GetEx<int>(JsonKeys.Vehicle_AxlePowertrain_AxleNumber);
+
+		public virtual VectoSimulationJobType Type => (_axlePt[JsonKeys.Vehicle_AxlePowertrain_Type] == null)
+			? VectoSimulationJobType.MultiplePowertrains
+			: JSONFile.ParsePowertrainType(_axlePt, JsonKeys.Vehicle_AxlePowertrain_Type);
+
+		public virtual IGearboxEngineeringInputData GearboxInputData => _gearbox ?? (_gearbox = ReadGearbox());
+
+		public virtual IAxleGearInputData AxleGearInputData => GearboxInputData as IAxleGearInputData;
+
+		public virtual ITorqueConverterEngineeringInputData TorqueConverterInputData => 
+			GearboxInputData as ITorqueConverterEngineeringInputData;
+
+		public virtual IAngledriveInputData AngledriveInputData => 
+			new JTokenAngleDriveInputData(_axlePt[JsonKeys.Vehicle_Angledrive], _basePath);
+
+		public virtual IRetarderInputData RetarderInputData => 
+			new JTokenRetarderInputData(_axlePt[JsonKeys.Vehicle_Retarder], _basePath);
+
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData => 
+			new JTokenPTOTransmissionInputData(_axlePt[JsonKeys.Vehicle_PTO], _basePath) ;
+
+		public virtual IGearshiftEngineeringInputData GearshiftInputData => _gearShift ?? (_gearShift = ReadGearShift());
+
+		public virtual ElectricMachineEntry<IElectricMotorEngineeringInputData> ElectricMotor => _electricMotor ?? 
+			(_electricMotor = new JTokenElectricMotorInputData(_axlePt[JsonKeys.Vehicle_ElectricMotor], _basePath)
+				.ReadElectricMotor());
+
+		private IGearshiftEngineeringInputData ReadGearShift()
+		{
+			var tcuFile = "";
+
+			try
+			{
+				tcuFile = (_axlePt[JsonKeys.Vehicle_TCU] != null)
+					? _axlePt.GetEx(JsonKeys.Vehicle_TCU).Value<string>()
+					: null;
+
+				return (tcuFile != null)
+					? JSONInputDataFactory.ReadShiftParameters(Path.Combine(_basePath, tcuFile), false)
+					: null;
+			}
+			catch (Exception e)
+			{
+				throw new VectoException($"JobFile: Failed to read TCU file '{tcuFile}': {e.Message}", e);
+			}
+		}
+
+		private IGearboxEngineeringInputData ReadGearbox()
+		{
+			var gearboxFile = "";
+
+			try
+			{
+				gearboxFile = (_axlePt[JsonKeys.Vehicle_GearboxFile] != null) 
+					? _axlePt.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>()
+					: null;
+
+				return (gearboxFile != null)
+					? JSONInputDataFactory.ReadGearbox(Path.Combine(_basePath, gearboxFile))
+					: null;
+			}
+			catch (Exception e)
+			{
+				throw new VectoException($"JobFile: Failed to read Gearbox file '{gearboxFile}': {e.Message}", e);
+			}
+		}
+
+	}
 
 	internal class JSONRetarderInputData : JSONSubComponent, IRetarderInputData
 	{
@@ -117,6 +218,191 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	// ###################################################################
 	// ###################################################################
+
+	internal class JTokenBase : LoggingObject, IComponentInputData
+	{
+		protected enum TableType {
+			LossMap,
+			Cycle,
+			PTO_Cycle_Driving,
+			EPTO_Cycle_Standstill,
+			PTO_Cycle_Standstill,
+			EM_ADC_LossMap
+		};
+
+		protected JToken _token;
+		protected string _basePath;
+
+		public JTokenBase(JToken token, string basePath)
+		{
+			_token = token;
+			_basePath = basePath;
+		}
+
+		public virtual string CertificationNumber => null;
+
+		public virtual CertificationMethod CertificationMethod => CertificationMethod.NotCertified;
+
+		public virtual bool SavedInDeclarationMode => false;
+
+		public virtual string Manufacturer => null;
+
+		public virtual string Model => null;
+
+		public virtual DataSource DataSource => null;
+
+		public virtual String AppVersion => null;
+
+		public virtual DateTime Date => DateTime.MinValue;
+
+		public virtual DigestData DigestValue => null;
+
+		protected internal TableData ReadTableData(string filename, string tableType, bool required = true)
+		{
+			if (!JSONFile.EmptyOrInvalidFileName(filename) && File.Exists(Path.Combine(_basePath, filename)))
+			{
+				try
+				{
+					return VectoCSVFile.Read(Path.Combine(_basePath, filename), true);
+				}
+				catch (Exception e)
+				{
+					Log.Warn("Failed to read file {0} {1}", Path.Combine(_basePath, filename), tableType);
+					throw new VectoException("Failed to read file for {0}: {1}", e, tableType, filename);
+				}
+			}
+
+			if (required)
+			{
+				throw new VectoException("Invalid filename for {0}: {1}", tableType, filename);
+			}
+
+			return null;
+		}
+
+		protected TableData ReadTable(string fieldName, TableType tableType)
+		{
+			var tableFile = _token?[fieldName]?.Value<string>();
+
+			return string.IsNullOrWhiteSpace(tableFile)
+				? null
+				: ReadTableData(tableFile, tableType.ToString().Replace("_", " "));
+		}
+	}
+
+	internal class JTokenElectricMotorInputData : JTokenBase
+	{
+		public JTokenElectricMotorInputData(JToken emToken, string basePath) : base(emToken, basePath)
+		{}
+
+		public ElectricMachineEntry<IElectricMotorEngineeringInputData> ReadElectricMotor()
+		{
+			return (_token == null)
+				? null
+				: new ElectricMachineEntry<IElectricMotorEngineeringInputData>
+					{
+						Position = PowertrainPositionHelper.Parse(_token.GetEx<string>(JsonKeys.Vehicle_EM_Position)),
+						RatioADC = _token.GetEx<double>(JsonKeys.Vehicle_EM_Ratio),
+						MechanicalTransmissionLossMap = ReadTable(JsonKeys.Vehicle_EM_MechTransLossMap, TableType.EM_ADC_LossMap),
+						Count = 1,
+
+						RatioPerGear = (_token[JsonKeys.Vehicle_EM_RatioPerGear] != null)
+									? _token[JsonKeys.Vehicle_EM_RatioPerGear].Select(x => x.Value<double>()).ToArray()
+									: new double[] { },
+
+						MechanicalTransmissionEfficiency = (_token[JsonKeys.Vehicle_EM_MechEff] != null)
+									? _token.GetEx<double>(JsonKeys.Vehicle_EM_MechEff)
+									: double.NaN,
+
+						ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(
+							Path.Combine(_basePath, _token.GetEx<string>(JsonKeys.Vehicle_EM_MotorFile)), false)
+					};
+		}
+	}
+
+	internal class JTokenRetarderInputData : JTokenBase, IRetarderInputData
+	{
+		private TableData _lossMap;
+
+		public JTokenRetarderInputData(JToken retarderToken, string basePath) : base(retarderToken, basePath)
+		{}
+
+		public virtual RetarderType Type => (_token == null) || (_token[JsonKeys.Vehicle_Retarder_Type] == null)
+			? RetarderType.None
+			: RetarderTypeHelper.Parse(_token.GetEx<string>(JsonKeys.Vehicle_Retarder_Type));
+
+		public virtual double Ratio => (_token == null) || (_token[JsonKeys.Vehicle_Retarder_Ratio] == null)
+			? 1.0
+			: _token.GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio);
+
+		public virtual TableData LossMap => 
+			_lossMap ?? (_lossMap = ReadTable(JsonKeys.Vehicle_Retarder_LossMapFile, TableType.LossMap));
+
+	}
+
+	internal class JTokenAngleDriveInputData : JTokenBase, IAngledriveInputData 
+	{
+		private TableData _lossMap;
+
+		public JTokenAngleDriveInputData(JToken angleDriveToken, string basePath) : base(angleDriveToken, basePath) 
+		{}
+
+		public virtual AngledriveType Type => (_token == null) || (_token[JsonKeys.Vehicle_Angledrive_Type] == null)
+			? AngledriveType.None
+			: _token.GetEx<string>(JsonKeys.Vehicle_Angledrive_Type).ParseEnum<AngledriveType>();
+
+		public virtual double Ratio => (_token == null) || (_token[JsonKeys.Vehicle_Angledrive_Ratio] == null)
+			? double.NaN
+			: _token.GetEx<double>(JsonKeys.Vehicle_Angledrive_Ratio);
+
+		public virtual double Efficiency => (_token == null) || (_token[JsonKeys.Vehicle_Angledrive_Efficiency] == null)
+			? double.NaN
+			: _token.GetEx<double>(JsonKeys.Vehicle_Angledrive_Efficiency);
+
+		public virtual TableData LossMap => 
+			_lossMap ?? (_lossMap = ReadTable(JsonKeys.Vehicle_Angledrive_LossMapFile, TableType.LossMap));
+
+	}
+
+	internal class JTokenPTOTransmissionInputData : JTokenBase, IPTOTransmissionInputData
+	{
+		public const string PTO_TYPE_NONE = "None";
+
+		private TableData _lossMap;
+		private TableData _cycle;
+		private TableData _cycleDriving;
+		private TableData _cycleEPTOStop;
+		private TableData _cyclePTOStop;
+
+		public JTokenPTOTransmissionInputData(JToken ptoToken, string basePath) : base(ptoToken, basePath)
+		{
+			if ((EPTOCycleDuringStop != null) && (PTOCycleDuringStop != null))
+			{
+				throw new VectoException(
+					$"Setting {JsonKeys.Vehicle_PTO_Cycle} AND {JsonKeys.Vehicle_EPTO_Cycle} is not allowed");
+			}
+		}
+
+        public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
+
+        public virtual string PTOTransmissionType => (_token == null) || (_token[JsonKeys.Vehicle_PTO_Type] == null)
+			? PTO_TYPE_NONE
+			: _token[JsonKeys.Vehicle_PTO_Type].Value<string>();
+
+		public virtual TableData PTOLossMap => 
+			_lossMap ?? (_lossMap = ReadTable(JsonKeys.Vehicle_PTO_LossMapFile, TableType.LossMap));
+
+		public virtual TableData PTOCycle => _cycle ?? (_cycle = ReadTable(JsonKeys.Vehicle_PTO_Cycle, TableType.Cycle));
+
+		public virtual TableData PTOCycleWhileDriving => 
+			_cycleDriving ?? (_cycleDriving = ReadTable(JsonKeys.Vehicle_PTO_CycleDriving, TableType.PTO_Cycle_Driving));
+
+		public TableData EPTOCycleDuringStop => 
+			_cycleEPTOStop ?? (_cycleEPTOStop = ReadTable(JsonKeys.Vehicle_EPTO_Cycle, TableType.EPTO_Cycle_Standstill));
+
+		public virtual TableData PTOCycleDuringStop => 
+			_cyclePTOStop ?? (_cyclePTOStop = ReadTable(JsonKeys.Vehicle_PTO_Cycle, TableType.PTO_Cycle_Standstill));
+	}
 
 	internal class JSONAngledriveInputData : JSONSubComponent, IAngledriveInputData
 	{
@@ -199,7 +485,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
+		public SquareMeter DeltaCdxA_CFD => (Body["DeltaCdxA_CFD"] == null) ? null : Body.GetEx<double>("DeltaCdxA_CFD").SI<SquareMeter>();
+
+		public SquareMeter DeltaCdxA_declared => (Body["DeltaCdxA_declared"] == null) ? null : Body.GetEx<double>("DeltaCdxA_declared").SI<SquareMeter>();
+
+		public SquareMeter DeltaTransferredCdxA => (Body["DeltaTransferredCdxA"] == null) ? null : Body.GetEx<double>("DeltaTransferredCdxA").SI<SquareMeter>();
+
+		public string LicenseNumberCFDMethod => (Body["LicenseNumberCFDMethod"] == null) ? null : Body.GetEx<string>("LicenseNumberCFDMethod");
+
+        public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
 
 		public virtual TableData CrosswindCorrectionMap
 		{
@@ -232,6 +526,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#region IPTOTransmissionInputData
+
+		public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
 
 		public virtual string PTOTransmissionType
 		{
@@ -666,5 +962,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+    public class JSONInMotionChargingInputData : JSONSubComponent, IVehicleInMotionChargingEngineering
+    {
+		public JSONInMotionChargingInputData(JSONVehicleDataV7 jsonFile) : base(jsonFile) { }
 
+		public bool Enabled => (Body["InMotionCharging"]?["IMC_Enabled"] != null) && Body["InMotionCharging"].GetEx<bool>("IMC_Enabled");
+
+		public double ShareIMCAvailabilityTotalMission => Body["InMotionCharging"]?["IMC_TotalDistance"] != null ? Body["InMotionCharging"].GetEx<double>("IMC_TotalDistance") / 100.0 : 0;
+
+		public SquareMeter DeltaCdxA => Body["InMotionCharging"]?["IMC_CdxA"] != null ? Body["InMotionCharging"].GetEx<double>("IMC_CdxA").SI<SquareMeter>() : 0.SI<SquareMeter>();
+
+		public bool IMCOnMotorwayOnly => Body["InMotionCharging"]?["IMC_MotorwaySection"] != null && Body["InMotionCharging"].GetEx<bool>("IMC_MotorwaySection");
+
+
+		#region Implementation of IVehicleInMotionChargingDeclaration
+
+		public IMCTechnology Technology => Body["InMotionCharging"]?["Technology"] != null
+			? Body["InMotionCharging"].GetEx<string>("Technology").ParseEnum<IMCTechnology>()
+			: IMCTechnology.None;
+
+		#endregion
+	}
+
+	public class JSONInMotionChargingNotApplicable : IVehicleInMotionChargingEngineering
+    {
+		#region Implementation of IVehicleInMotionChargingDeclaration
+
+		public IMCTechnology Technology => IMCTechnology.None;
+
+		#endregion
+
+		#region Implementation of IVehicleInMotionChargingEngineering
+
+		public bool Enabled => false;
+		public double ShareIMCAvailabilityTotalMission => 0.0;
+		public SquareMeter DeltaCdxA => 0.0.SI<SquareMeter>();
+		public bool IMCOnMotorwayOnly => false;
+
+		#endregion
+	}
+
+	public class JSONFuelCellSystemEngineeringInputData : IFuelCellSystemEngineeringInputData
+	{
+		public IList<FuelCellStringEntry<IFuelCellComponentEngineeringInputData>> FuelCellStrings { get; internal set; }
+
+        public Meter MaxWindowSize { get; internal set; }
+    }
 }

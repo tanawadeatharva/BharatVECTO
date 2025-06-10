@@ -162,6 +162,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			{ ElectricMotorMapReader.Fields.PowerElectrical, XMLNames.PowerMap_ElectricPower }
 		};
 
+		public static readonly Dictionary<string, string> EMTorqueCurve = new Dictionary<string, string> {
+			{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed },
+            { XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque },
+            { XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque }
+        };
+
 		public static readonly Dictionary<string, string> BoostingLimitsMapping = new Dictionary<string, string> {
 				{MaxBoostingTorqueReader.Fields.MotorSpeed, XMLNames.BoostingLimitation_RotationalSpeed},
 				{MaxBoostingTorqueReader.Fields.DrivingTorque, XMLNames.BoostingLimitation_BoostingTorque}

@@ -78,7 +78,7 @@ In [Engineering Mode](#engineering-mode) this defines the effective (dynamic) wh
 
 ### Axles/Wheels
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient). For non-driven axles the user can edit the wheel end friction.
 
 <div class="engineering">
 In Engineering mode, the **Wheels Inertia [kgm²]** has to be set per wheel for each axle.
@@ -169,6 +169,25 @@ The *Loss map EM ADC* can be used to consider the losses of a transmission step 
 
 In case of a P2.5 configuration (the electric motor is connected to an internal shaft of the transmission) the transmission ratio for every single gear of the transmission has to be specified in the list to the right of the electric motor parameters. The ratio is defined as $n_\textrm{GBX,in} / n_\textrm{EM}$ in case of EM without additional ADC or $n_\textrm{GBX,in} / n_\textrm{ADC,out}$ in case of EM with additional ADC.
 
+## Vehicle Editor -- Composite Fuel Cell System Tab
+
+![Composite Fuel Cell System Tab](pics/FuelCell/veh_form_fuel_cell.png)
+
+For fuel cell hybrid vehicles the input element on the *Composite Fuel Cell System* tab is enabled. 
+
+Here the FCS file for the FCS-String can be loaded or created (see [Fuel Cell System String Editor](#fuel-cell-system-editor))
+
+The number of *Fuel Cell System Strings (FCS-String)* limited to *two*, each of them supports up to *three* *Fuel Cell Systems (FCS)*.
+
+**Double-click** an entry to edit.
+
+**Click** selected item.
+: ![addfc](pics/plus-circle-icon.png) Add Fuel Cell System File (.vfcc)
+: ![remfc](pics/minus-circle-icon.png) Remove the selected Fuel Cell System File from the list
+
+In the Fuel Cell System Dialog, the Fuel Cell System File itself, and the number of fuel cell systems in the string can be modified. (see [Fuel Cell System Model](#fuel-cell-system) for details)
+
+![Fuel Cell System Dialog](pics/FuelCell/fuel_cell_component_dialog.png)
 
 
 ## Vehicle Editor -- REESS Tab
@@ -187,7 +206,29 @@ For the electric energy storage multiple battery packs can be configured either 
 
 In the REESS Dialog the battery file itself and how it is connected to the electric system (i.e, the stream identifier and number of packs used) can be modified.
 
-![](pics/BatteryPackDialog.png)
+![BatteryPackDialog](pics/BatteryPackDialog.png)
+
+## Vehicle Editor -- In-motion Charging Tab
+
+<div class="engineering">
+![](pics/Vehicle_IMC_Eng.png)
+
+In engineering mode the following model parameters are necessary:
+
+  - Share of in-motion charging infrastructure available on total mission distance
+  - Delta CdxA with active in-motion charging feature
+  - In-motion charging feature only available on motorway sections
+
+The influence of these parameters is described [here](#in-motion-charging)
+</div>	
+
+<div class="declaration">
+![](pics/Vehicle_IMC_Decl.png)
+
+In declaration mode only the available in-motion charging technology needs to be selected.
+</div>	
+
+
 
 ## Vehicle Editor -- IEPC Tab
 

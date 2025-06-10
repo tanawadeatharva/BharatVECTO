@@ -26,6 +26,8 @@ Refers to other files:
   "Body": {
     "SavedInDeclMode": false,
     "DeclarationVehicle": "SampleVehicle.xml",
+    "ManufacturerRecord": "SampleVehicle.MRF.xml",
+    "Mileage": 30000.0,
     "FanPowerCoefficients": [
       0.00000055,
       14.62,

@@ -291,6 +291,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			KilogramPerWattSecond kilogramPerWattSecond = 3.SI<KilogramPerWattSecond>();
             AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Gramm.Per.Watt.Second), kilogramPerWattSecond);
+
+			WattPerSecond wattPerSecond = 5.SI<WattPerSecond>();
+			AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Watt.Per.Second), wattPerSecond);
 		}
 
 		/// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
@@ -20,9 +21,11 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		private bool _twinTyres;
 
+        private NewtonMeter _wheelEndFriction;
+
         public bool TwinTyres { get => _twinTyres; set => SetProperty(ref _twinTyres, value); }
 
-
+        public NewtonMeter WheelEndFriction { get => _wheelEndFriction; set => SetProperty(ref _wheelEndFriction, value); }
 
         private AxleType _axleType;
         public AxleType AxleType { get => _axleType; set => SetProperty(ref _axleType, value); }

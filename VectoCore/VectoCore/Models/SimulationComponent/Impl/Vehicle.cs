@@ -78,20 +78,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
-			if (AirdragData?.CrossWindCorrectionCurve != null) {
-				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
-			}
+			//if (AirdragData?.CrossWindCorrectionCurve != null) {
+			//	AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
+			//}
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			SetMaxVehicleSpeed();
-			PreviousState = new VehicleState {
+			var airdrag = AirDragResistance(vehicleSpeed, vehicleSpeed);
+
+            PreviousState = new VehicleState {
 				Distance = DataBus.DrivingCycleInfo.CycleStartDistance,
 				Velocity = vehicleSpeed,
 				RollingResistance = RollingResistance(roadGradient),
 				SlopeResistance = SlopeResistance(roadGradient),
-				AirDragResistance = AirDragResistance(vehicleSpeed, vehicleSpeed),
+				AirDragResistance = airdrag.AirdragForce,
 			};
 			PreviousState.VehicleTractionForce = PreviousState.RollingResistance
 												+ PreviousState.AirDragResistance
@@ -153,11 +155,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			//CurrentState.Velocity = vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval;
-			var vehicleAccelerationForce = AccelerationForce(startAcceleration)
+			var airdrag = AirDragResistance(vehicleSpeed,
+				vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval);
+
+            var vehicleAccelerationForce = AccelerationForce(startAcceleration)
 											+ RollingResistance(roadGradient)
-											+
-											AirDragResistance(vehicleSpeed,
-												vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval)
+											+ airdrag.AirdragForce
 											+ SlopeResistance(roadGradient);
 
 			var retVal = NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
@@ -180,15 +183,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.DriverAcceleration = AccelerationForce(acceleration);
 			CurrentState.RollingResistance = (PreviousState.Velocity + CurrentState.Velocity).IsEqual(0, 1e-9) ? 0.SI<Newton>() : RollingResistance(gradient);
+			AirDragLossResult? airDragResistance;
 			try {
-				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
+				airDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
 			} catch (VectoException ex) {
 				Log.Warn("Exception during calculation of AirDragResistance: absTime: {0}, dist: {1}, v: {2}. {3}", absTime,
 					CurrentState.Distance, CurrentState.Velocity, ex);
-				CurrentState.AirDragResistance = AirDragResistance(VectoMath.Max(0, PreviousState.Velocity),
+				airDragResistance = AirDragResistance(VectoMath.Max(0, PreviousState.Velocity),
 					VectoMath.Max(0, CurrentState.Velocity));
 			}
-			CurrentState.SlopeResistance = SlopeResistance(gradient);
+
+			CurrentState.AirDragResistance = airDragResistance.Value.AirdragForce;
+			CurrentState.EffectiveAirdragArea = airDragResistance.Value.EffectiveAirDragArea;
+            CurrentState.SlopeResistance = SlopeResistance(gradient);
 
 			// DriverAcceleration = vehicleTractionForce - RollingResistance - AirDragResistance - SlopeResistance
 			CurrentState.VehicleTractionForce = CurrentState.DriverAcceleration
@@ -211,6 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_veh_inertia] = CurrentState.DriverAcceleration * averageVelocity;
 			container[ModalResultField.P_roll] = CurrentState.RollingResistance * averageVelocity;
 			container[ModalResultField.P_air] = CurrentState.AirDragResistance * averageVelocity;
+			container[ModalResultField.EffectiveAirDragArea] = CurrentState.EffectiveAirdragArea;
 			container[ModalResultField.P_slope] = CurrentState.SlopeResistance * averageVelocity;
 			container[ModalResultField.P_trac] = CurrentState.VehicleTractionForce * averageVelocity;
 
@@ -254,21 +262,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public MeterPerSecond MaxVehicleSpeed { get; set; }
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		public AirDragLossResult AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			var vAverage = (previousVelocity + nextVelocity) / 2;
 			if (vAverage.IsEqual(0)) {
-				return 0.SI<Newton>();
+				return new AirDragLossResult(0.SI<Watt>(), 0.SI<SquareMeter>(), vAverage);
 			}
-			var result = ComputeAirDragPowerLoss(previousVelocity, nextVelocity) / vAverage;
+			var result = ComputeAirDragPowerLoss(previousVelocity, nextVelocity);
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;
 		}
 
-		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
+		private AirDragLossResult ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, ModelData.AirDensity);
+			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(DataBus.DrivingCycleInfo.CycleData.LeftSample, v1, v2, ModelData.AirDensity);
 		}
 
 		public Meter Distance => PreviousState.Distance;
@@ -296,6 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Newton VehicleTractionForce = 0.SI<Newton>();
 			public MeterPerSecond Velocity = 0.SI<MeterPerSecond>();
 			public MeterPerSquareSecond Acceleration = 0.SI<MeterPerSquareSecond>();
+			public SquareMeter EffectiveAirdragArea { get; set; }
 
 			public override string ToString() =>
 				$"v: {Velocity}  " +

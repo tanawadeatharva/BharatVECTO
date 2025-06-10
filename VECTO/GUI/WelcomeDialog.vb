@@ -17,7 +17,7 @@ Imports TUGraz.VectoCore.Utils
 ''' <remarks></remarks>
 Public Class WelcomeDialog
 
-	Private Const UserManualPDF = "User Manual\Release Notes Vecto 4.pdf"
+	Private Const UserManualPDF = "User Manual\Release Notes Vecto DEV.pdf"
 	'Close
 	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
 		DialogResult = DialogResult.Cancel

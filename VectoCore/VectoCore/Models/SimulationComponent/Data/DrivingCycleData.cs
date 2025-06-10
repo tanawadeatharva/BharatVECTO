@@ -65,8 +65,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public interface IDrivingCycleData
 	{
 		List<DrivingCycleData.DrivingCycleEntry> Entries { get; }
+
 		string Name { get; }
+		
 		CycleType CycleType { get; }
+		
 		void Finish();
 	}
 

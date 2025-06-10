@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.IEPCDataFile:
 					tmp = JSONInputDataFactory.ReadIEPCEngineeringInputData(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.FuelCellComponentFile:
+					tmp = JSONInputDataFactory.ReadFuelCellComponentEngineeringInputData(filename, tolerateMissing);
+					break;
 			}
 
 			if(tmp is IVehicleEngineeringInputData x1) VehicleData = x1;
@@ -122,7 +125,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if(tmp is IElectricMotorEngineeringInputData x14) ElectricMotor = x14;
 			if(tmp is IHybridStrategyParameters x15) HybridStrategyParameters = x15;
 			if(tmp is IBusAuxiliariesEngineeringData x16) BusAux = x16;
-			if (tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
+			if(tmp is IIEPCEngineeringInputData x17) IEPCData = x17;
+			//if(tmp is IFuelCellSystemEngineeringInputData x18) FuelCellSystem = x18;
 
 			_filename = filename;
 		}
@@ -162,8 +166,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public CertificationMethod CertificationMethod { get; private set; }
 		public string CertificationNumber { get; private set; }
 		public DigestData DigestValue { get; private set; }
+		public string SimulationToolLicenseNumber { get; private set; }
+        public Kilogram H2StorageUsableCapacity { get; private set; }
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; private set; }
+		public bool BatteryOnlyMode { get; private set; }
+        public DynamicChargingTechnology DynamicChargingTechnology { get; private set; }
+        public string VehicleMonitoringData { get; }
 
-		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
+        IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle => Vehicle;
 
 		public IHybridStrategyParameters HybridStrategyParameters { get; set; }
 
@@ -201,7 +211,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries => null;
 
-		public IElectricStorageSystemEngineeringInputData ElectricStorage =>
+		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => null;
+
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => null;
+
+        public IElectricStorageSystemEngineeringInputData ElectricStorage =>
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {
 				new JSONElectricStorageEngineeringInputData {
 					REESSPack = Battery,
@@ -222,6 +236,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		} }
 
 		public IIEPCEngineeringInputData IEPCEngineeringInputData => IEPCData;
+
+		public IFuelCellSystemEngineeringInputData FuelCellSystemInputData => throw new NotImplementedException();
+
+		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
 		public IIEPCDeclarationInputData IEPC => IEPCData;
 
@@ -248,7 +266,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public XmlNode XMLSource => null;
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		public Meter Length => VehicleData.Length;
@@ -261,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
 		public TableData BoostingLimitations => Vehicle.BoostingLimitations;
 		
 
@@ -277,7 +296,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double InitialSOC => VehicleData.InitialSOC;
 
-		public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
+		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => null;
+
+		public IVehicleInMotionChargingEngineering InMotionCharging { get; }
+		IVehicleInMotionChargingDeclaration IVehicleDeclarationInputData.InMotionCharging => InMotionCharging;
+
+        public VectoSimulationJobType VehicleType => VehicleData.VehicleType;
 
 		public IAirdragEngineeringInputData AirdragInputData => AirdragData;
 

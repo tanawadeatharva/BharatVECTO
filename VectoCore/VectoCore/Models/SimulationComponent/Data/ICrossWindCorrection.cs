@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Diagnostics;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -37,14 +38,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public interface ICrossWindCorrection
 	{
-		//SquareMeter EffectiveAirDragArea(MeterPerSecond x, IDataBus dataBus);
-
-		void SetDataBus(IDataBus dataBus);
-
 		CrossWindCorrectionMode CorrectionMode { get; }
 
 		SquareMeter AirDragArea { get; }
 
-		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
+		AirDragLossResult AverageAirDragPowerLoss(DrivingCycleData.DrivingCycleEntry positionInCycle, MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
+
+		SquareMeter DeltaAirDragAreaIMC { get; }
+    }
+
+	[DebuggerDisplay("{PowerLoss}, {AirdragForce}, {AverageSpeed}, {EffectiveAirDragArea}")]
+	public readonly struct AirDragLossResult
+	{
+		public AirDragLossResult(Watt powerLoss, SquareMeter airdragArea, MeterPerSecond averageSpeed)
+		{
+			PowerLoss = powerLoss;
+			EffectiveAirDragArea = airdragArea;
+			AverageSpeed = averageSpeed;
+		}
+
+		public MeterPerSecond AverageSpeed { get; }
+
+		public Watt PowerLoss { get; }
+
+		public SquareMeter EffectiveAirDragArea { get; }
+
+		public Newton AirdragForce => AverageSpeed.IsEqual(0) ? 0.SI<Newton>() : PowerLoss / AverageSpeed;
+
+		#region Overrides of Object
+
+		public override string ToString()
+		{
+			return $"{PowerLoss} ({AirdragForce}, {AverageSpeed}, {EffectiveAirDragArea})";
+		}
+
+		#endregion
 	}
 }

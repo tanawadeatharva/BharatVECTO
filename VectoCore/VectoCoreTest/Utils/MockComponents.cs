@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -31,5 +32,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
 
 		public IIEPCDeclarationInputData IEPC { get; }
-	}
+
+		public IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
+
+        public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; }
+
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+    }
 }

@@ -1300,7 +1300,7 @@ public class LorrySimulation
 			VectoSimulationJobType.IEPC_E);
 		var ng = vehicle.Components?.EngineInputData?.EngineModes.Any(e =>
 			e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-		var ovcHev = vehicle.OvcHev;
+		var ovcHev = vehicle.OVC;
 		Segment segment;
 		try {
 			segment = DeclarationData.TruckSegments.Lookup(
@@ -1370,7 +1370,7 @@ public class LorrySimulation
 
 		TestContext.WriteLine(string.Join("\n", runs.Select(r => r.CycleName + "_" + r.RunSuffix)));
 
-		if (dataProvider.JobInputData.Vehicle.OvcHev) {
+		if (dataProvider.JobInputData.Vehicle.OVC) {
 			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting),
 				runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
 		}
@@ -1429,6 +1429,7 @@ public class LorrySimulation
 		if (EMOn(prevRow, position) || (hasGen && EMOn(prevRow, PowertrainPosition.GEN))) {
 			var cond = DeclarationData.Conditioning.LookupPowerDemand(
 				run.GetContainer().RunData.VehicleData.VehicleClass,
+				run.GetContainer().RunData.JobType,
 				run.GetContainer().RunData.Mission.MissionType);
 			var condMod = modDataRow.Field<Watt>("P_aux_COND_el [kW]");
 			Assert.IsTrue(cond.IsEqual(condMod), $"expected {cond} got {condMod} at {time}");

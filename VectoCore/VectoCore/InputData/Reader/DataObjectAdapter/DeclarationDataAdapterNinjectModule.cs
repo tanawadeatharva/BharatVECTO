@@ -1,6 +1,4 @@
-﻿using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
+﻿using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Generic;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
@@ -33,6 +31,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_S_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_S_IEPC>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_F2>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_F2>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_F3>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_F3>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_F4>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_F4>();
+
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_F_IEPC>()
+				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_F_IEPC>();
 
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.HEV_P1>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.HEV_P1>();
@@ -83,6 +93,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_S_IEPC>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_S_IEPC>();
+
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_F2>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_F2>();
+
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_F3>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_F3>();
+
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_F4>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_F4>();
+
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_F_IEPC>()
+				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_F_IEPC>();
 
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_P1>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.HEV_P1>();

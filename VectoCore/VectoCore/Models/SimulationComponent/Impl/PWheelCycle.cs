@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CubicMeter CargoVolume => RunData.VehicleData.CargoVolume;
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		public AirDragLossResult AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			throw new System.NotImplementedException();
 		}

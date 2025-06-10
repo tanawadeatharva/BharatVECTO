@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -101,7 +102,32 @@ namespace TUGraz.VectoCore.OutputData
 			SumDataFields.K_ENGLINE
 		};
 
+		public static readonly Tuple<string, Type>[] FuelCell_FcColumns = {
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCMAP_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_PS_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_BusAux_ES_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_H_CORR, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_AUXHTR_KM_CORR, typeof(ConvertedSI)),
 
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_CORR_KM, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FC_HEV_SOC_KM, typeof(ConvertedSI)),
+
+			Tuple.Create(SumDataFields.FuelCellFields.K_FCSLine, typeof(ConvertedSI)),
+            Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_H, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.FCFINAL_KM, typeof(ConvertedSI)),
+		};
+
+		public static readonly Tuple<string, Type>[] FuelCell_Columns = {
+			Tuple.Create(SumDataFields.FuelCellFields.P_FCS, typeof(ConvertedSI)),
+			Tuple.Create(SumDataFields.FuelCellFields.E_FCS, typeof(ConvertedSI)),
+		};
 
 		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
@@ -296,6 +322,10 @@ namespace TUGraz.VectoCore.OutputData
 			Tuple.Create(SumDataFields.P_WHEEL_POS, typeof(ConvertedSI)),
 		};
 
+		public static readonly Tuple<string, Type>[] WheelEndColumns = {
+			Tuple.Create(SumDataFields.E_WHEELEND_SAVED, typeof(ConvertedSI)),
+		};
+
 		public static readonly Tuple<string, Type>[] BrakeColumns = {
 			Tuple.Create(SumDataFields.E_BRAKE, typeof(ConvertedSI)),
 		};
@@ -476,6 +506,9 @@ namespace TUGraz.VectoCore.OutputData
 				case IBrakes _:
 					CreateColumns(BrakeColumns);
 					break;
+				case WheelEnd _:
+					CreateColumns(WheelEndColumns);
+					break;
 				case IDriver _:
 					//CreateColumns(DriverSignals);
 					break;
@@ -521,6 +554,10 @@ namespace TUGraz.VectoCore.OutputData
 				//CreateColumns(DCDCConverterSignals);
 				case ElectricAuxiliaries _:
 					CreateColumns(ElectricAuxiliariesSignals);
+					break;
+				case FuelCellSystem _:
+					CreateColumns(FuelCell_Columns);
+					CreateColumns(FuelCell_FcColumns);
 					break;
 			}
 		}
@@ -701,6 +738,9 @@ namespace TUGraz.VectoCore.OutputData
 
 			cols.AddRange(FcCols.Reverse());
 
+			cols.AddRange(FuelCell_FcColumns.Select(x => x.Item1));
+			cols.AddRange(FuelCell_Columns.Select(x => x.Item1));
+
 			cols.AddRange(new[] {
 				SumDataFields.CO2_KM,
 				SumDataFields.CO2_TKM,
@@ -757,6 +797,7 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.E_RET_LOSS,
 				SumDataFields.E_ANGLE_LOSS,
 				SumDataFields.E_AXL_LOSS, 
+				SumDataFields.E_WHEELEND_SAVED,
 				SumDataFields.E_BRAKE, 
 				SumDataFields.E_VEHICLE_INERTIA, 
 				SumDataFields.E_WHEEL, 
@@ -834,7 +875,8 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				lock (Table) {
-					var outputColumns = GetOutputColumnsOrdered().ToArray();
+					AddFinalCSResult();
+					var outputColumns = GetOutputColumnsOrdered().Distinct().ToArray();
 					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable(false, outputColumns);
 					
 					try {
@@ -842,6 +884,55 @@ namespace TUGraz.VectoCore.OutputData
 					} catch (Exception e) {
 						LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
 					}
+				}
+			}
+		}
+
+		private void AddFinalCSResult()
+		{
+			lock (Table) {
+				if (!Table.Columns.Contains(SumDataFields.OVCHEVMode) || !Table.AsEnumerable().Any(r =>
+						r.Field<string>(SumDataFields.OVCHEVMode) == OvcHevMode.ChargeSustaining.ToString())) {
+					return;
+				}
+
+				var bestCSResult = Table.AsEnumerable().GroupBy(r => Tuple.Create(
+						r.Field<string>(SumDataFields.JOB).Split('-').First(),
+						r.Field<string>(SumDataFields.CYCLE),
+						r.Field<ConvertedSI>(SumDataFields.LOADING),
+						r.Field<string>(SumDataFields.HDV_CO2_VEHICLE_CLASS),
+						r.Field<string>(SumDataFields.OVCHEVMode)),
+					(grp, rows) => {
+						if (rows.Count() == 1) {
+							return null; // it is the only result - no need to duplicate
+						}
+						var myRows = rows.ToList();
+						var bestResult = DeclarationData.GetSumDataFinalResultEntryIndex(myRows);
+						if (bestResult < 0 || bestResult >= myRows.Count) {
+							throw new VectoException(
+								$"Invalid index for best result entry. got {bestResult}, max. {myRows.Count}");
+						}
+
+						return myRows[bestResult];
+					}).ToList();
+				// copy row with best results (for OVC-CS) at the end of sum data
+				foreach (var row in bestCSResult) {
+					if (row == null || row.Field<string>(SumDataFields.OVCHEVMode) != OvcHevMode.ChargeSustaining.ToString()) {
+						continue;
+					}
+
+					var jobNbrs = row.Field<string>(SumDataFields.JOB).Split('-');
+
+					var newRow = Table.Rows.Add(row.ItemArray);
+					if (jobNbrs.Length < 2) {
+						throw new VectoException(
+							"error writing sum data - expected at least two parts in JobNumber field");
+					}
+
+					newRow[SumDataFields.JOB] =
+						SumDataFields.GetSumDataJobID(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
+					newRow[SumDataFields.SORT] =
+						SumDataFields.GetSumDataSortingValue(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
 				}
 			}
 		}
@@ -890,17 +981,7 @@ namespace TUGraz.VectoCore.OutputData
 			var row = GetResultDictionary(modData, runData);
 
 			foreach (DataColumn col in Table.Columns) {
-				var func = SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName);
-				if (func == null) {
-					continue;
-				}
-
-				if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
-					var value = func.Item2(runData, modData);
-					if (value != null) {
-						row[col.ColumnName] = value;
-					}
-				}
+				SetValue(modData, runData, col, row, SumDataFields.SumDataValue.GetVECTOValueOrDefault(col.ColumnName));
 			}
 
 			var multipleEngineModes = runData.EngineData?.MultipleEngineFuelModes ?? false;
@@ -937,12 +1018,35 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
+			if (runData.JobType.IsOneOf(VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC) 
+				&& runData.FuelCellSystemData?.FuelCellStrings?.Count > 0) {
+
+				foreach (DataColumn col in Table.Columns) {
+					SetValue(modData, runData, col, row, SumDataFields.FuelCellValue.GetVECTOValueOrDefault(col.ColumnName));
+                }
+			}
+
 			if ((runData.GearboxData?.Gears.Count ?? 0) > 0) {
 				WriteGearshiftStats(modData, row, (uint?)runData.GearboxData?.Gears.Count ?? 0u);
 				WriteGearRatios(row, runData);
 			}
 
 			AddResultDictionary(row);
+		}
+
+		private static void SetValue(IModalDataContainer modData, VectoRunData runData, DataColumn col, Dictionary<string, object> row, Tuple<ModalResultField[], SumDataFields.WriteSumEntry> ValueFunc)
+		{
+			var func = ValueFunc;
+			if (func == null) {
+				return;
+			}
+
+			if (func.Item1 == null || func.Item1.All(x => modData.ContainsColumn(x.GetName()))) {
+				var value = func.Item2(runData, modData);
+				if (value != null) {
+					row[col.ColumnName] = value;
+				}
+			}
 		}
 
 		private string GetAuxColName(string auxKey)

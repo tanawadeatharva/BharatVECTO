@@ -237,10 +237,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_air [kW]", outputFactor: 1e-3)] P_air,
 
-		/// <summary>
-		///     [kW]	Power demand due to road gradient.
-		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_slope [kW]", outputFactor: 1e-3)] P_slope,
+		[ModalResultField(typeof(SI), caption: "CdxA_eff [m^2]")] EffectiveAirDragArea,
+
+        /// <summary>
+        ///     [kW]	Power demand due to road gradient.
+        /// </summary>
+        [ModalResultField(typeof(SI), caption: "P_slope [kW]", outputFactor: 1e-3)] P_slope,
 
 		/// <summary>
 		///     [kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
@@ -255,6 +257,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_wheel_inertia [kW]", outputFactor: 1e-3)] P_wheel_inertia,
 
 		[ModalResultField(typeof(SI), caption: "P_brake_in [kW]", outputFactor: 1e-3)] P_brake_in,
+
+		[ModalResultField(typeof(SI), caption: "P_wheelEnd_saving [kW]", outputFactor: 1e-3)] P_wheelEnd_saving,
+
+		[ModalResultField(typeof(SI), caption: "P_wheelEnd_in [kW]", outputFactor: 1e-3)] P_wheelEnd_in,
 
 		[ModalResultField(typeof(SI), caption: "P_axle_in [kW]", outputFactor: 1e-3)] P_axle_in,
 
@@ -361,7 +367,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), "altitude [m]")] altitude,
 
-		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
+		[ModalResultField(typeof(int), "highway [-]")] Highway,
+
+        [ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
 
 		[ModalResultField(typeof(DrivingBehavior))] drivingBehavior,
 
@@ -470,12 +478,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_REESS_JB_Cables_loss [kW]", outputFactor: 1e-3)] P_ES_Conn_loss,
 
 
+
+		[ModalResultField(typeof(SI), caption: "P_CFCS [kW]", outputFactor: 1e-3)] P_FCSystem,
+		[ModalResultField(typeof(SI), caption: "FC_CFCS [g/h]", outputFactor: 3600 * 1000)] FC_FCSystem,
+
+
+
+		/// <summary>
+        /// Power fuel cell systems 
+        /// </summary>
+        [ModalResultField(typeof(SI), caption: "P_FCS_{0} [kW]", outputFactor: 1e-3)] P_FCS,
+
+		///// <summary>
+		///// Power fuel cell systems 
+		///// </summary>
+		//[ModalResultField(typeof(SI), caption: "P_FCS_MinEff_{0} [kW]", outputFactor: 1e-3)] P_FCS_MinEff,
+
+		/// <summary>
+		/// Power fuel cell systems 
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "t_FCS_On_{0} [s]")] t_FCS_On,
+
+        /// <summary>
+        /// Fuel consumption from each fuel cell system
+        /// </summary>
+        [ModalResultField(typeof(SI), caption: "FC_FCS_{0} [g/h]", outputFactor: 3600 * 1000)] FC_FCS,
+
+
+
+
+
+
         [ModalResultField(typeof(SI), caption: "T_max_propulsion [Nm]")] MaxPropulsionTorqe,
 
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_In [kW]", outputFactor: 1e-3)] P_DCDC_In,
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_Out [kW]", outputFactor: 1e-3)] P_DCDC_Out,
 		[ModalResultField(typeof(SI), caption: "P_DC/DC_missing [kW]", outputFactor: 1e-3)] P_DCDC_missing,
 
+
+		
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]
@@ -550,6 +591,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 			return attribute;
 		}
+
+
+		public static string Format(this ModalResultField self, params object[] args)
+		{
+			return string.Format(self.GetCaption(), args);
+        }
+
 
 		private static MemberInfo ForValue(ModalResultField field)
 		{

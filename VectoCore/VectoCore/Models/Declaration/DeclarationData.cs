@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -59,6 +60,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using Point = TUGraz.VectoCommon.Utils.Point;
 using NLog.Fluent;
+using System.Diagnostics;
 using ElectricSystem = TUGraz.VectoCore.Models.Declaration.Auxiliaries.ElectricSystem;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -98,6 +100,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly SteeringPumpBus SteeringPumpBus = new SteeringPumpBus();
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
+
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Conditioning Conditioning = new Conditioning();
 		public static readonly Payloads Payloads = new Payloads();
@@ -111,6 +114,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//public static readonly HEVStrategyParameters InitEquivalenceFactorsBus = new HEVStrategyParametersBus();
 
 		public static readonly VehicleOperationLookup VehicleOperation = new VehicleOperationLookup();
+
+		public static readonly IMCTechnologyLookup ImcTechnology = new IMCTechnologyLookup();
 
 		public static readonly double ElectricMachineDefaultMechanicalTransmissionEfficiency = 1;
 		//public static MeterPerSecond CycleSpeedLimit;
@@ -143,6 +148,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Kilogram EM_MassElectronics = 0.SI<Kilogram>();
 		public static readonly Kilogram EM_MassInverter = 100.SI<Kilogram>();
 		public static readonly KilogramPerWattSecond Battery_MassPerCapacity = 6.7.SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt.Hour).Cast<KilogramPerWattSecond>();
+
+		public static readonly WheelEndStdFrictions WwheelEndStdFrictions = new WheelEndStdFrictions();
 
 
 		/// <summary>
@@ -223,12 +230,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false)
+		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false, bool throwException = true)
 		{
 				var allowVocational = true;
 			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OvcHev;
+			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OVC;
 			Segment segment;
 			try {
 				segment = DeclarationData.TruckSegments.Lookup(
@@ -243,7 +250,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 					false, ng, ovcHev);
 			}
 
-			if (!segment.Found) {
+			if (!segment.Found && allowVocational)
+			{
+                allowVocational = false;
+                segment = DeclarationData.TruckSegments.Lookup(
+                    vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
+                    vehicle.CurbMassChassis,
+                    false, ng, ovcHev);
+            }
+
+			if (!segment.Found && throwException) {
 				throw new VectoException(
 					"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
 					vehicle.VehicleCategory, vehicle.AxleConfiguration,
@@ -308,7 +324,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
-					return (vehicleData.Components?.ElectricMachines?.Entries
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+					return (vehicleData.Components?.EngineInputData?.RatedPowerDeclared ?? 0.SI<Watt>()) +
+							(vehicleData.Components?.ElectricMachines?.Entries
 								.Where(x => x.Position != PowertrainPosition.GEN)
 								.Sum(x => x.ElectricMachine.R85RatedPower * x.Count) ?? 0.SI<Watt>()) +
 							(vehicleData.Components?.IEPC?.R85RatedPower ?? 0.SI<Watt>()) +
@@ -1822,8 +1841,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static double GenericDeterioration => 0.05;
-
+			public const double GenericDeterioration = 0.05;
 
 			public static double GetMaxSoc(BatteryType type)
 			{
@@ -1841,25 +1859,195 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
+		public static int GetDeclarationReportFinalResultEntryIndex<T>(List<T> results, VectoSimulationJobType jobType) where T:IResultEntry
+		{
+			if (results.Any(r => r.OVCMode == OvcHevMode.ChargeSustaining))
+			{
+				/// FCHV pre-run should not be taken into account for the final result.
+				/// FCHVs Iteration == 0 -> PEV pre-run.
+				return results
+					.Select((r, idx) => (entry: r, index: idx))
+					.Where(r => (jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC) ? r.entry.OVCIteration != 0 : true)
+					.MinBy(r => Math.Abs(r.entry.DeltaSoC)).index;
+			}
+
+			return results.Count - 1;
+		}
+
+		public static int GetSumDataFinalResultEntryIndex(List<DataRow> results)
+		{
+			if (results.Any(r => r.Field<string>(SumDataFields.OVCHEVMode) == OvcHevMode.ChargeSustaining.ToString())) {
+				return results
+					.Select((r, idx) =>
+						Tuple.Create(
+							Math.Abs(r.Field<double>(SumDataFields.REESS_EndSoC) -
+									r.Field<double>(SumDataFields.REESS_StartSoC)), idx)).MinBy(x => x.Item1).Item2;
+			}
+
+			return results.Count - 1;
+		}
+
+        public static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, IResultEntry csResult)
 		{
 			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
-			var chgEfficiency = CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);
-			CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);
+			//CalculateChargingEfficiencyOVCHEV(cdResult.MaxChargingPower, vehicleOperation, cdResult.BatteryData);
+
+			if (cdResult.VectoRunData.InMotionCharging) {
+				//var chgEfficiencies = CalculateChargingEfficiencyIMCOVCHEV(cdResult.VectoRunData, vehicleOperation);
+				return CalculateWeightedResultIMC(cdResult, csResult, vehicleOperation);
+			}
+			var chgEfficiency = CalculateChargingEfficiencyOVCHEV(cdResult.VectoRunData, vehicleOperation);
 			return CalculateWeightedResult(cdResult, csResult, vehicleOperation, chgEfficiency);
 		}
 
 		public static IWeightedResult CalculateWeightedResultCompletedBus(IResultEntry cdResult, IResultEntry csResult)
 		{
 			var vehicleOperation = VehicleOperation.LookupVehicleOperation(cdResult.VehicleClass, cdResult.Mission);
-			return CalculateWeightedResult(cdResult, csResult, vehicleOperation, (1, 1, 1));
+			var chargingEff = new ChargingEfficiencies() {
+				EtaChargingWeighted = 1,
+				EtaChargingInMission = 1,
+				EtaChargingInMotion = 1,
+				EtaChargingDepot = 1
+			};
+			return CalculateWeightedResult(cdResult, csResult, vehicleOperation, chargingEff);
 		}
 
+		private static IWeightedResult CalculateWeightedResultIMC(IResultEntry cdResult,
+			IResultEntry csResult,
+			VehicleOperationLookup.VehicleOperationData vehicleOperation)
+		{
+			if (cdResult.Status != VectoRun.Status.Success || csResult.Status != VectoRun.Status.Success) {
+				return null;
+			}
+			var batteryData = cdResult.BatteryData;
+			if (batteryData == null) {
+				throw new VectoException("Battery Data is required for OVC post-processing");
+			}
+
+			var D19_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
+			//var D20_stationarychargingDuringMissionMaxPwrInfastructure = vehicleOperation.StationaryChargingMaxPwrInfrastructure;
+			//var D21_stationaryChargingDuringMission_AvgDurationPerEvent = vehicleOperation.StationaryChargingDuringMission_AvgDurationPerEvent;
+			//var D22_stationaryChargingDuringMission_NbrEvents = vehicleOperation.StationaryChargingDuringMission_NbrEvents;
+			var D23_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
+			var D24_realWorldFactorChargeDuringMission = 0.0; // vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
+			var D25_shareOfDistanceWithInMotionCharging = GetShareIMCInfrastructure(cdResult.VectoRunData.InMotionChargingTechnology, vehicleOperation);
+			var D26_realWorldFactorInMotionChargingDuringMission = vehicleOperation.RealWorldUsageFactors.InMotionChargingDuringMission;
+
+			//var D9_maxStatChargingPower = cdResult.MaxChargingPower;
+			var D10_useableBatteryCapForR_CDA = cdResult.BatteryData.UseableStoredEnergy;
+
+			var D11_energyConsumptionCdMode = cdResult.ElectricEnergyConsumption / cdResult.Distance;
+			var D12_fuelConsumptionCdMode = cdResult.FuelData.Sum(x =>
+				cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
+			var D13_fuelConsumptionCsMode = csResult.FuelData.Sum(x =>
+				csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected * x.LowerHeatingValueVecto);
+
+			var D15_actualChargeDepletingRange = D10_useableBatteryCapForR_CDA / D11_energyConsumptionCdMode;
+			var D16_equivalentAllElectricRange = D15_actualChargeDepletingRange *
+												((D13_fuelConsumptionCsMode - D12_fuelConsumptionCdMode) /
+												D13_fuelConsumptionCsMode);
+			var D17_zeroCO2EmissionsRange = D16_equivalentAllElectricRange;
+
+			var D28_elRangefromStartSoC_ChargingAtDepot = D15_actualChargeDepletingRange * D23_realWorldFactorUsageStartSoC;
+			var D29_electricEnergyFromStartSoC = D11_energyConsumptionCdMode * D28_elRangefromStartSoC_ChargingAtDepot;
+			//var D30_chargingEfficiencyBatteryStationaryDuringMission = 0; // not relevant 
+			  // double.NaN;
+			  //VectoMath.Min(
+			  //    VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
+			  //    D21_stationaryChargingDuringMission_AvgDurationPerEvent * D29_chargingEffBattInMission,
+			  //    D10_useableBatteryCapForR_CDA) * D22_stationaryChargingDuringMission_NbrEvents * D24_realWorldFactorChargeDuringMission;
+			var D31_electricEnergyChargedDuringMissionFromStatInfrastructure = 0.SI<WattSecond>(); // always 0 becauseD24_realWorldFactorChargeDuringMission is 0
+				//       VectoMath.Min(
+					//	VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
+					//				D21_stationaryChargingDuringMission_AvgDurationPerEvent *
+					//				D30_chargingEfficiencyBatteryStationaryDuringMission, D10_useableBatteryCapForR_CDA) *
+					//D22_stationaryChargingDuringMission_NbrEvents * D24_realWorldFactorChargeDuringMission;
+
+			var D32_electridRageforUFFromStatChgDuringMission =
+				D31_electricEnergyChargedDuringMissionFromStatInfrastructure / D11_energyConsumptionCdMode;
+			var D33_electricRangeForUFFromInMotionCharging = D19_dailySpecificMileage * D25_shareOfDistanceWithInMotionCharging;
+			var D34_electricEnergyDirectFeed = D11_energyConsumptionCdMode * D33_electricRangeForUFFromInMotionCharging;
+			var D35_electricEnergyChargedDuringMissionInMotion = D10_useableBatteryCapForR_CDA * D26_realWorldFactorInMotionChargingDuringMission;
+			var D36_electridRangeForUFFromInMotionCharging = D35_electricEnergyChargedDuringMissionInMotion / D11_energyConsumptionCdMode;
+
+			var D38_utilityFactor = VectoMath.Min(1.0,
+				(D28_elRangefromStartSoC_ChargingAtDepot + D32_electridRageforUFFromStatChgDuringMission +
+				D33_electricRangeForUFFromInMotionCharging + D36_electridRangeForUFFromInMotionCharging) /
+				D19_dailySpecificMileage);
+
+			var D40_electricEnergyReqForDailyMileage = D11_energyConsumptionCdMode * D19_dailySpecificMileage;
+			var D41_limitationElectricEnergyChargedIntoBattery = VectoMath.Max(0.0,
+				D40_electricEnergyReqForDailyMileage - D34_electricEnergyDirectFeed);
+
+			var D43_shareElectricEnergyFromGridFirstCharged = D41_limitationElectricEnergyChargedIntoBattery /
+															D40_electricEnergyReqForDailyMileage;
+
+			var chargingEfficiency = CalculateChargingEfficiencyIMCOVCHEV(cdResult.VectoRunData, vehicleOperation,
+				D29_electricEnergyFromStartSoC, D31_electricEnergyChargedDuringMissionFromStatInfrastructure,
+				D35_electricEnergyChargedDuringMissionInMotion);
+
+			var D44_averageChargingEfficiencyDuringExtCharging = chargingEfficiency.EtaChargingWeighted;
+			var D45_shareElectricEnergyFromGrid = 1 - D43_shareElectricEnergyFromGridFirstCharged;
+			var D46_averageDischargeEfficiencyBattery = cdResult.BatteryEfficiencyDischarge;
+
+			var D48_correctionFactor_ECSoC_to_ECTerminal =
+				D43_shareElectricEnergyFromGridFirstCharged * (1 / D44_averageChargingEfficiencyDuringExtCharging) +
+				D45_shareElectricEnergyFromGrid * D46_averageDischargeEfficiencyBattery;
+
+			var D50_electricEnergyConsumptionWeighted =
+				D11_energyConsumptionCdMode * D48_correctionFactor_ECSoC_to_ECTerminal;
+
+			var D52_electricEnergyConsumptionWeighted = D38_utilityFactor * D50_electricEnergyConsumptionWeighted;
+			var D53_fuelConsumptionWeighted = cdResult.FuelData.Select(x => Tuple.Create(x,
+					D38_utilityFactor * cdResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected +
+					(1 - D38_utilityFactor) * csResult.FuelConsumptionFinal(x.FuelType).TotalFuelConsumptionCorrected))
+				.ToDictionary(x => x.Item1, x => x.Item2);
+			
+			var fcPerMeter = cdResult.FuelData.Select(f => Tuple.Create(f,
+					(cdResult.FuelConsumptionFinal(f.FuelType).TotalFuelConsumptionCorrected / cdResult.Distance) * cdResult.WeightingFactor))
+				.ToDictionary(x => x.Item1, x => x.Item2);
+
+			var retVal = new WeightedResult() {
+				Status = VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
+				Distance = cdResult.Distance,
+				Payload = cdResult.Payload,
+				CargoVolume = cdResult.CargoVolume,
+				PassengerCount = cdResult.PassengerCount,
+				AverageSpeed = cdResult.AverageSpeed,
+				AverageDrivingSpeed = cdResult.AverageDrivingSpeed,
+				ActualChargeDepletingRange = D15_actualChargeDepletingRange,
+				EquivalentAllElectricRange = D16_equivalentAllElectricRange,
+				ZeroCO2EmissionsRange = D17_zeroCO2EmissionsRange,
+				HydrogenRange = D17_zeroCO2EmissionsRange,
+				UtilityFactor = D38_utilityFactor,
+				ElectricEnergyConsumption = D52_electricEnergyConsumptionWeighted * cdResult.Distance,
+				FuelConsumption = D53_fuelConsumptionWeighted,
+				CO2PerMeter = (D38_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D38_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
+				FuelConsumptionPerMeter = fcPerMeter,
+
+				AuxHeaterFuel = cdResult.AuxHeaterFuel,
+				ZEV_CO2 =
+					cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
+					csResult.ZEV_FuelConsumption_AuxHtr != null
+						? (D38_utilityFactor * (cdResult.ZEV_CO2 / cdResult.Distance)) + ((1 - D38_utilityFactor) * (csResult.ZEV_CO2 / csResult.Distance))
+						: null,
+				ZEV_FuelConsumption_AuxHtr =
+					cdResult.AuxHeaterFuel != null && cdResult.ZEV_FuelConsumption_AuxHtr != null &&
+					csResult.ZEV_FuelConsumption_AuxHtr != null
+						? (D38_utilityFactor * (cdResult.ZEV_FuelConsumption_AuxHtr / cdResult.Distance)) +
+						((1 - D38_utilityFactor) * (csResult.ZEV_FuelConsumption_AuxHtr / csResult.Distance))
+						: null,
+			};
+
+			return retVal;
+		}
 
 		private static IWeightedResult CalculateWeightedResult(IResultEntry cdResult, 
 																IResultEntry csResult, 
 																VehicleOperationLookup.VehicleOperationData vehicleOperation,
-																(double etaChgBatDepot, double etaChgBatInMission, double etaChtBatWeighted) chargingEfficiency)
+																ChargingEfficiencies chargingEfficiency)
 		{
 			if (!cdResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore) || 
 				!csResult.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore)) {
@@ -1877,7 +2065,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var D23_realWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
 			var D24_realWorldFactorChargeDuringMission = vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
 
-			var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = chargingEfficiency;
+			//var (etaChgBatDepot, etaChgBatInMission, etaChtBatWeighted) = chargingEfficiency;
 			
 			var D9_maxStatChargingPower = cdResult.MaxChargingPower;
 
@@ -1895,7 +2083,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var D17_zeroCO2EmissionsRange = D16_equivalentAllElectricRange;
 
 			var D27_elRangefromStartSoC_ChargingAtDepot = D15_actualChargeDepletingRange * D23_realWorldFactorUsageStartSoC;
-			var D28_chargingEffBattInMission = etaChgBatInMission;
+			var D28_chargingEffBattInMission = chargingEfficiency.EtaChargingInMission;
 			var D29_electricEnergyChargedDuringMissionStatInfrastructure =
 				VectoMath.Min(
 					VectoMath.Min(D9_maxStatChargingPower, D20_stationarychargingDuringMissionMaxPwrInfastructure) *
@@ -1905,7 +2093,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var D32_utilityFactor = Math.Min(1, (D27_elRangefromStartSoC_ChargingAtDepot + D30_elRangeStatChargingDuringMission) / D19_dailySpecificMileage);
 
-			var D25_chargingEffBattWeighted = etaChtBatWeighted;
+			var D25_chargingEffBattWeighted = chargingEfficiency.EtaChargingWeighted;
 			var D34_electricEnergyCdModeTerminal = cdResult.ElectricEnergyConsumption / D25_chargingEffBattWeighted;
 
 			var D36_electricEnergyConsumptionWeighted = D32_utilityFactor * D34_electricEnergyCdModeTerminal;
@@ -1920,6 +2108,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
             var retVal = new WeightedResult() {
 				Status = cdResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore || csResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore ? VectoRun.Status.PrimaryBusSimulationIgnore : VectoRun.Status.Success,
+				JobType = cdResult.VectoRunData.JobType,
+				OffVehicleCharging = cdResult.VectoRunData.VehicleData.OffVehicleCharging,
 				Distance = cdResult.Distance,
 				Payload = cdResult.Payload,
 				CargoVolume = cdResult.CargoVolume,
@@ -1929,6 +2119,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ActualChargeDepletingRange = D15_actualChargeDepletingRange,
 				EquivalentAllElectricRange = D16_equivalentAllElectricRange,
 				ZeroCO2EmissionsRange = D17_zeroCO2EmissionsRange,
+				HydrogenRange = D17_zeroCO2EmissionsRange,
 				UtilityFactor = D32_utilityFactor,
 				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
 				FuelConsumption = D37_fuelConsumptionWeighted,
@@ -1954,13 +2145,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
-		public static (double, double, double) CalculateChargingEfficiencyOVCHEV(Watt maxChargingPwrVeh,
-			VehicleOperationLookup.VehicleOperationData vehicleOperation, BatterySystemData batteryData)
+		public static ChargingEfficiencies CalculateChargingEfficiencyOVCHEV(VectoRunData runData,
+			VehicleOperationLookup.VehicleOperationData vehicleOperation)
 		{
+			var batteryData = runData.BatteryData;
 			var depotChargingPower =
 				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
-			var inMissionChargingPower = VectoMath.Min(vehicleOperation.StationaryChargingMaxPwrInfrastructure,
-				maxChargingPwrVeh);
+
+			var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
 
 			var tmpBattery = new BatterySystem(null, batteryData);
 			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
@@ -1988,13 +2182,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 				vehicleOperation.RealWorldUsageFactors.StationaryChargingDuringMission;
 			var totalChargedEnergy = chargedEnergyDepot + chargedEnergyInMission;
 
-			return (etaChgBatDepot, etaChgBatInMission, etaChgBatDepot * chargedEnergyDepot / totalChargedEnergy +
-														etaChgBatInMission * chargedEnergyInMission /
-														totalChargedEnergy);
+			//return (etaChgBatDepot, etaChgBatInMission, etaChgBatDepot * chargedEnergyDepot / totalChargedEnergy +
+			//											etaChgBatInMission * chargedEnergyInMission /
+			//											totalChargedEnergy);
+			return new ChargingEfficiencies() {
+				EtaChargingDepot = etaChgBatDepot,
+				EtaChargingInMission = etaChgBatInMission,
+				EtaChargingInMotion = double.NaN,
+				EtaChargingWeighted = etaChgBatDepot * chargedEnergyDepot / totalChargedEnergy +
+									etaChgBatInMission * chargedEnergyInMission /
+									totalChargedEnergy
+			};
+
 		}
 
-
-		public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
+        public static double CalculateChargingEfficiencyPEV(VectoRunData runData)
 		{
 			var batteryData = runData.BatteryData;
 			var tmpBattery = new BatterySystem(null, batteryData);
@@ -2012,6 +2214,103 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return etaChgBatDepot;
 		}
 
+		public static double CalculateChargingEfficiencyIMCPEV(VectoRunData runData, WattSecond energyDepot, WattSecond energyInMotion)
+		{
+			var batteryData = runData.BatteryData;
+			var tmpBattery = new BatterySystem(null, batteryData);
+			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
+			tmpBattery.Initialize(centerSoC);
+
+			var depotChargingPower =
+				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
+			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
+			var currentEstDep = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossDep = currentEstDep * (runData.BatteryData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) *
+								currentEstDep;
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDep) / respChgBatDepot.PowerDemand).Value();
+
+			var inMotionChargingPower = GetInMotionChargingPower(runData.Mission.MissionType);
+			var respInMotionChg = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMotionChargingPower, true);
+			var currentEstInM = inMotionChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInM = currentEstInM * (runData.BatteryData?.ConnectionSystemResistance ?? 0.SI<Ohm>()) *
+								currentEstInM;
+			var etaChgInMotion = 1 - ((respInMotionChg.LossPower + connectorLossInM) / respInMotionChg.PowerDemand).Value();
+
+			return energyDepot / (energyDepot + energyInMotion) * etaChgBatDepot +
+					energyInMotion / (energyDepot + energyInMotion) * etaChgInMotion;
+		}
+
+		public static ChargingEfficiencies CalculateChargingEfficiencyIMCOVCHEV(VectoRunData runData, VehicleOperationLookup.VehicleOperationData vehicleOperation,
+			WattSecond energyDepot, WattSecond energyInMission, WattSecond energyInMotion)
+		{
+			var batteryData = runData.BatteryData;
+			var depotChargingPower =
+				VectoMath.Max(MinDepotChgPwr, batteryData.UseableStoredEnergy / DepotChargingDuration);
+
+            var inMissionChargingPower = VectoMath.Min(
+				vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+				runData.MaxChargingPower);
+
+			var inMotionChargingPower = GetInMotionChargingPower(runData.Mission.MissionType);
+
+			var tmpBattery = new BatterySystem(null, batteryData);
+			var centerSoC = (tmpBattery.MinSoC + tmpBattery.MaxSoC) / 2.0;
+			tmpBattery.Initialize(centerSoC);
+
+			var respChgBatDepot = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), depotChargingPower, true);
+			var respChgBatInMission = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMissionChargingPower, true);
+			var respChgBatInMotion = tmpBattery.Request(0.SI<Second>(), 1.SI<Second>(), inMotionChargingPower, true);
+
+			var currentEstInMission = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInMission = currentEstInMission * batteryData.ConnectionSystemResistance *
+								currentEstInMission;
+			var currentEstInMotion = inMissionChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossInMotion = currentEstInMotion * batteryData.ConnectionSystemResistance *
+										currentEstInMotion;
+			var currentEstDepot = depotChargingPower / tmpBattery.InternalVoltage;
+			var connectorLossDepot = currentEstDepot * batteryData.ConnectionSystemResistance *
+								currentEstDepot;
+
+			var etaChgBatDepot = 1 - ((respChgBatDepot.LossPower + connectorLossDepot) / respChgBatDepot.PowerDemand).Value();
+			var etaChgBatInMission = 1 - ((respChgBatInMission.LossPower + connectorLossInMission) / respChgBatInMission.PowerDemand).Value();
+			var etaChgBatInMotion = 1 - ((respChgBatInMotion.LossPower + connectorLossInMission) / respChgBatInMotion.PowerDemand).Value();
+
+			var totalChargedEnergy = energyDepot + energyInMission + energyInMotion;
+
+			return new ChargingEfficiencies() {
+				EtaChargingDepot = etaChgBatDepot,
+				EtaChargingInMission = etaChgBatInMission,
+				EtaChargingInMotion = etaChgBatInMotion,
+				EtaChargingWeighted = energyDepot / totalChargedEnergy * etaChgBatDepot +
+									energyInMission / totalChargedEnergy * etaChgBatInMission +
+									energyInMotion / totalChargedEnergy * etaChgBatInMotion
+			};
+		}
+
+		private static Watt GetInMotionChargingPower(MissionType missionType)
+		{
+			switch (missionType) {
+				case MissionType.LongHaul:
+				case MissionType.LongHaulEMS:
+				case MissionType.RegionalDelivery:
+				case MissionType.RegionalDeliveryEMS:
+				case MissionType.UrbanDelivery:
+				case MissionType.MunicipalUtility:
+				case MissionType.Construction:
+				case MissionType.Interurban:
+				case MissionType.Coach:
+				case MissionType.VerificationTest:
+				case MissionType.ExemptedMission:
+					return 100.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+				case MissionType.HeavyUrban:
+				case MissionType.Urban:
+				case MissionType.Suburban:
+					return 30.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+				default:
+					throw new ArgumentOutOfRangeException(nameof(missionType), missionType, null);
+			}
+		}
+
 		public static IWeightedResult CalculateWeightedSummary(IList<IResultEntry> entries)
 		{
 			if (entries == null || !entries.Any()) {
@@ -2026,6 +2325,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var result = new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().VectoRunData.JobType,
+				OffVehicleCharging = false,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.Distance * e.WeightingFactor),
@@ -2046,7 +2347,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ActualChargeDepletingRange = entries.All(e => e.ActualChargeDepletingRange != null) ? entries.Sum(e => e.ActualChargeDepletingRange * e.WeightingFactor) : null,
 				EquivalentAllElectricRange = entries.All(e => e.EquivalentAllElectricRange != null) ? entries.Sum(e => e.EquivalentAllElectricRange * e.WeightingFactor) : null,
 				ZeroCO2EmissionsRange = entries.All(e => e.ZeroCO2EmissionsRange != null) ? entries.Sum(e => e.ZeroCO2EmissionsRange * e.WeightingFactor) : null,
-				UtilityFactor = double.NaN,
+                HydrogenRange = entries.All(e => e.HydrogenRange != null) ? entries.Sum(e => e.HydrogenRange * e.WeightingFactor) : null,
+                UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().AuxHeaterFuel,
 				ZEV_CO2 = entries.Sum(e => ((e?.ZEV_CO2 ?? 0.SI<Kilogram>()) / e.Distance) * e.WeightingFactor),
@@ -2070,6 +2372,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return new WeightedResult()
 			{
 				Status = VectoRun.Status.Success,
+				JobType = entries.First().Weighted.JobType,
+				OffVehicleCharging = true,
 				AverageSpeed = null,
 				AverageDrivingSpeed = null,
 				Distance = entries.Sum(e => e.ChargeDepletingResult.Distance * e.ChargeDepletingResult.WeightingFactor),
@@ -2087,7 +2391,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				CO2PerMeter = entries.All(e => e.Weighted.CO2PerMeter != null) ? entries.Sum(e => (e.Weighted.CO2PerMeter) * e.ChargeDepletingResult.WeightingFactor) : null,
 				ActualChargeDepletingRange = entries.Sum(e => e.Weighted.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),
 				EquivalentAllElectricRange = entries.Sum(e => e.Weighted.EquivalentAllElectricRange * e.ChargeDepletingResult.WeightingFactor),
-				ZeroCO2EmissionsRange = entries.Sum(e => e.Weighted.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
+				ZeroCO2EmissionsRange = entries.Where(e => e.Weighted.ZeroCO2EmissionsRange != null).Sum(e => e.Weighted.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
+				HydrogenRange = entries.Where(e => e.Weighted.HydrogenRange != null).Sum(e => e.Weighted.HydrogenRange * e.ChargeDepletingResult.WeightingFactor),
 				UtilityFactor = double.NaN,
 
 				AuxHeaterFuel = entries.First().ChargeDepletingResult.AuxHeaterFuel,
@@ -2096,11 +2401,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 			};
 		}
 
+        public static ElectricRangesPEV CalculateElectricRangesFCHV(VectoRunData runData, IModalDataContainer data, double deterioration)
+        {
+            return runData.InMotionCharging
+                ? DoCalculateElectricRangesIMCFCHV(data, runData, deterioration)
+                : DoCalculateElectricRangesFCHV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
+                    data.Distance, CalculateChargingEfficiencyPEV(runData), runData, deterioration);
+        }
 
-		public static ElectricRangesPEV CalculateElectricRangesPEV(VectoRunData runData, IModalDataContainer data)
+        public static ElectricRangesPEV CalculateElectricRangesPEV(VectoRunData runData, IModalDataContainer data)
 		{
-			return DoCalculateElectricRangesPEV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr, 
-				data.Distance, CalculateChargingEfficiencyPEV(runData), runData.BatteryData);
+			return runData.InMotionCharging
+				? DoCalculateElectricRangesIMCPEV(data, runData, runData.BatteryData)
+				: DoCalculateElectricRangesPEV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
+					data.Distance, CalculateChargingEfficiencyPEV(runData), runData.BatteryData);
 		}
 
 		public static ElectricRangesPEV CalculateElectricRangesPEVCompletedBus(BatterySystemData batteryData,
@@ -2110,7 +2424,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 				distance: distance, chargingEfficiencyBattery: 1, batteryData);
 		}
 
-		private static ElectricRangesPEV DoCalculateElectricRangesPEV(WattSecond electricEnergyConsumptionSoCCorr, Meter distance, double chargingEfficiencyBattery, BatterySystemData runDataBatteryData)
+        private static ElectricRangesPEV DoCalculateElectricRangesFCHV(
+			WattSecond electricEnergyConsumptionSoCCorr, 
+			Meter distance, 
+			double chargingEfficiencyBattery, 
+			VectoRunData runData,
+			double deterioration)
+		{
+			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
+                runData.InputData.JobInputData.Vehicle.Components.ElectricStorage, 
+				runData.JobType, 
+				runData.VehicleData.OffVehicleCharging, 
+				deterioration);
+
+            return DoCalculateElectricRangesPEV(electricEnergyConsumptionSoCCorr, distance, chargingEfficiencyBattery, batteryData);
+        }
+
+        private static ElectricRangesPEV DoCalculateElectricRangesPEV(WattSecond electricEnergyConsumptionSoCCorr, Meter distance, double chargingEfficiencyBattery, BatterySystemData runDataBatteryData)
 		{
 			var batteryData = runDataBatteryData;
 			if (batteryData == null) {
@@ -2136,6 +2466,87 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
+        internal static ElectricRangesPEV DoCalculateElectricRangesIMCFCHV(IModalDataContainer modData, VectoRunData runData, double deterioration)
+		{
+			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
+                runData.InputData.JobInputData.Vehicle.Components.ElectricStorage,
+                runData.JobType,
+                runData.VehicleData.OffVehicleCharging,
+                deterioration);
+
+            return DoCalculateElectricRangesIMCPEV(modData, runData, batteryData);
+        }
+
+        internal static ElectricRangesPEV DoCalculateElectricRangesIMCPEV(IModalDataContainer modData, VectoRunData runData, BatterySystemData batteryData)
+		{
+			if (batteryData == null) {
+				throw new VectoException("Battery Data is required for PEV range calculation");
+			}
+
+			var distance = modData.Distance;
+			var electricEnergyConsumptionSoCCorr = modData.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr;
+
+			// runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass
+            var vehicleOperation = VehicleOperation.LookupVehicleOperation(runData.Mission.BusParameter?.BusGroup ?? runData.VehicleData.VehicleClass, runData.Mission.MissionType);
+
+			var D9_useableBatteryCapacityForR_CDA = batteryData.UseableStoredEnergy;
+			var D10_electricEnergyConsumption = electricEnergyConsumptionSoCCorr / distance;
+
+			var D12_actualChargeDepletingRange = D9_useableBatteryCapacityForR_CDA / D10_electricEnergyConsumption;
+			var D13_equivalentAllElectricRange = D12_actualChargeDepletingRange;
+			var D14_zeroCO2EmissionsRange = D13_equivalentAllElectricRange;
+
+			var D16_dailySpecificMileage = vehicleOperation.Mileage.DailyMileage;
+			var D17_RealWorldFactorUsageStartSoC = vehicleOperation.RealWorldUsageFactors.StartSoCBeforeMission;
+			var D18_shareInMotionChargingInfrastructure = GetShareIMCInfrastructure(runData.InMotionChargingTechnology, vehicleOperation);
+			var D19_realWorkdFactorInMotionChargingDuringMission =
+				vehicleOperation.RealWorldUsageFactors.InMotionChargingDuringMission;
+
+			var D21_electricEnergyFromStartSoCDepot = D17_RealWorldFactorUsageStartSoC * D9_useableBatteryCapacityForR_CDA;
+			var D22_electricEnergyDirectFeed = D18_shareInMotionChargingInfrastructure * D10_electricEnergyConsumption * D16_dailySpecificMileage;
+			var D23_electricEnergyChargedInMotion = D19_realWorkdFactorInMotionChargingDuringMission * D9_useableBatteryCapacityForR_CDA;
+
+			var D25_electricEnergyReqForDailyMileage = D10_electricEnergyConsumption  * D16_dailySpecificMileage;
+			var D26_LimitaionOfElectricEnergyCharged =
+				VectoMath.Max(D25_electricEnergyReqForDailyMileage - D22_electricEnergyDirectFeed, 0.SI<WattSecond>());
+
+			var D28_shareElectricEnergyFromGrid = D26_LimitaionOfElectricEnergyCharged / D25_electricEnergyReqForDailyMileage;
+			var D29_averageChgEffExternalCharging = CalculateChargingEfficiencyIMCPEV(runData, D21_electricEnergyFromStartSoCDepot, D23_electricEnergyChargedInMotion);
+			var D30_shareElectridEnergyGridDirectFeed = 1 - D28_shareElectricEnergyFromGrid;
+			var D31_AverageDischargingEfficiencyBattery = modData.BatteryEfficiencyDischarge();
+
+			var D33_CorrectionFactorEC_SoC_to_EC_Terminal = D28_shareElectricEnergyFromGrid*(1/D29_averageChgEffExternalCharging) + D30_shareElectridEnergyGridDirectFeed* D31_AverageDischargingEfficiencyBattery;
+
+			var D35_EC_el_Final = D10_electricEnergyConsumption * D33_CorrectionFactorEC_SoC_to_EC_Terminal * distance;
+
+			var retVal = new ElectricRangesPEV {
+				ActualChargeDepletingRange = D12_actualChargeDepletingRange,
+				EquivalentAllElectricRange = D13_equivalentAllElectricRange,
+				ZeroCO2EmissionsRange = D14_zeroCO2EmissionsRange,
+				ElectricEnergyConsumption = D35_EC_el_Final,
+			};
+			return retVal;
+		}
+
+		public static double GetShareIMCInfrastructure(IMCTechnology imcTech,
+			VehicleOperationLookup.VehicleOperationData vehicleOperationData)
+		{
+			switch (imcTech) {
+				case IMCTechnology.NotApplicable:
+					return double.NaN;
+				case IMCTechnology.OverheadPantograph:
+					return vehicleOperationData.ShareInMotionCharging.ShareCatenary;
+				case IMCTechnology.OverheadTrolley:
+					return vehicleOperationData.ShareInMotionCharging.ShareTrolley;
+				case IMCTechnology.GroundRail:
+					return vehicleOperationData.ShareInMotionCharging.ShareGroundRail;
+				case IMCTechnology.Wireless:
+					return vehicleOperationData.ShareInMotionCharging.ShareWireless;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
 		public struct ElectricRangesPEV
 		{
 			public Meter ZeroCO2EmissionsRange { get; set; }
@@ -2143,5 +2554,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public Meter EquivalentAllElectricRange { get; set; }
 			public WattSecond ElectricEnergyConsumption { get; set; }
 		}
+
+		public struct ChargingEfficiencies
+		{
+			public double EtaChargingDepot { get; set; }
+			public double EtaChargingInMission { get; set; }
+			public double EtaChargingInMotion { get; set; }
+			public double EtaChargingWeighted { get; set; }
+		}
+
 	}
 }

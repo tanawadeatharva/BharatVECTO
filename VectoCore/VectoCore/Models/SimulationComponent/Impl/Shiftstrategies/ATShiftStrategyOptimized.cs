@@ -430,7 +430,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 					response);
 			}
 
-			return CheckEarlyUpshiftFromLocked(
+			if (currentGear.TorqueConverterLocked==false) {
+				return false;
+			}
+
+            return CheckEarlyUpshiftFromLocked(
 				absTime, dt, outTorque, outAngularVelocity, origInTorque, origInAngularVelocity, currentGear, lastShiftTime,
 				response);
 		}
@@ -465,7 +469,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				((Container.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
 				Container.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * Container.VehicleInfo.VehicleSpeed;
+			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed).AirdragForce * Container.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = Container.VehicleInfo.RollingResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
 
 			var slopeLoss = Container.VehicleInfo.SlopeResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
@@ -704,8 +708,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 			var current = currentGear;
 
-			foreach (var next in Gears.IterateGears(Gears.Predecessor(current),
-						Gears.Predecessor(current, (uint)GearshiftParams.AllowedGearRangeFC))) {
+			var vDrop = Container.DriverInfo.DriverAcceleration * GearshiftParams.ATLookAheadTime;
+			var vehicleSpeedPostShift = (Container.VehicleInfo.VehicleSpeed + vDrop * GearshiftParams.VelocityDropFactor).LimitTo(
+				0.KMPHtoMeterPerSecond(), Container.DrivingCycleInfo.CycleData.LeftSample.VehicleTargetSpeed);
+
+			var outAngularVelocityEst =
+				(outAngularVelocity * vehicleSpeedPostShift / (Container.VehicleInfo.VehicleSpeed + Container.DriverInfo.DriverAcceleration * dt))
+				.Cast<PerSecond>();
+			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
+
+            var dtLow = dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval*0.8);
+            var isGear1 = currentGear.Gear.Equals(1);
+			var beforeReachingTargetSpeed = Container.DrivingCycleInfo.TargetSpeed.IsSmallerOrEqual(Container.VehicleInfo.VehicleSpeed + Container.DriverInfo.DriverAcceleration * dt) && Container.DriverInfo.DriverAcceleration.IsGreater(0.0);
+			var rightIsStop = Container.DrivingCycleInfo.CycleData.RightSample.VehicleTargetSpeed.IsEqual(0.0);
+
+            foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC))) {
+				
+				if (dtLow && isGear1 && !beforeReachingTargetSpeed && rightIsStop) {
+                    continue;
+                }
+
 				if (next == null) {
 					// no further gear
 					continue;
@@ -868,7 +890,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				((Container.DrivingCycleInfo.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
 				Container.DrivingCycleInfo.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
-			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed) * Container.VehicleInfo.VehicleSpeed;
+			var airDragLoss = Container.VehicleInfo.AirDragResistance(vehicleSpeed, vehicleSpeed).AirdragForce * Container.VehicleInfo.VehicleSpeed;
 			var rollResistanceLoss = Container.VehicleInfo.RollingResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;
 
 			var slopeLoss = Container.VehicleInfo.SlopeResistance(avgSlope) * Container.VehicleInfo.VehicleSpeed;

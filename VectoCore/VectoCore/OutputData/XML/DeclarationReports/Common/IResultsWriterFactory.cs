@@ -4,13 +4,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
     public interface IResultsWriterFactory
     {
-        IResultsWriter GetCIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+        IResultsWriter GetCIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
             bool exempted);
 
-		IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+		IResultsWriter GetMRFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 			bool exempted);
 
-		IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
+		IResultsWriter GetVIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc,
 			bool exempted);
 
     }

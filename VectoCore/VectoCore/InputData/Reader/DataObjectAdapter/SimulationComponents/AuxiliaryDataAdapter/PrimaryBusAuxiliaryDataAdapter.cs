@@ -257,8 +257,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = GetDefaultElectricalUserConfig();
 
 			retVal.AlternatorType =
-				vehicleData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-					VectoSimulationJobType.IEPC_E)
+				vehicleData.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle,
+					VectoSimulationJobType.IEPC_E,
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.FCHV_IEPC)
 					? AlternatorType.None
 					: busAux.ElectricSupply.AlternatorTechnology;
 			retVal.ElectricalConsumers = currentDemand;
@@ -441,7 +444,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					return busParams.HVACHEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return busParams.HVACPEV;
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException(nameof(vehicleType), vehicleType, null);
 			}
@@ -597,9 +603,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					hvacParams = mission.BusParameter.HVACHEV;
 					break;
 				case VectoSimulationJobType.BatteryElectricVehicle:
+				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.IEPC_E:
 					hvacParams = mission.BusParameter.HVACPEV;
 					break;
+				case VectoSimulationJobType.EngineOnlySimulation:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -664,7 +673,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				DemandType = AuxiliaryDemandType.Dynamic,
 				ID = Constants.Auxiliaries.IDs.Cond,
 				ConnectToREESS = true,
-				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, mission),
+				PowerDemandElectric = DeclarationData.Conditioning.LookupPowerDemand(hdv, jobType, mission),
 			};
 
 			auxDataList.Add(aux);

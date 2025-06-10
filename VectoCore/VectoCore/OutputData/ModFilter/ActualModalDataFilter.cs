@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.P_air,
 					ModalResultField.P_slope,
 					ModalResultField.P_wheel_in,
+					ModalResultField.P_wheelEnd_in,
+					ModalResultField.P_wheelEnd_saving,
 					ModalResultField.P_brake_in,
 					ModalResultField.P_brake_loss,
 					ModalResultField.P_wheel_inertia,
