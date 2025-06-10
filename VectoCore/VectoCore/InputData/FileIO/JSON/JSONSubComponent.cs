@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					$"{JsonKeys.Vehicle_AxlePowertrain_AxleNumber} not defined in {JsonKeys.Vehicle_AxlePowertrains}");
 			}
 
-			if (Type == VectoSimulationJobType.MultiplePowertrains)
+			if (!Type.IsMultiplePowertrains())
 			{
 				throw new VectoException(
 					$"{JsonKeys.Vehicle_AxlePowertrain_Type} bad or missing in {JsonKeys.Vehicle_AxlePowertrains}");
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			: _axlePt.GetEx<int>(JsonKeys.Vehicle_AxlePowertrain_AxleNumber);
 
 		public virtual VectoSimulationJobType Type => (_axlePt[JsonKeys.Vehicle_AxlePowertrain_Type] == null)
-			? VectoSimulationJobType.MultiplePowertrains
+			? VectoSimulationJobType.EngineOnlySimulation
 			: JSONFile.ParsePowertrainType(_axlePt, JsonKeys.Vehicle_AxlePowertrain_Type);
 
 		public virtual IGearboxEngineeringInputData GearboxInputData => _gearbox ?? (_gearbox = ReadGearbox());
