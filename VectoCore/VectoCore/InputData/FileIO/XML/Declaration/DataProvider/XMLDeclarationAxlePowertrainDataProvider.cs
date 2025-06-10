@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         public int AxleNumber => int.Parse(GetAttribute(BaseNode, "axleNumber"));
 
-        public virtual VectoSimulationJobType Type => VectoSimulationJobType.MultiplePowertrains;
+        public virtual ArchitectureID Architecture => ArchitectureID.UNKNOWN;
 
         public virtual IAngledriveInputData AngledriveInputData =>
             _angledriveInputData ?? (_angledriveInputData = CreateComponent(XMLNames.Component_Angledrive, AngledriveCreator, true));
@@ -187,7 +187,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
         }
 
-        public override VectoSimulationJobType Type => VectoSimulationJobType.BatteryElectricVehicle;
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null) 
+            ? ArchitectureID.F2 
+            : (Vehicle.Components.EngineInputData != null) 
+                ? ArchitectureID.S2 
+                : ArchitectureID.E2;
     }
 
     public class XMLDeclaration_AxlePowertrain_EM3_DataProviderV27 : XMLDeclarationAxlePowertrainDataProvider
@@ -199,7 +203,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
         }
 
-        public override VectoSimulationJobType Type => VectoSimulationJobType.BatteryElectricVehicle;
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F3
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S3
+                : ArchitectureID.E3;
     }
 
     public class XMLDeclaration_AxlePowertrain_EM4_DataProviderV27 : XMLDeclarationAxlePowertrainDataProvider
@@ -211,7 +219,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
         }
 
-        public override VectoSimulationJobType Type => VectoSimulationJobType.BatteryElectricVehicle;
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F4
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S4
+                : ArchitectureID.E4;
     }
 
     public class XMLDeclaration_AxlePowertrain_IEPC_DataProviderV27 : XMLDeclarationAxlePowertrainDataProvider
@@ -223,7 +235,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
         }
 
-        public override VectoSimulationJobType Type => VectoSimulationJobType.IEPC_E;
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F_IEPC
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S_IEPC
+                : ArchitectureID.E_IEPC;
     }
 
     public interface IXMLAxlePowertrainDeclarationInputData : IAxlePowertrainDeclarationInputData, IXMLResource
