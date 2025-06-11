@@ -50,7 +50,7 @@ public class AirDragTests
 		
 
 		var cwcc =
-			new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+			new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(),
 				CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurveFromStream(InputDataHelper.InputDataAsStream(header, data),
 					crossSectionArea.SI<SquareMeter>()), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 

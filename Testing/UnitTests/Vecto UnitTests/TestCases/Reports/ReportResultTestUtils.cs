@@ -14,6 +14,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.Reports;
@@ -109,15 +110,17 @@ public class ReportResultTestUtils
 	}
 
 	public static VectoRunData GetMockRunData(VehicleCategory vehicleCategory, VectoSimulationJobType jobType,
-		bool offVehicleCharging, bool exempted, OvcHevMode ovcMode, FuelType[] fuelTypes)
+		bool offVehicleCharging, bool exempted, OvcHevMode ovcMode, FuelType[] fuelTypes, IMCTechnology? imcTech = null)
 	{
 		var fuels = fuelTypes == null || fuelTypes.Length == 0 ? new[] { FuelType.DieselCI } : fuelTypes;
-		return new VectoRunData() {
+		var retVal =  new VectoRunData() {
 			Mission = new Mission() {
 				MissionType = MissionType.LongHaul
 			},
 			OVCMode = ovcMode,
-			Exempted = exempted,
+			InMotionCharging = imcTech.HasValue && imcTech != IMCTechnology.NotApplicable,
+			InMotionChargingTechnology = imcTech ?? IMCTechnology.NotApplicable,
+            Exempted = exempted,
 			JobType = jobType,
 			Loading = LoadingType.LowLoading,
 			MaxChargingPower = 250.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
@@ -129,7 +132,8 @@ public class ReportResultTestUtils
 				VehicleClass = VehicleClass.Class5,
 				VehicleCategory = vehicleCategory,
 				OffVehicleCharging = offVehicleCharging,
-			},
+				H2StorageUsableCapacity =  30.SI<Kilogram>()
+            },
 			EngineData = new CombustionEngineData() {
 				FuelMode = 0,
 				Fuels = fuels.Select(x => new CombustionEngineFuelData()
@@ -157,7 +161,11 @@ public class ReportResultTestUtils
 				}
 			}
 		};
-	}
+		if (jobType.IsBatteryElectric() || jobType.IsFCHV()) {
+			retVal.EngineData = null;
+		}
+		return retVal;
+    }
 
 	public static IModalDataContainer GetMockModData(VectoRun.Status runStatus, FuelType[] fuelTypes, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 	{
@@ -178,7 +186,27 @@ public class ReportResultTestUtils
 		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff);
 		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff * axlEff);
 
-		if (runStatus != VectoRun.Status.Success) {
+		var batChgEff = 0.95;
+		var batDischgEff = 0.93;
+		var batEnergy = 200.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>();
+		var factorChg = ovcMode.IsOneOf(OvcHevMode.ChargeSustaining, OvcHevMode.NotApplicable) ? 1 : 0.1;
+		var batteryEntries = new[] {
+			// internal , terminal
+			Tuple.Create(batEnergy * factorChg, batEnergy * factorChg / batChgEff),
+			Tuple.Create(-batEnergy, -batEnergy * batDischgEff)
+		};
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_reess_int, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField, Func<SI, bool>>((_, f) =>
+				batteryEntries.Select(x => x.Item1).Where(x => f == null || f(x)).Sum());
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_reess_terminal, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField,
+				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
+		modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_terminal_ES, It.IsAny<Func<SI, bool>>()))
+			.Returns<ModalResultField,
+				Func<SI, bool>>((_, f) => batteryEntries.Select(x => x.Item2).Where(x => f(x)).Sum());
+		modData.Setup(x => x.GetValues<SI>(ModalResultField.REESSStateOfCharge)).Returns(() => new[] { 50.SI(), 50.SI() });
+
+        if (runStatus != VectoRun.Status.Success) {
 			modData.Setup(x => x.Error).Returns("TestCase Error!");
 			modData.Setup(x => x.StackTrace).Returns("Testcase Stacktrace");
 		}
@@ -208,5 +236,56 @@ public class ReportResultTestUtils
 		mc.Setup(x => x.ElectricEnergyConsumption_SoC_Corr).Returns(200.SI(Unit.SI.Mega.Joule).Cast<WattSecond>() * elOvcFactor);
 
 		return modData.Object;
+	}
+
+	public static IDeclarationInputDataProvider GetMockInputData(int amdm)
+	{
+		var xmlType = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24 + ":FOO";
+
+		var mock = new Mock<IDeclarationInputDataProvider>();
+		var inputDataSource = new DataSource() {
+			SourceType = DataSourceType.XMLFile
+		};
+		mock.Setup(i => i.DataSource).Returns(inputDataSource);
+		var xmlNS = "";
+		switch (amdm) {
+			case 2:
+				xmlNS = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+				break;
+			case 3:
+				xmlNS = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+				break;
+
+		}
+
+		var vehicleDataSource = new DataSource() {
+			TypeVersion = xmlNS,
+		};
+		mock.Setup(i => i.JobInputData.Vehicle.DataSource).Returns(vehicleDataSource);
+
+		var pack = new Mock<IBatteryPackDeclarationInputData>();
+		var b1 = new Mock<IElectricStorageDeclarationInputData>();
+		var bat = new Mock<IElectricStorageSystemDeclarationInputData>();
+		pack.Setup(p => p.StorageType).Returns(REESSType.Battery);
+		pack.Setup(p => p.MinSOC).Returns(0.2);
+		pack.Setup(p => p.MaxSOC).Returns(0.8);
+		pack.Setup(p => p.MaxCurrentMap).Returns(InputDataHelper.InputDataAsTableData("SoC, I_charge, I_discharge", new[] {"0, 300, 300", "100, 500, 500"}));
+		pack.Setup(p => p.Capacity).Returns(7.5.SI(Unit.SI.Ampere.Hour).Cast<AmpereSecond>());
+		pack.Setup(p => p.InternalResistanceCurve)
+			.Returns(InputDataHelper.InputDataAsTableData("SoC, Ri-2, Ri-10, Ri-20",
+				new[] { "0, 20, 20, 20", "100, 20, 20, 20" }));
+		pack.Setup(p => p.VoltageCurve)
+			.Returns(InputDataHelper.InputDataAsTableData("SoC, V", new[] { "0, 600", "100, 650" }));
+		pack.Setup(p => p.DataSource).Returns(new DataSource() {
+			SourceType = DataSourceType.XMLFile
+		});
+		b1.Setup(b => b.Count).Returns(1);
+		b1.Setup(b => b.StringId).Returns(0);
+		b1.Setup(b => b.REESSPack).Returns(pack.Object);
+		bat.Setup(b => b.ElectricStorageElements).Returns(new[] { b1.Object });
+
+		mock.Setup(i => i.JobInputData.Vehicle.Components.ElectricStorage).Returns(bat.Object);
+
+		return mock.Object;
 	}
 }

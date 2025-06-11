@@ -276,11 +276,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			throw new NotImplementedException();
 		}
-		public override NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed)
+		public override NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed, uint gear)
 		{
 			throw new NotImplementedException();
 		}
-		public override NewtonMeter FullGenerationTorque(PerSecond avgSpeed)
+		public override NewtonMeter FullGenerationTorque(PerSecond avgSpeed, uint gear)
 		{
 			throw new NotImplementedException();
 		}

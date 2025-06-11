@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission,
 				Segment segment, OvcHevMode ovcMode)
 			{
-				return AirdragDataAdapter.CreateAirdragData(completedVehicle, mission);
+				return AirdragDataAdapter.CreateAirdragData(completedVehicle, mission, segment, ovcMode);
 			}
 
 			

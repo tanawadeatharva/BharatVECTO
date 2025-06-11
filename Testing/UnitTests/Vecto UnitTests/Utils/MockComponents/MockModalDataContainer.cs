@@ -153,7 +153,12 @@ namespace TUGraz.Vecto.UnitTests.Utils.MockComponents
 			}
 		}
 
-		public object this[string auxId]
+		public object this[ModalResultField key, string arg] {
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
+        public object this[string auxId]
 		{
 			get => CurrentRow[Auxiliaries[auxId]];
 			set => CurrentRow[Auxiliaries[auxId]] = value;
@@ -335,8 +340,16 @@ namespace TUGraz.Vecto.UnitTests.Utils.MockComponents
 
 		public ICorrectedModalData CorrectedModalData { get; }
 		public bool HasAxlegear { get; set; }
+		
+		public IModalDataPostProcessor PostProcessingCorrection {
+			set => throw new NotImplementedException();
+		}
 
-		public void RegisterComponent(VectoSimulationComponent component)
+        public KilogramPerWattSecond FuelCellLine => throw new NotImplementedException();
+
+		public bool HasBattery => throw new NotImplementedException();
+
+        public void RegisterComponent(VectoSimulationComponent component)
 		{
 			
 		}

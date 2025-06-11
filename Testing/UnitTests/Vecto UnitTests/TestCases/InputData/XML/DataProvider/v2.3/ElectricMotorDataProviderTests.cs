@@ -52,7 +52,7 @@ public class ElectricMotorDataProviderTests
 		Assert.AreEqual(400, v1.OverloadTorque.Value(), 1e-3);
 		Assert.AreEqual(2000, v1.OverloadTestSpeed.AsRPM, 1e-3);
 		Assert.AreEqual(30, v1.OverloadTime.Value());
-		Assert.AreEqual(2, v1.FullLoadCurve.Rows.Count);
+		Assert.AreEqual(2, v1.FullLoadCurve.First().LoadCurve.Rows.Count);
 		Assert.AreEqual(1, v1.PowerMap.Count);
 		Assert.AreEqual(4, v1.PowerMap.First().PowerMap.Rows.Count);
 		Assert.AreEqual(0, v1.PowerMap.First().Gear);
@@ -64,7 +64,7 @@ public class ElectricMotorDataProviderTests
 		Assert.AreEqual(400, v2.OverloadTorque.Value(), 1e-3);
 		Assert.AreEqual(2000, v2.OverloadTestSpeed.AsRPM, 1e-3);
 		Assert.AreEqual(30, v2.OverloadTime.Value());
-		Assert.AreEqual(2, v2.FullLoadCurve.Rows.Count);
+		Assert.AreEqual(2, v2.FullLoadCurve.First().LoadCurve.Rows.Count);
 		Assert.AreEqual(1, v2.PowerMap.Count);
 		Assert.AreEqual(4, v2.PowerMap.First().PowerMap.Rows.Count);
 		Assert.AreEqual(0, v2.PowerMap.First().Gear);
@@ -96,7 +96,7 @@ public class ElectricMotorDataProviderTests
 		Assert.AreEqual(400, v1.OverloadTorque.Value(), 1e-3);
 		Assert.AreEqual(2000, v1.OverloadTestSpeed.AsRPM, 1e-3);
 		Assert.AreEqual(30, v1.OverloadTime.Value());
-		Assert.AreEqual(2, v1.FullLoadCurve.Rows.Count);
+		Assert.AreEqual(2, v1.FullLoadCurve.First().LoadCurve.Rows.Count);
 		Assert.AreEqual(1, v1.PowerMap.Count);
 		Assert.AreEqual(4, v1.PowerMap.First().PowerMap.Rows.Count);
 		Assert.AreEqual(0, v1.PowerMap.First().Gear);
@@ -127,7 +127,7 @@ public class ElectricMotorDataProviderTests
 		Assert.AreEqual(400, v1.OverloadTorque.Value(), 1e-3);
 		Assert.AreEqual(2000, v1.OverloadTestSpeed.AsRPM, 1e-3);
 		Assert.AreEqual(30, v1.OverloadTime.Value());
-		Assert.AreEqual(2, v1.FullLoadCurve.Rows.Count);
+		Assert.AreEqual(2, v1.FullLoadCurve.First().LoadCurve.Rows.Count);
 		Assert.AreEqual(2, v1.PowerMap.Count);
 
 		var v1p1 = v1.PowerMap[0];
@@ -145,7 +145,7 @@ public class ElectricMotorDataProviderTests
 		Assert.AreEqual(400, v2.OverloadTorque.Value(), 1e-3);
 		Assert.AreEqual(2000, v2.OverloadTestSpeed.AsRPM, 1e-3);
 		Assert.AreEqual(30, v2.OverloadTime.Value());
-		Assert.AreEqual(2, v2.FullLoadCurve.Rows.Count);
+		Assert.AreEqual(2, v2.FullLoadCurve.First().LoadCurve.Rows.Count);
 		Assert.AreEqual(2, v2.PowerMap.Count);
 
 		var v2p1 = v1.PowerMap[0];

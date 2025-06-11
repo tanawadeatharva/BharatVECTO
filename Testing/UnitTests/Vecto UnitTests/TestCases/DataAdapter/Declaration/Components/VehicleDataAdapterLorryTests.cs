@@ -170,7 +170,7 @@ public class VehicleDataAdapterLorryTests
         veh.Setup(v => v.ArchitectureID).Returns(ArchitectureID.UNKNOWN);
         veh.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.ConventionalVehicle);
         veh.Setup(v => v.LegislativeClass).Returns(LegislativeClass.M3);
-        veh.Setup(v => v.OvcHev).Returns(false);
+        veh.Setup(v => v.OVC).Returns(false);
 
         adas.Setup(a => a.EngineStopStart).Returns(false);
         adas.Setup(a => a.PredictiveCruiseControl).Returns(PredictiveCruiseControlType.None);
@@ -223,7 +223,7 @@ public class VehicleDataAdapterLorryTests
         veh.Setup(v => v.ArchitectureID).Returns(ArchitectureID.UNKNOWN);
         veh.Setup(v => v.VehicleType).Returns(VectoSimulationJobType.ConventionalVehicle);
         veh.Setup(v => v.LegislativeClass).Returns(LegislativeClass.M3);
-        veh.Setup(v => v.OvcHev).Returns(false);
+        veh.Setup(v => v.OVC).Returns(false);
 
         adas.Setup(a => a.EngineStopStart).Returns(false);
         adas.Setup(a => a.PredictiveCruiseControl).Returns(PredictiveCruiseControlType.None);

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -45,8 +46,8 @@ public class ElectricMotorModelDataTests
 			1e-3);
 	}
 
-	[TestCase(225, 3724.21, 375, 4551.82, 120, -269635.019)]
-	[TestCase(220, 6207.03, 375, 4551.82, 120, 600063.423)]
+	[TestCase(225, 3724.21, 375, 4551.82, 120, 32133.6285)]
+	[TestCase(220, 6207.03, 375, 4551.82, 120, 340.97849)]
 	public void TestElectricMotorOverloadBufferTest(double contTq, double contSpdRpm, double ovlTq, double ovlSpdRpm, double ovlDuration, double expectedOvlBfr)
 	{
 		var componentData = GetEMInputDataDecl(contTq.SI<NewtonMeter>(), contSpdRpm.RPMtoRad(), ovlTq.SI<NewtonMeter>(), ovlSpdRpm.RPMtoRad(), ovlDuration.SI<Second>());
@@ -80,15 +81,15 @@ public class ElectricMotorModelDataTests
         var em = emData.EfficiencyData;
         var gear = new GearshiftPosition(0);
 
-        Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(-396.076, em.FullLoadDriveTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(-365.153, em.FullLoadDriveTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(-380.6145, em.FullLoadDriveTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
+        Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(-396.076, em.FullLoadDriveTorque(600.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(-365.153, em.FullLoadDriveTorque(500.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(-380.6145, em.FullLoadDriveTorque(550.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
 
-        Assert.AreEqual(334.2300, em.FullGenerationTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(406.076, em.FullGenerationTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-        Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
+        Assert.AreEqual(334.2300, em.FullGenerationTorque(400.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(406.076, em.FullGenerationTorque(600.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+        Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
 
         Assert.AreEqual(-101.70072, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
         Assert.AreEqual(-25000, em.LookupElectricPower(400.SI<Volt>(), 2000.RPMtoRad(), -101.70072.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
@@ -132,7 +133,12 @@ public class ElectricMotorModelDataTests
 		vl.SetupGet(i => i.OverloadTestSpeed).Returns(ovlSpd);
 		vl.Setup(v => v.OverloadTime).Returns(ovlDuration);
 
-		vl.SetupGet(v => v.FullLoadCurve).Returns(InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData2));
+		vl.SetupGet(v => v.FullLoadCurve).Returns(new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData2)
+			}
+		});
 		var map = new Mock<IElectricMotorPowerMap>();
 		map.SetupGet(m => m.PowerMap).Returns(InputDataHelper.InputDataAsTableData(EMMapHdr, EMMapData2));
 		vl.Setup(v => v.PowerMap).Returns(new[] { map.Object });
@@ -225,7 +231,12 @@ public class ElectricMotorModelDataTests
         vl.SetupGet(i => i.OverloadTestSpeed).Returns(2000.RPMtoRad());
         vl.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 
-        vl.SetupGet(v => v.FullLoadCurve).Returns(InputDataHelper.InputDataAsTableData(EMFldHdr, emFldData));
+		vl.SetupGet(v => v.FullLoadCurve).Returns(new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, emFldData)
+			}
+		});
         var map = new Mock<IElectricMotorPowerMap>();
         map.SetupGet(m => m.PowerMap).Returns(InputDataHelper.InputDataAsTableData(EMMapHdr, emMapData).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0));
         vl.Setup(v => v.PowerMap).Returns(new[] { map.Object });

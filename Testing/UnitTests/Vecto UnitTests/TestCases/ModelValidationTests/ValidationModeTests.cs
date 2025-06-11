@@ -147,7 +147,7 @@ public class ValidationModeTests
             AirdragData = new AirdragData() {
                 CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
                 CrossWindCorrectionCurve =
-                    new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+                    new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(), 0.SI<SquareMeter>(),
                         CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
                         CrossWindCorrectionMode.NoCorrection)
             },

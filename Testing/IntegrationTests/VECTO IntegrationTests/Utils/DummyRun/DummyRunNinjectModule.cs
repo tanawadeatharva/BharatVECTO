@@ -96,7 +96,8 @@ public class DummyRunModDataFactory : IModalDataFactory
         modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn);
         modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff);
         modData.Setup(x => x.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, It.IsNotNull<Func<SI, bool>>())).Returns(e_gbxIn * gbxEff * axlEff);
-
+		modData.Setup(x => x.GetValues<SI>(ModalResultField.REESSStateOfCharge))
+			.Returns(() => new[] { 50.SI(), 50.SI() });
         if (runStatus != VectoRun.Status.Success) {
             modData.Setup(x => x.Error).Returns("TestCase Error!");
             modData.Setup(x => x.StackTrace).Returns("Testcase Stacktrace");

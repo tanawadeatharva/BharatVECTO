@@ -61,17 +61,17 @@ public class AirdragDataAdapterTests
                 return realDao.GetDeclarationAirResistanceCurve(cw, cdxA, h);
             });
 
-        //var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
-        //imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
+        var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
+        imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
 
         var vehicle = new Mock<IVehicleDeclarationInputData>();
-        //vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
+        vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
         vehicle.Setup(v => v.Components).Returns(new Mock<IVehicleComponentsDeclaration>().Object);
         if (cdxA.HasValue) {
             vehicle.Setup(v => v.Components.AirdragInputData.AirDragArea).Returns(cdxA.Value.SI<SquareMeter>());
         }
 
-        var data = segment.Missions.Select(m => dao.Object.CreateAirdragData(vehicle.Object.Components.AirdragInputData, m, segment)).ToArray();
+        var data = segment.Missions.Select(m => dao.Object.CreateAirdragData(vehicle.Object, m, segment, OvcHevMode.NotApplicable)).ToArray();
 
         Console.WriteLine(heights.Select(x => x.Value()).Join(", "));
         Console.WriteLine(areas.Select(x => x.Value()).Join(", "));
@@ -122,14 +122,14 @@ public class AirdragDataAdapterTests
                 return realDao.GetDeclarationAirResistanceCurve(cw, cdxA, h);
             });
 
-        //var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
-        //imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
+        var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
+        imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
 
         var vehicle = new Mock<IVehicleDeclarationInputData>();
-        //vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
+        vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
         vehicle.Setup(v => v.Components).Returns(new Mock<IVehicleComponentsDeclaration>().Object);
 
-        var data = segment.Missions.Where(m => m.BusParameter.BusGroup == testClass).Select(m => dao.Object.CreateAirdragData(vehicle.Object.Components.AirdragInputData, m, segment)).ToArray();
+        var data = segment.Missions.Where(m => m.BusParameter.BusGroup == testClass).Select(m => dao.Object.CreateAirdragData(vehicle.Object, m, segment, OvcHevMode.NotApplicable)).ToArray();
 
         Console.WriteLine(heights.Select(x => x.Value()).Join(", "));
         Console.WriteLine(areas.Select(x => x.Value()).Join(", "));
@@ -166,18 +166,18 @@ public class AirdragDataAdapterTests
                 areas.Add(cdxA);
                 return realDao.GetDeclarationAirResistanceCurve(cw, cdxA, h);
             });
-        //var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
-        //imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
+        var imcData = new Mock<IVehicleInMotionChargingDeclaration>();
+        imcData.Setup(i => i.Technology).Returns(IMCTechnology.GroundRail);
 
         var vehicle = new Mock<IVehicleDeclarationInputData>();
-        //vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
+        vehicle.Setup(v => v.InMotionCharging).Returns(imcData.Object);
         vehicle.Setup(v => v.Height).Returns(bodyHeight.SI<Meter>());
         vehicle.Setup(v => v.Components).Returns(new Mock<IVehicleComponentsDeclaration>().Object);
-        if (cdxA.HasValue) {
+		if (cdxA.HasValue) {
             vehicle.Setup(v => v.Components.AirdragInputData.AirDragArea).Returns(cdxA.Value.SI<SquareMeter>());
         }
 
-        var data = segment.Missions.Select(m => dao.Object.CreateAirdragData(vehicle.Object, m)).ToArray();
+        var data = segment.Missions.Select(m => dao.Object.CreateAirdragData(vehicle.Object, m, segment, OvcHevMode.NotApplicable)).ToArray();
 
         Console.WriteLine(heights.Select(x => x.Value()).Join(", "));
         Console.WriteLine(areas.Select(x => x.Value()).Join(", "));

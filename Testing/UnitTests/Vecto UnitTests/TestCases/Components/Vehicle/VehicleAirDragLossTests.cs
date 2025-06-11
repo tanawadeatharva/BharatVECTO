@@ -51,7 +51,7 @@ public class VehicleAirDragLossTests
 
         var nextSpeed = vehicleSpeed.KMPHtoMeterPerSecond() + acceleration.SI<MeterPerSquareSecond>() * dt.SI<Second>();
         var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), nextSpeed);
-        Assert.AreEqual(expected, avgForce.Value(), Tolerance);
+        Assert.AreEqual(expected, avgForce.AirdragForce.Value(), Tolerance);
     }
 
 
@@ -100,6 +100,7 @@ public class VehicleAirDragLossTests
 		driver.Setup(d => d.DriverBehavior).Returns(DrivingBehavior.Driving);
 		var cycle = new Mock<IDrivingCycleInfo>();
 		cycle.Setup(c => c.CycleStartDistance).Returns(0.SI<Meter>());
+		cycle.Setup(c => c.CycleData).Returns(new CycleData() { });
 		container.Setup(c => c.DriverInfo).Returns(driver.Object);
 		container.Setup(c => c.DrivingCycleInfo).Returns(cycle.Object);
 		container.Setup(c => c.RunData).Returns(runData);
@@ -130,7 +131,7 @@ public class VehicleAirDragLossTests
 
 		return new AirdragData() {
 			CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(cdxA, airdragData, CrossWindCorrectionMode.DeclarationModeCorrection),
+				new CrosswindCorrectionCdxALookup(cdxA, 0.SI<SquareMeter>(), airdragData, CrossWindCorrectionMode.DeclarationModeCorrection),
 			
 		};
 	}

@@ -4,6 +4,7 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
@@ -163,7 +164,7 @@ namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
                     EngineData = CreateMockupEngineData(vehicle, modeIdx),
                     GearboxData = CreateMockupGearboxData(vehicle),
                     AxleGearData = CreateMockupAxleGearData(vehicle),
-                    DriverData = CreateDriverData(segment),
+                    //DriverData = CreateDriverData(segment),
                     BatteryData = new VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery.BatterySystemData(),
                     JobType = InputDataProvider.JobInputData.JobType,
 

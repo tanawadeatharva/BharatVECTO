@@ -1054,7 +1054,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12,
             new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
         TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16,
-            new[] { 101.4, 142.9, 51.9, 142.9, 0.0, })
+            new[] { 101.4, 142.9, 51.9, 142.9, 0.0, }),
 		Category(Definitions.TESTCASE_MIGRATED)
         ]
         public void SegmentLookupCargoVolumeTest(VehicleCategory category, AxleConfiguration axleConfiguration,

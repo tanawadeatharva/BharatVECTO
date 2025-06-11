@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -455,7 +456,12 @@ public class ElectricMotorTests
         vl.SetupGet(i => i.OverloadTestSpeed).Returns(2000.RPMtoRad());
         vl.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 
-        vl.SetupGet(v => v.FullLoadCurve).Returns(InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+		vl.SetupGet(v => v.FullLoadCurve).Returns(new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData)
+			}
+		});
         var map = new Mock<IElectricMotorPowerMap>();
         map.SetupGet(m => m.PowerMap).Returns(InputDataHelper.InputDataAsTableData(EMMapHdr, EMMapData).ApplyFactor(ElectricMotorMapReader.Fields.PowerElectrical, 1000.0));
         vl.Setup(v => v.PowerMap).Returns(new[] { map.Object });

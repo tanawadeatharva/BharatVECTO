@@ -44,6 +44,7 @@ public class AirdragTests
             double expected)
     {
         var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+            0.SI<SquareMeter>(),
             new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
                 crossSectionArea.SI<SquareMeter>(),
                 height.SI<Meter>()),
@@ -87,6 +88,7 @@ public class AirdragTests
         double height)
     {
         var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
+			0.SI<SquareMeter>(),
             new AirdragDataAdapter().GetDeclarationAirResistanceCurve(parameterSet,
                 crossSectionArea.SI<SquareMeter>(),
                 height.SI<Meter>()),
@@ -102,7 +104,7 @@ public class AirdragTests
         var airDrag = new AirdragData() {
             CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
             CrossWindCorrectionCurve =
-                new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+                new CrosswindCorrectionCdxALookup(null, null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
         };
 
         Assert.IsTrue(airDrag.IsValid(),
@@ -120,7 +122,7 @@ public class AirdragTests
             var airDrag = new AirdragData {
                 CrossWindCorrectionMode = correctionMode,
                 CrossWindCorrectionCurve =
-                    new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+                    new CrosswindCorrectionCdxALookup(null, null, null, correctionMode)
             };
 
             Assert.IsFalse(airDrag.IsValid(),

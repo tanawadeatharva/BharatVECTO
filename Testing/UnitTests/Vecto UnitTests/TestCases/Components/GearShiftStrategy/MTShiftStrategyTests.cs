@@ -442,7 +442,7 @@ public class MTShiftStrategyTests
 		vehicleInfo.Setup(v => v.VehicleSpeed).Returns(1.KMPHtoMeterPerSecond());
 
 		vehicleInfo.Setup(v => v.AirDragResistance(It.IsAny<MeterPerSecond>(), It.IsAny<MeterPerSecond>()))
-			.Returns(0.SI<Newton>());
+			.Returns(new AirDragLossResult(0.SI<Watt>(), 0.SI<SquareMeter>(), 0.SI<MeterPerSecond>()));
 		vehicleInfo.Setup(v => v.RollingResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
 		vehicleInfo.Setup(v => v.SlopeResistance(It.IsAny<Radian>())).Returns(0.SI<Newton>());
 		vehicleInfo.Setup(v => v.VehicleSpeed).Returns(30.KMPHtoMeterPerSecond());

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -123,7 +124,12 @@ public class FactorMethodGenericElectricMotorTests
 		vLow.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
 		vLow.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
-		vLow.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+		vLow.Setup(v => v.FullLoadCurve).Returns(() => new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData)
+			}
+		});
 
 		vHi.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
 		vHi.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
@@ -132,7 +138,12 @@ public class FactorMethodGenericElectricMotorTests
 		vHi.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
 		vHi.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
-		vHi.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+		vHi.Setup(v => v.FullLoadCurve).Returns(() => new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData)
+			}
+		});
 
 		em.Setup(e => e.DragCurve).Returns(InputDataHelper.InputDataAsTableData(EmDragHdr, EmDragData));
         return retVal;
@@ -168,7 +179,12 @@ public class FactorMethodGenericElectricMotorTests
 		vLow.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
 		vLow.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
-		vLow.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+		vLow.Setup(v => v.FullLoadCurve).Returns(() => new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData)
+			}
+		});
 
 		vHi.Setup(v => v.VoltageLevel).Returns(400.SI<Volt>());
 		vHi.Setup(v => v.ContinuousTorque).Returns(200.SI<NewtonMeter>());
@@ -177,7 +193,12 @@ public class FactorMethodGenericElectricMotorTests
 		vHi.Setup(v => v.OverloadTestSpeed).Returns(2000.RPMtoRad());
 		vHi.Setup(v => v.OverloadTime).Returns(30.SI<Second>());
 		// explicitly return a new instance on every call because the column names in GenericBusElectricMotorData are overwritten and this leads to an error, see also ToDo's in ElectricMotorInputData
-		vHi.Setup(v => v.FullLoadCurve).Returns(() => InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData));
+		vHi.Setup(v => v.FullLoadCurve).Returns(() => new List<IElectricMotorLoadCurve>() {
+			new ElectricMotorLoadCurve() {
+				Gear = 0,
+				LoadCurve = InputDataHelper.InputDataAsTableData(EMFldHdr, EMFldData)
+			}
+		});
 
 		var drag = new Mock<IDragCurve>();
 		drag.Setup(d => d.DragCurve).Returns(() => InputDataHelper.InputDataAsTableData(EmDragHdr, EmDragData));

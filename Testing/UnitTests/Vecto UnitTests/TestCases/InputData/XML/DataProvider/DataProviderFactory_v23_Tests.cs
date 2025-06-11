@@ -28,9 +28,9 @@ public class DataProviderFactory_v23_Tests
 	[TestCase("Vehicle_Conventional_HeavyLorryDeclarationType", typeof(XMLDeclarationConventionalHeavyLorryDataProviderV24), VectoSimulationJobType.ConventionalVehicle)]
 	[TestCase("Vehicle_HEV-Px_HeavyLorryDeclarationType", typeof(XMLDeclarationHevPxHeavyLorryDataProviderV24), null)] // can be parallel or ihpc - depends on components which are not available
 	[TestCase("Vehicle_HEV-Sx_HeavyLorryDeclarationType", typeof(XMLDeclarationHevSxHeavyLorryDataProviderV24), VectoSimulationJobType.SerialHybridVehicle)]
-	[TestCase("Vehicle_PEV_HeavyLorryDeclarationType", typeof(XMLDeclarationPevHeavyLorryE2DataProviderV24), VectoSimulationJobType.BatteryElectricVehicle)]
-	[TestCase("Vehicle_IEPC_HeavyLorryDeclarationType", typeof(XMLDeclarationIepcHeavyLorryDataProviderV24), VectoSimulationJobType.IEPC_E)]
-	[TestCase("Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType", typeof(XMLDeclarationHeviepcsHeavyLorryDataProviderV24), VectoSimulationJobType.IEPC_S)]
+	[TestCase("Vehicle_PEV_HeavyLorryDeclarationType", typeof(XMLDeclarationPevHeavyLorryDataProviderV24), VectoSimulationJobType.BatteryElectricVehicle)]
+	[TestCase("Vehicle_IEPC_HeavyLorryDeclarationType", typeof(XMLDeclarationIEPCHeavyLorryDataProviderV24), VectoSimulationJobType.IEPC_E)]
+	[TestCase("Vehicle_HEV-IEPC-S_HeavyLorryDeclarationType", typeof(XMLDeclarationHevIEPCSHeavyLorryDataProviderV24), VectoSimulationJobType.IEPC_S)]
 
 	[TestCase("Vehicle_Conventional_MediumLorryDeclarationType", typeof(XMLDeclarationConventionalMediumLorryVehicleDataProviderV24), VectoSimulationJobType.ConventionalVehicle)]
 	[TestCase("Vehicle_HEV-Px_MediumLorryDeclarationType", typeof(XMLDeclarationHevPxMediumLorryDataProviderV24), VectoSimulationJobType.ParallelHybridVehicle)]

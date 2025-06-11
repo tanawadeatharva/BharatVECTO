@@ -13,45 +13,40 @@ public class AirdragDataTests
 	[TestCase]
 	public void VcdbTest()
 	{
-		
-		var dataBus = new MockVehicleContainer();
-
 		var vairbeta = new CrosswindCorrectionVAirBeta(5.SI<SquareMeter>(),
 			CrossWindCorrectionCurveReader.ReadCdxABetaTable(InputDataHelper.InputDataAsTableData(VAirHdr, VAirData)));
-		vairbeta.SetDataBus(dataBus);
-
+		
 		var cycleEntry = new DrivingCycleData.DrivingCycleEntry() {
 			AirSpeedRelativeToVehicle = 20.KMPHtoMeterPerSecond(),
 			WindYawAngle = 0
 		};
-		dataBus.CycleData = new CycleData() { LeftSample = cycleEntry };
-
+		
 		var pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(509.259, pAvg, 1e-3);
 
 		pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(521.990, pAvg, 1e-3);
 
 		pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(636.574, pAvg, 1e-3);
 
 		cycleEntry.WindYawAngle = 20;
 
 		pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(829.074, pAvg, 1e-3);
 
 		pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(1036.343, pAvg, 1e-3);
 
 		cycleEntry.WindYawAngle = -120;
 
 		pAvg =
-			vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+			vairbeta.AverageAirDragPowerLoss(cycleEntry, 20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), Physics.AirDensity).PowerLoss.Value();
 		Assert.AreEqual(-1019.5370, pAvg, 1e-3);
 	}
 
