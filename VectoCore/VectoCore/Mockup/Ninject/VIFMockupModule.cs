@@ -45,20 +45,18 @@ namespace TUGraz.VectoMockup.Ninject
 
 			#region Implementation of IVIFReportFactory
 
-			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
+			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId, 
 				bool exempted, bool iepc, bool ihpc)
 			{
 				return new MockupPrimaryVehicleInformationFile(
-					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
-						ihpc));
+					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
 			}
 			
 			public IXMLMultistepIntermediateReport GetInterimVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 				ArchitectureID archId, bool exempted, bool iepc, bool ihpc)
 			{
 				return new MockupInterimVehicleInformationFile(
-					_interimFactory.GetInterimVIFReport(vehicleType, jobType, archId, exempted,
-						iepc, ihpc));
+					_interimFactory.GetInterimVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
 			}
 
 			IXmlMultistepTypeWriter IVIFReportInterimFactory.GetConventionalVehicleType()

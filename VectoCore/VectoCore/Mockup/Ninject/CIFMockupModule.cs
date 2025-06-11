@@ -73,7 +73,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetHEV_IEPC_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
+		public IXmlTypeWriter GetMultiple_FCHV_LorryVehicleType()
+		{
+			return _cifFactory.GetMultiple_FCHV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
 		{
 			return _cifFactory.GetFCHV_F2_LorryVehicleType();
 		}
@@ -93,7 +98,17 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetFCHV_IEPC_LorryVehicleType();
 		}
 
-		public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
+        public IXmlTypeWriter GetMultiple_PEV_LorryVehicleType()
+        {
+            return _cifFactory.GetMultiple_PEV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_LorryVehicleType()
+        {
+            return _cifFactory.GetMultiple_SHEV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
         {
             return _cifFactory.GetPEV_E2_LorryVehicleType();
         }
@@ -268,6 +283,21 @@ namespace TUGraz.VectoMockup.Ninject
         {
             return _cifFactory.GetElectricMachineGroup();
         }
+
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainElectricMachineGroup()
+		{
+			return _cifFactory.GetAxlePowertrainElectricMachineGroup();
+        }
+
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainTransmissionGroup()
+		{
+			return _cifFactory.GetAxlePowertrainTransmissionGroup();
+        }
+
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainIEPCTransmissionGroup()
+		{
+			return _cifFactory.GetAxlePowertrainIEPCTransmissionGroup();
+		}
 
         public IReportOutputGroup GetREESSGroup()
         {

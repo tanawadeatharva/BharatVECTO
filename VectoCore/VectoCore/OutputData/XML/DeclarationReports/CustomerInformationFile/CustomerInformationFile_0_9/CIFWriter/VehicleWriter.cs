@@ -233,7 +233,163 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class CIF_FCHV_F2_LorryVehicleWriter : VehicleWriter
+	public abstract class CIF_Multiple_LorryVehicleWriter : VehicleWriter
+	{
+        protected readonly Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>> _getPowertrain;
+
+        public CIF_Multiple_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+			: base(cifFactory, mrfFactory) 
+		{
+            _getPowertrain = new Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>>();
+        }
+
+		protected XElement GetRetarder(IAxlePowertrainDeclarationInputData axlePt)
+		{
+            return new XElement(_cif + XMLNames.Component_Retarder,
+                axlePt.RetarderInputData.Type != RetarderType.None);
+        }
+
+        protected XElement GetAxleRatio(IAxlePowertrainDeclarationInputData axlePt, bool optional = false)
+        {
+            IAxleGearInputData axlegear = axlePt.AxleGearInputData;
+
+            return (!optional || (axlegear != null)) ? new XElement(_cif + "AxleRatio", axlegear.Ratio.ToXMLFormat(3)) : null;
+        }
+
+        protected XElement GetEM2Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+		{
+			return new XElement(_cif + "Powertrain",
+				new XAttribute("axleNumber", axlePt.AxleNumber),
+				new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "PowertrainEM2Type"),
+                _cifFactory.GetAxlePowertrainElectricMachineGroup().GetElements(axlePt),
+                _cifFactory.GetAxlePowertrainTransmissionGroup().GetElements(axlePt),
+                GetRetarder(axlePt),
+                GetAxleRatio(axlePt)
+            );
+		}
+
+		protected XElement GetEM3Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+		{
+            return new XElement(_cif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "PowertrainEM3Type"),
+                _cifFactory.GetAxlePowertrainElectricMachineGroup().GetElements(axlePt),
+                _cifFactory.GetTransmissionGroupNoGearbox().GetElements(null),
+                GetRetarder(axlePt),
+                GetAxleRatio(axlePt)
+            );
+        }
+
+        protected XElement GetEM4Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_cif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "PowertrainEM4Type"),
+                _cifFactory.GetAxlePowertrainElectricMachineGroup().GetElements(axlePt),
+                _cifFactory.GetTransmissionGroupNoGearbox().GetElements(null)
+            );
+        }
+
+        protected XElement GetIEPCPowertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_cif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "PowertrainIEPCType"),
+                _cifFactory.GetAxlePowertrainElectricMachineGroup().GetElements(axlePt),
+                _cifFactory.GetAxlePowertrainIEPCTransmissionGroup().GetElements(axlePt),
+                GetRetarder(axlePt),
+                GetAxleRatio(axlePt, true)
+            );
+        }
+    }
+
+    public class CIF_Multiple_FCHV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    {
+        public CIF_Multiple_FCHV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) 
+			: base(cifFactory, mrfFactory) 
+		{
+			_getPowertrain.Add(ArchitectureID.F2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.F3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.F4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.F_IEPC, GetIEPCPowertrain);
+        }
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "FCHV_Multiple-Fx_LorryVehicleType"),
+                _cifFactory.GetFCHV_LorryVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetLorryAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_Multiple_PEV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    {
+        public CIF_Multiple_PEV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+            : base(cifFactory, mrfFactory) 
+		{
+            _getPowertrain.Add(ArchitectureID.E2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.E3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.E4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.E_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "PEV_Multiple-Ex_LorryVehicleType"),
+                _cifFactory.GetPEV_LorryVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetLorryAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_Multiple_SHEV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    {
+        public CIF_Multiple_SHEV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+            : base(cifFactory, mrfFactory) 
+		{
+            _getPowertrain.Add(ArchitectureID.S2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.S3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.S4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.S_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(AbstractCustomerReport.XSI + XMLNames.XSIType, "HEV_Multiple-Sx_LorryVehicleType"),
+                _cifFactory.GetHEV_LorryVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetEngineGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetLorryAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_FCHV_F2_LorryVehicleWriter : VehicleWriter
 	{
 		public CIF_FCHV_F2_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
 

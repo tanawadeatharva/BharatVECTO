@@ -64,7 +64,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var architectures = new VectoSimulationJobType[] {
 				VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.IEPC_E
+				VectoSimulationJobType.IEPC_E,
+				VectoSimulationJobType.Multiple_PEV
 			};
 			var val = GenericSocData(row);
 			foreach (var archs in architectures) {
@@ -92,7 +93,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VectoSimulationJobType.IHPC,
 				VectoSimulationJobType.IEPC_S,
 				VectoSimulationJobType.FCHV,
-				VectoSimulationJobType.FCHV_IEPC
+				VectoSimulationJobType.FCHV_IEPC,
+				VectoSimulationJobType.Multiple_FCHV,
+				VectoSimulationJobType.Multiple_SHEV
 			};
 			foreach (var archs in architectures)
 			{
