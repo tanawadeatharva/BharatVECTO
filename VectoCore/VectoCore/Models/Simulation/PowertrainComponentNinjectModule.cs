@@ -70,7 +70,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 				Bind<ICombustionEngine>().To<StopStartCombustionEngine>().Named(_realPowertrain.ICEName(cycleType));
 			}
 
-			Bind<IWheelEnd>().To<WheelEnd>().Named(_realPowertrain.Prefix);
             Bind<ICombustionEngine>().To<EngineOnlyCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.EngineOnly));
 			Bind<ICombustionEngine>().To<VTPCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.VTP));
 
@@ -448,6 +447,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<ISimpleVehicleContainer>().To<SimplePowertrainContainer>().Named(namingHelper.Prefix);
 
             Bind<IWheels>().To<Wheels>().Named(namingHelper.Prefix);
+			Bind<IWheelEnd>().To<WheelEnd>().Named(namingHelper.Prefix);
+
             Bind<IDistanceBasedDrivingCycle>().To<DistanceBasedDrivingCycle>().Named(namingHelper.Prefix);
             Bind<IMeasuredSpeedDrivingCycle>().To<MeasuredSpeedDrivingCycle>().Named(namingHelper.Prefix);
 			Bind<IPWheelCycle>().To<PWheelCycle>().Named(namingHelper.Prefix);
