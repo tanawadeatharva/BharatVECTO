@@ -8,20 +8,17 @@ namespace TUGraz.VectoCore.Utils.Ninject
 {
 	public interface IVehicleTypeAndArchitectureStringHelperReport
 	{
-		string GetName(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId = ArchitectureID.UNKNOWN,
+		string GetName(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId = ArchitectureID.UNKNOWN, 
 			bool exempted = false, bool iepc = false, bool ihpc = false);
 
 		object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
-			bool exempted, bool iepc, bool ihpc);
+            bool exempted, bool iepc, bool ihpc);
 
 		CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; }
 	}
 
-	
-
 	public class VehicleTypeAndArchitectureStringHelperReport : IVehicleTypeAndArchitectureStringHelperReport
 	{
-		
 		public  CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = (arguments => {
 
 			//may be called with first argument of type string (when defining the bindings) or VehicleCategory when using the factory
@@ -30,9 +27,8 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				vehicleType = vehicleCategory.GetVehicleType();
 			}
 			
-			
-			
 			VectoSimulationJobType jobType = (VectoSimulationJobType)arguments[1];
+			
 			ArchitectureID archId = (ArchitectureID)arguments[2];
 			if (jobType == VectoSimulationJobType.ParallelHybridVehicle){
 				archId = ArchitectureID.P1; //same report for all p-hevs
@@ -41,47 +37,19 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			bool exempted = (bool)arguments[3];
 			bool iepc = (bool)arguments[4];
 			bool ihpc = (bool)arguments[5];
+
 			var classification =
 				new VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(jobType, archId, vehicleType,
 					exempted, iepc, ihpc);
+
 			return classification.ToString();
-
-			string result = "";
-			if (exempted) {
-				result += exempted + vehicleType;
-			} else {
-				if (vehicleType == VehicleCategoryHelper.Lorry || vehicleType == VehicleCategoryHelper.PrimaryBus || vehicleType == VehicleCategoryHelper.CompletedBus || vehicleType == VehicleCategoryHelper.Van) {
-					if (jobType == VectoSimulationJobType.ParallelHybridVehicle || ihpc) {
-						result += "HEV-Px/IHPC";
-					}else if (jobType == VectoSimulationJobType.SerialHybridVehicle) {
-						result += "HEV-" + archId;
-					}else if (jobType == VectoSimulationJobType.BatteryElectricVehicle) {
-						if (iepc) {
-							result += "PEV-IEPC";
-						} else {
-							result += "PEV" + archId;
-						}
-					}else if (jobType == VectoSimulationJobType.ConventionalVehicle) {
-						result += "Conventional";
-					}
-				}else if (vehicleType == VehicleCategoryHelper.CompletedBus) {
-					result += jobType;
-				}
-
-				result += vehicleType;
-			}
-
-
-			return result;
 		});
+
 		public virtual string GetName(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId = ArchitectureID.UNKNOWN,
 			bool exempted = false, bool iepc = false, bool ihpc = false)
 		{
-
 			return CreateName(ToParams(vehicleType, jobType, archId, exempted, iepc, ihpc));
 		}
-
-
 
 		public virtual object[] ToParams(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
 			bool exempted, bool iepc, bool ihpc)
@@ -90,17 +58,21 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			{
 				throw new Exception(
 					$"String provided for {nameof(vehicleType)} must match the strings in {nameof(VehicleCategoryHelper.SuperCategories)}");
-			};
+			}
+
 			return new[] { (object)vehicleType, jobType, archId, exempted, iepc, ihpc };
 		}
 	}
 
 	public class VehicleTypeAndArchitectureStringHelperRundata
 	{
-		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => {
-			if (arguments[0] is VehicleClassification classification) {
+		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => 
+		{
+			if (arguments[0] is VehicleClassification classification) 
+			{
                 return GetName(classification);
-            } else {
+            } 
+			else {
 				throw new ArgumentException($"{nameof(arguments)}[0] must be of type {typeof(VehicleClassification)}");
 			}
 		};
@@ -113,7 +85,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 		}
 
 		public string GetName(string vehicleType, VectoSimulationJobType jobType, ArchitectureID archId = ArchitectureID.UNKNOWN,
-			bool exempted = false, bool iepc = false, bool ihpc = false)
+            bool exempted = false, bool iepc = false, bool ihpc = false)
 		{
 			return GetName(new VehicleClassification(jobType, archId, vehicleType, exempted, iepc, ihpc));
 		}
@@ -137,7 +109,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			private readonly VectoSimulationJobType _jobType;
 			private readonly bool _exempted;
 			private readonly ArchitectureID _archId;
-			private readonly string _vehicleType;
+            private readonly string _vehicleType;
 			private readonly bool _iepc;
 			private readonly bool _ihpc;
 			private readonly bool _isSingleBus;
@@ -145,8 +117,8 @@ namespace TUGraz.VectoCore.Utils.Ninject
 			private VectoSimulationJobType JobType => Exempted ? VectoSimulationJobType.ConventionalVehicle : _jobType; //ignored for exempted vehicles
 
 			private ArchitectureID ArchId => Exempted ? ArchitectureID.UNKNOWN : _archId;//ignored for exempted vehicles
-			
-			private string VehicleType => _vehicleType;
+
+            private string VehicleType => _vehicleType;
 
 			private bool Exempted => _exempted;
 
@@ -156,7 +128,8 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 			private bool IsSingleBus => _isSingleBus;
 
-			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, bool exempted, bool iepc, bool ihpc, bool singleBus = false)
+			public VehicleClassification(VectoSimulationJobType jobType, ArchitectureID archId, string vehicleType, 
+				bool exempted, bool iepc, bool ihpc, bool singleBus = false)
 			{
 				_iepc = iepc;
 				_ihpc = ihpc;
@@ -206,7 +179,8 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 			public bool Equals(VehicleClassification other)
 			{
-				return JobType == other.JobType && ArchId == other.ArchId && VehicleType == other.VehicleType && Exempted == other.Exempted && Iepc == other.Iepc && Ihpc == other.Ihpc;
+				return JobType == other.JobType && ArchId == other.ArchId && VehicleType == other.VehicleType 
+					&& Exempted == other.Exempted && Iepc == other.Iepc && Ihpc == other.Ihpc;
 			}
 
 			public override bool Equals(object obj)
@@ -220,7 +194,7 @@ namespace TUGraz.VectoCore.Utils.Ninject
 				{
 					var hashCode = (int)JobType;
 					hashCode = (hashCode * 397) ^ (int)ArchId;
-					hashCode = (hashCode * 397) ^ (VehicleType != null ? VehicleType.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (VehicleType != null ? VehicleType.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ Exempted.GetHashCode();
 					hashCode = (hashCode * 397) ^ Iepc.GetHashCode();
 					hashCode = (hashCode * 397) ^ Ihpc.GetHashCode();
@@ -243,10 +217,14 @@ namespace TUGraz.VectoCore.Utils.Ninject
 
 	public class VehicleTypeAndArchitectureStringHelperResults
 	{
-		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => {
-			if (arguments[0] is ResultsVehicleClassification classification) {
+		public CombineArgumentsToNameInstanceProvider.CombineToName CreateName { get; } = arguments => 
+		{
+			if (arguments[0] is ResultsVehicleClassification classification) 
+			{
 				return GetName(classification);
-			} else {
+			} 
+			else 
+			{
 				throw new ArgumentException($"{nameof(arguments)}[0] must be of type {typeof(ResultsVehicleClassification)}");
 			}
 		};

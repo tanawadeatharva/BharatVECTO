@@ -825,7 +825,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var busAux = auxInputData.BusAuxiliariesData;
-			return jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.MultiplePowertrains)
+			return jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.Multiple_PEV, VectoSimulationJobType.Multiple_FCHV)
 				? GetBatteryElectricBusAuxiliariesData(vehicleData, busAux)
 				: GetBusAuxiliariesData(vehicleData, busAux);
 		}

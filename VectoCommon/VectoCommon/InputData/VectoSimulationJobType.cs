@@ -12,6 +12,8 @@
 		IEPC_E,
 		IEPC_S,
 		IHPC,
-		MultiplePowertrains,
+		Multiple_FCHV,
+		Multiple_SHEV,
+		Multiple_PEV
 	}
 }

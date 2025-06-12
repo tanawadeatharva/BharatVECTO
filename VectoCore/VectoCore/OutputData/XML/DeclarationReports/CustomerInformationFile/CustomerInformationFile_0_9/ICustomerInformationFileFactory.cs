@@ -22,11 +22,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IXmlTypeWriter GetHEV_S3_LorryVehicleType();
 		IXmlTypeWriter GetHEV_S4_LorryVehicleType();
 		IXmlTypeWriter GetHEV_IEPC_LorryVehicleType();
-		IXmlTypeWriter GetFCHV_F2_LorryVehicleType();
+		IXmlTypeWriter GetMultiple_FCHV_LorryVehicleType();
+        IXmlTypeWriter GetFCHV_F2_LorryVehicleType();
 		IXmlTypeWriter GetFCHV_F3_LorryVehicleType();
 		IXmlTypeWriter GetFCHV_F4_LorryVehicleType();
 		IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType();
-		IXmlTypeWriter GetPEV_E2_LorryVehicleType();
+        IXmlTypeWriter GetMultiple_PEV_LorryVehicleType();
+        IXmlTypeWriter GetMultiple_SHEV_LorryVehicleType();
+        IXmlTypeWriter GetPEV_E2_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E3_LorryVehicleType();
 		IXmlTypeWriter GetPEV_E4_LorryVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_LorryVehicleType();
@@ -76,7 +79,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IReportOutputGroup GetHEV_LorryVehicleTypeGroup();
 		IReportOutputGroup GetFCHV_LorryVehicleTypeGroup();
 		IReportOutputGroup GetElectricMachineGroup();
-		IReportOutputGroup GetREESSGroup();
+		IAxlePowertrainReportOutputGroup GetAxlePowertrainElectricMachineGroup();
+        IAxlePowertrainReportOutputGroup GetAxlePowertrainTransmissionGroup();
+		IAxlePowertrainReportOutputGroup GetAxlePowertrainIEPCTransmissionGroup();
+        IReportOutputGroup GetREESSGroup();
         IReportOutputGroup GetFuelCellGroup();
         IReportOutputGroup GetPEV_LorryVehicleTypeGroup();
 

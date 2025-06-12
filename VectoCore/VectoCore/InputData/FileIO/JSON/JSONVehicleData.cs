@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				base(json, filename, job, tolerateMissing)
 		{}
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+		public override VectoSimulationJobType VehicleType => Body.GetEx<string>("PowertrainConfiguration").ParseEnum<VectoSimulationJobType>();
 
 		public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData =>
 			_axlePowertrains ?? (_axlePowertrains = GetAxlePowertrains());

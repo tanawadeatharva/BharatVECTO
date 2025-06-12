@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var ihpc = (primaryVehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (primaryVehicle.Components?.IEPC != null);
+			
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(
 				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				inputData.JobInputData.JobType,
@@ -55,13 +56,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				iepc,
 				ihpc);
 
-
-
 			CustomerRpt = _cifFactory.GetCustomerReport(
 				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				inputData.JobInputData.JobType,
 				primaryVehicle.ArchitectureID,
-				primaryVehicle.ExemptedVehicle,
+                primaryVehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
 

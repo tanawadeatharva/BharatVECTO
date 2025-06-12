@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -57,26 +58,33 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 	}
 
 
-	public class TransmissionGroupWithGearbox : AbstractCIFGroupWriter
-	{
+	public class TransmissionGroupWithGearbox : AbstractCIFGroupWriter, IAxlePowertrainReportOutputGroup
+    {
 		public TransmissionGroupWithGearbox(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
-		#region Overrides of AbstractCIFGroupWriter
+		public IList<XElement> GetElements(IAxlePowertrainDeclarationInputData axlePt)
+		{
+            return GetElements(axlePt.GearboxInputData);
+        }
 
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicle = GetVehicle(inputData);
 			var gearbox = vehicle.Components.GearboxInputData;
 
-			return new List<XElement>() {
-				new XElement(_cif + "TransmissionValues", gearbox.CertificationMethod.ToXMLFormat()),
-				new XElement(_cif + XMLNames.Gearbox_TransmissionType, gearbox.Type.ToXMLFormat()),
-				new XElement(_cif + "NrOfGears", gearbox.Gears.Count)
-			};
+			return GetElements(gearbox);
 		}
 
-		#endregion
-	}
+		private IList<XElement> GetElements(IGearboxDeclarationInputData gearbox)
+		{
+            return new List<XElement>() {
+                new XElement(_cif + "TransmissionValues", gearbox.CertificationMethod.ToXMLFormat()),
+                new XElement(_cif + XMLNames.Gearbox_TransmissionType, gearbox.Type.ToXMLFormat()),
+                new XElement(_cif + "NrOfGears", gearbox.Gears.Count)
+            };
+        }
+
+    }
 
 	public class TransmissionGroupWithoutGearbox : AbstractCIFGroupWriter
 	{
@@ -96,13 +104,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class IEPCTransmissionGroup : AbstractCIFGroupWriter
-	{
+	public class IEPCTransmissionGroup : AbstractCIFGroupWriter, IAxlePowertrainReportOutputGroup
+    {
 		public IEPCTransmissionGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
-		#region Overrides of AbstractCIFGroupWriter
+		public IList<XElement> GetElements(IAxlePowertrainDeclarationInputData axlePt)
+		{
+            return new List<XElement>() {
+                new XElement(_cif + "NrOfGears", axlePt.IEPCInputData.Gears.Count)
+            };
+        }
 
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
             var vehicle = GetVehicle(inputData);
             var iepc = vehicle.Components.IEPC;
@@ -111,8 +124,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				new XElement(_cif + "NrOfGears", iepc.Gears.Count)
 			};
 		}
-
-		#endregion
 	}
 
 	public class FuelCellGroup : AbstractCIFGroupWriter
@@ -185,60 +196,85 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public class ElectricMachineGroup : AbstractCIFGroupWriter
-	{
+	public class ElectricMachineGroup : AbstractCIFGroupWriter, IAxlePowertrainReportOutputGroup
+    {
 		public ElectricMachineGroup(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
 
-		#region Overrides of AbstractCIFGroupWriter
-
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        public IList<XElement> GetElements(IAxlePowertrainDeclarationInputData axlePt)
 		{
-			var result = new XElement(_cif + "ElectricMachineSystem");
+            var architecture = axlePt.Architecture;
+            var iepc = axlePt.IEPCInputData;
+			var electricMotors = new List<ElectricMachineEntry<IElectricMotorDeclarationInputData>>() { axlePt.ElectricMotor };
 
-			Watt totalRatedPropulsionPower = null;
-			IList<IElectricMotorVoltageLevel> voltageLevels = null;
-			var vehicle = GetVehicle(inputData);
-			var count = 1;
-			if (vehicle.ArchitectureID == ArchitectureID.S_IEPC || vehicle.ArchitectureID == ArchitectureID.E_IEPC || vehicle.ArchitectureID == ArchitectureID.F_IEPC) {
-				count = vehicle.Components.IEPC.DesignTypeWheelMotor && vehicle.Components.IEPC.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
-                totalRatedPropulsionPower = vehicle.Components.IEPC.TotalRatedPowerCalculated;
-				voltageLevels = vehicle.Components.IEPC.VoltageLevels.ToList();
-
-			} else {
-				voltageLevels = new List<IElectricMotorVoltageLevel>();
-				var propulsionElectricMachines = vehicle.Components.ElectricMachines.Entries
-					.Where(e => e.Position != PowertrainPosition.GEN);
-				totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower * e.Count));
-				var groupedVoltageLevels = propulsionElectricMachines
-					.SelectMany(electricMachine => electricMachine.ElectricMachine.VoltageLevels).GroupBy((level => level.VoltageLevel));
-				foreach (IGrouping<Volt, IElectricMotorVoltageLevel> electricMotorVoltageLevels in groupedVoltageLevels) {
-					voltageLevels.Add(electricMotorVoltageLevels.MaxBy(level => level.ContinuousTorqueSpeed * level.ContinuousTorque));
-				}
-			}
-
-			result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW", 0)));
-
-			var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
-			result.Add(voltageLevelsXElement);
-
-			foreach (var electricMotorVoltageLevel in voltageLevels) {
-				var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
-					voltageLevels.Count > 1
-						? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0))
-						: null,
-					new XElement(_cif + "MaxContinuousPropulsionPower",
-						(electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed * count)
-						.ValueAsUnit("kW", 0)));
-
-				voltageLevelsXElement.Add(voltageLevel);
-			}
-
-
-			return new List<XElement>() { result } ;
+            return GetElements(architecture, iepc, electricMotors);
         }
 
-		#endregion
-	}
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+		{
+            var vehicle = GetVehicle(inputData);
+            
+			var architecture = vehicle.ArchitectureID;
+            var iepc = vehicle.Components.IEPC;
+            var electricMotors = vehicle.Components.ElectricMachines?.Entries;
+
+			return GetElements(architecture, iepc, electricMotors);
+		}
+
+        private IList<XElement> GetElements(
+			ArchitectureID architecture, 
+			IIEPCDeclarationInputData iepc, 
+			IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> electricMotors)
+		{
+            var result = new XElement(_cif + "ElectricMachineSystem");
+
+            Watt totalRatedPropulsionPower = null;
+            IList<IElectricMotorVoltageLevel> voltageLevels = new List<IElectricMotorVoltageLevel>();
+            var count = 0;
+
+            if (architecture.IsOneOf(ArchitectureID.S_IEPC, ArchitectureID.E_IEPC, ArchitectureID.F_IEPC))
+            {
+                count = iepc.DesignTypeWheelMotor && iepc.NrOfDesignTypeWheelMotorMeasured == 1 ? 2 : 1;
+                totalRatedPropulsionPower = iepc.TotalRatedPowerCalculated;
+                voltageLevels = iepc.VoltageLevels.ToList();
+            }
+            else
+            {
+                var propulsionElectricMachines = electricMotors.Where(e => e.Position != PowertrainPosition.GEN);
+
+                count = 1;
+                totalRatedPropulsionPower = propulsionElectricMachines.Sum((e => e.ElectricMachine.R85RatedPower * e.Count));
+
+                var groupedVoltageLevels = propulsionElectricMachines
+                    .SelectMany(electricMachine => electricMachine.ElectricMachine.VoltageLevels).GroupBy((level => level.VoltageLevel));
+
+                foreach (IGrouping<Volt, IElectricMotorVoltageLevel> electricMotorVoltageLevels in groupedVoltageLevels)
+                {
+                    voltageLevels.Add(electricMotorVoltageLevels.MaxBy(level => level.ContinuousTorqueSpeed * level.ContinuousTorque));
+                }
+            }
+
+            result.Add(new XElement(_cif + "TotalRatedPropulsionPower", totalRatedPropulsionPower.ValueAsUnit("kW", 0)));
+
+            var voltageLevelsXElement = new XElement(_cif + "VoltageLevels");
+            result.Add(voltageLevelsXElement);
+
+            foreach (var electricMotorVoltageLevel in voltageLevels)
+            {
+                var voltageLevel = new XElement(_cif + XMLNames.ElectricMachine_VoltageLevel,
+                    voltageLevels.Count > 1
+                        ? new XAttribute("voltage", electricMotorVoltageLevel.VoltageLevel.ToXMLFormat(0))
+                        : null,
+                    new XElement(_cif + "MaxContinuousPropulsionPower",
+                        (electricMotorVoltageLevel.ContinuousTorque * electricMotorVoltageLevel.ContinuousTorqueSpeed * count)
+                        .ValueAsUnit("kW", 0)));
+
+                voltageLevelsXElement.Add(voltageLevel);
+            }
+
+            return new List<XElement>() { result };
+        }
+
+    }
 
 	public class REESSGroup : AbstractCIFGroupWriter
 	{

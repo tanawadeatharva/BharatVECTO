@@ -113,7 +113,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					return GetFCHV_RunData(GetBatteryElectricVehicleRunData, VectoSimulationJobType.FCHV);
 				case VectoSimulationJobType.FCHV_IEPC:
 					return GetFCHV_RunData(GetIEPCRunData, VectoSimulationJobType.FCHV_IEPC);
-				case VectoSimulationJobType.MultiplePowertrains:
+				case VectoSimulationJobType.Multiple_FCHV:
+				case VectoSimulationJobType.Multiple_PEV:
+				case VectoSimulationJobType.Multiple_SHEV:
 					return GetMultiplePowertrainsRunData();
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
@@ -364,7 +366,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 				yield return new VectoRunData {
 					JobName = InputDataProvider.JobInputData.JobName,
-					JobType = VectoSimulationJobType.MultiplePowertrains,
+					JobType = InputDataProvider.JobInputData.JobType,
 					VehicleData = vehicleData,
 					WheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle),
 					AirdragData = dao.CreateAirdragData(
@@ -374,8 +376,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
 					BusAuxiliaries = dao.CreateBusAuxiliariesData(
 						vehicle.Components.AuxiliaryInputData, 
-						vehicleData, 
-						VectoSimulationJobType.MultiplePowertrains),
+						vehicleData,
+                        InputDataProvider.JobInputData.JobType),
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
 					BatteryData = batteryData,

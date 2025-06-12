@@ -226,8 +226,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
-
         public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = -1) => null;
         
         public override RetarderType GetRetarderType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
@@ -274,6 +272,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override string PowertrainPositionPrefix => "F";
 
         public override bool HybridElectricHDV => true;
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_FCHV;
     }
 
     public class XMLDeclaration_Multiple_PEV_PrimaryBus_DataProviderV27 : XMLDeclaration_Multiple_PrimaryBus_DataProviderV27
@@ -286,6 +286,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         { }
 
         public override string PowertrainPositionPrefix => "E";
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_PEV;
     }
 
     public class XMLDeclaration_Multiple_SHEV_PrimaryBus_DataProviderV27 : XMLDeclaration_Multiple_PrimaryBus_DataProviderV27
@@ -300,5 +302,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override string PowertrainPositionPrefix => "S";
 
         public override bool HybridElectricHDV => true;
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_SHEV;
     }
 }

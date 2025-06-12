@@ -47,7 +47,13 @@ namespace TUGraz.VectoMockup.Ninject
 				.Named(VectoSimulationJobType.IEPC_E.ToString());
 
 			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.MultiplePowertrains.ToString());
+                .Named(VectoSimulationJobType.Multiple_FCHV.ToString());
+
+            Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+                .Named(VectoSimulationJobType.Multiple_PEV.ToString());
+
+            Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
+                .Named(VectoSimulationJobType.Multiple_SHEV.ToString());
 
 			Bind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.SerialHybridVehicle.ToString());

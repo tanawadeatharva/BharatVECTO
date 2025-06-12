@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -24,6 +25,11 @@ namespace TUGraz.VectoCommon.InputData
 			return jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC;
 		}
 
+		public static bool IsMultiplePowertrains(this VectoSimulationJobType jobType)
+		{
+			return jobType.IsOneOf(VectoSimulationJobType.Multiple_SHEV, VectoSimulationJobType.Multiple_FCHV, VectoSimulationJobType.Multiple_PEV);
+		}
+
 		public static string GetPowertrainArchitectureType(this VectoSimulationJobType jobType)
 		{
 			switch (jobType) {
@@ -34,12 +40,15 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.Multiple_SHEV:
 					return Hybrid;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.Multiple_PEV:
 					return PureElectric;
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.Multiple_FCHV:
 					return FuelCell;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
@@ -56,15 +65,21 @@ namespace TUGraz.VectoCommon.InputData
 					return GetPHEVArchitectureId(em);
 
 				case VectoSimulationJobType.SerialHybridVehicle:
+				case VectoSimulationJobType.Multiple_SHEV when (em != PowertrainPosition.IEPC):
 					return GetSHEVArchitecureID(em);
 
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.Multiple_PEV when (em != PowertrainPosition.IEPC):
+				case VectoSimulationJobType.Multiple_FCHV when (em != PowertrainPosition.IEPC):
 					return GetPEVArchId(emPos: em);
 
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.Multiple_SHEV when (em == PowertrainPosition.IEPC):
+				case VectoSimulationJobType.Multiple_FCHV when (em == PowertrainPosition.IEPC):
+				case VectoSimulationJobType.Multiple_PEV when (em == PowertrainPosition.IEPC):
 					return GetIepcArchitectureId(jobType, em);
 
 				case VectoSimulationJobType.IHPC:
@@ -83,11 +98,14 @@ namespace TUGraz.VectoCommon.InputData
 				case VectoSimulationJobType.EngineOnlySimulation:
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.IEPC_S:
+				case VectoSimulationJobType.Multiple_SHEV:
 					return true;
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.Multiple_FCHV:
+				case VectoSimulationJobType.Multiple_PEV:
 					return false;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(jobType), jobType, null);
@@ -102,10 +120,13 @@ namespace TUGraz.VectoCommon.InputData
 
 			switch (jobType) {
 				case VectoSimulationJobType.IEPC_E:
-					return ArchitectureID.E_IEPC;
+                case VectoSimulationJobType.Multiple_PEV:
+                    return ArchitectureID.E_IEPC;
 				case VectoSimulationJobType.IEPC_S:
-					return ArchitectureID.S_IEPC;
-				case VectoSimulationJobType.FCHV_IEPC:
+                case VectoSimulationJobType.Multiple_SHEV:
+                    return ArchitectureID.S_IEPC;
+                case VectoSimulationJobType.Multiple_FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
 					return ArchitectureID.F_IEPC;
 				default:
 					throw new ArgumentException(nameof(jobType));
