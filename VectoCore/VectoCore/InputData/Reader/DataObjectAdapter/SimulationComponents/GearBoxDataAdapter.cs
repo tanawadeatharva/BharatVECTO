@@ -554,6 +554,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				var lossMap = TransmissionLossMapReader.Create(1, gear.Ratio, $"Gear{i + 1}");
 
 				ShiftPolygon shiftPolygon = null;
+                ShiftPolygon deratedEmShiftPolygon = null;
 				if (iepc.Gears.Count > 1)
 				{
 					if (shiftPolygonCalc != null)
@@ -568,10 +569,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							null, gearInput, null, axlegearRatio,
 							dynamicTyreRadius, runData.ElectricMachinesData?.FirstOrDefault()?.Item2);
 					}
-				}
-
-				var deratedEmShiftPolygon = CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalc, gearInput, i, axlegearRatio,
+					deratedEmShiftPolygon = CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalc, gearInput, i, axlegearRatio,
 						dynamicTyreRadius);
+                }
+
+				
                 var gearData = new GearData
 				{
 					ShiftPolygon = shiftPolygon,

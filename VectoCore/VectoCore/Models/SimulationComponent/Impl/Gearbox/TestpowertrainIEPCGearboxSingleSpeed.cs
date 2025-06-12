@@ -11,8 +11,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 	// so that these can be set from outside without interfering with the class in the real implementation
     public class TestpowertrainIEPCGearboxSingleSpeed : IEPCGearboxSingleSpeed, ITestPowertrainTransmission
 	{
-		public TestpowertrainIEPCGearboxSingleSpeed(IVehicleContainer container, GearboxData modelData) : base(
-			container, modelData, false)
+		public TestpowertrainIEPCGearboxSingleSpeed(IVehicleContainer container, IShiftStrategy strategy) : base(
+			container, strategy, false)
 		{
 			if (!container.IsTestPowertrain) {
 				throw new VectoException("This class shall not be used in a real powertrain!");
@@ -23,22 +23,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
 		public GearshiftPosition SetGear
 		{
-			set => throw new NotImplementedException();
+			set {}
 		}
 		public GearshiftPosition SetNextGear {
-			set => throw new NotImplementedException();
+			set {}
 		}
 
-		public bool SetDisengaged {
-			set => throw new NotImplementedException();
+		public bool SetDisengaged
+		{
+			set {}
 		}
 
 		public bool SetDisengageGearbox {
-			set => throw new NotImplementedException();
+			set {}
 		}
 
 		public Second SetEngageTime {
-			set => throw new NotImplementedException();
+			set {}
 		}
 
 		#endregion

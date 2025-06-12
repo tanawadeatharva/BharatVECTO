@@ -19,8 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
         public IShiftStrategy Strategy => null;
 
-		public IEPCGearboxSingleSpeed(IVehicleContainer container, GearboxData modelData) : this(container,
-			modelData, false)
+		public IEPCGearboxSingleSpeed(IVehicleContainer container, IShiftStrategy strategy) : this(container, strategy, false)
 		{
 			if (container.IsTestPowertrain) {
 				throw new VectoException(
@@ -28,9 +27,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 			}
         }
 
-        protected IEPCGearboxSingleSpeed(IVehicleContainer container, GearboxData modelData, bool dummy) : base(container,
-            modelData.Gears.First().Value)
-        {
+        protected IEPCGearboxSingleSpeed(IVehicleContainer container, IShiftStrategy strategy, bool dummy) : base(container,
+            container.RunData.GearboxData.Gears.First().Value)
+		{
+			var modelData = container.RunData.GearboxData;
             GearboxType = modelData.Type;
             Gear = new GearshiftPosition(1);
             TCLocked = true;
