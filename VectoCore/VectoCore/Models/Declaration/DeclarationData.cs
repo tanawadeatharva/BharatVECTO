@@ -1106,7 +1106,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var emMaxSpeed = electricMotorData.EfficiencyData.MaxSpeed;
 				
 				//Transform EM Fullloadcurve to include ADC losses and ratio. Convert EM to Drivetrain
-				var fullLoadCurveTransformed = TransformFullLoadCurve(fullLoadCurveOrig, lossMap, emRatio);
+				var fullLoadCurveTransformed = lossMap == null
+					? fullLoadCurveOrig
+					: TransformFullLoadCurve(fullLoadCurveOrig, lossMap, emRatio);
 				var emMaxSpeedDt = emMaxSpeed / emRatio;
 				
 				
