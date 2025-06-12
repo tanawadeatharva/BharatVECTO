@@ -519,7 +519,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                 .Cast<PerSecond>();
             var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
 
+			var dtLow = dt.IsSmaller(Constants.SimulationSettings.TargetTimeInterval * 0.8);
+			var isGear1 = currentGear.Gear.Equals(1);
+			var beforeReachingTargetSpeed = Container.DrivingCycleInfo.TargetSpeed.IsSmallerOrEqual(Container.VehicleInfo.VehicleSpeed + Container.DriverInfo.DriverAcceleration * dt) && Container.DriverInfo.DriverAcceleration.IsGreater(0.0);
+			var rightIsStop = Container.DrivingCycleInfo.CycleData.RightSample.VehicleTargetSpeed.IsEqual(0.0);
+
             foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC))) {
+
+				if (dtLow && isGear1 && !beforeReachingTargetSpeed && rightIsStop) {
+					continue;
+				}
 
                 if (next == null) {
                     // no further gear
@@ -646,8 +655,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
             var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(base.GearshiftParams.TimeBetweenGearshifts);
 
             if (shiftTimeReached && IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
-                Downshift(absTime, gear);
-                return true;
+				var next_gear = Gears.Predecessor(gear);
+
+				if (!(next_gear.TorqueConverterLocked.Equals(true)) || !(IsAboveUpShiftCurve(next_gear, outTorque / GearboxModelData.Gears[next_gear.Gear].Ratio, outAngularVelocity * GearboxModelData.Gears[next_gear.Gear].Ratio, true))) {
+					Downshift(absTime, gear);
+					return true;
+				}
             }
 
             if (shiftTimeReached && Container.DriverInfo.DrivingAction == DrivingAction.Accelerate) {
