@@ -368,6 +368,11 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
+	public IWheelEnd CreateWheelEnd(IVehicleContainer container, WheelEndData modelData)
+	{
+		throw new NotImplementedException();
+	}
+
 	public IExemptedVehicleContainer CreateExemptedVehicleContainer(VectoRunData runData, IModalDataContainer modData,
         ISumData writeSumData)
     {

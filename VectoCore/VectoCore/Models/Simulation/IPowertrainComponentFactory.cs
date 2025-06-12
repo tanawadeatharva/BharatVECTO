@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -100,6 +101,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 			IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es);
 
 		IElectricMotorControl CreateElectricMotorController(CycleType cycle, IVehicleContainer container, IElectricSystem es);
+
+		IWheelEnd CreateWheelEnd(IVehicleContainer container, WheelEndData modelData);
 	}
 
 	public interface IIEPCGearboxFactory
