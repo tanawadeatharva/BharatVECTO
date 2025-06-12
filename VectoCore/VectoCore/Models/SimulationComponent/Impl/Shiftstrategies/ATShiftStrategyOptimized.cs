@@ -722,7 +722,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var beforeReachingTargetSpeed = Container.DrivingCycleInfo.TargetSpeed.IsSmallerOrEqual(Container.VehicleInfo.VehicleSpeed + Container.DriverInfo.DriverAcceleration * dt) && Container.DriverInfo.DriverAcceleration.IsGreater(0.0);
 			var rightIsStop = Container.DrivingCycleInfo.CycleData.RightSample.VehicleTargetSpeed.IsEqual(0.0);
 
-            foreach (var next in Gears.IterateGears(Gears.Successor(currentGear), Gears.Successor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC))) {
+            foreach (var next in Gears.IterateGears(Gears.Predecessor(currentGear), Gears.Predecessor(currentGear, (uint)GearshiftParams.AllowedGearRangeFC))) {
 				
 				if (dtLow && isGear1 && !beforeReachingTargetSpeed && rightIsStop) {
                     continue;
