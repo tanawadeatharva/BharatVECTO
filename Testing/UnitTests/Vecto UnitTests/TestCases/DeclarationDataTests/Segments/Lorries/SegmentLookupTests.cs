@@ -98,17 +98,17 @@ namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.Segments.Lorries
 		]
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
-			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.TruckSegments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>(),
-						false),
-				$"ERROR: Could not find the declaration segment for vehicle. " +
-				$"Category: {VehicleCategory.RigidTruck}, " +
-				$"AxleConfiguration: {AxleConfiguration.AxleConfig_4x2.GetName()}, " +
-				$"GrossVehicleWeight: {weight.SI<Kilogram>()}");
+			var segment = DeclarationData.TruckSegments.Lookup(
+				VehicleCategory.RigidTruck,
+				AxleConfiguration.AxleConfig_4x2,
+				weight.SI<Kilogram>(),
+				0.SI<Kilogram>(),
+				false);
+            Assert.IsFalse(segment.Found);
+				//$"ERROR: Could not find the declaration segment for vehicle. " +
+				//$"Category: {VehicleCategory.RigidTruck}, " +
+				//$"AxleConfiguration: {AxleConfiguration.AxleConfig_4x2.GetName()}, " +
+				//$"GrossVehicleWeight: {weight.SI<Kilogram>()}");
 		}
 
 		[
@@ -119,17 +119,17 @@ namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.Segments.Lorries
 		]
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
-			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.TruckSegments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x4,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>(),
-						false),
-				$"ERROR: Could not find the declaration segment for vehicle. " +
-				$"Category: {VehicleCategory.RigidTruck}, " +
-				$"AxleConfiguration: {AxleConfiguration.AxleConfig_4x4.GetName()}, " +
-				$"GrossVehicleWeight: {weight.SI<Kilogram>()}");
+			var segment = DeclarationData.TruckSegments.Lookup(
+				VehicleCategory.RigidTruck,
+				AxleConfiguration.AxleConfig_4x4,
+				weight.SI<Kilogram>(),
+				0.SI<Kilogram>(),
+				false);
+            Assert.IsFalse(segment.Found);
+				//$"ERROR: Could not find the declaration segment for vehicle. " +
+				//$"Category: {VehicleCategory.RigidTruck}, " +
+				//$"AxleConfiguration: {AxleConfiguration.AxleConfig_4x4.GetName()}, " +
+				//$"GrossVehicleWeight: {weight.SI<Kilogram>()}");
 		}
 
         [
