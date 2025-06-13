@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 		[
             //TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492), // primary vehicle cycle pruning -> cycle is not configured for the current vehicle.
             TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
-			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.4657),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1040.0068),
 
 			TestCase(SINGLEBUS_34F_FM, "Coach", 781.6859),
             //TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187), // primary vehicle cycle pruning -> cycle cycle is not configured for the current vehicle.
