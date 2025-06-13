@@ -681,7 +681,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
                         // var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
                         // SetGear(gbxState);
 						var tmpGear = Gears.Predecessor(currentGear);
-						var tmpResponseDs = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tmpGear);
+						var tmpResponseDs = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tmpGear, true);
 						
                         // done
                         if (tmpResponseDs.Engine.EngineSpeed.IsSmaller(Container.EngineInfo.EngineN95hSpeed) && tmpResponseDs.DeltaFullLoad - Formulas.InertiaPower(
@@ -884,12 +884,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 
 		protected ResponseDryRun RequestDryRunWithGear(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear)
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition gear, bool updateComponents = false)
 		{
 			TestPowertrain.Gearbox.SetDisengaged = false;
 			TestPowertrain.Gearbox.SetGear = gear;
 
 			TestPowertrain.Container.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			if (updateComponents)
+				TestPowertrain.UpdateComponents();
 			var response = (ResponseDryRun)TestPowertrain.Container.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			return response;
