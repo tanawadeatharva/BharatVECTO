@@ -20,7 +20,6 @@
 		<AngledriveType axleNumber="1">Separate Angledrive</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
 		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
-		<NgTankSystem>Liquefied</NgTankSystem>
 		<ArchitectureID>S2</ArchitectureID>
 		<ArchitectureIDPwt2>S-IEPC</ArchitectureIDPwt2>
 		<OVC>true</OVC>
