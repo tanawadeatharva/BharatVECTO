@@ -8378,7 +8378,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.SeparateAngledrive, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S2, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S_IEPC, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8554,7 +8554,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S3, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S4, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
