@@ -32,6 +32,7 @@
 	16-05-2025: Added H2 elements to PHEV and SHEV vehicles.
 	27-05-2025: Making new fields of completed buses optional (multiple OEMs can be involved in completed buses).
 	17-06-2025: Removed NgTankSystem from multiple-SHEV Primary Bus.
+	17-06-2025: Removed Retarder from components of X4 architectures.
 	-->
 
 	<!--                      JOB                           -->
@@ -2604,7 +2605,6 @@
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="ElectricMachineType"/>
 					<xs:element name="ElectricEnergyStorage" type="ElectricEnergyStorageType"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
@@ -2660,7 +2660,6 @@
 			<xs:extension base="Abstract_Components_HEV-Sx_LorryDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Components_HEV-Sx_GenSetSequenceGroup"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_SHEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
@@ -2719,7 +2718,6 @@
 			<xs:extension base="Abstract_Components_FCHV_Fx_LorryDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Components_FCHV_Fx_FuelCellSequenceGroup"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_PEV_Lorry_Type"/>
 					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
@@ -2833,7 +2831,6 @@
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="ElectricMachineType"/>
 					<xs:element name="ElectricEnergyStorage" type="ElectricEnergyStorageType"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_PEV_PrimaryBus_Type"/>
 				</xs:sequence>
@@ -2885,7 +2882,6 @@
 			<xs:extension base="Abstract_Components_HEV-Sx_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Components_HEV-Sx_GenSetSequenceGroup"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_SHEV_PrimaryBus_Type"/>
 				</xs:sequence>
@@ -2940,7 +2936,6 @@
 			<xs:extension base="Abstract_Components_FCHV_Fx_PrimaryBusDeclarationType">
 				<xs:sequence>
 					<xs:group ref="Components_FCHV_Fx_FuelCellSequenceGroup"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="AUX_Component_FCHV_PrimaryBus_Type"/>
 				</xs:sequence>
@@ -3058,7 +3053,6 @@
 			<xs:extension base="Abstract_xEV_Powertrain_Type">
 				<xs:sequence>
 					<xs:element name="ElectricMachine" type="ElectricMachineType"/>
-					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
