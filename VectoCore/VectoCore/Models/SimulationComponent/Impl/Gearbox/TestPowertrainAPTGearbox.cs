@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 		}
 
 		public bool SetDisengageGearbox {
-			set => throw new NotImplementedException();
+			set {}
 		}
 
 		public Second SetEngageTime {

@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		IDCDCConverter CreateDCDCConverter(IVehicleContainer container, double efficiency);
 
-		ISimpleBattery CreateSimpleBattery(bool smartAlternator, IVehicleContainer container, WattSecond capacity, double efficiency);
+		ISimpleBattery CreateSimpleBattery(bool smartAlternator, IVehicleContainer container, WattSecond capacity, double storageEfficiency);
 
 		IBusAuxiliariesAdapter CreateBusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null);
 		
