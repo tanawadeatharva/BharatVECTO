@@ -113,11 +113,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAngledriveInputData CreateAngledriveData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
-		IXMLEngineDeclarationInputData CreateEngineData(
+        IXMLAngledriveInputData CreateAngledriveData(
+            string version, int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+        IXMLEngineDeclarationInputData CreateEngineData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLRetarderInputData CreateRetarderData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLRetarderInputData CreateRetarderData(
+            string version, int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLAuxiliariesDeclarationInputData CreateAuxiliariesData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);

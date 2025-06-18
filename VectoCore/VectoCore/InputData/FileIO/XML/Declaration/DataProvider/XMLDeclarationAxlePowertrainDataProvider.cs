@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
             if (version == null)
             {
-                return new XMLDeclarationRetarderDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
+                return Factory.CreateRetarderData(XMLDeclarationRetarderDataProviderV10.AXLE_NUMBER_VERSION, AxleNumber, Vehicle, componentNode, sourceFile);
             }
 
             return Factory.CreateRetarderData(version, Vehicle, componentNode, sourceFile);
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         {
             if (version == null)
             {
-                return new XMLDeclarationAngledriveDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
+                return Factory.CreateAngledriveData(XMLDeclarationAngledriveDataProviderV10.AXLE_NUMBER_VERSION, AxleNumber, Vehicle, componentNode, sourceFile);
             }
 
             return Factory.CreateAngledriveData(version, Vehicle, componentNode, sourceFile);
