@@ -12,6 +12,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		public FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
 		{
+			int KiloWattFactor = 1000;
 			List<FuelCellModuleData> modules = new List<FuelCellModuleData>();
 			foreach(var fuelCellModule in fuelCellSystem.FuelCellModules)
 			{
@@ -27,25 +28,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 						.AsEnumerable()
 						.Select(r => new PowerOutputConsumption
 						{
-							PowerOutput = r.Field<string>("powerOutput").ToDouble().SI<Watt>(),
-							FuelConsumption = r.Field<string>("fuelConsumption").ToDouble().ConvertToKilogramPerSecond(),
+							PowerOutput = r.Field<string>("powerOutput").ToDouble().SI<Watt>() * KiloWattFactor,
+							FuelConsumption = r.Field<string>("fuelConsumption").ToDouble().SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>()
 						}).ToList(),
 					}
 				});
 			}
 
 			return new FuelCellSystemDeclarationData(modules);
-		}
-	}
-
-	public static class DoubleExtensions
-	{
-		public static KilogramPerSecond ConvertToKilogramPerSecond(this double gramsPerHour)
-		{
-			double Kilo = 1000;
-			double SecondsPerHour = 3600;
-
-			return (gramsPerHour / (Kilo * SecondsPerHour)).SI<KilogramPerSecond>();
 		}
 	}
 }
