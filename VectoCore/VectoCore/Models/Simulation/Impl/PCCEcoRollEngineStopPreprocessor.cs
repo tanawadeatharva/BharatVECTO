@@ -7,6 +7,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -43,7 +44,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (TestPowertrain.Container.GearboxInfo) {
 				case IAMTGearbox _:
-					RunPreprocessingAMTGearbox();
+				case IEPCGearboxMultipleGears _:
+                    RunPreprocessingAMTGearbox();
 					return;
 				case IAPTGearbox _:
 					RunPreprocessingATGearbox();
