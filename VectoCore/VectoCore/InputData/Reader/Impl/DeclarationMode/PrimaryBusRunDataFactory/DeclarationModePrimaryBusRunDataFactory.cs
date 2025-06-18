@@ -550,7 +550,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var vehicle = DataProvider.JobInputData.Vehicle;
 
-				foreach (var mission in _segment.Missions)
+				var missions = GetMissions();
+
+                foreach (var mission in missions)
 				{
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
