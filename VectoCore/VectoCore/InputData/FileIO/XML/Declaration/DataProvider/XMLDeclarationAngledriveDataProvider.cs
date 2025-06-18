@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		private int? _axleNumber;
 
 		public XMLDeclarationAngledriveDataProviderV10(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile, int? axleNumber = null) :
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-			_axleNumber = axleNumber;
+			//_axleNumber = axleNumber;
 		}
 
 		#region Implementation of IAngledriveInputData

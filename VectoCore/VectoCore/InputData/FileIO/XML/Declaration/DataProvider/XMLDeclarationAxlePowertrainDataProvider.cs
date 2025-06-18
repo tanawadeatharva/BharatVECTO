@@ -159,20 +159,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         protected virtual IRetarderInputData RetarderCreator(string version, XmlNode componentNode, string sourceFile)
         {
-            if (version == null)
-            {
-                return new XMLDeclarationRetarderDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
-            }
+            // TODO MQ: do not create instances directly - use Factory instead!
+            //if (version == null)
+            //{
+            //    return new XMLDeclarationRetarderDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
+            //}
 
             return Factory.CreateRetarderData(version, Vehicle, componentNode, sourceFile);
         }
 
         protected virtual IAngledriveInputData AngledriveCreator(string version, XmlNode componentNode, string sourceFile)
         {
-            if (version == null)
-            {
-                return new XMLDeclarationAngledriveDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
-            }
+			// TODO MQ: do not create instances directly - use Factory instead!
+            //if (version == null)
+            //{
+            //    return new XMLDeclarationAngledriveDataProviderV10(Vehicle, componentNode, sourceFile, AxleNumber);
+            //}
 
             return Factory.CreateAngledriveData(version, Vehicle, componentNode, sourceFile);
         }

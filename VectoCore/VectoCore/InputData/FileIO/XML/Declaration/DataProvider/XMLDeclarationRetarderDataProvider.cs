@@ -51,14 +51,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IXMLDeclarationVehicleData Vehicle;
         private int? _axleNumber;
-
-        public XMLDeclarationRetarderDataProviderV10(
-			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile, int? axleNumber = null) :
+		
+		public XMLDeclarationRetarderDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-            _axleNumber = axleNumber;
+            //_axleNumber = axleNumber;
         }
 
 		#region Implementation of IRetarderInputData
