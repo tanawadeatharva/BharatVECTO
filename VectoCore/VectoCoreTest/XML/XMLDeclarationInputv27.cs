@@ -2153,8 +2153,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(4670.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(11990.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(600, vehicle.EngineIdleSpeed.AsRPM);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1.0, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual("only one engaged gearwheel above oil level", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(true, vehicle.VocationalVehicle);
@@ -2179,7 +2178,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.IsNull(vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -2282,8 +2281,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(7100.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(650, vehicle.EngineIdleSpeed.AsRPM);
             Assert.AreEqual(20.3, vehicle.CargoVolume.Value());
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1.0, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.IsNull(vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
@@ -2306,7 +2304,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.IsNull(vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -2918,8 +2916,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
             Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -2946,7 +2943,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -3048,8 +3045,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(20.300, vehicle.CargoVolume.Value());
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -3074,7 +3070,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -3950,8 +3946,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
             Assert.AreEqual("None", vehicle.Components.PTOTransmissionInputData.PTOTransmissionType);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -3979,7 +3974,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -4082,8 +4077,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(10143.SI<Kilogram>(), vehicle.CurbMassChassis);
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(20.300, vehicle.CargoVolume.Value());
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -4111,7 +4105,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap.Rows.Count; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -4645,9 +4639,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(null, vehicle.CargoVolume);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", axlePt1.PTOTransmissionInputData.PTOTransmissionType);
@@ -4688,7 +4681,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(2, axlePt2.ElectricMotor.Count);
             Assert.AreEqual(true, axlePt2.ElectricMotor.ADC.Ratio.IsEqual(12.720));
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -4982,9 +4975,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(18000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(null, vehicle.CargoVolume);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", axlePt1.PTOTransmissionInputData.PTOTransmissionType);
@@ -5025,7 +5017,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(2, axlePt2.ElectricMotor.Count);
             Assert.AreEqual(true, axlePt2.ElectricMotor.ADC.Ratio.IsEqual(12.720));
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -5154,9 +5146,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(11990.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(null, vehicle.CargoVolume);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", axlePt1.PTOTransmissionInputData.PTOTransmissionType);
@@ -5201,7 +5192,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(1, axlePt2.ElectricMotor.Count);
             Assert.AreEqual(null, axlePt2.ElectricMotor.ADC);
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -5419,9 +5410,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(11990.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(null, vehicle.CargoVolume);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", axlePt1.PTOTransmissionInputData.PTOTransmissionType);
@@ -5466,7 +5456,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(1, axlePt2.ElectricMotor.Count);
             Assert.AreEqual(null, axlePt2.ElectricMotor.ADC);
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.AuxiliaryInputData.Auxiliaries;
@@ -6076,8 +6066,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(true, vehicle.Articulated);
             Assert.AreEqual(null, vehicle.CurbMassChassis);
             Assert.AreEqual(28000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(AngledriveType.None, vehicle.Components.AngledriveInputData.Type);
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -6105,7 +6094,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.Throws<VectoException>(() => { var x = vehicle.Components.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             Assert.IsNull(vehicle.Components.AuxiliaryInputData);
@@ -6909,8 +6898,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(true, vehicle.Articulated);
             Assert.AreEqual(28000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
@@ -6937,7 +6925,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.IsNull(vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(2, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.BusAuxiliaries;
@@ -7609,8 +7597,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(true, vehicle.Articulated);
             Assert.AreEqual(20000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(true, vehicle.EngineIdleSpeed.AsRPM.IsEqual(1));
-            Assert.AreEqual(RetarderType.TransmissionOutputRetarder, vehicle.Components.RetarderInputData.Type);
-            Assert.AreEqual(1, vehicle.Components.RetarderInputData.Ratio);
+            Assert.AreEqual(RetarderType.None, vehicle.Components.RetarderInputData.Type);
             Assert.AreEqual(null, vehicle.Components.AngledriveInputData);
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -7637,7 +7624,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.IsNull(vehicle.Components.GearboxInputData);
             Assert.IsNull(vehicle.Components.TorqueConverterInputData);
             Assert.IsNull(vehicle.Components.AngledriveInputData);
-            Assert.AreEqual(31, vehicle.Components.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = vehicle.Components.RetarderInputData.LossMap; });
             Assert.IsNull(vehicle.Components.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.BusAuxiliaries;
@@ -7915,9 +7902,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(28000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -7950,7 +7936,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(PowertrainPosition.BatteryElectricE4, axlePt2.ElectricMotor.Position);
             Assert.AreEqual(2, axlePt2.ElectricMotor.Count);
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.BusAuxiliaries;
@@ -8220,9 +8206,8 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicle.AxleConfiguration);
             Assert.AreEqual(28000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
@@ -8253,7 +8238,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(PowertrainPosition.BatteryElectricE4, axlePt2.ElectricMotor.Position);
             Assert.AreEqual(2, axlePt2.ElectricMotor.Count);
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.BusAuxiliaries;
@@ -8378,7 +8363,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.SeparateAngledrive, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S2, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S_IEPC, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8548,13 +8533,12 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(20000.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
             Assert.AreEqual(1, vehicle.EngineIdleSpeed.AsRPM);
             Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt1.RetarderInputData.Type);
-            Assert.AreEqual(RetarderType.TransmissionInputRetarder, axlePt2.RetarderInputData.Type);
+            Assert.AreEqual(RetarderType.None, axlePt2.RetarderInputData.Type);
             Assert.AreEqual(true, axlePt1.RetarderInputData.Ratio.IsEqual(1));
-            Assert.AreEqual(true, axlePt2.RetarderInputData.Ratio.IsEqual(2));
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(TankSystem.Liquefied, vehicle.TankSystem);
+            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S3, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S4, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8590,7 +8574,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(2, axlePt2.ElectricMotor.Count);
             Assert.AreEqual(null, axlePt2.ElectricMotor.ADC);
             Assert.Throws<VectoException>(() => { var x = axlePt2.AngledriveInputData.LossMap; });
-            Assert.AreEqual(2, axlePt2.RetarderInputData.LossMap.Rows.Count);
+            Assert.Throws<VectoException>(() => { var x = axlePt2.RetarderInputData.LossMap; });
             Assert.IsNull(axlePt2.AxleGearInputData);
             Assert.IsNotNull(vehicle.Components.AxleWheels);
             var aux = vehicle.Components.BusAuxiliaries;

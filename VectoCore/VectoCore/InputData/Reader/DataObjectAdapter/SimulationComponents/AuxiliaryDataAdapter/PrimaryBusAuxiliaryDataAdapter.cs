@@ -7,7 +7,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -77,10 +76,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var applicableHVACConfigHeating = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
 				HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentHeating);
 
+			// Diesel is hardcoded to calculate SSM parameters, but is unused and does not influence output.
+			var fuelData = FuelData.Diesel;
+
 			var ssmCooling = CreatePrimarySSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
-				runData.Loading, applicableHVACConfigCooling, hvacParams, FuelData.Diesel, true);
+				runData.Loading, applicableHVACConfigCooling, hvacParams, fuelData, true);
 			var ssmHeating = CreatePrimarySSMModelParameters(primaryVehicle.Components.BusAuxiliaries, mission,
-				runData.Loading, applicableHVACConfigHeating, hvacParams, FuelData.Diesel, false);
+				runData.Loading, applicableHVACConfigHeating, hvacParams, fuelData, false);
 			ssmHeating.ElectricHeater = GetElectricHeater(mission, runData);
 			ssmHeating.HeatingDistributions = DeclarationData.BusAuxiliaries.HeatingDistributionCases;
 			return (ssmCooling, ssmHeating);

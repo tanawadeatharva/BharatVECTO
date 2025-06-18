@@ -38,6 +38,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		// ReSharper disable InconsistentNaming
 		DieselCI,
+		DieselB100CI,
 		EthanolCI,
 		PetrolPI,
 		EthanolPI,
@@ -60,6 +61,8 @@ namespace TUGraz.VectoCommon.Models
 			switch (ftype) {
 				case FuelType.DieselCI:
 					return "Diesel CI";
+				case FuelType.DieselB100CI:
+					return "Diesel B100 CI";
 				case FuelType.EthanolCI:
 					return "Ethanol CI";
 				case FuelType.PetrolPI:

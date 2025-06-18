@@ -108,6 +108,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			switch (fuelType) {
 				case FuelType.DieselCI:
+				case FuelType.DieselB100CI:
 				case FuelType.EthanolCI:
 				case FuelType.NGCI:
 					return true;
