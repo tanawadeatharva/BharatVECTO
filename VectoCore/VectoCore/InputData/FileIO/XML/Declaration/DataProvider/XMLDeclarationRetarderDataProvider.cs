@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		public static readonly string AXLE_NUMBER_VERSION = $"{XSD_TYPE}:AxleNumberVersion";
+
 		protected IXMLDeclarationVehicleData Vehicle;
         private int? _axleNumber;
 		
@@ -58,12 +60,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-            //_axleNumber = axleNumber;
         }
 
-		#region Implementation of IRetarderInputData
+        public XMLDeclarationRetarderDataProviderV10(
+            int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(componentNode, sourceFile)
+        {
+			_axleNumber = axleNumber;
+            SourceType = DataSourceType.XMLFile;
+            Vehicle = vehicle;
+        }
 
-		public virtual RetarderType Type => Vehicle.GetRetarderType(AxleNumber.Value);
+        #region Implementation of IRetarderInputData
+
+        public virtual RetarderType Type => Vehicle.GetRetarderType(AxleNumber.Value);
 
 		public virtual double Ratio => Vehicle.GetRetarderRatio(AxleNumber.Value);
 

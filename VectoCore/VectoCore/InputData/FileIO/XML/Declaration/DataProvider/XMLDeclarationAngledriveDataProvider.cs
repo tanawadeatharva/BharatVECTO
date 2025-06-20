@@ -50,7 +50,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		protected IXMLDeclarationVehicleData Vehicle;
+        public static readonly string AXLE_NUMBER_VERSION = $"{XSD_TYPE}:AxleNumberVersion";
+
+        protected IXMLDeclarationVehicleData Vehicle;
 		private int? _axleNumber;
 
 		public XMLDeclarationAngledriveDataProviderV10(
@@ -59,12 +61,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-			//_axleNumber = axleNumber;
 		}
 
-		#region Implementation of IAngledriveInputData
+        public XMLDeclarationAngledriveDataProviderV10(
+            int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(componentNode, sourceFile)
+        {
+			_axleNumber = axleNumber;
+            SourceType = DataSourceType.XMLFile;
+            Vehicle = vehicle;
+        }
 
-		public virtual AngledriveType Type => Vehicle.GetAngledriveType(AxleNumber.Value);
+        #region Implementation of IAngledriveInputData
+
+        public virtual AngledriveType Type => Vehicle.GetAngledriveType(AxleNumber.Value);
 
 		public virtual double Ratio => GetDouble(XMLNames.AngleDrive_Ratio);
 
