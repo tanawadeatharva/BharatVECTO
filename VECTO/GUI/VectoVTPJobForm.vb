@@ -13,7 +13,6 @@
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Windows.Forms.DataVisualization.Charting
-Imports System.Xml
 Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData

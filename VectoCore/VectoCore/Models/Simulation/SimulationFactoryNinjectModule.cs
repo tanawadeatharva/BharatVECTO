@@ -134,6 +134,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public IVectoHash ManufacturerRecordHash { set { } }
 
+		public IVectoHash CustomerFileHash { set { } }
+		
+		public IVectoHash PrimaryVIFHash { set { } }
+
 		#endregion
 	}
 }

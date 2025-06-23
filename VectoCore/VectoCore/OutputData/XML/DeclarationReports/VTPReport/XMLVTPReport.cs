@@ -59,6 +59,7 @@ using LogManager = NLog.LogManager;
 using static TUGraz.VectoCore.Models.Simulation.Data.VectoRunData;
 using static TUGraz.VectoCore.Models.Declaration.PT1;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -298,7 +299,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var selectedMission = GetSelectedMission();
 			
-			var vtpFcMeasured = vtpResult.VTPFcMeasured.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos)).ToDictionary(x => x.Item1, x => x.Item2);
+			var vtpFcMeasured = vtpResult.VTPFcMeasured
+				.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos))
+				.ToDictionary(x => x.Item1, x => x.Item2);
 			
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured
 				.Select(x =>
@@ -683,7 +686,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var componentChecks = ComponentIntegrityChecks(ref allSuccess);
 			var jobIntegrity = JobIntegrityChecks(ref allSuccess);
-			var manufacturerReportIntegrity = ManufacturerReportIntegrityChecks(ref allSuccess);
+			var manufacturerReportIntegrity = ReportIntegrityChecks(ManufacturerRecordHash, "ManufacturerReport", ref allSuccess, "ManufacturerRecord");
+			var customerInfoFileIntegrity   = ReportIntegrityChecks(CustomerFileHash, "CustomerInformationFile", ref allSuccess);
+			var primaryVIFIntegrity = PrimaryVIFHash != null ? ReportIntegrityChecks(PrimaryVIFHash, "PrimaryVIF", ref allSuccess) : null;
 
 			DataIntegrityPart.Add(
 				new XAttribute("status", allSuccess ? XMLNames.Report_Results_Status_Success_Val : "failed"),
@@ -692,7 +697,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 					componentChecks.ToArray()
 				),
 				manufacturerReportIntegrity,
-				jobIntegrity
+				jobIntegrity,
+				customerInfoFileIntegrity,
+				primaryVIFIntegrity
 			);
 		}
 
@@ -754,33 +761,38 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		private XElement ManufacturerReportIntegrityChecks(ref bool allSuccess)
+		private XElement ReportIntegrityChecks(IVectoHash reportHash, string xmlReportParameter, ref bool allSuccess, string sourceParameter = null)
 		{
-			bool mrStatus;
-			XElement manufacturerReportIntegrity;
-			try {
-				var mrHashRead = ManufacturerRecordHash.ReadHash();
-				var mrHashRecomputed = ManufacturerRecordHash.ComputeHash();
-				mrStatus = ManufacturerRecordHash.ValidateHash();
-				manufacturerReportIntegrity = new XElement(
-					tns + "ManufacturerReport",
-					new XAttribute("status", mrStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
-					new XElement(tns + "DigestValueRecomputed", mrHashRecomputed),
+			bool hashStatus;
+			XElement reportIntegrity;
+
+			try
+			{
+				var sourceDigestValueParam = sourceParameter == null ? xmlReportParameter : sourceParameter;
+				var readHash = reportHash.ReadHash();
+				var computedHash = reportHash.ComputeHash();
+				hashStatus = reportHash.ValidateHash();
+				reportIntegrity = new XElement(
+					tns + xmlReportParameter,
+					new XAttribute("status", hashStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
+					new XElement(tns + "DigestValueRecomputed", computedHash),
 					new XElement(
 						tns + "DigestValueRead",
-						new XAttribute("source", "ManufacturerRecord"), mrHashRead)
-				);
-			} catch (Exception e) {
-				mrStatus = false;
-				var mrError = e.Message;
-				manufacturerReportIntegrity = new XElement(
-					tns + "ManufacturerReport",
-					new XAttribute("status", "failed"),
-					new XElement(tns + "Error", mrError)
+						new XAttribute("source", sourceDigestValueParam), readHash)
 				);
 			}
-			allSuccess = allSuccess && mrStatus;
-			return manufacturerReportIntegrity;
+			catch (Exception e)
+			{
+				hashStatus = false;
+				reportIntegrity = new XElement(
+					tns + xmlReportParameter,
+					new XAttribute("status", "failed"),
+					new XElement(tns + "Error", e.Message)
+				);
+			}
+
+			allSuccess = allSuccess && hashStatus;
+			return reportIntegrity;
 		}
 
 		private XElement JobIntegrityChecks(ref bool allSuccess)
@@ -1011,6 +1023,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public IManufacturerReport ManufacturerRecord { protected get; set; }
 
 		public IVectoHash ManufacturerRecordHash { protected get; set; }
+
+		public IVectoHash CustomerFileHash { protected get; set; }
+
+		public IVectoHash PrimaryVIFHash { protected get; set; }
 
 		#endregion
 	}

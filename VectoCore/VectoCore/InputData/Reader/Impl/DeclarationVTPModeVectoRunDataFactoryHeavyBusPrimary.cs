@@ -31,8 +31,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter) : 
-            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report) 
+        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter) :
+            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
         {
 			DataAdapter = declarationDataAdapter;
             InputDataProvider = inputProvider;
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData = tempVehicle,
 				Cycle = VTPCycle
 			};
-			
+
 			GearboxData = DataAdapter.CreateGearboxData(vehicle, vectoRun, null);
 			RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
             GearshiftData = DataAdapter.CreateGearshiftData(
-				AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), 
-				EngineData.IdleSpeed, 
+				AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0),
+				EngineData.IdleSpeed,
 				vehicle.Components.GearboxInputData.Type,
 				vehicle.Components.GearboxInputData.Gears.Count);
 
@@ -120,7 +120,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             Report.InputDataHash = JobInputData.VectoJobHash;
             Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
             Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-            var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
+			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
+			Report.PrimaryVIFHash = JobInputData.VectoPrimaryVIFHash;
+			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
                                         x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
                                             .ToList())
                                     .ToList();
@@ -242,11 +244,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 			var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
-				keySelector: f => f.Type, 
+				keySelector: f => f.Type,
 				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
-					f.Type, 
+					f.Type,
 					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
-            
+
             vtpRunData.VTPData = new VTPData() {
 				CorrectionFactors = correctionFactors,
 				FuelNCVs = JobInputData.FuelNCVs

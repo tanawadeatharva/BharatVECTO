@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
@@ -51,9 +52,25 @@ namespace TUGraz.VectoCommon.InputData
 
 		ICompletedVIF CompletedVIFInputData { get; }
 
+		/// <summary>
+		/// Gets the CIF input data for the specific VTP.
+		/// As per the regulation it must be provided by the manufacturer.
+		/// </summary>
+		IReportFile CIFInputData { get; }
+
+		/// <summary>
+		/// Gets the Primary Bus VIF data.
+		/// As per the regulation it must be provided by the manufacturer.
+		/// </summary>
+		IReportFile PrimaryVIFInputData { get; }
+
 		IVectoHash VectoJobHash { get; }
 
 		IVectoHash VectoManufacturerReportHash { get; }
+
+		IVectoHash VectoCustomerFileHash { get; }
+
+		IVectoHash VectoPrimaryVIFHash { get; }
 
 		Meter Mileage { get; }
 
@@ -75,10 +92,10 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IManufacturerReport
 	{
 		string Source { get; }
-
+		
 		IResultsInputData Results { get; }
 
-		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
+		IDictionary<VectoComponents, IList<string>> ComponentDigests { get; }
 
 		DigestData JobDigest { get; }
 
@@ -91,9 +108,23 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string Source { get; }
 
-		Meter VehicleLength {  get; }
+		Meter VehicleLength { get; }
 
 		VehicleCode BodyworkCode { get; }
 	}
 
+	public interface IReportFile
+	{
+		string Source { get; }
+	}
+
+	public class ReportFile : IReportFile
+	{
+		public ReportFile(string source)
+		{
+			Source = source ?? throw new ArgumentNullException(nameof(source));
+		}
+
+		public string Source { get; }
+	}
 }

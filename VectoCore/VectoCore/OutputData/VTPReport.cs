@@ -32,11 +32,18 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData {
-	public interface IVTPReport : IDeclarationReport {
+namespace TUGraz.VectoCore.OutputData
+{
+	public interface IVTPReport : IDeclarationReport
+	{
 		IVectoHash InputDataHash { set; }
 
 		IManufacturerReport ManufacturerRecord { set; }
+
 		IVectoHash ManufacturerRecordHash { set; }
+
+		IVectoHash CustomerFileHash { set; }
+
+		IVectoHash PrimaryVIFHash { set; }
 	}
 }

@@ -144,6 +144,11 @@ Public Class VectoVTPJob
     Public ReadOnly Property VectoJobHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoJobHash
 
     Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
+
+    Public ReadOnly Property VectoCustomerFileHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoCustomerFileHash
+
+    Public ReadOnly Property VectoPrimaryVIFHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoPrimaryVIFHash
+
     Public Property Mileage As Meter Implements IVTPDeclarationJobInputData.Mileage
 
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
@@ -291,6 +296,18 @@ Public Class VectoVTPJob
     End Property
 
     Public ReadOnly Property BodyworkCode As VehicleCode Implements ICompletedVIF.BodyworkCode
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property CIFInputData As IReportFile Implements IVTPDeclarationJobInputData.CIFInputData
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property PrimaryVIFInputData As IReportFile Implements IVTPDeclarationJobInputData.PrimaryVIFInputData
         Get
             Throw New NotImplementedException()
         End Get

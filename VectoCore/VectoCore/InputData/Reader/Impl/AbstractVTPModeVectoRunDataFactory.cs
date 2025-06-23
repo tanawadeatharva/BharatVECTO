@@ -64,6 +64,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			Report.InputDataHash = JobInputData.VectoJobHash;
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
+			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
 			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
 										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
 											.ToList())

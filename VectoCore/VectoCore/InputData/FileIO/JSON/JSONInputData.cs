@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						Body[JsonKeys.Vehicle_GearboxFile], e.Message);
 				}
 
-				return new JSONGearboxDataV6(GetDummyJSONStructure(), 
+				return new JSONGearboxDataV6(GetDummyJSONStructure(),
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>())
 					+ MissingFileSuffix);
 			}
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
-					//.Select(cycle => 
+					//.Select(cycle =>
 					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
 					TableData cycleData;
 					if (File.Exists(cycleFile)) {
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VectoSimulationJobType JobType => Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>() ? VectoSimulationJobType.EngineOnlySimulation : VectoSimulationJobType.ConventionalVehicle;
 
 		public virtual string JobName => _jobname;
-		
+
 		#endregion
 
 		#region DriverInputData
@@ -585,7 +585,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV3(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
 
-		
+
 	}
 
 
@@ -615,12 +615,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
 		{
-			VectoJobHash = VectoHash.Load(
-				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()));
-			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null
-				? VectoHash.Load(
-					Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()))
-				: null;
+			var baseFullPath = Path.GetFullPath(BasePath);
+			string declPath = Path.Combine(baseFullPath, Body["DeclarationVehicle"].Value<string>());
+			string mrfPath  = Path.Combine(baseFullPath, Body["ManufacturerRecord"].Value<string>());
+			string vifPath  = Path.Combine(baseFullPath, Body["PrimaryVIF"]?.Value<string>() ?? string.Empty);
+			string cifPath  = Path.Combine(baseFullPath, Body["CustomerInformationFile"]?.Value<string>() ?? string.Empty);
+
+			VectoJobHash                = VectoHash.Load(declPath);
+			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(mrfPath) : null;
+			VectoPrimaryVIFHash         = Body["PrimaryVIF"] != null ? VectoHash.Load(vifPath) : null;
+			VectoCustomerFileHash	    = Body["CustomerInformationFile"] != null ? VectoHash.Load(cifPath) : null;
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_inputReader = kernel.Get<IXMLInputDataReader>();
@@ -642,13 +646,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVectoHash VectoManufacturerReportHash { get; }
 
+		public IVectoHash VectoCustomerFileHash { get; }
+
+		public IVectoHash VectoPrimaryVIFHash { get; }
+
 		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
 		string IManufacturerReport.Source => Body["ManufacturerRecord"].Value<string>();
 
 		string ICompletedVIF.Source => Body[JsonKeys.VTP_CompletedVIF]?.Value<string>();
 
-		public Meter VehicleLength 
+		public IReportFile PrimaryVIFInputData => new ReportFile(Body["PrimaryVIF"]?.Value<string>());
+
+		public IReportFile CIFInputData => new ReportFile(Body["CustomerInformationFile"]?.Value<string>());
+
+		public string CoolingFanTechnology => _coolingFanTech;
+
+		public Meter VehicleLength
 		{
 			get
 			{
@@ -660,7 +674,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public VehicleCode BodyworkCode 
+		public VehicleCode BodyworkCode
 		{
 			get
 			{
@@ -715,7 +729,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IList<IFuelNCVData> FuelNCVs
 		{
-			get 
+			get
 			{
 				var fuelNCVs = new List<IFuelNCVData>();
 
@@ -757,7 +771,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public NewtonMeter TorqueDriftRightWheel
 		{
-			get { return Body.GetEx<double>(JsonKeys.Job_TorqueDriftRightWheel).SI<NewtonMeter>(); }		
+			get { return Body.GetEx<double>(JsonKeys.Job_TorqueDriftRightWheel).SI<NewtonMeter>(); }
 		}
 
 
@@ -814,7 +828,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			var hash = XMLHashProvider.ComputeHash(xmlDoc, signatureDigest.Reference.Remove(0, 1), signatureDigest.CanonicalizationMethods,
 				signatureDigest.DigestMethod);
-			
+
 			if (!hash.InnerText.Equals(signatureDigest.DigestValue)) {
 				throw new VectoException($"Manufacturer Report hash: {signatureDigest.DigestValue} differs from calculated hash: {hash.InnerText}");
 			}
@@ -863,7 +877,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
 
-			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));			
+			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 		}
 	}
 
@@ -996,7 +1010,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Second MaxEngineOffTimespan { get; set; }
 
 		public double UtilityFactorStandstill { get; set; }
-		
+
 		public double UtilityFactorDriving { get; set; }
 
 		#endregion
@@ -1015,11 +1029,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 	}
-	
+
 	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
-		
+
 		public JSONInputDataSingleBusV6(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
 		{
@@ -1075,7 +1089,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleDeclarationInputData Vehicle => PrimaryVehicle;
 		public string JobName { get; }
-		
+
 		public VectoSimulationJobType JobType => VectoSimulationJobType.ConventionalVehicle;
 
 		#endregion
@@ -1099,7 +1113,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			PrimaryInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("PrimaryVehicleResults"));
 			CompletedInputDataFile = Path.Combine(BasePath, Body.GetEx<string>("CompletedVehicle"));
 			RunSimulation = Body.ContainsKey(JsonKeys.BUS_RunSimulation) ? Body.GetEx<bool>(JsonKeys.BUS_RunSimulation) : true;
-			
+
 
             //PrimaryVehicle = CreateReader(primaryInputData);
 
@@ -1169,7 +1183,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	public class JSONInputDataV9_BEV : AbstractJSONInputData
 	{
-		
+
 		public JSONInputDataV9_BEV(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
 			tolerateMissing)
 		{
@@ -1220,7 +1234,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				? null
 				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
 
-		
+
 	}
 
 	// --------------------------
@@ -1270,7 +1284,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			//VehicleData = ReadVehicle();
 			//Gearbox = ReadGearbox();
-			
+
 
 		}
 
@@ -1308,12 +1322,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string PrimaryVehicleInputDataPath => _primaryVehicleInputDataPath;
 		public string StageInputDataPath => _stageInputDataPath;
-		public IDeclarationInputDataProvider PrimaryVehicle => 
+		public IDeclarationInputDataProvider PrimaryVehicle =>
 			_primaryVehicle ?? (_primaryVehicle =
 				_xmlInputReader.CreateDeclaration(_primaryVehicleInputDataPath));
 
-        public IVehicleDeclarationInputData StageInputData => 
-			_stageInputDataPath != null 
+        public IVehicleDeclarationInputData StageInputData =>
+			_stageInputDataPath != null
 			?
             _stageInputData ?? (_stageInputData =
                 _xmlInputReader.CreateDeclaration(_stageInputDataPath).JobInputData.Vehicle)
