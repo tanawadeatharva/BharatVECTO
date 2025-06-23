@@ -11,6 +11,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -1075,7 +1076,33 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
 		}
 
-		[
+		public void RunAllDeclarationJob(string jobName)
+		{
+			//var relativeJobPath = GetFullJobPath(jobName);
+			var writer = new FileOutputWriter(jobName);
+			var inputData = Path.GetExtension(jobName) == ".xml"
+				? xmlInputReader.CreateDeclaration(jobName)
+				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
+				: JSONInputDataFactory.ReadJsonJob(jobName);
+			if (inputData is IMultistepBusInputDataProvider vif) {
+				inputData = new XMLDeclarationVIFInputData(vif, null);
+			}
+			var factory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputData, writer, null, null, true);
+			factory.WriteModalResults = true;
+			//factory.ActualModalData = true;
+			factory.Validate = false;
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+        [
 			TestCase(80, 0, TestName = "Conventional DriveOff 80km/h  level"),
 		]
 		public void ConventionalVehicleDriveOff(double vmax, double slope)
@@ -1591,9 +1618,39 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobfile, 0);
 		}
 
-		// =================================================
 
-		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 9)]
+		public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
+		{
+			if (cycleIdx < 0) {
+				RunAllDeclarationJob(jobFile);
+			} else {
+				RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
+			}
+		}
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E2_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", -1)]
+		public void TestHybridBatteryDominantMode_PEV(string jobFile, int cycleIdx)
+		{
+			if (cycleIdx < 0) {
+				RunAllDeclarationJob(jobFile);
+			} else {
+				RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
+			}
+		}
+
+        // =================================================
+
+        public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
 			Kilogram payload = null, GearboxType gearboxType = GearboxType.NoGearbox,
 			NewtonMeter maxGearboxTorque = null, NewtonMeter boostingLimit = null, NewtonMeter topTorque = null)
