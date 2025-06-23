@@ -12,6 +12,36 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public class AlwaysOffCombustionEngine : StopStartCombustionEngine
+	{
+		public AlwaysOffCombustionEngine(IVehicleContainer container, CombustionEngineData modelData,
+			bool pt1Disabled = false) : base(container, modelData, pt1Disabled)
+		{
+			CombustionEngineOn = false;
+		}
+
+        public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, bool dryRun)
+		{
+			var retVal = HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			retVal.Engine.EngineOn = false;
+			return retVal;
+		}
+
+		public override Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return 0.SI<Watt>();
+		}
+
+		#region Overrides of StopStartCombustionEngine
+
+		public override bool CombustionEngineOn
+		{
+			get => false; set {} }
+
+		#endregion
+	}
+
 	public class StopStartCombustionEngine : CombustionEngine
 	{
 		protected WattSecond EngineStartEnergy;

@@ -437,6 +437,98 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
+        public ISimpleVehicleContainer BuildSimpleHybridBatteryOnlyPowertrain(VectoRunData data)
+        {
+            var container = GetVehicleContainer(data);
+            var es = ConnectREESS(data, container);
+            var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            AddHighVoltageAuxiliaries(data, container, es, dcdc);
+
+            //IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
+            var engine = new AlwaysOffCombustionEngine(container, data.EngineData);
+            var gearbox = new DisengagedGearbox(container);
+            
+            var idleController = GetIdleController(data.PTO, engine, container);
+            var clutch = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
+                ? new Clutch(container, data.EngineData)
+                : null;
+
+
+            var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+
+            // TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+            //       should be a reference/proxy to the main driving cyle. but how to access it?
+            switch (data.Cycle.CycleType) {
+                case CycleType.DistanceBased:
+                    container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+                    break;
+                case CycleType.MeasuredSpeed:
+                    new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
+                    break;
+                case CycleType.EngineOnly:
+                    break;
+                default:
+                    throw new VectoException("Wrong CycleType for SimplePowertrain");
+            }
+
+            if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
+                var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
+                var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+                es.Connect(whrCharger);
+                engine.WHRCharger = whrCharger;
+            }
+
+            vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
+                    data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+                .AddComponent(new WheelEnd(container, data.WheelEndData))
+                .AddComponent(
+                    GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(
+                    GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
+                .AddComponent(gearbox)
+                .AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+                .AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container,
+                    es,
+                    new SimpleElectricMotorControl()))
+                .AddComponent(
+                    GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                .AddComponent(
+                    GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                .AddComponent(clutch)
+                .AddComponent(
+                    GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                .AddComponent(engine, idleController);
+            AddAuxiliaries(engine, container, data);
+
+            if (data.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
+                // this has to be done _after_ the powertrain is connected together so that the cluch already has its nextComponent set (necessary in the idle controlelr)
+                clutch.IdleController = idleController;
+                
+            }
+
+            if (data.BusAuxiliaries != null) {
+                if (!(container.BusAux is BusAuxiliariesAdapter busAux)) {
+                    throw new VectoException("BusAux data set but no BusAux component found!");
+                }
+
+                var auxCfg = data.BusAuxiliaries;
+                var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+                    ? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
+                        auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+                    : (ISimpleBattery)new NoBattery(container);
+                busAux.ElectricStorage = electricStorage;
+                if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+                    busAux.DCDCConverter = dcdc;
+                    es.Connect(dcdc);
+                }
+            }
+            return container;
+        }
+
         /// <summary>
         /// Builds a simple battery electric powertrain for PEVs.
         /// <code>

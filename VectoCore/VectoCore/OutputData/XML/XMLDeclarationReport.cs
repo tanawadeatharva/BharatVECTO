@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				if (data.HasAxlegear) {
 					var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
 					var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-					AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null ? double.NaN : eAxlOut / eAxlIn;
+					AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null || eAxlIn.IsEqual(0) ? double.NaN : eAxlOut / eAxlIn;
 				} else {
 					AverageAxlegearEfficiency = double.NaN;
 				}

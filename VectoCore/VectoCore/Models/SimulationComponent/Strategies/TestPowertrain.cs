@@ -93,6 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		public ICombustionEngine CombustionEngine { get; }
 		public IAuxPort EngineAux { get; }
 		public IElectricMotor ElectricMotor { get; }
+		public SimpleElectricMotorControl ElectricMotorControl { get;  }
 		public IElectricChargerPort Charger { get; }
 		public Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission { get; } = new Dictionary<PowertrainPosition, ElectricMotor>();
 		public ITorqueConverter TorqueConverter { get; }
@@ -115,6 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			CombustionEngine = Container.EngineInfo as StopStartCombustionEngine;
 			EngineAux = (CombustionEngine as StopStartCombustionEngine)?.EngineAux;
 			ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ElectricMotor;
+			ElectricMotorControl = (ElectricMotor as ElectricMotor)?.Control as SimpleElectricMotorControl;
 			Charger = (((ElectricMotor as ElectricMotor)?.ElectricPower as ElectricSystem)?.Charger.FirstOrDefault(x => x is GensetChargerAdapter)) as GensetChargerAdapter;
 			foreach (var pos in container.ElectricMotorPositions) {
 				if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC ||
@@ -153,6 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			//Brakes = new MockBrakes(container);
 		}
 
+		
 		public void UpdateComponents() => Container.UpdateComponents(RealContainer);
 	}
 
