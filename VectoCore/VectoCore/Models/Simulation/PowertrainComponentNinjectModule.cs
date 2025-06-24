@@ -342,7 +342,7 @@ namespace TUGraz.VectoCore.Models.Simulation
             var aptnGearboxT = typeof(TestPowertrainAPTNGearbox);
 			var iepcGearboxT = typeof(TestPowertrainIEPCGearbox);
 
-			var measuredSpdHybGbxT = typeof(MeasuredSpeedHybridsGearbox);
+			var measuredSpdHybGbxT = typeof(TestPowertrainMeasuredSpeedHybridsGearbox);
 			var measuredSpdHybGearGbxT = typeof(MeasuredSpeedHybridsCycleGearbox);
 
             #region distance based
