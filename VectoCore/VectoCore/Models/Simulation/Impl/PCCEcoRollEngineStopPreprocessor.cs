@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case IAPTGearbox _:
 					RunPreprocessingATGearbox();
 					return;
-				case null when !TestPowertrain.Container.HasGearbox:
+				case IGearboxInfo _ when !TestPowertrain.Container.HasGearbox:
 					RunPreprocessingNoGearbox();
 					return;
 				default:
