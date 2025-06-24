@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of ITestpowertrainElectricMotor
 
 		public IElectricSystem GetElectricSystem => ElectricPower;
-		public ElectricMotorState GetPreviousState => PreviousState.Clone();
+		public ElectricMotorState GetPreviousState => PreviousState;
 		public Joule SetThermalBuffer
 		{
 			set { ThermalBuffer = value; }
