@@ -11,7 +11,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 {
-	public class IEPCGearboxSingleSpeed : TransmissionComponent, IGearbox
+	public class IEPCGearboxSingleSpeed : TransmissionComponent, IGearbox, IIEPCGearbox
     {
         protected GearData GearData;
 
