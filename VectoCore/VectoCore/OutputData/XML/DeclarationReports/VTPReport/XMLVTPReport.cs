@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	internal class XMLVTPReport : DeclarationReport<XMLVTPReport.ResultEntry>, IVTPReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.21";
+		public const string CURRENT_SCHEMA_VERSION = "0.3";
 
 		private const string VTPReportTartetName = "VTPReportTarget";
 		
