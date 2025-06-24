@@ -5,14 +5,12 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.OutputData;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Utils;
 
@@ -1615,7 +1613,8 @@ public class JSONFileWriter : IOutputFileWriter
 	private Dictionary<string, object> SaveVTPJob(IVTPDeclarationJobInputData job, string filename, bool declarationmode)
 	{
 		// Body
-		var body = new Dictionary<string, object> {
+		var body = new Dictionary<string, object>
+		{
 			{ "SavedInDeclMode", declarationmode },
 			{ "DeclarationVehicle", GetRelativePath(job.Vehicle.DataSource.SourceFile, Path.GetDirectoryName(filename)) },
 			{ "ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)) }
@@ -1629,6 +1628,7 @@ public class JSONFileWriter : IOutputFileWriter
 		if (isVehiclePrimaryBus)
 		{
 			body.Add(JsonKeys.VTP_CompletedVIF, GetRelativePath(job.CompletedVIFInputData.Source, Path.GetDirectoryName(filename)));
+			body.Add(JsonKeys.VTP_PrimaryVIF, GetRelativePath(job.PrimaryVIFInputData.Source, Path.GetDirectoryName(filename)));
 		}
 
 		body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value);

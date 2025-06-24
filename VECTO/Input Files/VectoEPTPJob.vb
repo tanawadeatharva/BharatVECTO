@@ -29,6 +29,8 @@ Public Class VectoVTPJob
     Private ReadOnly _vehicleFile As SubPath
     Private ReadOnly _manufacturerRecord As SubPath
     Private ReadOnly _completedVIF As SubPath
+    Private ReadOnly _primaryVIF As SubPath
+    Private ReadOnly _vehicleCIF As SubPath
 
     Public ReadOnly CycleFiles As List(Of SubPath)
     Public FanCoefficients As Double()
@@ -42,6 +44,8 @@ Public Class VectoVTPJob
         _vehicleFile = New SubPath
         _manufacturerRecord = New SubPath()
         _completedVIF = New SubPath()
+        _primaryVIF = New SubPath()
+        _vehicleCIF = New SubPath()
         _fuelNCVData = New List(Of IFuelNCVData)
 
         Dim kernel As IKernel = New StandardKernel(New VectoNinjectModule)
@@ -255,6 +259,32 @@ Public Class VectoVTPJob
         End Set
     End Property
 
+    Public Property PrimaryVIF(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _primaryVIF.OriginalPath
+            Else
+                Return _primaryVIF.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _primaryVIF.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property VehicleCIF(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _vehicleCIF.OriginalPath
+            Else
+                Return _vehicleCIF.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _vehicleCIF.Init(_myPath, value)
+        End Set
+    End Property
+
     Public ReadOnly Property Source As String Implements IManufacturerReport.Source
         Get
             Return _manufacturerRecord.FullPath
@@ -303,13 +333,13 @@ Public Class VectoVTPJob
 
     Public ReadOnly Property CIFInputData As IReportFile Implements IVTPDeclarationJobInputData.CIFInputData
         Get
-            Throw New NotImplementedException()
+            Return New ReportFile(_vehicleCIF.FullPath)
         End Get
     End Property
 
     Public ReadOnly Property PrimaryVIFInputData As IReportFile Implements IVTPDeclarationJobInputData.PrimaryVIFInputData
         Get
-            Throw New NotImplementedException()
+            Return New ReportFile(_primaryVIF.FullPath)
         End Get
     End Property
 End Class

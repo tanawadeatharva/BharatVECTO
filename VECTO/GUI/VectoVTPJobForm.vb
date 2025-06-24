@@ -27,7 +27,6 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.InputData.Impl
-Imports Castle.Components.DictionaryAdapter.Xml
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -169,9 +168,12 @@ Public Class VectoVTPJobForm
 
     Private Sub UpdateCompletedVIFElements()
         Dim VIFinputData As ICompletedVIF = Nothing
+        Dim PrimaryVIFInputData As IReportFile = Nothing
+        Dim CustomerInfoFileInputData As IReportFile = Nothing
         Dim foundOutIfPrimary = False
         Dim isVehiclePrimaryBus = False
         Dim canAccessVIFSource = False
+        Dim canAccessPrimaryVIFSource = False
         Dim vehicleFile As String =
             If _
             (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
@@ -195,6 +197,8 @@ Public Class VectoVTPJobForm
                     IVTPEngineeringInputDataProvider)
 
                 VIFinputData = inputData.JobInputData.CompletedVIFInputData
+                PrimaryVIFInputData = inputData.JobInputData.PrimaryVIFInputData
+                CustomerInfoFileInputData = inputData.JobInputData.CIFInputData
 
                 If Not foundOutIfPrimary Then
                     isVehiclePrimaryBus = inputData.JobInputData.Vehicle.VehicleCategory.GetVehicleType() Is VehicleCategoryHelper.PrimaryBus
@@ -204,6 +208,7 @@ Public Class VectoVTPJobForm
         End If
 
         completedVIFTxtbox.Enabled = isVehiclePrimaryBus
+        primaryVIFTb.Enabled = isVehiclePrimaryBus
 
         If VIFinputData IsNot Nothing Then
             If VIFinputData.Source IsNot Nothing Then
@@ -211,8 +216,18 @@ Public Class VectoVTPJobForm
             End If
         End If
 
+        If PrimaryVIFInputData IsNot Nothing Then
+            If PrimaryVIFInputData.Source IsNot Nothing Then
+                canAccessPrimaryVIFSource = True
+            End If
+        End If
+
         completedVIFTxtbox.Text = If(canAccessVIFSource And isVehiclePrimaryBus, VIFinputData.Source, "")
+        primaryVIFTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, PrimaryVIFInputData.Source, "")
+        cifTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, CustomerInfoFileInputData.Source, "")
+
         completedVIFButton.Enabled = completedVIFTxtbox.Enabled
+        primaryVIFBtn.Enabled = primaryVIFTb.Enabled
     End Sub
 
     'Open file
@@ -409,6 +424,8 @@ Public Class VectoVTPJobForm
         vectoJob.PathVeh = TbVEH.Text
         vectoJob.ManufacturerRecord = tbManufacturerRecord.Text
         vectoJob.CompletedVIF = completedVIFTxtbox.Text
+        vectoJob.PrimaryVIF = primaryVIFTb.Text
+        vectoJob.VehicleCIF = cifTb.Text
 
         For Each lv0 As ListViewItem In LvCycles.Items
             Dim sb As SubPath = New SubPath
@@ -1050,6 +1067,18 @@ Public Class VectoVTPJobForm
     Private Sub completedVIFButton_Click(sender As Object, e As EventArgs) Handles completedVIFButton.Click
         If CompletedVIFFileBrowser.OpenDialog(FileRepl(completedVIFTxtbox.Text, GetPath(VectoFile))) Then
             completedVIFTxtbox.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
+    Private Sub cifBtn_Click(sender As Object, e As EventArgs) Handles cifBtn.Click
+        If CompletedVIFFileBrowser.OpenDialog(FileRepl(cifTb.Text, GetPath(VectoFile))) Then
+            cifTb.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
+    Private Sub primaryVIFBtn_Click(sender As Object, e As EventArgs) Handles primaryVIFBtn.Click
+        If CompletedVIFFileBrowser.OpenDialog(FileRepl(primaryVIFTb.Text, GetPath(VectoFile))) Then
+            primaryVIFTb.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
 End Class

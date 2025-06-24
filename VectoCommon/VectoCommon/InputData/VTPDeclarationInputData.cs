@@ -122,7 +122,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		public ReportFile(string source)
 		{
-			Source = source ?? throw new ArgumentNullException(nameof(source));
+			Source = source;
 		}
 
 		public string Source { get; }
