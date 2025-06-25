@@ -41,7 +41,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetHEV_S3_PrimaryBusVehicleType();
 		IXmlTypeWriter GetHEV_S4_PrimaryBusVehicleType();
 		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusVehicleType();
-		IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType();
+		IXmlTypeWriter GetMultiple_FCHV_PrimaryBusVehicleType();
+        IXmlTypeWriter GetMultiple_PEV_PrimaryBusVehicleType();
+        IXmlTypeWriter GetMultiple_SHEV_PrimaryBusVehicleType();
+        IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType();
 		IXmlTypeWriter GetFCHV_F3_PrimaryBusVehicleType();
 		IXmlTypeWriter GetFCHV_F4_PrimaryBusVehicleType();
 		IXmlTypeWriter GetFCHV_IEPC_PrimaryBusVehicleType();
@@ -82,7 +85,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetHEV_S3_PrimaryBusComponentsType();
 		IXmlTypeWriter GetHEV_S4_PrimaryBusComponentsType();
 		IXmlTypeWriter GetHEV_IEPC_S_PrimaryBusComponentsType();
-		IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType();
+        IXmlTypeWriter GetMultiple_FCHV_PrimaryBusComponentsType();
+        IXmlTypeWriter GetMultiple_PEV_PrimaryBusComponentsType();
+        IXmlTypeWriter GetMultiple_SHEV_PrimaryBusComponentsType();
+        IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType();
 		IXmlTypeWriter GetFCHV_F3_PrimaryBusComponentsType();
 		IXmlTypeWriter GetFCHV_F4_PrimaryBusComponentsType();
 		IXmlTypeWriter GetFCHV_IEPC_PrimaryBusComponentsType();

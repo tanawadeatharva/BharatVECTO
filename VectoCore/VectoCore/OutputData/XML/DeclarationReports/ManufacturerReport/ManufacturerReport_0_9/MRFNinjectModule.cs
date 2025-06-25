@@ -467,7 +467,103 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					true,
 					false)));
 
-			Bind<IXMLManufacturerReport>().To<PEV_E2_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+            Bind<IXMLManufacturerReport>().To<Multiple_FCHV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_FCHV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_FCHV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_FCHV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_PEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_PEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_PEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_PEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_SHEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_SHEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_SHEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<Multiple_SHEV_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLManufacturerReport>().To<PEV_E2_PrimaryBus_ManufacturerReport>().Named(VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.BatteryElectricVehicle,
 					ArchitectureID.E2,
@@ -667,7 +763,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusVehicleType());
 			Bind<IXmlTypeWriter>().To<HevIepcSPrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusVehicleType());
-			Bind<IXmlTypeWriter>().To<FCHV_F2_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+
+            Bind<IXmlTypeWriter>().To<Multiple_FCHV_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+                .NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_FCHV_PrimaryBusVehicleType());
+            Bind<IXmlTypeWriter>().To<Multiple_PEV_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+                .NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_PEV_PrimaryBusVehicleType());
+            Bind<IXmlTypeWriter>().To<Multiple_SHEV_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
+                .NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_SHEV_PrimaryBusVehicleType());
+
+            Bind<IXmlTypeWriter>().To<FCHV_F2_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetFCHV_F2_PrimaryBusVehicleType());
 			Bind<IXmlTypeWriter>().To<FCHV_F3_PrimaryBusVehicleTypeWriter>().When(AccessedViaMRFFactory)
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetFCHV_F3_PrimaryBusVehicleType());
@@ -750,7 +854,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_S4_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MrfhevIepcSPrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetHEV_IEPC_S_PrimaryBusComponentsType());
-			Bind<IXmlTypeWriter>().To<MRF_FCHV_F2_PrimaryBusComponentsTypeWriter>()
+			
+			Bind<IXmlTypeWriter>().To<MRF_Multiple_FCHV_PrimaryBusComponentsTypeWriter>()
+				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_FCHV_PrimaryBusComponentsType());
+            Bind<IXmlTypeWriter>().To<MRF_Multiple_PEV_PrimaryBusComponentsTypeWriter>()
+                .NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_PEV_PrimaryBusComponentsType());
+            Bind<IXmlTypeWriter>().To<MRF_Multiple_SHEV_PrimaryBusComponentsTypeWriter>()
+                .NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetMultiple_SHEV_PrimaryBusComponentsType());
+
+            Bind<IXmlTypeWriter>().To<MRF_FCHV_F2_PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetFCHV_F2_PrimaryBusComponentsType());
 			Bind<IXmlTypeWriter>().To<MRF_FCHV_F3_PrimaryBusComponentsTypeWriter>()
 				.NamedLikeFactoryMethod((IManufacturerReportFactory f) => f.GetFCHV_F3_PrimaryBusComponentsType());
