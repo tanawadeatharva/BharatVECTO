@@ -105,10 +105,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, NonOVC, WithH2Fuel));
 			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, WithH2Fuel));
 
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, WithOVC, NoH2Fuel));
 			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, WithOVC, NoH2Fuel));
@@ -132,8 +136,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
 				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, NonOVC, NoH2Fuel));
 
         }
 
