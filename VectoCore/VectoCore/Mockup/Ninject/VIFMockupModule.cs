@@ -179,7 +179,22 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevS4VehicleType();
 			}
 
-			public IXmlTypeWriter GetHevF2VehicleType()
+            public IXmlTypeWriter GetMultiplePEVVehicleType()
+            {
+                return _vifReportFactoryImplementation.GetMultiplePEVVehicleType();
+            }
+
+            public IXmlTypeWriter GetMultipleSHEVVehicleType()
+            {
+                return _vifReportFactoryImplementation.GetMultipleSHEVVehicleType();
+            }
+
+            public IXmlTypeWriter GetMultipleFCHVVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetMultipleFCHVVehicleType();
+            }
+
+            public IXmlTypeWriter GetHevF2VehicleType()
 			{
 				return _vifReportFactoryImplementation.GetHevF2VehicleType();
 			}

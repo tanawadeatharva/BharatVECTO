@@ -32,12 +32,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
-using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -102,8 +99,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             ExemptedPrimaryBusDataType,
             ExemptedCompletedBusDataType,
             FCHV_Multiple_Fx_LorryDataType,
+            FCHV_Multiple_Fx_PrimaryBusDataType,
             PEV_Multiple_Ex_LorryDataType,
-            HEV_Multiple_Sx_LorryDataType
+            PEV_Multiple_Ex_PrimaryBusDataType,
+            HEV_Multiple_Sx_LorryDataType,
+            HEV_Multiple_Sx_PrimaryBusDataType
         }
 
         protected Dictionary<OutputType, Action> _additionalDataWriters;
@@ -184,8 +184,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
                 { OutputType.ExemptedPrimaryBusDataType, WriteExempted_Data },
                 { OutputType.ExemptedCompletedBusDataType, WriteExempted_Data },
                 { OutputType.FCHV_Multiple_Fx_LorryDataType, WriteMultiple_FCHV_Data },
+                { OutputType.FCHV_Multiple_Fx_PrimaryBusDataType, WriteMultiple_FCHV_Data },
                 { OutputType.PEV_Multiple_Ex_LorryDataType, WriteMultiple_PEV_Data },
-                { OutputType.HEV_Multiple_Sx_LorryDataType, WriteMultiple_SHEV_Data }
+                { OutputType.PEV_Multiple_Ex_PrimaryBusDataType, WriteMultiple_PEV_Data },
+                { OutputType.HEV_Multiple_Sx_LorryDataType, WriteMultiple_SHEV_Data },
+                { OutputType.HEV_Multiple_Sx_PrimaryBusDataType, WriteMultiple_SHEV_Data }
             };
 
             _additionalFields = new XElement(_tns + XMLNames.MonitoringDataNode);
