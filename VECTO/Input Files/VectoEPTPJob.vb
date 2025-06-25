@@ -342,4 +342,10 @@ Public Class VectoVTPJob
             Return New ReportFile(_primaryVIF.FullPath)
         End Get
     End Property
+
+    Public ReadOnly Property CoolingFanTechCoefficient As Double Implements IManufacturerReport.CoolingFanTechCoefficient
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
 End Class

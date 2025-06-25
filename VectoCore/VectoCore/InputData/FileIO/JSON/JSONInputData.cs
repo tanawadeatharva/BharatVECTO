@@ -611,6 +611,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IResultsInputData _manufacturerResults;
 		private Meter _vehicleLength;
 		private VehicleCode _bodyworkCode;
+		private string _coolingFanTech;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -660,8 +661,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IReportFile CIFInputData => new ReportFile(Body["CustomerInformationFile"]?.Value<string>());
 
-		public string CoolingFanTechnology => _coolingFanTech;
-
 		public Meter VehicleLength
 		{
 			get
@@ -695,6 +694,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return _manufacturerResults;
 			}
 		}
+
+		public double CoolingFanTechCoefficient 
+		{
+			get
+			{
+				if (_manufacturerResults == null)
+				{
+					ReadManufacturerReport();
+				}
+
+				return new FanBusCoolingCoefficient().GetTechnologyCoefficient(_coolingFanTech); 
+			}
+		}
+
+
 
 		public IList<ICycleData> Cycles
 		{
@@ -878,6 +892,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
+
+			_coolingFanTech = xmlDoc.SelectSingleNode("//*[local-name() = 'Auxiliaries']//*[local-name()='CoolingFanTechnology']")?.InnerText 
+				?? throw new ArgumentException("Auxiliary fan technology is missing. Please provide a Primary Manufacturer Report file.");
 		}
 	}
 

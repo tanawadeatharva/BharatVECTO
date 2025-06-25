@@ -102,6 +102,8 @@ namespace TUGraz.VectoCommon.InputData
 		void ValidateSimulationToolVersion();
 
 		void ValidateHash();
+
+		double CoolingFanTechCoefficient { get; }
 	}
 
 	public interface ICompletedVIF

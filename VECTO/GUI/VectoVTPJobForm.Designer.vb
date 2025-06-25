@@ -100,7 +100,7 @@ Partial Class VectoVTPJobForm
         Me.lblMileageUnit = New System.Windows.Forms.Label()
         Me.tbMileage = New System.Windows.Forms.TextBox()
         Me.lblMileage = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
+        Me.mrfLbl = New System.Windows.Forms.Label()
         Me.tbManufacturerRecord = New System.Windows.Forms.TextBox()
         Me.ButtonManR = New System.Windows.Forms.Button()
         Me._ncvGrpBox = New System.Windows.Forms.GroupBox()
@@ -744,7 +744,7 @@ Partial Class VectoVTPJobForm
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileageUnit)
         Me.pnManufacturerRecord.Controls.Add(Me.tbMileage)
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileage)
-        Me.pnManufacturerRecord.Controls.Add(Me.Label8)
+        Me.pnManufacturerRecord.Controls.Add(Me.mrfLbl)
         Me.pnManufacturerRecord.Controls.Add(Me.tbManufacturerRecord)
         Me.pnManufacturerRecord.Controls.Add(Me.ButtonManR)
         Me.pnManufacturerRecord.Location = New System.Drawing.Point(17, 172)
@@ -757,7 +757,7 @@ Partial Class VectoVTPJobForm
         '
         Me.primaryVIFBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.primaryVIFBtn.Image = CType(resources.GetObject("primaryVIFBtn.Image"), System.Drawing.Image)
-        Me.primaryVIFBtn.Location = New System.Drawing.Point(738, 156)
+        Me.primaryVIFBtn.Location = New System.Drawing.Point(738, 154)
         Me.primaryVIFBtn.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.primaryVIFBtn.Name = "primaryVIFBtn"
         Me.primaryVIFBtn.Size = New System.Drawing.Size(36, 38)
@@ -769,7 +769,7 @@ Partial Class VectoVTPJobForm
         '
         Me.primaryVIFTb.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.primaryVIFTb.Location = New System.Drawing.Point(176, 161)
+        Me.primaryVIFTb.Location = New System.Drawing.Point(176, 160)
         Me.primaryVIFTb.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.primaryVIFTb.Name = "primaryVIFTb"
         Me.primaryVIFTb.Size = New System.Drawing.Size(559, 26)
@@ -813,7 +813,7 @@ Partial Class VectoVTPJobForm
         Me.cifLbl.Location = New System.Drawing.Point(5, 63)
         Me.cifLbl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.cifLbl.Name = "cifLbl"
-        Me.cifLbl.Size = New System.Drawing.Size(120, 20)
+        Me.cifLbl.Size = New System.Drawing.Size(167, 20)
         Me.cifLbl.TabIndex = 53
         Me.cifLbl.Text = "Customer Information:"
         '
@@ -833,7 +833,7 @@ Partial Class VectoVTPJobForm
         '
         Me.completedVIFTxtbox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.completedVIFTxtbox.Location = New System.Drawing.Point(176, 111)
+        Me.completedVIFTxtbox.Location = New System.Drawing.Point(176, 110)
         Me.completedVIFTxtbox.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.completedVIFTxtbox.Name = "completedVIFTxtbox"
         Me.completedVIFTxtbox.Size = New System.Drawing.Size(559, 26)
@@ -879,15 +879,15 @@ Partial Class VectoVTPJobForm
         Me.lblMileage.TabIndex = 47
         Me.lblMileage.Text = "Mileage:"
         '
-        'Label8
+        'mrfLbl
         '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(4, 18)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(164, 20)
-        Me.Label8.TabIndex = 43
-        Me.Label8.Text = "Manufacturer Record:"
+        Me.mrfLbl.AutoSize = True
+        Me.mrfLbl.Location = New System.Drawing.Point(4, 18)
+        Me.mrfLbl.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.mrfLbl.Name = "mrfLbl"
+        Me.mrfLbl.Size = New System.Drawing.Size(48, 20)
+        Me.mrfLbl.TabIndex = 43
+        Me.mrfLbl.Text = "MRF:"
         '
         'tbManufacturerRecord
         '
@@ -1165,7 +1165,7 @@ End Sub
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents pnManufacturerRecord As Panel
-    Friend WithEvents Label8 As Label
+    Friend WithEvents mrfLbl As Label
     Friend WithEvents tbManufacturerRecord As TextBox
     Friend WithEvents ButtonManR As Button
     Friend WithEvents lblMileageUnit As Label

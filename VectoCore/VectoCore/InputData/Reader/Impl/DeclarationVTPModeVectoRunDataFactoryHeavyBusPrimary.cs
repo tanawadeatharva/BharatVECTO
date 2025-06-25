@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -207,11 +208,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
         protected override AuxFanData GetFanData()
         {
-            return new AuxFanData()
-            {
-                FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(JobInputData.FanPowerCoefficents.Skip(3).Take(1)).ToArray(),
-                FanDiameter = JobInputData.FanDiameter,
-            };
+			var coolingCoefficient = JobInputData.ManufacturerReportInputData.CoolingFanTechCoefficient;
+			return new AuxFanData()
+			{
+				FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(new[] { coolingCoefficient }).ToArray(),
+				FanDiameter = JobInputData.FanDiameter,
+			};
         }
 
         protected override IEnumerable<VectoRunData> GetNextRun()

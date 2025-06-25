@@ -222,6 +222,7 @@ Public Class VectoVTPJobForm
             End If
         End If
 
+        mrfLbl.Text = If(isVehiclePrimaryBus, "MRF (primary):", "MRF:")
         completedVIFTxtbox.Text = If(canAccessVIFSource And isVehiclePrimaryBus, VIFinputData.Source, "")
         primaryVIFTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, PrimaryVIFInputData.Source, "")
         cifTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, CustomerInfoFileInputData.Source, "")
@@ -287,12 +288,7 @@ Public Class VectoVTPJobForm
             tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
             tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
             tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
-            Dim coefficientsD As Double() = vectoJob.FanPowerCoefficents.ToArray()
-            If (coefficientsD.Length >= 4) Then
-                tbC4.Text = coefficientsD(3).ToGUIFormat()
-            Else
-                tbC4.Text = "1"
-            End If
+            tbC4.Text = vectoJob.ManufacturerReportInputData.CoolingFanTechCoefficient.ToString()
         Else
             Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
             If (coefficients.Length >= 1) Then
