@@ -1045,6 +1045,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			var factory = SimulatorFactory.CreateSimulatorFactory(mode, inputProvider, writer);
 			factory.Validate = false;
 			factory.WriteModalResults = true;
+			factory.SerializeVectoRunData = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
@@ -1622,6 +1623,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 9)]
@@ -1634,6 +1636,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			}
 		}
 
+		// these testcases are only to compare P-HEV battery only mode with PEV
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E2_Grp5_BO-Mode.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", 0)]
@@ -1646,6 +1649,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			} else {
 				RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
 			}
+		}
+
+		[TestCase(@"E:\QUAM\Downloads\job_1108190_not_Working (2)\DECL_Mode\IEPC-S_Gbx3Speed+Axle\IEPC-S__Gbx3Axl.vecto", 0)]
+		public void TestMergeRequest396(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
 		}
 
         // =================================================

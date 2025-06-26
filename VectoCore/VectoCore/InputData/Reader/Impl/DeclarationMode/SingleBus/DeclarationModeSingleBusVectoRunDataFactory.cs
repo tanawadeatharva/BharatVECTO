@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				runData.Aux = DataAdapter.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
-					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, false);
 				
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 runData.Aux = DataAdapter.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType,
                     _segment.VehicleClass, PrimaryVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
-                    VectoSimulationJobType.SerialHybridVehicle);
+                    VectoSimulationJobType.SerialHybridVehicle, runData.BatteryOnlyHybridMode);
                 runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
                     mission, PrimaryVehicle, CompletedVehicle , runData);
 
@@ -512,7 +512,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					PrimaryVehicle.Length ?? mission.BusParameter.VehicleLength,
-					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, runData.BatteryOnlyHybridMode);
 				runData.DriverData = DriverData;
 
 				runData.EngineData.FuelMode = modeIdx.Value;
@@ -698,7 +698,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     vehicle.Components.AuxiliaryInputData,
                     vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     vehicle.Length ?? mission.BusParameter.VehicleLength,
-                    vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType);
+                    vehicle.Components.AxleWheels.NumSteeredAxles, vehicle.VehicleType, false);
                 result.DriverData = DriverData;
 
                 result.VehicleData.VehicleClass = _segment.VehicleClass;

@@ -137,10 +137,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			public virtual IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 				IBusAuxiliariesDeclarationData busAuxInput, MissionType mission,
-				VehicleClass segment, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
+				VehicleClass segment, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				return AuxDataAdapter.CreateAuxiliaryData(auxInputData, busAuxInput, mission, segment,
-					vehicleLength, numSteeredAxles, jobType);
+					vehicleLength, numSteeredAxles, jobType, batteryOnlyHybridMode);
 			}
 
 			public virtual IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission,

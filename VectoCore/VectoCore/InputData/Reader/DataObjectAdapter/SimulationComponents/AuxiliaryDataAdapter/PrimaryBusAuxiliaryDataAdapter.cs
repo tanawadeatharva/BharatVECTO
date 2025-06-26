@@ -621,7 +621,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
 			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles,
-			VectoSimulationJobType jobType)
+			VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 		{
 			if (auxInputData != null)
 			{

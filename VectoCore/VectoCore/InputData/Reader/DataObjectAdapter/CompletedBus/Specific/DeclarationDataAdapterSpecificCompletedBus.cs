@@ -40,10 +40,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
 			}
 
 			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData,
-				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType)
+				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				return AuxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass,
-					vehicleLength, numSteeredAxles, jobType);
+					vehicleLength, numSteeredAxles, jobType, batteryOnlyHybridMode);
 			}
 
 			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission,

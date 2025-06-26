@@ -29,7 +29,7 @@ public class AuxiliaryDataAdapterTest
 		var auxInput = CreateAuxInput(psTechnology, "Default", "Standard technology", "Crankshaft mounted - Electronically controlled visco clutch", "Electric driven pump");
 
 		var auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, MissionType.LongHaul, VehicleClass.Class2,
-			8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle);
+			8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle, false);
 
 		var ps = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.PneumaticSystem);
 
@@ -313,7 +313,7 @@ public class AuxiliaryDataAdapterTest
 		IList<VectoRunData.AuxData> auxData = null;
 		try {
 			auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, missionType, vehicleClass,
-				vehicleLength, numSteeredAxles, vectoSimulationJobType);
+				vehicleLength, numSteeredAxles, vectoSimulationJobType, false);
 		} catch (VectoException ex) {
 			if (fail) {
 				Assert.Pass(ex.Message);

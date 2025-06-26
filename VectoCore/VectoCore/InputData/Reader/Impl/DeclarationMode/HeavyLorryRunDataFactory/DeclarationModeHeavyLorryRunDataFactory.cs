@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 
 				simulationRunData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				simulationRunData.DriverData = DriverData;
@@ -382,7 +382,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				result.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null,
 					mission.MissionType, _segment.VehicleClass, Vehicle.Length,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 
 
 				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);

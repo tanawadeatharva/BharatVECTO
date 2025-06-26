@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
@@ -133,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.SerialHybridVehicle);
+					VectoSimulationJobType.SerialHybridVehicle, runData.BatteryOnlyHybridMode);
 
 				CreateGearboxAndGearshiftData(runData);
 
@@ -203,7 +204,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var engineMode = engineModes[modeIdx.Value];
 				var runData = CreateCommonRunData(Vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
-				runData.DriverData = DriverData;
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
+				}
+
+                runData.DriverData = DriverData;
 
 				runData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
@@ -223,8 +228,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.VehicleType == VectoSimulationJobType.IHPC ? ArchitectureID.P_IHPC : Vehicle.ArchitectureID, null);
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.ParallelHybridVehicle);
+					VectoSimulationJobType.ParallelHybridVehicle, runData.BatteryOnlyHybridMode);
 
+				if (runData.BatteryOnlyHybridMode && runData.Aux.Any(x => x.ID != Constants.Auxiliaries.IDs.Fan && !x.ConnectToREESS)) {
+					throw new VectoException(
+						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
+				}
 
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
@@ -266,10 +275,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				if (ovcMode != OvcHevMode.NotApplicable && runData.InputData.JobInputData.Vehicle.OVC)
 				{
 					runData.ModFileSuffix += ovcMode == OvcHevMode.ChargeSustaining ? "CS" : "CD";
-				}
-
-				if (ovcMode == OvcHevMode.ChargeDepleting) {
-					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
 				}
 
 				runData.OVCMode = ovcMode;
@@ -469,8 +474,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var runData = CreateCommonRunData(Vehicle, mission, loading, _segment);
+				
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
+				}
 
-				runData.AirdragData =
+                runData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 				runData.DriverData = DriverData;
 
@@ -514,9 +523,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					_segment.VehicleClass,
 					Vehicle.Length,
 					Vehicle.Components.AxleWheels.NumSteeredAxles,
-					Vehicle.VehicleType);
+					Vehicle.VehicleType, runData.BatteryOnlyHybridMode);
 
-				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
+				if (Vehicle.BatteryOnlyMode && runData.Aux.Any(x => x.ID != Constants.Auxiliaries.IDs.Fan && x.ConnectToREESS)) {
+					throw new VectoException(
+						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
+				}
+
+                var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
 				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData);
 

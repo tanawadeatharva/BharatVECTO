@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 				simulationRunData.DriverData = DriverData;
 				
 
@@ -358,7 +358,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, 
 					Vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.SerialHybridVehicle);
+					VectoSimulationJobType.SerialHybridVehicle, runData.BatteryOnlyHybridMode);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
 
@@ -604,7 +604,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, runData.BatteryOnlyHybridMode);
 				var emPos = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 				runData.DriverData = DriverData;
 
@@ -916,7 +916,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
 					Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.ParallelHybridVehicle);//Hardcode to override IHPC
+					VectoSimulationJobType.ParallelHybridVehicle, runData.BatteryOnlyHybridMode);//Hardcode to override IHPC
 				runData.DriverData = DriverData;
 
 
@@ -1116,7 +1116,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 				var emPos = result.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 				result.DriverData = DriverData;
 
