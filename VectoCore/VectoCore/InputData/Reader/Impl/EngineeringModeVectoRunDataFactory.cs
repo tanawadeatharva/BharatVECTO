@@ -740,9 +740,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 					var powertrainPosition = electricMachines.FirstOrDefault(e => e.Item1 != PowertrainPosition.GEN)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
 
-					var jobType = electricMachines.Count > 0 && (battery != null || superCap != null)
-						? VectoSimulationJobType.ParallelHybridVehicle
-						: VectoSimulationJobType.ConventionalVehicle;
+					var jobType = vehicle.VehicleType;
+						//electricMachines.Count > 0 && (battery != null || superCap != null)
+						//? VectoSimulationJobType.ParallelHybridVehicle
+						//: VectoSimulationJobType.ConventionalVehicle;
 
 					retVal.JobType = jobType;
 					retVal.ElectricMachinesData = electricMachines;
@@ -753,7 +754,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						throw new VectoException(
 							"Powertrain Architecture 'hybrid electric vehicle, P2' with AT transmission not supported");
 					}
-					retVal.HybridStrategyParameters = jobType == VectoSimulationJobType.ParallelHybridVehicle
+					retVal.HybridStrategyParameters = jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC)
 						? DataAdapter.CreateHybridStrategyParameters(InputDataProvider.JobInputData, engineData, retVal.GearboxData)
 						: null;
 					if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear != null &&
