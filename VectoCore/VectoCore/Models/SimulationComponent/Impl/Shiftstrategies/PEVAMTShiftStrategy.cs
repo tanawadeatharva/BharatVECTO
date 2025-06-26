@@ -192,6 +192,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			if (DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Accelerating && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Driving) {
 				return currentGear;
 			}
+
+			if (DataBus.ElectricMotorInfo(EMPos).EmOff) {
+				return currentGear;
+			}
 			if ((absTime - _gearbox.LastDownshift).IsSmaller(GearshiftParams.UpshiftAfterDownshiftDelay)) {
 				return currentGear;
 			}
