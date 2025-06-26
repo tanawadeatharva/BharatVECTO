@@ -226,12 +226,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					VectoSimulationJobType.ParallelHybridVehicle);
 
 
-				CreateGearboxAndGearshiftData(runData);
 				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateVoltageCenterSoc(), runData.GearboxData.GearList);
+					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
+				
+				CreateGearboxAndGearshiftData(runData);
 
-				runData.HybridStrategyParameters =
+                runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
 						runData.SuperCapData,
 						runData.VehicleData.TotalVehicleMass,
@@ -289,7 +290,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 			}
@@ -322,7 +323,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 			}
@@ -416,7 +417,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -637,7 +638,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 			}
@@ -757,7 +758,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 

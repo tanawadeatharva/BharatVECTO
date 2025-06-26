@@ -766,7 +766,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					};
 					
 					var shiftStrategyName =PowertrainBuilder.GetShiftStrategyName(vehicle.Components.GearboxInputData.Type,
-							vehicle.VehicleType);
+							vehicle.VehicleType, false, false);
 					var gearshiftParams =
 						dao.CreateGearshiftData(
 							vehicle.Components.GearboxInputData.Type, InputDataProvider.DriverInputData.GearshiftInputData,

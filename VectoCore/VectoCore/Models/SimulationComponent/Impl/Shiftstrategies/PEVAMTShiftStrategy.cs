@@ -76,6 +76,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		}
 	}
 
+	public class ParallelHybridBatteryOnlyModeShiftStrategy : PEVAMTShiftStrategy
+	{
+		public static string Name => "AMT - EffShift (P-HEV Battery only)";
+
+        public ParallelHybridBatteryOnlyModeShiftStrategy(IVehicleContainer dataBus) : base(dataBus) { }
+		protected ParallelHybridBatteryOnlyModeShiftStrategy(IVehicleContainer dataBus, bool dummy) : base(dataBus, dummy) { }
+
+		protected override PowertrainPosition GetEMPos(IVehicleContainer dataBus)
+		{
+			return dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+					x.Item1.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5,
+						PowertrainPosition.IHPC))
+				?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+		}
+    }
+
 	public class PEVAMTShiftStrategy : LoggingObject, IShiftStrategy
 	{
 		protected IDataBus DataBus;
@@ -110,18 +126,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 		protected ITestPowertrain<Gearbox> TestPowertrain;
 
-		public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
+		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
+
+        public PEVAMTShiftStrategy(IVehicleContainer dataBus) : this(dataBus, false)
 		{
 			if (dataBus.RunData.VehicleData == null) {
 				return;
 			}
 
-			EMPos = dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
-				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+			EMPos = GetEMPos(dataBus);
 			SetupVelocityDropPreprocessor(dataBus);
 		}
-
-		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
 		{
@@ -134,16 +149,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			if (runData.VehicleData == null) {
 				return;
 			}
-			EMPos = runData.ElectricMachinesData.FirstOrDefault(x =>
-				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+
+			EMPos = GetEMPos(dataBus);
 
 			GearboxModelData = runData.GearboxData;
 			GearshiftParams = runData.GearshiftParameters;
 			GearList = GearboxModelData.GearList;
 			MaxStartGear = GearList.Reverse().First();
 
-			VoltageLevels = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == EMPos)?.Item2.EfficiencyData;
+			var emData = runData.ElectricMachinesData
+				.First(x => x.Item1.GetPositionNumber() == EMPos.GetPositionNumber()).Item2;
+
+            VoltageLevels = emData.EfficiencyData;
 
 			TransmissionRatio = (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *  // axlegeardata may be null for certain IEPC configurations
 								(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
@@ -153,9 +170,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
-			var em = runData.ElectricMachinesData.First(x => x.Item1 == EMPos).Item2;
-			EMRatio = em.RatioADC;
-			DeRatedShiftpolygons = CalculateDeratedShiftLines(em,
+			
+			EMRatio = emData.RatioADC;
+			DeRatedShiftpolygons = CalculateDeratedShiftLines(emData,
 				runData.GearboxData.InputData.Gears, runData.VehicleData.DynamicTyreRadius,
 				runData.AxleGearData?.AxleGear.Ratio ?? 1.0, runData.GearboxData.Type);
 
@@ -171,11 +188,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 		}
 
-		protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
+		protected virtual PowertrainPosition GetEMPos(IVehicleContainer dataBus)
+		{
+			return dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+				x.Item1.IsOneOf(PowertrainPosition.BatteryElectricE2, PowertrainPosition.IEPC))?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+		}
+
+        protected void SetupVelocityDropPreprocessor(IVehicleContainer dataBus)
 		{
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
 			TestContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
+			if (dataBus.RunData.BatteryOnlyHybridMode) {
+				new AlwaysOffCombustionEngine(TestContainer, dataBus.RunData.EngineData);
+			}
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;
@@ -904,7 +930,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			{
 				DataBus = dataBus;
 				ElectricMotorData = dataBus.RunData.ElectricMachinesData
-					.First(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC).Item2;
+					.First(x => x.Item1.GetPositionNumber() == 2).Item2;
 				GearboxModelData = dataBus.RunData.GearboxData;
 			}
 

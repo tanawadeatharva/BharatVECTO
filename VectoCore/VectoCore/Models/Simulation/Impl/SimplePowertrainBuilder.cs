@@ -564,21 +564,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = ConnectREESS(data, container);
 			es.Connect(new SimpleCharger());
 
-			vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
+			var em = data.BatteryOnlyHybridMode ?
+				GetElectricMachineBatteryOnlyP2(
+					data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
+					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()) 
+				: GetElectricMachine(
+				data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
+				data.ElectricMachinesData, container, es, new SimpleElectricMotorControl());
+
+            vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
 					data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
                 .AddComponent(new WheelEnd(container, data.WheelEndData))
                 .AddComponent(data.AxleGearData is null ? null : new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(data.GearboxData is null ? null : GetSimpleGearbox(container, data))
-				.AddComponent(GetElectricMachine(
-					data.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1,
-					data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()));
+				.AddComponent(em);
 			var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
 
 			AddElectricAuxiliaries(data, container, es, null, dcdc);
 			if (data.AxleGearData == null) {
 				new DummyAxleGearInfo(container); // necessary for certain IEPC configurations
+			}
+
+			if (data.BatteryOnlyHybridMode) {
+				new AlwaysOffCombustionEngine(container, data.EngineData);
 			}
 			return container;
 		}

@@ -18,6 +18,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool pt1Disabled = false) : base(container, modelData, pt1Disabled)
 		{
 			CombustionEngineOn = false;
+			PreviousState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineSpeed = 0.RPMtoRad();
 		}
 
         public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque,
@@ -37,7 +40,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool CombustionEngineOn
 		{
-			get => false; set {} }
+			get => false; set {}
+		}
+
+		#region Overrides of CombustionEngine
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			base.DoCommitSimulationStep(time, simulationInterval);
+			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineSpeed = 0.RPMtoRad();
+		}
+
+		#endregion
 
 		#endregion
 	}
@@ -270,7 +285,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (other is CombustionEngine e) {
 				PreviousState = e.PreviousState;
-				return EngineAux.UpdateFrom(e.EngineAux);
+				EngineAux?.UpdateFrom(e.EngineAux);
+				return true;
 			}
 			return false;
 		}

@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
         IShiftStrategy GetShiftStrategy(IVehicleContainer container);
 
-        string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType, bool isTestPowerTrain = false);
+        string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType, bool isTestPowerTrain, bool batteryOnlyPHEVMode);
 
     }
 }

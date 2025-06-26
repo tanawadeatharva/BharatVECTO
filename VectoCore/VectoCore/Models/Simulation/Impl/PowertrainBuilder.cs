@@ -534,7 +534,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.BatteryOnlyHybridMode && data.OVCMode == OvcHevMode.ChargeDepleting) {
 				switch (data.ElectricMachinesData.First().Item1) {
 					case PowertrainPosition.HybridP2:
-						throw new NotImplementedException("Battery only mode for P2 Hybrids not implementd");
+						return BuildFullPowertrainParallelHybridBatteryOnlyModeP2(data, modData, sumWriter);
 					case PowertrainPosition.HybridP3:
 					case PowertrainPosition.HybridP4:
 						return BuildFullPowertrainParallelHybridBatteryOnlyMode(data, modData, sumWriter);
@@ -636,6 +636,61 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			///TODO: remove
 			data.ElectricAuxDemand = 0.SI<Watt>();
 
+			return container;
+		}
+
+		private IVehicleContainer BuildFullPowertrainParallelHybridBatteryOnlyModeP2(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
+		{
+			var container = GetVehicleContainer(data.ExecutionMode, data, modData, sumWriter);
+            var es = ConnectREESS(data, container);
+
+            var ctl = new BatteryElectricMotorController(container, es);
+
+            var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+
+			var gearbox = data.GearboxData.Type == GearboxType.APTN
+				? (Gearbox)new APTNGearbox(container, new APTNShiftStrategy(container))
+				: new PEVGearbox(container, new ParallelHybridBatteryOnlyModeShiftStrategy(container));
+
+			var powertrain = cycle
+				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
+				.AddComponent(gearbox)
+				.AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+				.AddComponent(GetPEVPTO(container, data))
+				.AddComponent(GetElectricMachineBatteryOnlyP2(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachineBatteryOnlyP2(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
+				.AddComponent(GetElectricMachineBatteryOnlyP2(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl));
+
+            new ATClutchInfo(container);
+			
+            var engine = new AlwaysOffCombustionEngine(container, data.EngineData);
+			AddAuxiliaries(engine, container, data);
+
+            var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            if (data.BusAuxiliaries != null) {
+				if (container.BusAux is BusAuxiliariesAdapter busAux) {
+					var auxCfg = data.BusAuxiliaries;
+					var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
+						? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity, auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
+						: (ISimpleBattery)new NoBattery(container);
+					busAux.ElectricStorage = electricStorage;
+					if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
+						busAux.DCDCConverter = dcdc;
+						es.Connect(dcdc);
+					}
+				} else {
+					throw new VectoException("BusAux data set but no BusAux component found!");
+				}
+            }
+
+            //AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 			return container;
 		}
 

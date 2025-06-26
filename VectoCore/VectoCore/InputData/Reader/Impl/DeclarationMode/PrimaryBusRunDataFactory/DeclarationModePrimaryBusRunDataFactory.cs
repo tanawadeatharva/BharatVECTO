@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
-				var shiftStrategyName = PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type, Vehicle.VehicleType);
+				var shiftStrategyName = PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type, Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 				
@@ -440,7 +440,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -520,7 +520,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -753,7 +753,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -874,7 +874,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -968,7 +968,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{	
-				var shiftStrategyName = PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type, Vehicle.VehicleType);
+				var shiftStrategyName = PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type, Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
@@ -1180,7 +1180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(Vehicle.Components.GearboxInputData.Type,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 
@@ -1259,7 +1259,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					);
 				var shiftStrategyName =
 					PowertrainBuilder.GetShiftStrategyName(GearboxType.APTN,
-						Vehicle.VehicleType);
+						Vehicle.VehicleType, false, Vehicle.BatteryOnlyMode);
 				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData,
 					ShiftPolygonCalculator.Create(shiftStrategyName, runData.GearshiftParameters));
 

@@ -419,7 +419,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return motor;
 		}
 
-		protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
+		protected IElectricMotor GetElectricMachineBatteryOnlyP2(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IElectricMotorControl ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
+
+			//container.ModData?.AddElectricMotor(pos);
+			var motor = new ElectricMotor(container, motorData.Item2, ctl, PowertrainPosition.BatteryElectricE2);
+			motor.Connect(es);
+			return motor;
+		}
+
+        protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, IVehicleContainer container,
 			IElectricSystem es, IHybridController ctl) where TElectricMotor : ElectricMotor
 		{
@@ -685,12 +700,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType,
-			bool isTestPowerTrain)
+			bool isTestPowerTrain, bool batteryOnlyPHEVMode)
 		{
 			switch (gearboxType) {
 				case GearboxType.AMT:
 					switch (jobType) {
 						case VectoSimulationJobType.ConventionalVehicle:
+							return AMTShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when batteryOnlyPHEVMode:
+							return ParallelHybridBatteryOnlyModeShiftStrategy.Name;
 						case VectoSimulationJobType.ParallelHybridVehicle:
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
@@ -708,9 +726,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					switch (jobType) {
-						case VectoSimulationJobType.ParallelHybridVehicle:
 						case VectoSimulationJobType.ConventionalVehicle:
 							return ATShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when !batteryOnlyPHEVMode:
+							return ATShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when batteryOnlyPHEVMode:
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.FCHV:
@@ -759,7 +779,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var jobType = runData.JobType;
 			var isTestPowerTrain = container.IsTestPowertrain;
 
-			var shiftStrategyName = GetShiftStrategyName(gearboxType, jobType, isTestPowerTrain);
+			var shiftStrategyName = GetShiftStrategyName(gearboxType, jobType, isTestPowerTrain, runData.BatteryOnlyHybridMode);
 			runData.ShiftStrategy = shiftStrategyName;
 			return ShiftStrategy.Create(container, runData.ShiftStrategy);
 		}
