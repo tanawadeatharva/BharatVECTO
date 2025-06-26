@@ -132,7 +132,22 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusVehicleType();
 		}
 
-		public IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType()
+        public IXmlTypeWriter GetMultiple_PEV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_FCHV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusVehicleType();
 		}
@@ -312,24 +327,39 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusComponentsType();
         }
 
-		public IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType()
+        public IXmlTypeWriter GetMultiple_FCHV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_PEV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_F3_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_F3_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_F4_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_F4_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_IEPC_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_IEPC_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetPEV_E2_PrimaryBusComponentsType()

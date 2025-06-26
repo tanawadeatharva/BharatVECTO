@@ -115,7 +115,115 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					true,
 					false)));
 
-			Bind<IXMLVehicleInformationFile>().To<HEV_F2_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+            Bind<IXMLVehicleInformationFile>().To<Multiple_FCHV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_FCHV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_FCHV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_FCHV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_PEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_PEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_PEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_PEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_SHEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_SHEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_SHEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<Multiple_SHEV_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLVehicleInformationFile>().To<HEV_F2_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.FCHV,
@@ -400,7 +508,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<HevS4VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevS4VehicleType());
 
-			Bind<IXmlTypeWriter>().To<HevF2VehicleType>().When(AccessedViaVIFFactory)
+			Bind<IXmlTypeWriter>().To<MultipleFCHVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleFCHVVehicleType());
+
+            Bind<IXmlTypeWriter>().To<MultiplePEVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultiplePEVVehicleType());
+
+            Bind<IXmlTypeWriter>().To<MultipleSHEVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleSHEVVehicleType());
+
+            Bind<IXmlTypeWriter>().To<HevF2VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF2VehicleType());
 
 			Bind<IXmlTypeWriter>().To<HevF3VehicleType>().When(AccessedViaVIFFactory)

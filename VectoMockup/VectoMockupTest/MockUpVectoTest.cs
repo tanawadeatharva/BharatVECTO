@@ -496,6 +496,18 @@ namespace VectoMockupTest
         [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F4_PrimaryBus_requiredOnly")]
         [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", TestName = "v27_FCHV_IEPC_PrimaryBus")]
         [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus")]
+		[TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly")]
         public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
