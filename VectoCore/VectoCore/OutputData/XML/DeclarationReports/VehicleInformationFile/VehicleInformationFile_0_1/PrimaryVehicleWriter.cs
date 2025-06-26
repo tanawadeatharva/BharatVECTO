@@ -166,7 +166,55 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevF2VehicleType : VehicleWriter
+	public class MultipleSHEVVehicleType : VehicleWriter
+	{
+        public MultipleSHEVVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            //var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+            //vehicleData.Add(_vifReportFactory.GetHevF2ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType")
+                //vehicleData
+                );
+        }
+    }
+
+	public class MultiplePEVVehicleType : VehicleWriter
+	{
+        public MultiplePEVVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            //var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+            //vehicleData.Add(_vifReportFactory.GetHevF2ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType")
+                //vehicleData
+                );
+        }
+    }
+
+	public class MultipleFCHVVehicleType : VehicleWriter
+	{
+        public MultipleFCHVVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            //var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+            //vehicleData.Add(_vifReportFactory.GetHevF2ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType")
+                //vehicleData
+				);
+        }
+    }
+
+    public class HevF2VehicleType : VehicleWriter
 	{
 		public HevF2VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
