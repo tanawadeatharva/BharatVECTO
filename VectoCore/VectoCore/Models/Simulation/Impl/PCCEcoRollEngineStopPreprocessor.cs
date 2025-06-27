@@ -51,6 +51,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case IAPTGearbox _:
 					RunPreprocessingATGearbox();
 					return;
+				case null when !TestPowertrain.Container.HasGearbox:
 				case IGearboxInfo _ when !TestPowertrain.Container.HasGearbox:
 					RunPreprocessingNoGearbox();
 					return;
