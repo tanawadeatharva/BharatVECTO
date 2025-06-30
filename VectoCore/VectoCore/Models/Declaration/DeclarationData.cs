@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				electricOprerationalRange < 350000.SI<Meter>();
 		}
 
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData, double? electricRange = null)
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IVehicleDeclarationInputData vehicleData, double? electricRange, VehicleClass actualVehicleClass = VehicleClass.Unknown)
 		{
 			switch (vehicleData.VehicleCategory) {
 				case VehicleCategory.Van:
@@ -308,6 +308,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 						vehicleData.VehicleType.IsBatteryElectric(),
 						electricRange);
 					return co2Group;
+				case VehicleCategory.HeavyBusCompletedVehicle:
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					return WeightingGroup.Lookup(
+						actualVehicleClass,
+						vehicleData.SleeperCab ?? false,
+						GetReferencePropulsionPower(vehicleData),
+						vehicleData.VehicleType.IsBatteryElectric(),
+						electricRange);
 				default:
 					return Declaration.WeightingGroup.Unknown;
 			}
