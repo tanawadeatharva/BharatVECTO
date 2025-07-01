@@ -131,7 +131,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Group40e,
 		Group40f,
 
-        Unknown
+		Group31LF,
+		Group31L1,
+		Group31L2,
+		Group31DD,
+		Group32C2,
+		Group32C3,
+		Group32DD,
+		Group33LF,
+		Group33L1,
+		Group33L2,
+		Group33DD,
+		Group34C2,
+		Group34C3,
+		Group34DD,
+		Group35FE,
+		Group39FE,
+
+		Unknown
     }
 
 	public static class WeightingGroupHelper
@@ -162,6 +179,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case WeightingGroup.Group9LH:
 				case WeightingGroup.Group10RD:
 				case WeightingGroup.Group10LH:
+				case WeightingGroup.Group31LF:
+				case WeightingGroup.Group31L1:
+				case WeightingGroup.Group31L2:
+				case WeightingGroup.Group31DD:
+				case WeightingGroup.Group32C2:
+				case WeightingGroup.Group32C3:
+				case WeightingGroup.Group32DD:
+				case WeightingGroup.Group33LF:
+				case WeightingGroup.Group33L1:
+				case WeightingGroup.Group33L2:
+				case WeightingGroup.Group33DD:
+				case WeightingGroup.Group34C2:
+				case WeightingGroup.Group34C3:
+				case WeightingGroup.Group34DD:
+				case WeightingGroup.Group35FE:
+				case WeightingGroup.Group39FE:
 					return Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)).Join("-");
 				default:
 					return group.ToString().Replace(Prefix, "");
