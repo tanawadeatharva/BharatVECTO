@@ -312,10 +312,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return WeightingGroup.Lookup(
 						actualVehicleClass,
-						vehicleData.SleeperCab ?? false,
+						false,
 						GetReferencePropulsionPower(vehicleData),
 						vehicleData.VehicleType.IsBatteryElectric(),
 						electricRange);
+				default:
+					return Declaration.WeightingGroup.Unknown;
+			}
+		}
+
+		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
+		{
+			var vehicleData = multiStageInputDataProvider.JobInputData.PrimaryVehicle.Vehicle;
+			switch (vehicleData.VehicleCategory)
+			{
+				case VehicleCategory.HeavyBusCompletedVehicle:
+					return WeightingGroup.Lookup(
+						GetVehicleGroupGroup(vehicleData).Item1,
+						false,
+						GetReferencePropulsionPower(vehicleData),
+						vehicleData.VehicleType.IsBatteryElectric(),
+						null);
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					var completedVehicleData = multiStageInputDataProvider.JobInputData.ConsolidateManufacturingStage.Vehicle;
+					return WeightingGroup.Lookup(
+						GetVehicleGroupGroup(completedVehicleData).Item1,
+						false,
+						GetReferencePropulsionPower(vehicleData),
+						vehicleData.VehicleType.IsBatteryElectric(),
+						null);
 				default:
 					return Declaration.WeightingGroup.Unknown;
 			}
@@ -347,11 +372,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-		}
-
-		public static WeightingGroup GetVehicleGroupCO2StandardsGroup(IMultistepBusInputDataProvider multiStageInputDataProvider)
-		{
-			return Declaration.WeightingGroup.Unknown;
 		}
 
 		public static double GetNumberOfPassengers(Mission mission, Meter length, Meter width, double registeredPassengerSeats,
