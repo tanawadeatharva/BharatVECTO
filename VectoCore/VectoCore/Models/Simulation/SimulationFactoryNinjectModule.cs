@@ -138,6 +138,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		
 		public IVectoHash PrimaryVIFHash { set { } }
 
+		public IVectoHash CompletedVIFHash { set { } }
+
 		#endregion
 	}
 }

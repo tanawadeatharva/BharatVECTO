@@ -335,6 +335,7 @@
 			<xs:element name="JobData" type="DataIntegrityResultType"/>
 			<xs:element name="CustomerInformationFile" type="DataIntegrityResultType"/>
 			<xs:element name="PrimaryVIF" type="DataIntegrityResultType" minOccurs="0"/>
+			<xs:element name="CompletedVIF" type="DataIntegrityResultType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="status" type="DataIntegrityStatusType" use="required"/>
 	</xs:complexType>

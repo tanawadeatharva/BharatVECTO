@@ -621,10 +621,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			string mrfPath  = Path.Combine(baseFullPath, Body["ManufacturerRecord"].Value<string>());
 			string vifPath  = Path.Combine(baseFullPath, Body["PrimaryVIF"]?.Value<string>() ?? string.Empty);
 			string cifPath  = Path.Combine(baseFullPath, Body["CustomerInformationFile"]?.Value<string>() ?? string.Empty);
+			string completedVifPath = Path.Combine(baseFullPath, Body["CompletedVIF"]?.Value<string>() ?? string.Empty);
 
 			VectoJobHash                = VectoHash.Load(declPath);
 			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(mrfPath) : null;
 			VectoPrimaryVIFHash         = Body["PrimaryVIF"] != null ? VectoHash.Load(vifPath) : null;
+			VectoCompletedVIFHash       = Body["CompletedVIF"] != null ? VectoHash.Load(completedVifPath) : null;
 			VectoCustomerFileHash	    = Body["CustomerInformationFile"] != null ? VectoHash.Load(cifPath) : null;
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
@@ -650,6 +652,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IVectoHash VectoCustomerFileHash { get; }
 
 		public IVectoHash VectoPrimaryVIFHash { get; }
+		
+		public IVectoHash VectoCompletedVIFHash { get; }
 
 		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 

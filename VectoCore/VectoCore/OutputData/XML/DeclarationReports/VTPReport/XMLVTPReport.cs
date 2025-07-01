@@ -688,7 +688,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var jobIntegrity = JobIntegrityChecks(ref allSuccess);
 			var manufacturerReportIntegrity = ReportIntegrityChecks(ManufacturerRecordHash, "ManufacturerReport", ref allSuccess, "ManufacturerRecord");
 			var customerInfoFileIntegrity   = ReportIntegrityChecks(CustomerFileHash, "CustomerInformationFile", ref allSuccess);
-			var primaryVIFIntegrity = PrimaryVIFHash != null ? ReportIntegrityChecks(PrimaryVIFHash, "PrimaryVIF", ref allSuccess) : null;
+			var primaryVIFIntegrity   = PrimaryVIFHash != null ? ReportIntegrityChecks(PrimaryVIFHash, "PrimaryVIF", ref allSuccess) : null;
+			var completedVIFIntegrity = CompletedVIFHash != null ? ReportIntegrityChecks(CompletedVIFHash, "CompletedVIF", ref allSuccess) : null;
 
 			DataIntegrityPart.Add(
 				new XAttribute("status", allSuccess ? XMLNames.Report_Results_Status_Success_Val : "failed"),
@@ -1027,6 +1028,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public IVectoHash CustomerFileHash { protected get; set; }
 
 		public IVectoHash PrimaryVIFHash { protected get; set; }
+		
+		public IVectoHash CompletedVIFHash { protected get; set; }
 
 		#endregion
 	}

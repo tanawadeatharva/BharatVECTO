@@ -71,6 +71,8 @@ namespace TUGraz.VectoCommon.InputData
 		IVectoHash VectoCustomerFileHash { get; }
 
 		IVectoHash VectoPrimaryVIFHash { get; }
+		
+		IVectoHash VectoCompletedVIFHash { get; }
 
 		Meter Mileage { get; }
 

@@ -45,5 +45,7 @@ namespace TUGraz.VectoCore.OutputData
 		IVectoHash CustomerFileHash { set; }
 
 		IVectoHash PrimaryVIFHash { set; }
+		
+		IVectoHash CompletedVIFHash { set; }
 	}
 }

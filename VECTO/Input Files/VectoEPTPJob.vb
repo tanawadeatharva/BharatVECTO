@@ -153,6 +153,8 @@ Public Class VectoVTPJob
 
     Public ReadOnly Property VectoPrimaryVIFHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoPrimaryVIFHash
 
+    Public ReadOnly Property VectoCompletedVIFHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoCompletedVIFHash
+
     Public Property Mileage As Meter Implements IVTPDeclarationJobInputData.Mileage
 
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
