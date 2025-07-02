@@ -140,15 +140,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_FCHV_CompletedBus_DataProviderV27>()
                 .Named(XMLDeclaration_FCHV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
             // ComponentDataProvider - Lorry
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Conventional_Lorry_ComponentDataProviderV27>()
                 .Named(XMLDeclaration_Conventional_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);

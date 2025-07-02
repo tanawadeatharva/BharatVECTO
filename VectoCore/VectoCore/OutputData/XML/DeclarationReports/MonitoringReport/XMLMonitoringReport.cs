@@ -703,7 +703,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             var mrfData = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data"));
             string dataType = mrfData.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
 
-            if (dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV") || dataType.Contains("HEV-Sx"))
+            if ((dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV") || dataType.Contains("HEV-Sx")) && !dataType.Contains("Completed"))
             {
                 var mrfComponents = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data", "Components"));
                 string componentsType = mrfComponents.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;

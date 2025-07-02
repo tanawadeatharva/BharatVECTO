@@ -5892,6 +5892,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 				<Battery>
 					<StringID>1</StringID>
@@ -5932,6 +5934,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<AxleWheels>

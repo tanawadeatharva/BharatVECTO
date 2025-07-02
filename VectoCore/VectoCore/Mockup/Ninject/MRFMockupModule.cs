@@ -207,7 +207,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPEV_CompletedBusVehicleType();
         }
 
-		public IXmlTypeWriter GetExempted_CompletedBusVehicleType()
+        public IXmlTypeWriter GetFCHV_CompletedBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetFCHV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetExempted_CompletedBusVehicleType()
 		{
 			return _manufacturerReportFactoryImplementation.GetExempted_CompletedBusVehicleType();
 		}

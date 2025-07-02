@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<vif:VectoMockResults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
+<vif:VectoMockResults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v1.1" 
 xmlns:vif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" 
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1  V:\VectoCore\VectoCore\Resources\XSD\VectoOutputMultistep.0.1.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v1.1  VectoOutputMultistep.1.1.xsd">
 	<Results>
 		<Status>success</Status>
 		<Result status="success">

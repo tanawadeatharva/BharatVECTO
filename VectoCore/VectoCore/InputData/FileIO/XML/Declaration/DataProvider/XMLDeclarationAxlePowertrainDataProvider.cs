@@ -178,6 +178,80 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         }
     }
 
+    public abstract class XMLDeclarationMultistage_AxlePowertrain_DataProviderV11 : XMLDeclarationAxlePowertrainDataProvider
+    {
+        protected override XNamespace SchemaNamespace => XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static XNamespace NAMESPACE_URI => XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public XMLDeclarationMultistage_AxlePowertrain_DataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        {}
+
+        public override IGearboxDeclarationInputData GearboxInputData => _gearboxInputData ??
+            (_gearboxInputData = ElementExists("Transmission") ? CreateComponent("Transmission", GearboxCreator) : null);
+    }
+
+    public class XMLDeclarationMultistage_AxlePowertrain_EM2_DataProviderV11 : XMLDeclarationMultistage_AxlePowertrain_DataProviderV11
+    {
+        public static string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "xEV_EM2_Powertrain_VIFType");
+
+        public XMLDeclarationMultistage_AxlePowertrain_EM2_DataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        {}
+
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F2
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S2
+                : ArchitectureID.E2;
+    }
+
+    public class XMLDeclarationMultistage_AxlePowertrain_EM3_DataProviderV11 : XMLDeclarationMultistage_AxlePowertrain_DataProviderV11
+    {
+        public static string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "xEV_EM3_Powertrain_VIFType");
+
+        public XMLDeclarationMultistage_AxlePowertrain_EM3_DataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        {}
+
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F3
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S3
+                : ArchitectureID.E3;
+    }
+
+    public class XMLDeclarationMultistage_AxlePowertrain_EM4_DataProviderV11 : XMLDeclarationMultistage_AxlePowertrain_DataProviderV11
+    {
+        public static string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "xEV_EM4_Powertrain_VIFType");
+
+        public XMLDeclarationMultistage_AxlePowertrain_EM4_DataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F4
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S4
+                : ArchitectureID.E4;
+    }
+
+    public class XMLDeclarationMultistage_AxlePowertrain_IEPC_DataProviderV11 : XMLDeclarationMultistage_AxlePowertrain_DataProviderV11
+    {
+        public static string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "xEV_IEPC_Powertrain_VIFType");
+
+        public XMLDeclarationMultistage_AxlePowertrain_IEPC_DataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override ArchitectureID Architecture => (Vehicle.Components.FuelCellSystem != null)
+            ? ArchitectureID.F_IEPC
+            : (Vehicle.Components.EngineInputData != null)
+                ? ArchitectureID.S_IEPC
+                : ArchitectureID.E_IEPC;
+    }
+
     public class XMLDeclaration_AxlePowertrain_EM2_DataProviderV27 : XMLDeclarationAxlePowertrainDataProvider
     {
         public static string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "xEV_EM2_Powertrain_Type");

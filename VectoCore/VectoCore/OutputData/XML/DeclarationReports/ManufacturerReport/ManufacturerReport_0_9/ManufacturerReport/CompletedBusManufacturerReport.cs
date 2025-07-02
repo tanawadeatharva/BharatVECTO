@@ -235,7 +235,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	internal class FCHV_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	{
+        public FCHV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : 
+			base(MRFReportFactory, resultFactory) 
+		{ }
+
+        public override string OutputDataType => "FCHVCompletedBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetFCHV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
 		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 

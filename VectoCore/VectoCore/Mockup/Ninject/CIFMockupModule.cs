@@ -188,7 +188,42 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetPEV_IEPC_CompletedBusVehicleType();
 		}
 
-		public IXmlTypeWriter GetConventional_SingleBusVehicleType()
+        public IXmlTypeWriter Get_Multiple_FCHV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_FCHV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_Multiple_PEV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_PEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_Multiple_SHEV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_SHEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F2_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F2_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F3_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F3_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F4_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F4_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_IEPC_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_IEPC_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetConventional_SingleBusVehicleType()
 		{
 			return _cifFactory.GetConventional_SingleBusVehicleType();
 		}
@@ -324,7 +359,12 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter();
 		}
 
-		public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
+        public IReportOutputGroup GetFCHV_CompletedBusVehicleSequenceGroupWriter()
+        {
+            return _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter();
+        }
+
+        public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
         {
             return _cifFactory.GetCompletedBusVehicleTypeGroup();
         }
