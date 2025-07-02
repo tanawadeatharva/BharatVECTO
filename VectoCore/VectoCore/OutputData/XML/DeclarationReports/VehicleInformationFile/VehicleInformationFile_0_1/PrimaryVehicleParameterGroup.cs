@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.Vehicle_OvcHev, vehicle.OVC),
 			};
 			if (vehicle.ArchitectureID.IsHybridVehicle() && vehicle.OVC) {
-				result.Add(new XElement(_vif + XMLNames.Vehicle_MaxChargingPower, vehicle.MaxChargingPower.Value()));
+				result.Add(new XElement(_vif + XMLNames.Vehicle_MaxChargingPower, vehicle.MaxChargingPower?.Value() ?? double.NaN));
 			}
 			return result;
 		}

@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
-			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
+			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode)
 			{
 				return PtoDataAdapter.CreateDefaultPTOData(pto, gbx);
 			}
@@ -317,7 +317,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override IPTODataAdapter PtoDataAdapter { get; } = new PTODataAdapterLorry();
 
-		}
+			protected virtual IPTODataAdapter BatteryElectricPtoDataAdapter { get; } = new ElectricPTODataAdapter();
+
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode)
+			{
+				if (batteryOnlyHybridMode) {
+					return BatteryElectricPtoDataAdapter.CreateDefaultPTOData(pto, gbx);
+				}
+				return PtoDataAdapter.CreateDefaultPTOData(pto, gbx);
+			}
+        }
 
 		public abstract class BatteryElectric : LorryBase
 		{

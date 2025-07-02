@@ -690,7 +690,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
             }
 
-            //AddElectricAuxiliaries(data, container, es, cycle, dcdc);
+			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 			return container;
 		}
 
@@ -729,6 +729,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 .AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
                 .AddComponent(gearbox)
                 .AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
+				//.AddComponent(GetPEVPTO(container, data))
                 .AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container, es, ctl))
                 .AddComponent(GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
                 .AddComponent(GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
@@ -758,8 +759,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                     throw new VectoException("BusAux data set but no BusAux component found!");
                 }
             }
-
-            AddHighVoltageAuxiliaries(data, container, es, dcdc);
+			AddElectricAuxiliaries(data, container, es, cycle, dcdc);
 
             ///TODO: remove
             data.ElectricAuxDemand = 0.SI<Watt>();

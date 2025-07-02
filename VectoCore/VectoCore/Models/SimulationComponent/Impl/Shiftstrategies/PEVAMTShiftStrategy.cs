@@ -199,9 +199,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			var runData = dataBus.RunData;
 			// MQ: 2019-11-29 - fuel used here has no effect as this is the modDatacontainer for the test-powertrain only!
 			TestContainer = PowertrainBuilder.BuildSimplePowertrainElectric(runData);
-			if (dataBus.RunData.BatteryOnlyHybridMode) {
-				new AlwaysOffCombustionEngine(TestContainer, dataBus.RunData.EngineData);
-			}
+
 			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
 			TestContainerBattery = TestContainer.BatteryInfo as Battery;
 			TestContainerBatterySystem = TestContainer.BatteryInfo as BatterySystem;

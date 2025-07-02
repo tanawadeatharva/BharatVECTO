@@ -1626,8 +1626,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", -1)]
-		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 9)]
-		public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp9_BO-Mode.xml", 16)] // MU Low loading
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp9_BO-Mode.xml", 16)] // MU Low loading
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0)]
+        public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
 		{
 			if (cycleIdx < 0) {
 				RunAllDeclarationJob(jobFile);
@@ -1642,7 +1645,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", -1)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", -1)]
-		public void TestHybridBatteryDominantMode_PEV(string jobFile, int cycleIdx)
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E2_Grp9_BO-Mode.xml", 4)]
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_E2_PEV_AMT_Conv.xml", 0)]
+        public void TestHybridBatteryDominantMode_PEV(string jobFile, int cycleIdx)
 		{
 			if (cycleIdx < 0) {
 				RunAllDeclarationJob(jobFile);

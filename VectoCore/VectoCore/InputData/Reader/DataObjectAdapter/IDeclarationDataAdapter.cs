@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
-		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
+		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode);
 
         AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode);
 

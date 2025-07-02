@@ -45,8 +45,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Overrides of CombustionEngine
 
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			EngineAux?.TorqueDemand(time, simulationInterval, CurrentState.EngineTorque, CurrentState.EngineSpeed,
+				false);
+			base.DoWriteModalResults(time, simulationInterval, container);
+		}
+
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
 		{
+			
 			base.DoCommitSimulationStep(time, simulationInterval);
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
 			CurrentState.EngineSpeed = 0.RPMtoRad();
