@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -257,10 +258,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
-				elAux.AddAuxiliary(new Conditioning(
-					data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond),
-					epto));
+			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
+			{
+				var conditioningAux = data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond);
+				var emConditioning = DeclarationData.Conditioning.LookupPowerDemand(
+					data.VehicleData.VehicleClass,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					data.Mission.MissionType);
+
+				elAux.AddAuxiliary(new Conditioning(conditioningAux, epto, data.JobType.IsFCHV() ? emConditioning : null));
 			}
 
 			var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
