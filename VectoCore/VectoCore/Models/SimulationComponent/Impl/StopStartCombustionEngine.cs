@@ -19,8 +19,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CombustionEngineOn = false;
 			PreviousState.EngineTorque = 0.SI<NewtonMeter>();
+			PreviousState.EngineOn = false;
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
 			CurrentState.EngineSpeed = 0.RPMtoRad();
+			CurrentState.EngineOn = false;
 		}
 
         public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque,
@@ -58,6 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			base.DoCommitSimulationStep(time, simulationInterval);
 			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
 			CurrentState.EngineSpeed = 0.RPMtoRad();
+			CurrentState.EngineOn = false;
 		}
 
 		#endregion
