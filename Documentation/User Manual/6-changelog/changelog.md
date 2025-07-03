@@ -2,6 +2,28 @@
 
 
 
+**VECTO v5.0.1 Official Release (03-07-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU n.a.: FCHV engineering run (vecto/vecto!391)
+    * CodeEU n.a.: H2 check in bus job (vecto/vecto!392)
+    * CodeEU n.a.: Auxiliaries REESS connection (vecto/vecto!397)
+    * CodeEU n.a.: Read PowerOutputConsumptionMap as kW (vecto/vecto!401)
+    * CodeEU n.a.: Select pruned missions for FCHV primary bus (vecto/vecto!403)
+    * CodeEU n.a.: Use angledrive in lorries' gearshift data creation (vecto/vecto!404)
+    * CodeEU n.a.: Remove wrong bus angledrive restrictions (vecto/vecto!405)
+    * CodeEU #1058: Decl GUI error message when FCHV in eng mode (vecto/vecto!407)
+    * CodeEU n.a.: Set NgTankSystem default for primary buses (vecto/vecto!408)
+    * CodeEU n.a.: FCHV F-IEPC simulation runs! (vecto/vecto!409)
+    * CodeEU #1047: Operational range for group 10 vehicle weights (vecto/vecto!402)
+    * CodeEU #1045: Ovc fc weighting to correspond to CO2 computation (vecto/vecto!413)
+    * CodeEU #848: 3s Buffer compute max EM PLoss for FL OPs (vecto/vecto!412)
+    * CodeEU #1067: Conditioning power demand for FCHVs (vecto/vecto!414)
+
+
+
 **VECTO v5.0.0-RC (05-06-2025)**
 
 

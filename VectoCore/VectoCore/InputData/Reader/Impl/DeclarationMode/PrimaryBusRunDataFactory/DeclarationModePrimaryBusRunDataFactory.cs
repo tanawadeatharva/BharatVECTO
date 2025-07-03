@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
                 CheckSuperCap(Vehicle);
-				AngleDriveAllowed(inputData:Vehicle);
+				
 				var simulationRunData = new VectoRunData {
 					InputData = DataProvider,
 					Loading = loading.Key,
@@ -163,8 +163,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			protected abstract void CreateGearboxAndGearshiftData(VectoRunData runData);
 
 			protected abstract bool AxleGearRequired();
-
-			protected abstract void AngleDriveAllowed(IVehicleDeclarationInputData inputData);
         }
 
 		public class Conventional : PrimaryBusBase
@@ -260,12 +258,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			protected override bool AxleGearRequired()
 			{
 				return true;
-			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				//No checks necessary with conventional vehicles
-				return;
 			}
 
 			#endregion
@@ -403,14 +395,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			protected override bool AxleGearRequired()
 			{
 				return InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData != null;
-			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type != AngledriveType.None)
-				{
-					throw new VectoException("Angledrive not allowed in serial hybrid vehicles");
-				}
 			}
         }
 
@@ -550,7 +534,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var vehicle = DataProvider.JobInputData.Vehicle;
 
-				foreach (var mission in _segment.Missions)
+				var missions = GetMissions();
+
+                foreach (var mission in missions)
 				{
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
@@ -706,14 +692,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
 				};
-			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type != AngledriveType.None)
-				{
-					throw new VectoException("Angledrive not allowed in serial hybrid vehicles");
-				}
 			}
 		}
 
@@ -985,12 +963,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				return true;
 			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				//No checks necessary with conventional vehicles
-				return;
-			}
         }
 
 		public class HEV_P1 : ParallelHybrid
@@ -1141,14 +1113,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
 				};
-			}
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				if (inputData.Components.AngledriveInputData != null && inputData.Components.AngledriveInputData.Type != AngledriveType.None)
-				{
-					throw new VectoException("Angledrive not allowed in pure electric vehicles");
-				}
 			}
         }
 
@@ -1322,15 +1286,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				return false;
 			}
-
-			#region Overrides of PrimaryBusBase
-
-			protected override void AngleDriveAllowed(IVehicleDeclarationInputData inputData)
-			{
-				return;
-			}
-
-			#endregion
 		}
 	}
 }

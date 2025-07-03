@@ -42,14 +42,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var retVal = new List<VectoRunData.AuxData>();
 
-			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes) && jobType != VectoSimulationJobType.FCHV && jobType != VectoSimulationJobType.FCHV_IEPC)
+			if (!new HashSet<AuxiliaryType>(auxInputData.Auxiliaries.Select(aux => aux.Type)).SetEquals(AuxiliaryTypes))
 			{
 				var error = string.Format(
 					"In Declaration Mode exactly {0} Auxiliaries must be defined for {2} vehicles: {1}",
 					AuxiliaryTypes.Count, string.Join(", ", AuxiliaryTypes.Select(aux => aux.ToString())), errorStringVehicleType);
 				Log.Error(error);
-				throw new VectoException(
-					error);
+				throw new VectoException(error);
 			}
 
 			var alternatorEfficiency = DeclarationData.AlternatorEfficiency;
@@ -124,8 +123,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			aux.PowerDemandMech = DeclarationData.ElectricSystem.Lookup(hdvClass, mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 			aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 			aux.PowerDemandElectric = aux.PowerDemandMech * alternatorEfficiency;
-			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S);
+			aux.ConnectToREESS = vectoSimulationJobType.IsOneOf(
+				VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle,
+				VectoSimulationJobType.IEPC_E,
+				VectoSimulationJobType.IEPC_S,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC);
 			auxDataList.Add(aux);
 		}
 
@@ -156,7 +160,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				VectoSimulationJobType.SerialHybridVehicle, 
 				VectoSimulationJobType.IEPC_E, 
 				VectoSimulationJobType.IEPC_S,
-				VectoSimulationJobType.ParallelHybridVehicle);
+				VectoSimulationJobType.ParallelHybridVehicle,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC);
 			auxDataList.Add(aux);
 		}
 
@@ -174,7 +180,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				VectoSimulationJobType.BatteryElectricVehicle,
 				VectoSimulationJobType.SerialHybridVehicle,
 				VectoSimulationJobType.IEPC_S,
-				VectoSimulationJobType.IEPC_E);
+				VectoSimulationJobType.IEPC_E,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC);
 			auxDataList.Add(aux);
 			return;
 		}
@@ -209,10 +217,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 				MissionType = mission,
 			};
-
-
 			
-		
 			if (powerDemand.electricPumps.IsGreater(0))
 			{
 				var spElectric = new VectoRunData.AuxData
@@ -227,28 +232,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					PowerDemandMech = powerDemand.electricPumps,
 					MissionType = mission,
 				};
-
 				
-	
-
-				if (jobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
-						VectoSimulationJobType.EngineOnlySimulation)) {
-					//For a conventional vehicle the electric steering pump power demand is added to the power demand of the mechanical steering pumpss
+				if (jobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle, VectoSimulationJobType.EngineOnlySimulation))
+				{
+					// For a conventional vehicle the electric steering pump power demand
+					// is added to the power demand of the mechanical steering pumps.
 					spElectric.ConnectToREESS = false;
 					spMech.PowerDemandMech += spElectric.PowerDemandMech;
-				} else {
-					//For a vehicle with REESS the electric part of the steering pump power demand is treated as separate component
+				}
+				else
+				{
+					// For a vehicle with REESS the electric part of the steering pump power demand
+					// is treated as separate component.
 					auxDataList.Add(spElectric);
 				}
 			}
 			
-
 			if (spMech.PowerDemandMech.IsGreater(0))
 			{
 				auxDataList.Add(spMech);
 			}
-
-
 		}
 
 		private static void AddFan(MissionType mission, VehicleClass hdvClass, VectoSimulationJobType jobType,
@@ -283,14 +286,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected override string errorStringVehicleType => "battery electric";
 	}
 
-	public class HeavyLorryFCHVAuxiliaryDataAdapter : HeavyLorryAuxiliaryDataAdapter
+	public class HeavyLorryFCHVAuxiliaryDataAdapter : HeavyLorryPEVAuxiliaryDataAdapter
 	{
-		protected internal override HashSet<AuxiliaryType> AuxiliaryTypes { get; } = new HashSet<AuxiliaryType>() {
-			AuxiliaryType.HVAC,
-			AuxiliaryType.PneumaticSystem,
-			AuxiliaryType.SteeringPump
-		};
-
 		protected override string errorStringVehicleType => "FCHV";
 	}
 }
