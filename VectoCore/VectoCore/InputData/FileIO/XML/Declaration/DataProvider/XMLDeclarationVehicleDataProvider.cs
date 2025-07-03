@@ -583,7 +583,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(
 			ElementExists("HydrogenStorageTechnology") ? GetString("HydrogenStorageTechnology") : null);
 
-		public bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
+		public virtual bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
 
 		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(
             ElementExists("DynamicChargingTechnology") ? GetString("DynamicChargingTechnology") : null);
