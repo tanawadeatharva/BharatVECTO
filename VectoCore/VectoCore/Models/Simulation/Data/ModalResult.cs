@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			
 			ModalResultField.grad,
 			ModalResultField.altitude,
+			ModalResultField.Highway,
 
 			ModalResultField.drivingBehavior,
 		};
@@ -92,6 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			ModalResultField.grad,
 			ModalResultField.altitude,
+			ModalResultField.Highway,
 
 			ModalResultField.drivingBehavior,
 		};
@@ -190,6 +192,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			ModalResultField.P_veh_inertia,
 			ModalResultField.P_roll,
 			ModalResultField.P_air,
+			ModalResultField.EffectiveAirDragArea,
 			ModalResultField.P_slope,
 			ModalResultField.P_trac
 		};
@@ -302,9 +305,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		};
 
 		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] FuelCellSystemSignals = {
+			ModalResultField.P_FCSystem,
+			ModalResultField.FC_FCSystem,
+		};
+
+		public static readonly ModalResultField[] FuelCellSignals = {
+			ModalResultField.FC_FCS,
+			ModalResultField.P_FCS,
+		};
+
+		public static readonly ModalResultField[] FuelCellComponentSignals = {
+			ModalResultField.t_FCS_On,
+		};
+
+
+		// ------------------------------------------------------------------------------------
 		public static readonly ModalResultField[] BrakeSignals = {
 			ModalResultField.P_brake_loss,
 			ModalResultField.P_brake_in
+		};
+
+		// ------------------------------------------------------------------------------------
+		public static readonly ModalResultField[] WheelEndSignals = {
+			ModalResultField.P_wheelEnd_in,
+			ModalResultField.P_wheelEnd_saving
 		};
 
 		// ------------------------------------------------------------------------------------
@@ -339,6 +364,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
 		protected internal List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
+
+		protected internal List<string> FuelCellStringColumns = new List<string>();
+		protected internal List<string> FuelCellColumns = new List<string>(); //contains fuel cell ids as string
+		protected internal List<string> FuelCellComponentIds = new List<string>();
+
 
 		protected internal Dictionary<int, Dictionary<ModalResultField, DataColumn>> BatteryColumns =
 			new Dictionary<int, Dictionary<ModalResultField, DataColumn>>();
@@ -390,7 +420,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IClutch _:
 					CreateColumns(ClutchSignals);
 					break;
-				case IGearbox g when runData.JobType != VectoSimulationJobType.IEPC_E && runData.JobType != VectoSimulationJobType.IEPC_S:
+				case IGearbox g when runData.JobType != VectoSimulationJobType.FCHV_IEPC
+						&& runData.JobType != VectoSimulationJobType.IEPC_E 
+						&& runData.JobType != VectoSimulationJobType.IEPC_S:
+					
 					CreateColumns(runData.GearboxData?.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial, GearboxType.IHPC) ?? false
 						? GearboxSignals_AT
 						: GearboxSignals);
@@ -404,6 +437,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_E:
 				case IGearbox _ when runData.JobType == VectoSimulationJobType.IEPC_S:
+				case IGearbox _ when runData.JobType == VectoSimulationJobType.FCHV_IEPC:
 					CreateColumns(IEPCTransmissionSignals);
 					break;
 				case ITorqueConverter _: CreateColumns(TorqueConverterSignals);
@@ -413,6 +447,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case Retarder _: CreateColumns(RetarderSignals); break;
 				case IWheels _: CreateColumns(WheelSignals); break;
 				case IBrakes _: CreateColumns(BrakeSignals); break;
+				case WheelEnd _: CreateColumns(WheelEndSignals); break;	
 				case IDriverInfo _: CreateColumns(DriverSignals); break;
 				case IVehicle _: CreateColumns(VehicleSignals); break;
 				case IElectricMotor c3 when c3.Position == PowertrainPosition.IEPC: 
@@ -430,6 +465,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				case IHybridController _: CreateColumns(HybridControllerSignals);
 					break;
 				case IDCDCConverter _: CreateColumns(DCDCConverterSignals);
+					break;
+				case FuelCellSystem _: CreateColumns(FuelCellSystemSignals);
+					break;
+				case FuelCellString fcs: 
+					CreateFuelCellColumns(fcs.StringId,  FuelCellSignals, FuelCellStringColumns, FuelCellColumns);
+					break;
+				case FuelCell fc: 
+					CreateFuelCellColumns(fc.Id.ToString(), FuelCellSignals, FuelCellColumns);
+					CreateFuelCellColumns(fc.Id.ToString(), FuelCellComponentSignals, FuelCellColumns);
+					FuelCellComponentIds.Add(fc.Id.ToString());
 					break;
 				case ElectricAuxiliaries _:
 					CreateElectricAuxColumns();
@@ -478,6 +523,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
 					entry.GetAttribute().ShowUnit;
 			}
+		}
+
+		protected internal void CreateFuelCellColumns(string id, IEnumerable<ModalResultField> signals, params List<string>[] columnLists)
+		{
+			foreach (var entry in signals) {
+				foreach (var columnList in columnLists) {
+					columnList.Add(string.Format(entry.GetCaption(), id));
+				}
+
+				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, id), typeof(SI));
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = entry.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+					entry.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+					entry.GetAttribute().ShowUnit;
+			}
+			
 		}
 
 		protected internal void CreateCombustionEngineColumns(VectoRunData runData)

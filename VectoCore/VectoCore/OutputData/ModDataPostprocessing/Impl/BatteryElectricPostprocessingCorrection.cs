@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                
 				var f = FuelData.Diesel;
 
-				var fc = new PEVFuelConsumptionCorrection(
+				var fc = new AuxHeaterFuelConsumptionCorrection(
                     fuel: f,
 					distance: modData.Distance,
 					duration: modData.Duration,

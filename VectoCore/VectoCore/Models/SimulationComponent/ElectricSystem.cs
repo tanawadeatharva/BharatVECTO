@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -6,19 +8,22 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnector, 
+	public class ElectricSystem : StatefulVectoSimulationComponent<ElectricSystem.State>, IElectricSystem, IElectricAuxConnector,
 		IElectricChargerConnector, IBatteryConnector, IUpdateable
 	{
 
 		protected readonly List<IElectricAuxPort> Consumers = new List<IElectricAuxPort>();
 
 		public IList<IElectricChargerPort> Charger { get;  }
+
+		public IFuelCellPort FuelCell { get; private set; } = null;
 
 		protected IElectricEnergyStorage Battery;
 		private readonly BatterySystemData ModelData;
@@ -32,13 +37,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 		{
 			powerDemand = powerDemand ?? 0.SI<Watt>();
+            var propellingDemand = VectoMath.Min(powerDemand, 0.SI<Watt>()); //Propelling demand is negative
+			var maxFcPower = VectoMath.Max(Battery.MaxChargePower(dt) - propellingDemand, 0.SI<Watt>());
+
+
 			var auxDemand = Consumers.Sum(x => x.PowerDemand(absTime, dt, dryRun)).DefaultIfNull(0);
 			var chargePower = Charger.Count == 0 ? 0.SI<Watt>() : Charger.Sum(x => x.PowerDemand(absTime, dt, powerDemand, auxDemand, dryRun));
-			var currentEst = powerDemand / Battery.InternalVoltage;
-			var connectorLoss = currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>() ) * currentEst;
-			var totalPowerDemand = powerDemand + chargePower - auxDemand - connectorLoss;
+			var fcPower = FuelCell?.PowerDemand(absTime, dt, maxFcPower, dryRun) ?? 0.SI<Watt>();
 
-			var batResponse = Battery.MainBatteryPort.Request(absTime, dt, totalPowerDemand, dryRun);
+			//How to losses when fuel cell is directly contributing to power demand
+			var currentEst = (powerDemand + fcPower) / Battery.InternalVoltage;
+			var connectorLoss = currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>() ) * currentEst;
+
+
+			var totalPowerDemand = powerDemand + chargePower + fcPower - auxDemand - connectorLoss;
+			var maxBatteryPowerDemand = (FuelCell != null) ? VectoMath.Max(totalPowerDemand, Battery.MaxDischargePower(dt)) : totalPowerDemand;
+            var batResponse = Battery.MainBatteryPort.Request(absTime, dt, maxBatteryPowerDemand, dryRun);
 
 			var response = dryRun
 				? (AbstractElectricSystemResponse)new ElectricSystemDryRunResponse(this)
@@ -50,14 +64,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			}
 			if (batResponse is RESSUnderloadResponse)
 			{
-				response = new ElectricSystemUnderloadResponse(this);
-			}
+                response = new ElectricSystemUnderloadResponse(this);
+            }
 
 			if (!dryRun)
 			{
-				CurrentState.SetState(powerDemand, auxDemand, chargePower, connectorLoss, batResponse.PowerDemand);
+				CurrentState.SetState(powerDemand, auxDemand, chargePower + fcPower, connectorLoss, batResponse.PowerDemand, fcPower);
 			}
 
+			response.MaxNominalFCRatedPower = (FuelCell != null) ? (FuelCell as FuelCellSystem).FuelCellStrings.Sum(x => x.FuelCells.Sum(y => y.MaxPower)) : null;
 			response.AbsTime = absTime;
 			response.SimulationInterval = dt;
 			response.RESSResponse = batResponse;
@@ -65,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			response.ConnectionSystemResistance = ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>();
 			response.ConsumerPower = powerDemand;
 			response.AuxPower = auxDemand;
-			response.ChargingPower = chargePower;
+			response.ChargingPower = chargePower + fcPower;
 			return response;
 		}
 
@@ -73,12 +88,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public Watt ChargePower => PreviousState.ChargePower;
 		public Watt BatteryPower => PreviousState.BatteryPower;
 		public Watt ConsumerPower => PreviousState.ConsumerPower;
+		public Watt FuelCellPower => PreviousState.FuelCellPower;
 
 		protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)
 		{
 			container[ModalResultField.P_Aux_el_HV] = CurrentState.AuxPower;
 			container[ModalResultField.P_ES_Conn_loss] = CurrentState.ConnectorLoss;
 			container[ModalResultField.P_terminal_ES] = CurrentState.TotalPowerDemand;
+
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
@@ -86,6 +103,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			AdvanceState();
 		}
 
+		public void Connect(IFuelCellPort fuelCell)
+		{
+			if (FuelCell != null)
+			{
+				throw new VectoException("Fuel cell is already connected to ES");
+
+			}
+
+			FuelCell = fuelCell;
+		}
 
 		#region Implementation of IBatteryChargeProvider
 
@@ -127,13 +154,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public Watt MaxChargePower(Second dt)
 		{
-			return Battery.MaxChargePower(dt);
+			var batMaxPower = Battery.MaxChargePower(dt);
+			var currentEst = batMaxPower / Battery.InternalVoltage;
+			var connectorLoss = currentEst * currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>());
+			return batMaxPower + connectorLoss;
 		}
 
 		public Watt MaxDischargePower(Second dt)
 		{
-			return Battery.MaxDischargePower(dt);
+			var batMaxPower = Battery.MaxDischargePower(dt);
+			var currentEst = batMaxPower / Battery.InternalVoltage;
+			var connectorLoss = currentEst * currentEst * (ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>());
+			return batMaxPower + connectorLoss;
 		}
+
 
 
 		#endregion
@@ -145,15 +179,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			public Watt ConsumerPower = 0.SI<Watt>();
 			public Watt BatteryPower = 0.SI<Watt>();
 			public Watt ConnectorLoss = 0.SI<Watt>();
+			public Watt FuelCellPower = 0.SI<Watt>();
 
-            public void SetState(Watt powerDemand, Watt auxDemand, Watt chargePower, Watt connectorLoss,
-				Watt batteryPower)
+            public void SetState(
+				Watt powerDemand,
+				Watt auxDemand,
+				Watt chargePower,
+				Watt connectorLoss,
+				Watt batteryPower,
+				Watt fuelCellPower)
 			{
 				AuxPower = auxDemand;
 				ChargePower = chargePower;
 				ConsumerPower = powerDemand;
 				BatteryPower = batteryPower;
 				ConnectorLoss = connectorLoss;
+				FuelCellPower = fuelCellPower;
 			}
 
 			public Watt TotalPowerDemand => ConsumerPower + ChargePower - AuxPower;

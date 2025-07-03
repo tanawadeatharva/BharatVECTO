@@ -1,22 +1,34 @@
 
-## VECTO v4.3.3 Official Release (04-03-2025)
+## VECTO v5.0.1 Official Release (03-07-2025)
 
 
 ### Bug Fixes
 
-- Check if XML element is signed (#950) (vecto/vecto!314)
+- FCHV engineering run (vecto/vecto!391)
 
-- NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+- H2 check in bus job (vecto/vecto!392)
 
-- fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+- Auxiliaries REESS connection (vecto/vecto!397)
 
-- fix: secure XML loading against external entity injection (vecto/vecto!319)
+- Read PowerOutputConsumptionMap as kW (vecto/vecto!401)
 
-- fix: correct interim supercap reader type (vecto/vecto!320)
+- Select pruned missions for FCHV primary bus (vecto/vecto!403)
 
-- fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+- Use angledrive in lorries' gearshift data creation (vecto/vecto!404)
 
-### Documentation
+- Remove wrong bus angledrive restrictions (vecto/vecto!405)
 
-- Update XSD parameter IDs documentation (vecto/vecto!327)
+- Decl GUI error message when FCHV in eng mode (vecto/vecto!407)
+
+- Set NgTankSystem default for primary buses (vecto/vecto!408)
+
+- FCHV F-IEPC simulation runs! (vecto/vecto!409)
+
+- Operational range for group 10 vehicle weights (vecto/vecto!402)
+
+- Ovc fc weighting to correspond to CO2 computation (vecto/vecto!413)
+
+- 3s Buffer compute max EM PLoss for FL OPs (vecto/vecto!412)
+
+- Conditioning power demand for FCHVs (vecto/vecto!414)
 

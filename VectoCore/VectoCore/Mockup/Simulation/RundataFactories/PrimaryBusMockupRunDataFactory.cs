@@ -61,7 +61,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
                 case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.BatteryElectricVehicle:
-					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+                case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
+                    return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
 				default:
@@ -354,7 +356,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				SleeperCab = vehicleData.SleeperCab,
 				//Loading = loading.Value.Item1,
 				VehicleClass = segment.VehicleClass,
-				OffVehicleCharging = vehicleData.OvcHev,
+				OffVehicleCharging = vehicleData.OVC,
 				VehicleCategory = vehicleData.VehicleCategory,
 				ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
 				//ADAS = CreateMockupAdasData(vehicleData),
@@ -380,7 +382,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 SleeperCab = vehicleData.SleeperCab,
                 Loading = loading.Value.Item1,
                 VehicleClass = segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VehicleCategory = vehicleData.VehicleCategory,
                 ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
                 ADAS = CreateMockupAdasData(vehicleData),

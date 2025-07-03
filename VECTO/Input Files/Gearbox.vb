@@ -839,6 +839,12 @@ Public Class MockEngineeringVehicle
     Public Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
     Public Property Manufacturer As String Implements IComponentInputData.Manufacturer
     Public Property Model As String Implements IComponentInputData.Model
+    Public Property SimulationToolLicenseNumber As String Implements IVehicleDeclarationInputData.SimulationToolLicenseNumber
+    Public Property VehicleMonitoringData As String Implements IVehicleDeclarationInputData.VehicleMonitoringData
+    Public Property H2StorageUsableCapacity As Kilogram Implements IVehicleDeclarationInputData.H2StorageUsableCapacity
+    Public Property HydrogenStorageTechnology As HydrogenStorageTechnology? Implements IVehicleDeclarationInputData.HydrogenStorageTechnology
+    Public Property BatteryOnlyMode As Boolean Implements IVehicleDeclarationInputData.BatteryOnlyMode
+    Public Property DynamicChargingTechnology As DynamicChargingTechnology Implements IVehicleDeclarationInputData.DynamicChargingTechnology
     Public Property [Date] As DateTime Implements IComponentInputData.[Date]
     Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
     Public Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
@@ -873,7 +879,12 @@ Public Class MockEngineeringVehicle
     Public Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData _
         Implements IVehicleDeclarationInputData.ADAS
 
+    Public ReadOnly Property AxlePowertrainEngineeringInputData As IList(Of IAxlePowertrainEngineeringInputData) Implements IVehicleComponentsEngineering.AxlePowertrainEngineeringInputData
+
+    Public ReadOnly Property IVehicleDeclarationInputData_InMotionCharging As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
+
     Public ReadOnly Property InitialSOC As Double Implements IVehicleEngineeringInputData.InitialSOC
+    Public ReadOnly Property InMotionCharging As IVehicleInMotionChargingEngineering Implements IVehicleEngineeringInputData.InMotionCharging
     Public Property VehicleType As VectoSimulationJobType Implements IVehicleEngineeringInputData.VehicleType
     Public ReadOnly Property PTO_DriveGear As GearshiftPosition Implements IVehicleEngineeringInputData.PTO_DriveGear
     Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
@@ -910,7 +921,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
     Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
-    Public ReadOnly Property OvcHev As Boolean Implements IVehicleDeclarationInputData.OvcHev
+    Public ReadOnly Property OVC As Boolean Implements IVehicleDeclarationInputData.OVC
     Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
     Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType
 
@@ -943,6 +954,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property ElectricStorage As IElectricStorageSystemEngineeringInputData Implements IVehicleComponentsEngineering.ElectricStorage
     Public ReadOnly Property ElectricMachines As IElectricMachinesEngineeringInputData Implements IVehicleComponentsEngineering.ElectricMachines
     Public ReadOnly Property IEPCEngineeringInputData As IIEPCEngineeringInputData Implements IVehicleComponentsEngineering.IEPCEngineeringInputData
+    Public ReadOnly Property FuelCellSystemInputData As IFuelCellSystemEngineeringInputData Implements IVehicleComponentsEngineering.FuelCellSystemInputData
 End Class
 
 Public Class MockJobInputData

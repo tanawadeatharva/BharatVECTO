@@ -73,6 +73,9 @@ Partial Class VectoVTPJobForm
         Me.tbFanDiameter = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnFanParameters = New System.Windows.Forms.Panel()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.tbC4 = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -85,6 +88,7 @@ Partial Class VectoVTPJobForm
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnManufacturerRecord = New System.Windows.Forms.Panel()
+        Me.completedVIFLlb = New System.Windows.Forms.Label()
         Me.lblMileageUnit = New System.Windows.Forms.Label()
         Me.tbMileage = New System.Windows.Forms.TextBox()
         Me.lblMileage = New System.Windows.Forms.Label()
@@ -105,9 +109,8 @@ Partial Class VectoVTPJobForm
         Me._tqDriftLeftTextbox = New System.Windows.Forms.TextBox()
         Me._tqDriftRightLbl = New System.Windows.Forms.Label()
         Me._tqDriftLeftLbl = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.tbC4 = New System.Windows.Forms.TextBox()
+        Me.completedVIFTxtbox = New System.Windows.Forms.TextBox()
+        Me.completedVIFButton = New System.Windows.Forms.Button()
         Me.GrCycles.SuspendLayout()
         Me.GrAux.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
@@ -132,11 +135,11 @@ Partial Class VectoVTPJobForm
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
-        Me.GrCycles.Location = New System.Drawing.Point(15, 399)
+        Me.GrCycles.Location = New System.Drawing.Point(15, 444)
         Me.GrCycles.Margin = New System.Windows.Forms.Padding(4)
         Me.GrCycles.Name = "GrCycles"
         Me.GrCycles.Padding = New System.Windows.Forms.Padding(4)
-        Me.GrCycles.Size = New System.Drawing.Size(687, 204)
+        Me.GrCycles.Size = New System.Drawing.Size(687, 159)
         Me.GrCycles.TabIndex = 10
         Me.GrCycles.TabStop = False
         Me.GrCycles.Text = "Cycles"
@@ -146,7 +149,7 @@ Partial Class VectoVTPJobForm
         Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(521, 169)
+        Me.Label2.Location = New System.Drawing.Point(521, 124)
         Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(146, 16)
@@ -168,7 +171,7 @@ Partial Class VectoVTPJobForm
         Me.LvCycles.Margin = New System.Windows.Forms.Padding(4)
         Me.LvCycles.MultiSelect = False
         Me.LvCycles.Name = "LvCycles"
-        Me.LvCycles.Size = New System.Drawing.Size(669, 143)
+        Me.LvCycles.Size = New System.Drawing.Size(669, 98)
         Me.LvCycles.TabIndex = 0
         Me.LvCycles.TabStop = False
         Me.LvCycles.UseCompatibleStateImageBehavior = False
@@ -184,7 +187,7 @@ Partial Class VectoVTPJobForm
         Me.BtDRIrem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtDRIrem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtDRIrem.Location = New System.Drawing.Point(39, 169)
+        Me.BtDRIrem.Location = New System.Drawing.Point(39, 124)
         Me.BtDRIrem.Margin = New System.Windows.Forms.Padding(4)
         Me.BtDRIrem.Name = "BtDRIrem"
         Me.BtDRIrem.Size = New System.Drawing.Size(32, 30)
@@ -196,7 +199,7 @@ Partial Class VectoVTPJobForm
         Me.BtDRIadd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtDRIadd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtDRIadd.Location = New System.Drawing.Point(7, 169)
+        Me.BtDRIadd.Location = New System.Drawing.Point(7, 124)
         Me.BtDRIadd.Margin = New System.Windows.Forms.Padding(4)
         Me.BtDRIadd.Name = "BtDRIadd"
         Me.BtDRIadd.Size = New System.Drawing.Size(32, 30)
@@ -220,7 +223,7 @@ Partial Class VectoVTPJobForm
         Me.GrAux.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GrAux.Controls.Add(Me.LvAux)
-        Me.GrAux.Location = New System.Drawing.Point(15, 219)
+        Me.GrAux.Location = New System.Drawing.Point(22, 264)
         Me.GrAux.Margin = New System.Windows.Forms.Padding(4)
         Me.GrAux.Name = "GrAux"
         Me.GrAux.Padding = New System.Windows.Forms.Padding(4)
@@ -591,6 +594,31 @@ Partial Class VectoVTPJobForm
         Me.pnFanParameters.Size = New System.Drawing.Size(291, 134)
         Me.pnFanParameters.TabIndex = 48
         '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(231, 110)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(19, 16)
+        Me.Label13.TabIndex = 56
+        Me.Label13.Text = "[-]"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(69, 109)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(26, 16)
+        Me.Label14.TabIndex = 55
+        Me.Label14.Text = "C4:"
+        '
+        'tbC4
+        '
+        Me.tbC4.Location = New System.Drawing.Point(108, 106)
+        Me.tbC4.Name = "tbC4"
+        Me.tbC4.Size = New System.Drawing.Size(113, 22)
+        Me.tbC4.TabIndex = 54
+        '
         'Label11
         '
         Me.Label11.AutoSize = True
@@ -697,6 +725,9 @@ Partial Class VectoVTPJobForm
         '
         'pnManufacturerRecord
         '
+        Me.pnManufacturerRecord.Controls.Add(Me.completedVIFButton)
+        Me.pnManufacturerRecord.Controls.Add(Me.completedVIFTxtbox)
+        Me.pnManufacturerRecord.Controls.Add(Me.completedVIFLlb)
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileageUnit)
         Me.pnManufacturerRecord.Controls.Add(Me.tbMileage)
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileage)
@@ -706,13 +737,23 @@ Partial Class VectoVTPJobForm
         Me.pnManufacturerRecord.Location = New System.Drawing.Point(15, 138)
         Me.pnManufacturerRecord.Margin = New System.Windows.Forms.Padding(4)
         Me.pnManufacturerRecord.Name = "pnManufacturerRecord"
-        Me.pnManufacturerRecord.Size = New System.Drawing.Size(700, 81)
+        Me.pnManufacturerRecord.Size = New System.Drawing.Size(700, 123)
         Me.pnManufacturerRecord.TabIndex = 41
+        '
+        'completedVIFLlb
+        '
+        Me.completedVIFLlb.AutoSize = True
+        Me.completedVIFLlb.Location = New System.Drawing.Point(5, 52)
+        Me.completedVIFLlb.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.completedVIFLlb.Name = "completedVIFLlb"
+        Me.completedVIFLlb.Size = New System.Drawing.Size(99, 16)
+        Me.completedVIFLlb.TabIndex = 50
+        Me.completedVIFLlb.Text = "Completed VIF:"
         '
         'lblMileageUnit
         '
         Me.lblMileageUnit.AutoSize = True
-        Me.lblMileageUnit.Location = New System.Drawing.Point(265, 53)
+        Me.lblMileageUnit.Location = New System.Drawing.Point(264, 87)
         Me.lblMileageUnit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblMileageUnit.Name = "lblMileageUnit"
         Me.lblMileageUnit.Size = New System.Drawing.Size(33, 16)
@@ -723,7 +764,7 @@ Partial Class VectoVTPJobForm
         '
         Me.tbMileage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbMileage.Location = New System.Drawing.Point(156, 49)
+        Me.tbMileage.Location = New System.Drawing.Point(155, 83)
         Me.tbMileage.Margin = New System.Windows.Forms.Padding(4)
         Me.tbMileage.Name = "tbMileage"
         Me.tbMileage.Size = New System.Drawing.Size(100, 22)
@@ -732,7 +773,7 @@ Partial Class VectoVTPJobForm
         'lblMileage
         '
         Me.lblMileage.AutoSize = True
-        Me.lblMileage.Location = New System.Drawing.Point(5, 53)
+        Me.lblMileage.Location = New System.Drawing.Point(4, 87)
         Me.lblMileage.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblMileage.Name = "lblMileage"
         Me.lblMileage.Size = New System.Drawing.Size(59, 16)
@@ -901,30 +942,27 @@ Partial Class VectoVTPJobForm
         Me._tqDriftLeftLbl.TabIndex = 0
         Me._tqDriftLeftLbl.Text = "Left"
         '
-        'Label13
+        'completedVIFTxtbox
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(231, 110)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(19, 16)
-        Me.Label13.TabIndex = 56
-        Me.Label13.Text = "[-]"
+        Me.completedVIFTxtbox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.completedVIFTxtbox.Location = New System.Drawing.Point(154, 49)
+        Me.completedVIFTxtbox.Margin = New System.Windows.Forms.Padding(4)
+        Me.completedVIFTxtbox.Name = "completedVIFTxtbox"
+        Me.completedVIFTxtbox.Size = New System.Drawing.Size(497, 22)
+        Me.completedVIFTxtbox.TabIndex = 51
         '
-        'Label14
+        'completedVIFButton
         '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(69, 109)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(26, 16)
-        Me.Label14.TabIndex = 55
-        Me.Label14.Text = "C4:"
-        '
-        'tbC4
-        '
-        Me.tbC4.Location = New System.Drawing.Point(108, 106)
-        Me.tbC4.Name = "tbC4"
-        Me.tbC4.Size = New System.Drawing.Size(113, 22)
-        Me.tbC4.TabIndex = 54
+        Me.completedVIFButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.completedVIFButton.Image = CType(resources.GetObject("completedVIFButton.Image"), System.Drawing.Image)
+        Me.completedVIFButton.Location = New System.Drawing.Point(654, 45)
+        Me.completedVIFButton.Margin = New System.Windows.Forms.Padding(4)
+        Me.completedVIFButton.Name = "completedVIFButton"
+        Me.completedVIFButton.Size = New System.Drawing.Size(32, 30)
+        Me.completedVIFButton.TabIndex = 52
+        Me.completedVIFButton.TabStop = False
+        Me.completedVIFButton.UseVisualStyleBackColor = True
         '
         'VectoVTPJobForm
         '
@@ -1070,4 +1108,7 @@ End Sub
     Friend WithEvents Label13 As Label
     Friend WithEvents Label14 As Label
     Friend WithEvents tbC4 As TextBox
+    Friend WithEvents completedVIFLlb As Label
+    Friend WithEvents completedVIFTxtbox As TextBox
+    Friend WithEvents completedVIFButton As Button
 End Class

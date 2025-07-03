@@ -110,6 +110,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV12_IEPC(json, filename, tolerateMissing);
 				case 13: 
 					return new JSONInputDataV13_IHPC(json, filename, tolerateMissing);
+				case 14:
+					return new JSONInputDataV14_FCHybrid(json, filename, tolerateMissing);
+				case 15:
+					return new JSONInputDataV15_FCHV_IEPC(json, filename, tolerateMissing);
+				case 16:
+					return new JSONInputDataV16_MultiplePowertrains(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -130,6 +136,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONVehicleDataV10_HEV_BEV(json, filename, job, tolerateMissing);
 				case 11:
 					return new JSONVehicleDataV11_IEPC(json, filename, job, tolerateMissing);
+				case 12:
+					return new JSONVehicleDataV12_FCHV(json, filename, job, tolerateMissing);
+				case 13:
+					return new JSONVehicleDataV13_FCHV_IEPC(json, filename, job, tolerateMissing);
+				case 14:
+					return new JSONVehicleDataV14_MultiplePowertrains(json, filename, job, tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}
@@ -254,6 +266,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 1:
 					return new JSONIEPCData(json, filename, tolerateMissing);
+				case 2:
+					return new JSONIEPCDataV2(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering IEPC: Unsupported FileVersion. Got {0}", version);
 			}
@@ -264,13 +278,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
-			switch (version)
-			{
+			switch (version) {
 				case 5:
 					return ReadElectricMotorData(filename, tolerateMissing);
 				default:
 					throw new VectoException("Engineering IHPC: Unsupported FileVersion. Got {0}", version);
 			}
 		}
+
+		public static IFuelCellComponentEngineeringInputData ReadFuelCellComponentEngineeringInputData(string filename,
+			bool tolerateMissing)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version)
+			{
+				case 1:
+					return new JSONFuelCellComponent(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("Engineering Fuel Cell System: Unsupported FileVersion. Got {0}", version);
+			}
+        }
 	}
+
+
 }

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mrf:VectoOutput xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.8="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.8" xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput file:///W:/VectoCore/VectoCore/Resources/XSD/VectoOutputManufacturer.xsd">
+	<mrf:Data xsi:type="HEV-Sx_PrimaryBusManufacturerOutputDataType" id="MRF-Lorry_S2_S3">
+		<Vehicle>
+			<Manufacturer>a</Manufacturer>
+			<ManufacturerAddress>token</ManufacturerAddress>
+			<Model>a</Model>
+			<VIN>a</VIN>
+			<VehicleCategory>N2</VehicleCategory>
+			<AxleConfiguration>4x2</AxleConfiguration>
+			<TechnicalPermissibleMaximumLadenMass unit="kg">3500</TechnicalPermissibleMaximumLadenMass>
+			<VehicleGroup>String</VehicleGroup>
+			<VehicleGroupCO2>a</VehicleGroupCO2>
+			<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+			<HybridElectricHDV>false</HybridElectricHDV>
+			<DualFuelVehicle>true</DualFuelVehicle>
+			<HEVArchitecture>String</HEVArchitecture>
+			<OffVehicleChargingCapability>true</OffVehicleChargingCapability>
+			<DynamicChargingTechnology>String</DynamicChargingTechnology>
+			<ADAS>
+				<EngineStopStart>true</EngineStopStart>
+				<PredictiveCruiseControl>true</PredictiveCruiseControl>
+			</ADAS>
+			<SimulationToolLicenseNumber>a</SimulationToolLicenseNumber>
+			<Components xsi:type="HEV-S3-PrimaryBusComponentsType">
+				<Engine>
+					<Model>a</Model>
+					<CertificationNumber>token</CertificationNumber>
+					<RatedPower>1</RatedPower>
+					<IdlingSpeed>1</IdlingSpeed>
+					<RatedSpeed>1</RatedSpeed>
+					<Capacity>3.1415926535897900073734945</Capacity>
+					<FuelTypes>
+						<FuelType>Diesel CI</FuelType>
+					</FuelTypes>
+					<WasteHeatRecoverySystem>true</WasteHeatRecoverySystem>
+				</Engine>
+				<ElectricMachineGen>
+					<Position>1</Position>
+					<CountAtPosition>1</CountAtPosition>
+					<ElectricMachineSystem>
+						<Model>a</Model>
+						<CertificationNumber>token</CertificationNumber>
+						<ElectricMachineType>String</ElectricMachineType>
+						<CertificationMethod>String</CertificationMethod>
+						<RatedPower>0</RatedPower>
+						<VoltageLevels>
+							<VoltageLevel>
+								<MaxContinuousPower>0</MaxContinuousPower>
+							</VoltageLevel>
+						</VoltageLevels>
+					</ElectricMachineSystem>
+				</ElectricMachineGen>
+				<REESSSpecifications>
+					<Battery stringId="text">
+						<Model>a</Model>
+						<CertificationNumber>token</CertificationNumber>
+						<CertificationMethod>String</CertificationMethod>
+						<NominalVoltage>0</NominalVoltage>
+						<TotalStorageCapacity unit="kWh">0</TotalStorageCapacity>
+						<TotalUsableCapacityInSimulation unit="kWh">0</TotalUsableCapacityInSimulation>
+					</Battery>
+				</REESSSpecifications>
+				<ElectricMachine>
+					<Position>2</Position>
+					<CountAtPosition>1</CountAtPosition>
+					<ElectricMachineSystem>
+						<Model>a</Model>
+						<CertificationNumber/>
+						<ElectricMachineType/>
+						<CertificationMethod/>
+						<RatedPower>120000</RatedPower>
+						<VoltageLevels>
+							<VoltageLevel>
+								<MaxContinuousPower>100000</MaxContinuousPower>
+							</VoltageLevel>
+						</VoltageLevels>
+					</ElectricMachineSystem>
+				</ElectricMachine>
+				<Retarder>
+					<RetarderType/>
+				</Retarder>
+				<Axlegear>
+					<Model>c</Model>
+					<CertificationNumber/>
+					<CertificationMethod>Measured</CertificationMethod>
+					<AxleType>Single portal axle</AxleType>
+					<Ratio>3.000	</Ratio>
+				</Axlegear>
+				<AxleWheels>
+					<Axle axleNumber="1">
+						<Tyre>
+							<TyreDimension>asdf</TyreDimension>
+							<CertificationNumber/>
+							<SpecificRRC>0.0055</SpecificRRC>
+							<DigestValue>asdf</DigestValue>
+						</Tyre>
+					</Axle>
+					<Axle axleNumber="2">
+						<Tyre>
+							<TyreDimension/>
+							<CertificationNumber/>
+							<SpecificRRC>0.0055</SpecificRRC>
+							<DigestValue/>
+						</Tyre>
+					</Axle>
+				</AxleWheels>
+				<Auxiliaries>
+					<CoolingFanTechnology>Crankshaft mounted - Electronically controlled visco clutch</CoolingFanTechnology>
+					<SteeringPumpTechnology>Dual displacement</SteeringPumpTechnology>
+					<ElectricSystem>
+						<AlternatorTechnology>conventional</AlternatorTechnology>
+					</ElectricSystem>
+					<PneumaticSystem>
+						<Technology>Large Supply</Technology>
+						<CompressorRatio>0.000</CompressorRatio>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
+						<AirsuspensionControl>mechanic</AirsuspensionControl>
+						<ReagentDosing>true</ReagentDosing>
+					</PneumaticSystem>
+					<HVACSystem>
+						<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>
+						<EngineWasteGasHeatExchanger>true</EngineWasteGasHeatExchanger>
+					</HVACSystem>
+				</Auxiliaries>
+			</Components>
+		</Vehicle>
+		<InputDataSignature>
+			<di:Reference>
+				<di:DigestMethod Algorithm="http://www.altova.com/"/>
+				<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+			</di:Reference>
+		</InputDataSignature>
+		<Results>
+			<Status>success</Status>
+			<Result xsi:type="ResultErrorType" status="error">
+				<Mission>asion</Mission>
+				<SimulationParameters>
+					<TotalVehicleMass unit="t">3.1415926535897900073734945</TotalVehicleMass>
+					<Payload unit="t">3.1415926535897900073734945</Payload>
+				</SimulationParameters>
+				<VehicleGroup>String</VehicleGroup>
+				<Error/>
+				<ErrorDetails/>
+			</Result>
+		</Results>
+		<ApplicationInformation>
+			<SimulationToolVersion>String</SimulationToolVersion>
+			<Date>2017-01-01T00:00:00Z</Date>
+		</ApplicationInformation>
+	</mrf:Data>
+	<mrf:Signature>
+		<di:Reference>
+			<di:DigestMethod Algorithm="http://www.altova.com/"/>
+			<di:DigestValue>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</di:DigestValue>
+		</di:Reference>
+	</mrf:Signature>
+</mrf:VectoOutput>

@@ -44,7 +44,8 @@ namespace TUGraz.VectoCore.OutputData
 
         private bool IsJobSupported()
         {
-            return (SimulatorFactory.RunDataFactory is DeclarationVTPModeVectoRunDataFactoryLorries);
+            return (SimulatorFactory.RunDataFactory is DeclarationVTPModeVectoRunDataFactoryLorries)
+                || (SimulatorFactory.RunDataFactory is DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary);
         }
 
         private void WriteOutputFilesToZipArchive(ZipArchive archive)
@@ -87,6 +88,12 @@ namespace TUGraz.VectoCore.OutputData
                 var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, manufacturerRecord);
                 WriteFileToZipArchive(filePath, archive);
             }
+
+            var completedVIF = vtpProvider.JobInputData.CompletedVIFInputData?.Source;
+            if (completedVIF != null) {
+				var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, completedVIF);
+				WriteFileToZipArchive(filePath, archive);
+			}
 
             var declarationVehicle = vtpProvider.JobInputData.Vehicle.DataSource.SourceFile;
             if (declarationVehicle != null) {

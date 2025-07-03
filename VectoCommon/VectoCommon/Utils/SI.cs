@@ -737,6 +737,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<WattSecondPerCubicMeterMeter>.Create(wattSecond.Val / m3.Value());
 		}
+
+		public static WattSecond operator *(WattSecondPerMeter wpm, Meter m)
+		{
+			return SIBase<WattSecond>.Create(wpm.Val * m.Value());
+		}
 	}
 
 	public class WattSecondPerCubicMeterMeter : SIBase<WattSecondPerCubicMeterMeter>
@@ -801,6 +806,17 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Watt>.Create(wpcm.Val * cm.Value());
 		}
+	}
+
+	public class WattPerSecond : SIBase<WattPerSecond>
+	{
+		private static readonly int[] Units = { 1, 2, -4, 0, 0, 0, 0 };
+
+		private WattPerSecond(double val) : base(val, Units)
+		{
+
+		}
+		public override string UnitString => "W/s";
 	}
 
 	/// <summary>

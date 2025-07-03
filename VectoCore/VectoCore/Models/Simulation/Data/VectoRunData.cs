@@ -97,6 +97,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ValidateObject]
 		public AngledriveData AngledriveData { get; internal set; }
 
+		[ValidateObject]
+		public IList<AxlePowertrainData> AxlePowertrainsData { get; internal set; }
+
 		[Required, ValidateObject]
 		[JsonIgnore]
 		public IDrivingCycleData Cycle { get; internal set; }
@@ -146,6 +149,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public SuperCapData SuperCapData { get; internal set; }
 
+		public FuelCellSystemData FuelCellSystemData { get; internal set; }
+
 		public DCDCData DCDCData { get; internal set; }
 
 		public SimulationType SimulationType { get; internal set; }
@@ -187,7 +192,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public Watt MaxChargingPower { get; internal set; }
 
-		[JsonIgnore]
+		public bool InMotionCharging { get; internal set; }
+
+		public IMCTechnology InMotionChargingTechnology { get; internal set; }
+
+        [JsonIgnore]
 		public IIterativeRunStrategy IterativeRunStrategy { get; internal set; } = new DefaultIterativeStrategy();
 
 		[JsonIgnore]
@@ -196,6 +205,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public NewtonMeter TorqueDriftLeftWheel { get; internal set; }
 
 		public NewtonMeter TorqueDriftRightWheel { get; internal set; }
+
+		public WheelEndData WheelEndData { get; internal set; }
 
 		[DebuggerDisplay("{ID}: {PowerDemandMech}/{PowerDemandElectric}")]
 		public class AuxData

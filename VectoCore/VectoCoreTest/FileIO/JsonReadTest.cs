@@ -47,6 +47,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
+using System.Linq;
 
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -459,6 +461,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
+
+
 		//[TestCase]
 		//public void TestReadingElectricTechlist()
 		//{
@@ -486,6 +490,104 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}
 
+		[
+		TestCase(@"Group5_Tractor_4x2/Class5_Tractor_DECL.vecto", 3.2, double.NaN, -3.2, TestName="JSON_job_WheelBearings_Conventional"),
+		TestCase(@"GenericVehicleE2/BEV_E2.vecto", 3.2, double.NaN, -3.2, TestName="JSON_job_WheelBearings_HEV_BEV"),
+		TestCase(@"GenericIEPC/IEPC_Gbx1Speed/IEPC__Gbx1.vecto", 3.2, double.NaN, -3.2, TestName="JSON_job_WheelBearings_IEPC"),
+		]
+		public void ReadJobWithWheelBearings(string jobfile, double friction0, double friction1, double delta)
+		{
+			var testDir = @"TestData/Generic Vehicles/Declaration Mode";
+			var filename = Path.Combine(testDir, jobfile);
+
+			var inputProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(filename);
+
+			Assert.NotNull(inputProvider);
+		
+			var axlesDec = inputProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration;
+
+			Assert.AreEqual(axlesDec[0].WheelEndFriction?.Value() ?? double.NaN, friction0);
+			Assert.AreEqual(axlesDec[1].WheelEndFriction?.Value() ?? double.NaN, friction1);
+
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, inputProvider, null);
+			var deltaFriction = runsFactory.RunDataFactory.NextRun().First().WheelEndData.DeltaFrictionTorque;
+
+			Assert.AreEqual(delta, deltaFriction.Value(), 1E-03);
+		}
+
+		[
+		TestCase(@"Group5_Tractor_4x2/Class5_Tractor_ENG.vecto", 3, double.NaN, 1.5, -10.2, TestName = "JSON_ENG_job_WheelBearings_Conventional"),
+		]
+		public void ReadEngineeringJobWithWheelBearings(string jobfile, double friction0, double friction1, double friction2, double delta)
+		{
+			var testDir = @"TestData/Generic Vehicles/Engineering Mode";
+			var filename = Path.Combine(testDir, jobfile);
+
+			var inputProvider = (IEngineeringInputDataProvider)JSONInputDataFactory.ReadJsonJob(filename);
+
+			Assert.NotNull(inputProvider);
+
+			var axlesDec = inputProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesEngineering;
+
+			Assert.AreEqual(friction0, axlesDec[0].WheelEndFriction?.Value() ?? double.NaN);
+			Assert.AreEqual(friction1, axlesDec[1].WheelEndFriction?.Value() ?? double.NaN);
+			Assert.AreEqual(friction2, axlesDec[2].WheelEndFriction?.Value() ?? double.NaN);
+
+			var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Engineering, inputProvider, null);
+			var deltaFriction = runsFactory.RunDataFactory.NextRun().First().WheelEndData.DeltaFrictionTorque;
+
+			Assert.AreEqual(delta, deltaFriction.Value(), 1E-03);
+		}
+
+		[
+		TestCase(@"Group5_Tractor_4x2/Class5_Tractor_DECL_BAD.vecto", "VehicleDriven", TestName="JSON_job_WheelBearings_Bad"),
+		TestCase(@"Group5_Tractor_4x2/Class5_Tractor_DECL_Negative.vecto", "negative", TestName="JSON_job_WheelBearings_Negative"),
+		TestCase(@"Group5_Tractor_4x2/Class5_Tractor_DECL_TooBig.vecto", "greater than", TestName="JSON_job_WheelBearings_TooBig"),
+		]
+		public void TestBadWheelBearings(string jobfile, string keyword)
+		{
+			var testDir = @"TestData/Generic Vehicles/Declaration Mode";
+			var filename = Path.Combine(testDir, jobfile);
+
+			var dataProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(filename);
+					
+			var exception = Assert.Throws<VectoException>(
+				() => { 
+					var axlesDec = dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration;
+					var runsFactory = SimulatorFactory.CreateSimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
+					runsFactory.RunDataFactory.NextRun().First();
+				});
+				
+			TestContext.WriteLine(exception.Message);
+		 	Assert.IsTrue(exception.Message.Contains(keyword));
+		}
+
+		[
+			TestCase(@"MultiplePowertrains/MultipleBEV_E2_E3/MultipleBEV.vecto", TestName="JSON_job_Multiple_powertrains_E2_E3")
+		]
+		public void JSON_Read_MultiplePowertrains(string jobfile)
+		{
+			var testDir = @"TestData/Generic Vehicles/Engineering Mode";
+			var filename = Path.Combine(testDir, jobfile);
+
+			var inputProvider = (IEngineeringInputDataProvider)JSONInputDataFactory.ReadJsonJob(filename);
+
+			var axlePts = inputProvider.JobInputData.Vehicle.Components.AxlePowertrainEngineeringInputData;
+
+			Assert.NotNull(axlePts);
+			Assert.IsTrue(axlePts.Count() > 0);
+
+			Assert.IsTrue(axlePts[0].AxleNumber == 1);
+			Assert.IsTrue(axlePts[0].Type == VectoSimulationJobType.BatteryElectricVehicle);
+			Assert.NotNull(axlePts[0].GearboxInputData);
+			Assert.NotNull(axlePts[0].AxleGearInputData);
+			Assert.NotNull(axlePts[0].TorqueConverterInputData);
+			Assert.NotNull(axlePts[0].GearshiftInputData);
+			Assert.NotNull(axlePts[0].AngledriveInputData);
+			Assert.NotNull(axlePts[0].RetarderInputData);
+			Assert.NotNull(axlePts[0].PTOTransmissionInputData);
+			Assert.NotNull(axlePts[0].ElectricMotor);
+		}
 
 		[TestCase]
 		public void JSON_Read_HeavyBus()

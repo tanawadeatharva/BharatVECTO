@@ -72,22 +72,18 @@ Public Class VehicleAuxiliariesDialog
 
 		If CbType.SelectedItem Is Nothing Then Exit Sub
 
-        Select Case CbType.SelectedValue.ToString()
-            Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
-                CbTech.DataSource =
-                    DeclarationData.Fan.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-            Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
-                Dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.SerialHybridVehicle)
-                Dim notSteered = (New String() {AxleNotSteered}).Concat(If(batteryElectricAuxOnly, DeclarationData.SteeringPump.FullyElectricTechnologies(), DeclarationData.SteeringPump.GetTechnologies())).ToArray()
-                Dim steeringTechs = If(
-                        batteryElectricAuxOnly,
-                        DeclarationData.SteeringPump.FullyElectricTechnologies(),
-                        DeclarationData.SteeringPump.GetTechnologies()
-                    )
+		Dim batteryElectricAuxOnly = JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC, VectoSimulationJobType.SerialHybridVehicle)
+		Select Case CbType.SelectedValue.ToString()
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
+				CbTech.DataSource =
+					if(batteryElectricAuxOnly, DeclarationData.Fan.FullyElectricTechnologies(), DeclarationData.Fan.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
+				Dim notSteered = (New String() {AxleNotSteered}).Concat(If(batteryElectricAuxOnly,DeclarationData.SteeringPump.FullyElectricTechnologies() ,DeclarationData.SteeringPump.GetTechnologies())).ToArray()
+				CbTech.DataSource =
+					If(batteryElectricAuxOnly, DeclarationData.SteeringPump.FullyElectricTechnologies(), DeclarationData.SteeringPump.GetTechnologies()).Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 
-                CbTech.DataSource = steeringTechs.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-                CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
-                CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
                 CbTech4.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
             Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
                 CbTech.DataSource =

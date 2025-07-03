@@ -51,6 +51,7 @@ namespace TUGraz.VectoMockup.Reports
 			ManufacturerRpt.GenerateReport();
 			var fullReportHash = GetSignature(ManufacturerRpt.Report);
 			VehicleInformationFile.GenerateReport(fullReportHash);
+			_monitoringReport.GenerateReport();
 		}
 
 	}

@@ -252,8 +252,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(), 0.SI<SquareMeter>(), 
+                        CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};
 		}

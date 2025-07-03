@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
     public abstract class AbstractCorrectedModalData : ICorrectedModalData
-    {
+	{
         protected readonly IModalDataContainer _modData;
 
         public AbstractCorrectedModalData(IModalDataContainer modData)
@@ -47,8 +49,13 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         public virtual Kilogram CO2Total { get; set; } = 0.SI<Kilogram>();
         public virtual Joule FuelEnergyConsumptionTotal => 0.SI<Joule>();
         public virtual WattSecond ElectricEnergyConsumption_SoC { get; set; } = 0.SI<WattSecond>();
-		public virtual WattSecond ElectricEnergyConsumption_SoC_Corr => ElectricEnergyConsumption_SoC + WorkBusAux_elPS_SoC_ElRange;
-        public virtual WattSecond ElectricEnergyConsumption_Final { get; set; } = 0.SI<WattSecond>();
+		public virtual WattSecond ElectricEnergyConsumption_SoC_Corr
+		{
+			get => ElectricEnergyConsumption_SoC + WorkBusAux_elPS_SoC_ElRange;
+			set => throw new NotImplementedException();
+		}
+
+		public virtual WattSecond ElectricEnergyConsumption_Final { get; set; } = 0.SI<WattSecond>();
 
 
 		public abstract IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel);
@@ -66,6 +73,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             ElectricEnergyConsumption_Final == null || _modData.Distance.IsEqual(0)
                 ? null
                 : ElectricEnergyConsumption_Final / _modData.Distance;
+
+
+		public WattSecond DeltaEReessFuelCell { get; set; }
     }
 
 
@@ -123,7 +133,9 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         //public virtual WattSecond EnergyDCDCMissing { get; set; }
         public virtual WattSecond DeltaEReessMech { get; set; }
 
-        #endregion
+
+
+		#endregion
     }
 
 	public class PEVCorrectedModalData : AbstractCorrectedModalData
@@ -134,11 +146,35 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
 		}
 
+
+
 		public override IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)
 		{
 			return new NoFuelConsumptionCorrection();
 		}
 	}
+
+	public class FCHVCorrectedModalData : AbstractCorrectedModalData
+	{
+		public FCHVCorrectedModalData(IModalDataContainer modData) : base(modData)
+		{
+
+		}
+
+		
+
+		public override IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)
+		{
+			if (fuel.FuelType != FuelType.H2FC || !FuelCorrection.ContainsKey(fuel.FuelType))
+			{
+				throw new VectoException("Invalid fuel {0}", fuel);
+			}
+
+			return FuelCorrection[fuel.FuelType];
+		}
+
+		public override WattSecond ElectricEnergyConsumption_SoC_Corr { get; set; }
+    }
 
 	public class EngineOnlyCorrectedModalData : AbstractCorrectedModalData
 	{

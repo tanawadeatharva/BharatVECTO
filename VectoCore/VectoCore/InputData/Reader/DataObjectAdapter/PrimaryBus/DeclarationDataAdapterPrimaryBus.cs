@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 {
     public abstract class DeclarationDataAdapterPrimaryBus
 	{
-		public abstract class PrimaryBusBase : IPrimaryBusDeclarationDataAdapter
+		public abstract class PrimaryBusBase : BaseSimulationDataAdapter, IPrimaryBusDeclarationDataAdapter
 		{
 
 			public abstract GearboxType[] SupportedGearboxTypes { get; }
@@ -44,6 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
 
+			protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
 
 			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
 				CompressorDrive compressorDrive)
@@ -59,9 +60,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					loading.Value.Item2, allowVocational);
 			}
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, Mission mission, Segment segment)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, mission, segment);
+				return _airdragDataAdapter.CreateAirdragData(vehicleData, mission, segment, ovcMode);
 			}
 
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
@@ -173,6 +174,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
 			{
 				throw new NotImplementedException("Not applicable to Primary Buses");
+			}
+
+			public FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+			{
+				return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
 			}
 		}
 
@@ -289,6 +295,44 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			#endregion
 		}
 
+		public class FuelCellHybrid : SerialHybrid
+		{
+			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusPEVAuxiliaryDataAdapter();
+
+			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+		}
+
+		public class HEV_F2 : FuelCellHybrid
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			#region Overrides of SerialHybrid
+
+			public override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.APTN, GearboxType.ATSerial };
+
+			#endregion
+		}
+
+		public class HEV_F3 : FuelCellHybrid
+		{
+		}
+
+		public class HEV_F4 : FuelCellHybrid
+		{
+		}
+
+		public class HEV_F_IEPC : FuelCellHybrid
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+
+			#region Overrides of PrimaryBusBase
+
+			public override GearboxType[] SupportedGearboxTypes => Array.Empty<GearboxType>();
+
+			#endregion
+		}
+
 		public abstract class ParallelHybrid : Hybrid
 		{
 			public override GearboxType[] SupportedGearboxTypes => new[]
@@ -307,7 +351,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class HEV_P1 : ParallelHybrid
 		{
-
 		}
 
 		public class HEV_P2 : ParallelHybrid

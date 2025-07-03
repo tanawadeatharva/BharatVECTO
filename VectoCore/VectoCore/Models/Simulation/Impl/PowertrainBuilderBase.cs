@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -50,6 +51,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -71,6 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
@@ -90,6 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(components.ElectricMotor)
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
@@ -109,6 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(components.HybridController)
 				.AddComponent(new Brakes(container))
+				.AddComponent(new WheelEnd(container, data.WheelEndData))
 				.AddComponent(components.ElectricMotor)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
@@ -253,10 +258,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			elAux.AddAuxiliaries(data.Aux.Where(x => x.ConnectToREESS && x.ID != Constants.Auxiliaries.IDs.Cond));
-			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond)) {
-				elAux.AddAuxiliary(new Conditioning(
-					data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond),
-					epto));
+			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
+			{
+				var conditioningAux = data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond);
+				var emConditioning = DeclarationData.Conditioning.LookupPowerDemand(
+					data.VehicleData.VehicleClass,
+					VectoSimulationJobType.BatteryElectricVehicle,
+					data.Mission.MissionType);
+
+				elAux.AddAuxiliary(new Conditioning(conditioningAux, epto, data.JobType.IsFCHV() ? emConditioning : null));
 			}
 
 			var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
@@ -691,6 +701,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return AMTShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.SerialHybridVehicle:
+						case VectoSimulationJobType.FCHV:
 							return PEVAMTShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -708,6 +719,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							return ATShiftStrategyOptimized.Name;
 						case VectoSimulationJobType.SerialHybridVehicle:
 						case VectoSimulationJobType.BatteryElectricVehicle:
+						case VectoSimulationJobType.FCHV:
+						case VectoSimulationJobType.FCHV_IEPC:
 							return APTNShiftStrategy.Name;
 						default:
 							throw new VectoException(
@@ -721,6 +734,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						case VectoSimulationJobType.BatteryElectricVehicle:
 						case VectoSimulationJobType.IEPC_E:
 						case VectoSimulationJobType.IEPC_S:
+						case VectoSimulationJobType.FCHV:
+						case VectoSimulationJobType.FCHV_IEPC:
 							return APTNShiftStrategy.Name;
 						case VectoSimulationJobType.ConventionalVehicle when isTestPowerTrain:
 							return null;

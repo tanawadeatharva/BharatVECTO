@@ -221,10 +221,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Run();
 				},
 				this,
-				() => {
+				(preRunOptions) => {
 					Container.RunData.Report?.PrepareResult(null); //<- increase number of expected results;
-					Container.FinishSingleSimulationRun();
+					if (preRunOptions.WriteModAndSumData)
+					{
+						Container.FinishSingleSimulationRun();
+					}
 				}) ?? false;
+
 			if (!runAgain) {
 				Container.FinishSimulationRun();
 				WritingResultsDone = true;

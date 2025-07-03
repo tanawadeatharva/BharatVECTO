@@ -31,6 +31,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<VIFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<VIFResultsWriter.HEVNonOVCBus>().Named(
+				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, false));
+			Bind<IResultsWriter>().To<VIFResultsWriter.HEVOVCBus>().Named(
+				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<VIFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.PureElectric, true));
 			Bind<IResultsWriter>().To<VIFResultsWriter.ExemptedVehicle>().Named(

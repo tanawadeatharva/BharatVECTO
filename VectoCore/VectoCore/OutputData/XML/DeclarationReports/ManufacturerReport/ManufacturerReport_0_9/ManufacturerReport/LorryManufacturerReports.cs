@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_Px_IHPCLorryManufacturerOutputDataType;
+		public override string OutputDataType => "HEV-Px_IHPC-LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S2_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "HEV-Sx_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 	internal class HEV_S3_LorryManufacturerReport : LorryManufacturerReportBase
 	{
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S3_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "HEV-Sx_LorryManufacturerOutputDataType";
 
 		public HEV_S3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory)
 		{
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_S4_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "HEV-Sx_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_HEV_IEPC_S_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "HEV-Sx_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -128,13 +128,65 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class FCHV_F2_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public FCHV_F2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
+
+		public override string OutputDataType => "FCHV-Fx_LorryManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetFCHV_F2_LorryVehicleType().GetElement(inputData);
+		}
+	}
+
+	internal class FCHV_F3_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public override string OutputDataType => "FCHV-Fx_LorryManufacturerOutputDataType";
+
+		public FCHV_F3_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory)
+		{}
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetFCHV_F3_LorryVehicleType().GetElement(inputData);
+		}
+	}
+
+	internal class FCHV_F4_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public FCHV_F4_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory) { }
+
+		public override string OutputDataType => "FCHV-Fx_LorryManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetFCHV_F4_LorryVehicleType().GetElement(inputData);
+		}
+	}
+
+	internal class FCHV_IEPC_LorryManufacturerReport : LorryManufacturerReportBase
+	{
+		public FCHV_IEPC_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory)
+			: base(MRFReportFactory, resultFactory) { }
+
+		public override string OutputDataType => "FCHV-Fx_LorryManufacturerOutputDataType";
+
+		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+		{
+			Vehicle = _mRFReportFactory.GetFCHV_IEPC_LorryVehicleType().GetElement(inputData);
+		}
+	}
+
 	internal class PEV_E2_LorryManufacturerReport : LorryManufacturerReportBase
 	{
 		public PEV_E2_LorryManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E2_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "PEV-Ex-IEPC_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -151,7 +203,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E3_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "PEV-Ex-IEPC_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -167,7 +219,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_E4_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "PEV-Ex-IEPC_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{
@@ -183,7 +235,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractManufacturerReport
 
-		public override string OutputDataType => XMLNames.MRF_OutputDataType_PEV_IEPC_LorryManufacturerOutputDataType;
+		public override string OutputDataType => "PEV-Ex-IEPC_LorryManufacturerOutputDataType";
 
 		protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
 		{

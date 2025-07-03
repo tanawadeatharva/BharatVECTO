@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
@@ -8,17 +10,26 @@ namespace TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies
 	{
 
 		protected Dictionary<int, T> _results = new Dictionary<int, T>(3);
+		private PreRunOptions[] _preRunOptions;
+
 		#region Implementation of IIterativeRunStrategy
 
-		protected AbstractIterativeRunStrategy()
+		protected AbstractIterativeRunStrategy(PreRunOptions[] preRunOptions)
 		{
-
+			_preRunOptions = preRunOptions;
 		}
 
 		public abstract bool RunAgain(int iteration, IModalDataContainer modData, VectoRunData runData);
 
 		public abstract void UpdateRunData(int iteration, IModalDataContainer modData, VectoRunData runData);
 		public bool Enabled { get; set; } = true;
+		public PreRunOptions GetPreRunOptions(int iteration)
+		{
+			if (_preRunOptions == null || _preRunOptions.Length < iteration + 1) {
+				throw new VectoException($"Not {nameof(PreRunOptions)} defined for iteration {iteration}");
+			}
+			return _preRunOptions[iteration];
+		}
 
 		#endregion
 	}

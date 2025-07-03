@@ -31,12 +31,6 @@
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<TorqueLimits xsi:type="v2.0:TorqueLimitsType">
-			<!-- optional -->
-			<v2.0:Entry gear="9" maxTorque="2000"/>
-			<v2.0:Entry gear="8" maxTorque="2000"/>
-			<v2.0:Entry gear="10" maxTorque="2000"/>
-		</TorqueLimits>
 		<ElectricMotorTorqueLimits xsi:type="ElectricMachineTorqueLimitsType">
 			<!-- optional -->
 			<ElectricMachine>
@@ -57,12 +51,6 @@
 				</VoltageLevel>
 			</ElectricMachine>
 			</ElectricMotorTorqueLimits>
-		<BoostingLimitations xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" xsi:type="v2.4:BoostingLimitationsType">
-			<Entry rotationalSpeed="0.12" boostingTorque="0.40"/>
-			<Entry rotationalSpeed="0.10" boostingTorque="0.30"/>
-			<Entry rotationalSpeed="1.40" boostingTorque="0.60"/>
-			<Entry rotationalSpeed="1.30" boostingTorque="0.60"/>
-		</BoostingLimitations>
 		<Components xsi:type="Components_HEV-IEPC-S_LorryType">
 			<Engine>
 				<v2.0:Data xsi:type="v1.0:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">

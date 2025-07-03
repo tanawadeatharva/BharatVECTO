@@ -103,9 +103,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 ? DeclarationData.VTPMode.SelectedMissionMediumLorry
 				: DeclarationData.VTPMode.GetSelectedMissionHeavyLorry(Segment.VehicleClass);
 
-            AirdragData = DataAdapter.CreateAirdragData(
-                vehicle.Components.AirdragInputData,
-                Segment.Missions.First(), Segment);
+            AirdragData = DataAdapter.CreateAirdragData(vehicle,
+                Segment.Missions.First(), Segment, OvcHevMode.NotApplicable);
             EngineData = DataAdapter.CreateEngineData(
                 vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
                 new Mission() { MissionType = vtpMission });

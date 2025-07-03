@@ -238,7 +238,9 @@ namespace TUGraz.VectoCommon.Models
 	{
 		IRESSResponse RESSResponse { get; set; }
 
-		Watt AuxPower { get; set; }
+        Watt MaxNominalFCRatedPower { get; set; }
+
+        Watt AuxPower { get; set; }
 
 		Watt ConsumerPower { get; set; }
 

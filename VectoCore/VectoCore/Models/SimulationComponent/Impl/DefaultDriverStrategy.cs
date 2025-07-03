@@ -121,6 +121,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                     case VectoSimulationJobType.SerialHybridVehicle:
                     case VectoSimulationJobType.IEPC_E:
                     case VectoSimulationJobType.IEPC_S:
+					case VectoSimulationJobType.FCHV:
+					case VectoSimulationJobType.FCHV_IEPC:
 						testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrainElectric(data);
 						break;
                     case VectoSimulationJobType.IHPC:
@@ -130,6 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					case VectoSimulationJobType.ConventionalVehicle:
 						testContainer = container.SimplePowertrainBuilder.BuildSimplePowertrain(data);
 						break;
+					case VectoSimulationJobType.EngineOnlySimulation:
 					default:
 						throw new ArgumentOutOfRangeException(nameof(data.JobType));
 				}
@@ -435,7 +438,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Newton CalculateCoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed, Meter targetAltitude, Meter targetDistance)
 		{
 			var dataBus = DataBus;
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetVelocity);
 			var rollResistanceForce = DataBus.VehicleInfo.RollingResistance(dataBus.DrivingCycleInfo.RoadGradient);
 
 			//mk20211008 shouldn't we calculate it the same as in ComputeCoastingDistance?
@@ -458,7 +461,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
-			var coastingResistanceForce = airDragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
@@ -476,7 +479,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return;
 			//}
 			var forces = dBus.VehicleInfo.SlopeResistance(dBus.DrivingCycleInfo.RoadGradient) + dBus.VehicleInfo.RollingResistance(dBus.DrivingCycleInfo.RoadGradient) +
-						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed);
+						dBus.VehicleInfo.AirDragResistance(dBus.VehicleInfo.VehicleSpeed, dBus.VehicleInfo.VehicleSpeed).AirdragForce;
 
 			if (dBus.GearboxInfo.GearboxType.AutomaticTransmission() && ATEcoRollReleaseLockupClutch && dBus.VehicleInfo.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
@@ -736,7 +739,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											+ vehicleMass * vehicleSpeed * vehicleSpeed / 2;
 			var energyDifference = currentKineticEnergy - kineticEnergyAtTarget;
 
-			var airDragForce = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
+			var airDrag = DataBus.VehicleInfo.AirDragResistance(vehicleSpeed, targetSpeed);
 			var rollingResistanceForce = DataBus.VehicleInfo.RollingResistance(
 				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - DataBus.MileageCounter.Distance))
 				.Value().SI<Radian>());
@@ -747,7 +750,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var iceDragLossPower = DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
 
 			var totalComponentLossPowers = gearboxLossPower + axleLossPower + emDragLossPower - iceDragLossPower;
-			var coastingResistanceForce = airDragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			var coastingResistanceForce = airDrag.AirdragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
 
 			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(
 				targetSpeed, vehicleSpeed - targetSpeed);
@@ -1054,7 +1057,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 
 							break;
-					}
+                        case ResponseOverload _:
+                            // for cases with IEPC while first is overspeed, second ist overload due to brake + downshift, third is coast with overload
+                            if (DataBus.GearboxInfo.GearboxType is GearboxType.APTN && absTime.IsEqual(DataBus.GearboxInfo.LastDownshift)) {
+                                third = Driver.DrivingActionAccelerate(absTime, ds, velocityWithOverspeed, gradient);
+                                debug.Add("[DMD.HRE-12] third:Overload (APTN,IEPC) -> Accelerate", third);
+                            }
+                            break;
+                    }
 					break;
 			}
 
@@ -1354,8 +1364,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									debug.Add("[DMB-DB-12] Roll", response);
 									break;
 								case ResponseUnderload _:
-									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear)
-									{
+									if (gear.Gear != DataBus.GearboxInfo.Gear.Gear || absTime.IsEqual(DataBus.GearboxInfo.LastDownshift))
+                                    {
 										// AT Gearbox switched gears, shift losses are no longer applied, try once more...
 										response = Driver.DrivingActionAccelerate(absTime, ds,
 											DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
@@ -1367,7 +1377,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												gradient, targetDistance: targetDistance);
 											debug.Add("[DMB-DB-14] Brake", response);
 										}
-									}
+                                        if (response is ResponseOverload && DataBus.GearboxInfo.GearboxType is GearboxType.APTN)
+                                        {
+                                            Log.Info("Brake -> Overload --> Accelerate -> Gearshift -> Accelerate --> Underload --> Accelerate --> Underload --> Brake -> Overload -> trying coast action");
+                                            response = Driver.DrivingActionCoast(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+                                            debug.Add("[DMB-DB-15] Coast", response);
+                                        }
+                                    }
 									break;
 							}
 						}
@@ -1439,7 +1455,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						if (response is ResponseOverload && !DataBus.ClutchInfo.ClutchClosed(absTime)) {
 							response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
 						}
-						if (response is ResponseGearShift) {
+                        // add a condition for APTN/IEPC as ResponseGearShift does not exist for them
+                        if (response is ResponseOverload && DataBus.GearboxInfo.GearboxType is GearboxType.APTN && absTime.IsEqual(DataBus.GearboxInfo.LastDownshift))
+                        {
+                            response = Driver.DrivingActionAccelerate(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
+                        }
+                        if (response is ResponseGearShift) {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
 						}
 						break;

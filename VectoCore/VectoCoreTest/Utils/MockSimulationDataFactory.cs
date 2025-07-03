@@ -243,6 +243,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 		public IElectricMachinesDeclarationInputData ElectricMachines { get; }
 		public IIEPCDeclarationInputData IEPC { get; }
+		public IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
 	}
 
 	public class MockVehicleTestInputData : IVehicleDeclarationInputData
@@ -252,8 +253,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool SavedInDeclarationMode { get; }
 		public string Manufacturer { get; }
 		public string Model { get; }
-
-		DateTime IComponentInputData.Date => _date;
+		public string SimulationToolLicenseNumber { get; }
+		public string VehicleMonitoringData { get; }
+        public Kilogram H2StorageUsableCapacity { get; }
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
+        public bool BatteryOnlyMode { get; }
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+        DateTime IComponentInputData.Date => _date;
 
 		public string AppVersion { get; }
 		public string Date { get; }
@@ -278,6 +284,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool? AirdragModifiedMultistep { get; }
 		public TankSystem? TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 		public bool ZeroEmissionVehicle { get; }
 		public bool HybridElectricHDV { get; }
 		public bool DualFuelVehicle { get; }
@@ -302,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public TableData BoostingLimitations { get; }
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 		public IVehicleComponentsDeclaration Components { get; set; }

@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 
@@ -28,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 	{
 		private readonly Watt _electricPowerDemand;
 		private readonly IEPTO _epto;
-
+		private readonly Watt _EMConditioning;
 
 		private bool EPTOOn(IDataBus dataBus)
 		{
@@ -42,24 +34,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 		#endregion
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the <see cref="Conditioning"/> class.
 		/// </summary>
-		/// <param name="condAuxData"></param>
-		/// <param name="eptoCycleController">needed in case an epto is present in the vehicle</param>
-		/// <exception cref="VectoException"></exception>
-
-		public Conditioning(VectoRunData.AuxData condAuxData, IEPTO epto = null)
+		/// <param name="condAuxData">Conditioning auxiliary data for the given vehicle.</param>
+		/// <param name="epto">EPTO if the vehicle presents one.</param>
+		/// <param name="_emConditioning">For FCHV vehicle the PEV, i.e. EM/Battery, conditioning is required.</param>
+		/// <exception cref="VectoException">Thrown if the auxiliary is other than COND or the power demand is not defined.</exception>
+		public Conditioning(VectoRunData.AuxData condAuxData, IEPTO epto = null, Watt _emConditioning = null)
 		{
-			if (condAuxData.ID != Constants.Auxiliaries.IDs.Cond) {
+			if (condAuxData.ID != Constants.Auxiliaries.IDs.Cond)
+			{
 				throw new VectoException($"Invalid {nameof(condAuxData)}: ID must be {Constants.Auxiliaries.IDs.Cond}");
 			}
 
-			if (condAuxData.PowerDemandElectric == null) {
-				throw new VectoException($"No electric powerdemand set for {condAuxData.ID}");
+			if (condAuxData.PowerDemandElectric == null)
+			{
+				throw new VectoException($"No electric power demand set for {condAuxData.ID}");
 			}
+
 			_electricPowerDemand = condAuxData.PowerDemandElectric;
 			_epto = epto;
 			AuxID = condAuxData.ID;
+			_EMConditioning = _emConditioning;
 		}
 
 		public Watt PowerDemand(IDataBus dataBus)
@@ -70,6 +66,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 					return GetPEV_SHEV_PowerDemand(dataBus);
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
+					return Get_FCHV_PowerDemand(dataBus);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 					return GetP_HEV_PowerDemand(dataBus);
@@ -88,6 +87,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 			} else {
 				return 0.SI<Watt>();
 			}
+		}
+
+		public Watt Get_FCHV_PowerDemand(IDataBus dataBus)
+		{
+			var powerDemand = 0.SI<Watt>();
+			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOff);
+			if (oneEmOn || EPTOOn(dataBus))
+			{
+				powerDemand += _EMConditioning;
+			}
+			
+			if(!dataBus.ElectricSystemInfo.FuelCellPower.IsEqual(0) || dataBus.IsTestPowertrain)
+			{
+				powerDemand += _electricPowerDemand;
+			}
+
+			return powerDemand;
 		}
 
 		public Watt GetP_HEV_PowerDemand(IDataBus dataBus)

@@ -79,7 +79,7 @@ Public Class IEPCForm
 		tbOverloadTime1.Text = voltageLevel.OverloadTime.ToGUIFormat()
 		tbOverloadTorque1.Text = voltageLevel.OverloadTorque.ToGUIFormat()
 		tboverloadTorqueSpeed1.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-		tbFLCurve1.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
+		tbFLCurve1.Text = GetRelativePath(voltageLevel.FullLoadCurve.First().LoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
 		SetPowerMapEntries(_lvPowerMap1, voltageLevel.PowerMap)
 	End Sub
 
@@ -90,7 +90,7 @@ Public Class IEPCForm
 		tbOverloadTime2.Text = voltageLevel.OverloadTime.ToGUIFormat()
 		tbOverloadTorque2.Text = voltageLevel.OverloadTorque.ToGUIFormat()
 		tbOverloadTorqueSpeed2.Text = voltageLevel.OverloadTestSpeed.AsRPM.ToGUIFormat()
-		tbFLCurve2.Text = GetRelativePath(voltageLevel.FullLoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
+		tbFLCurve2.Text = GetRelativePath(voltageLevel.FullLoadCurve.First().LoadCurve.Source, Path.GetDirectoryName(_iepcFilePath))
 		SetPowerMapEntries(_lvPowerMap2, voltageLevel.PowerMap)
 	End Sub
 

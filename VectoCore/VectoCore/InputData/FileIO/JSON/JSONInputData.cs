@@ -54,7 +54,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
-using System.Globalization;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -123,6 +122,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					{ JsonKeys.JsonHeader, new object() },
 					{ JsonKeys.JsonBody, new object() }
 				});
+		}
+
+		public static VectoSimulationJobType ParsePowertrainType(JToken json, string field)
+		{
+			switch (json.GetEx<String>(field))
+			{
+				case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
+				case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+				case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
+				case "IEPC_E":
+				case "IEPC": return VectoSimulationJobType.IEPC_E;
+				case "IEPC_S":
+				case "IEPC-S": return VectoSimulationJobType.IEPC_S;
+				case "IHPC": return VectoSimulationJobType.IHPC;
+				case "MultiplePowertrains": return VectoSimulationJobType.MultiplePowertrains;
+				default: throw new VectoException("Invalid parameter value {0}", json.GetEx<String>(field));
+			}
 		}
 	}
 
@@ -585,15 +601,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
-		IVTPDeclarationInputDataProvider, IManufacturerReport
+		IVTPDeclarationInputDataProvider, IManufacturerReport, ICompletedVIF
 	{
 		private IDictionary<VectoComponents, IList<string>> _componentDigests;
 		private DigestData _jobDigest;
 		private IXMLInputDataReader _inputReader;
 		private IResultsInputData _manufacturerResults;
-		private Meter _vehicleLenght;
-		private VehicleClass _vehicleClass;
-		private VehicleCode _vehicleCode;
+		private Meter _vehicleLength;
+		private VehicleCode _bodyworkCode;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -607,11 +622,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_inputReader = kernel.Get<IXMLInputDataReader>();
+
+			_bodyworkCode = VehicleCode.NOT_APPLICABLE;
 		}
 
 		public IVTPEngineeringJobInputData JobInputData => this;
 
 		public IManufacturerReport ManufacturerReportInputData => this;
+
+		public ICompletedVIF CompletedVIFInputData => this;
 
 		public IVehicleDeclarationInputData Vehicle =>
 			_inputReader.CreateDeclaration(
@@ -624,6 +643,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
 		string IManufacturerReport.Source => Body["ManufacturerRecord"].Value<string>();
+
+		string ICompletedVIF.Source => Body[JsonKeys.VTP_CompletedVIF]?.Value<string>();
+
+		public Meter VehicleLength 
+		{
+			get
+			{
+				if (_vehicleLength == null)
+				{
+					ReadCompletedVIF();
+				}
+				return _vehicleLength;
+			}
+		}
+
+		public VehicleCode BodyworkCode 
+		{
+			get
+			{
+				if (_bodyworkCode == VehicleCode.NOT_APPLICABLE)
+				{
+					ReadCompletedVIF();
+				}
+				return _bodyworkCode;
+			}
+		}
 
 		public IResultsInputData Results
 		{
@@ -742,36 +787,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public Meter VehicleLength
-		{
-			get {
-				if (_vehicleLenght == null) {
-					ReadManufacturerReport();
-				}
-				return _vehicleLenght;
-			}
-		}
-
-		public VehicleClass VehicleClass
-		{
-			get {
-				if (_vehicleClass == VehicleClass.Unknown) {
-					ReadManufacturerReport();
-				}
-				return _vehicleClass;
-			}
-		}
-
-		public VehicleCode VehicleCode
-		{
-			get {
-				if (_vehicleCode == VehicleCode.NOT_APPLICABLE) {
-					ReadManufacturerReport();
-				}
-				return _vehicleCode;
-			}
-		}
-
 		public void ValidateSimulationToolVersion()
 		{
 			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
@@ -780,10 +795,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			string vectoVersionStr = VectoSimulationCore.VersionNumber;
 
 			bool xmlVersionNewer = VersioningUtil.CompareVersions(simToolVersionStr, vectoVersionStr) > 0;
-			
+
+			#if !DEBUG
 			if (xmlVersionNewer) {
 				throw new VectoException($"Not allowed to run simulation because VECTO version ({vectoVersionStr}) is older than <SimulationToolVersion> in Manufacturer Report ({simToolVersionStr}).");
 			}
+			#endif
 		}
 
 		public void ValidateHash()
@@ -802,6 +819,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
+
+		private void ReadCompletedVIF()
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(Path.Combine(Path.GetFullPath(BasePath), Body[JsonKeys.VTP_CompletedVIF].Value<string>()));
+
+			var code = xmlDoc.SelectSingleNode($"//*[local-name()='{XMLNames.Vehicle_BodyworkCode}']").InnerText;
+			_bodyworkCode = code.ParseEnum<VehicleCode>();
+
+			var length = xmlDoc.SelectSingleNode($"//*[local-name()='{XMLNames.Bus_VehicleLength}']").InnerText.ToDouble();
+			_vehicleLength = (length / 1000).SI<Meter>();
+		}
 
 		private void ReadManufacturerReport()
 		{
@@ -832,10 +861,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
 
-			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
-			_vehicleLenght = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleLength']")?.InnerText.ToDouble().SI<Meter>();
-			_vehicleClass = VehicleClassHelper.Parse(xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleGroup']")?.InnerText);
-			_vehicleCode = xmlDoc.SelectSingleNode("//*[local-name() = 'VehicleCode']")?.InnerText.ParseEnum<VehicleCode>() ?? VehicleCode.NOT_APPLICABLE;
+			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));			
 		}
 	}
 
@@ -1094,7 +1120,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override bool SavedInDeclarationMode => true;
 
-        #endregion
+		#endregion
 
         //#region Implementation of IDeclarationInputDataProvider
 
@@ -1113,7 +1139,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         //#endregion
 
-        #region Implementation of IMultistageVIFInputData
+		#region Implementation of IMultistageVIFInputData
 
 		public IVehicleDeclarationInputData VehicleInputData => Vehicle;
 		public IMultistepBusInputDataProvider MultistageJobInputData => PrimaryVehicleData;
@@ -1236,9 +1262,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType JobType => VectoSimulationJobType.IHPC;
 	}
 
+	public class JSONInputDataV14_FCHybrid : JSONInputDataV9_BEV
+	{
+		public JSONInputDataV14_FCHybrid(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{
+			//VehicleData = ReadVehicle();
+			//Gearbox = ReadGearbox();
+			
+
+		}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV;
+    }
+
+	public class JSONInputDataV15_FCHV_IEPC : JSONInputDataV12_IEPC
+	{
+		public JSONInputDataV15_FCHV_IEPC(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.FCHV_IEPC;
+	}
+
+	public class JSONInputDataV16_MultiplePowertrains : AbstractJSONInputData
+	{
+		public JSONInputDataV16_MultiplePowertrains(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
+		{
+			VehicleData = ReadVehicle();
+		}
+
+		public override VectoSimulationJobType JobType => VectoSimulationJobType.MultiplePowertrains;
+	}
+
+
 	// --------------------------
 
-		public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
+	public class JSONInputDataV10_PrimaryAndStageInputBus : JSONFile, IInputDataProvider, IMultistagePrimaryAndStageInputDataProvider
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 		private readonly string _primaryVehicleInputDataPath;

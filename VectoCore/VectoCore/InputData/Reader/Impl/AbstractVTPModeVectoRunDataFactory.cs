@@ -107,11 +107,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		public abstract IEnumerable<VectoRunData> NextRun();
 
 		public abstract IInputDataProvider DataProvider { get; }
-		
-		#endregion
 
-		
-		protected virtual AuxFanData GetFanData()
+        public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+
+
+        #endregion
+
+
+        protected virtual AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
 				FanCoefficients = DeclarationData.VTPMode.FanParameters,
@@ -148,6 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				Retarder = RetarderData,
 				PTO = PTOTransmissionData,
 				Report = Report,
+				WheelEndData = Dao.CreateWheelEndData(segment.VehicleClass, JobInputData.Vehicle)
 			};
 		}
 

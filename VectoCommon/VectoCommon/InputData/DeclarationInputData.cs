@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -89,7 +90,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// In case of components loaded from XML files, this is the name of the XSD Type
 		/// </summary>
 		public string Type { get; set; }
-		
+
 		public string TypeVersion { get; set; }
 
 		public string SourcePath => SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null;
@@ -112,7 +113,7 @@ namespace TUGraz.VectoCommon.InputData
 		VehicleCategory VehicleCategory { get; }
 
 		/// <summary>
-		/// P037  
+		/// P037
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		AxleConfiguration AxleConfiguration { get; }
@@ -159,13 +160,19 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool? AirdragModifiedMultistep { get; }
 
-		TankSystem? TankSystem { get; }
+        Kilogram H2StorageUsableCapacity { get; }
+
+        HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
+
+        TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 
-		// fields for exempted vehicles
+		IVehicleInMotionChargingDeclaration InMotionCharging { get; }
 
-		bool ZeroEmissionVehicle { get; }
+        // fields for exempted vehicles
+
+        bool ZeroEmissionVehicle { get; }
 
 		bool HybridElectricHDV { get; }
 
@@ -212,7 +219,7 @@ namespace TUGraz.VectoCommon.InputData
 		VehicleDeclarationType VehicleDeclarationType { get; }
 
 		IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
-		
+
 		TableData BoostingLimitations { get; }
 
 		// components
@@ -221,18 +228,31 @@ namespace TUGraz.VectoCommon.InputData
 		XmlNode XMLSource { get; }
 
 		string VehicleTypeApprovalNumber { get; }
-		
-		ArchitectureID ArchitectureID { get; }
-		
-		bool OvcHev { get; }
 
-		Watt MaxChargingPower { get; }
+		ArchitectureID ArchitectureID { get; }
+
+		bool OVC { get; }
+
+		bool BatteryOnlyMode { get; }
+
+        DynamicChargingTechnology DynamicChargingTechnology {  get; }
+
+        Watt MaxChargingPower { get; }
 
 		VectoSimulationJobType VehicleType { get; }
 
+		string SimulationToolLicenseNumber { get; }
+
+        string VehicleMonitoringData { get; }
+    }
+
+	public interface IVehicleInMotionChargingDeclaration
+    {
+		IMCTechnology Technology { get; }
 	}
 
-	public interface IVehicleComponentsDeclaration
+
+    public interface IVehicleComponentsDeclaration
 	{
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
@@ -255,12 +275,14 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
-		
+
 		IElectricStorageSystemDeclarationInputData ElectricStorage { get; }
 
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 
 		IIEPCDeclarationInputData IEPC { get; }
+
+		IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
 	}
 
 	public static class ComponentsHelper{
@@ -418,7 +440,6 @@ namespace TUGraz.VectoCommon.InputData
 		}
 	}
 
-
 	public interface IAirdragDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
@@ -437,7 +458,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IRetarderInputData : IComponentInputData
 	{
 		/// <summary>
-		/// P052  
+		/// P052
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		RetarderType Type { get; }
@@ -494,12 +515,14 @@ namespace TUGraz.VectoCommon.InputData
 		DataSource DataSource { get; }
 
         bool Steered { get; }
-    }
+
+		NewtonMeter WheelEndFriction { get; }
+	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
-		/// P108  
+		/// P108
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		string Dimension { get; }
@@ -766,18 +789,31 @@ namespace TUGraz.VectoCommon.InputData
 		IList<string> Technology { get; }
 	}
 
-    //public interface IPowerRatingInputData
-    //{
+	public interface IFuelCellSystemDeclarationInputData
+	{
+		List<IFuelCellModuleDeclarationInputData> FuelCellModules { get; }
+	}
 
-    //NewtonMeter ContinuousTorque { get; }
-    //PerSecond ContinuousTorqueSpeed { get; } //TestSpeedContinuousTorque
-    //NewtonMeter OverloadTorque { get; }
-    //PerSecond OverloadTestSpeed { get; } //TestSpeedOverloadTorque
-    //Second OverloadTime { get; } //OverloadDuration
-                                 //}
+	public interface IFuelCellModuleDeclarationInputData
+	{
+		int Count { get; }
+
+		Watt MaxPower { get; }
+
+		Watt MinPower { get; }
+
+		IFuelCellDeclarationInputData FuelCell { get; }
+	}
+
+	public interface IFuelCellDeclarationInputData : IComponentInputData
+	{
+		Watt FCSRatedPower { get; }
+
+		TableData FuelCellPowerOutputConsumptionMap { get; }
+	}
 
 
-    public interface IElectricMotorDeclarationInputData : IComponentInputData
+	public interface IElectricMotorDeclarationInputData : IComponentInputData
 	{
 		ElectricMachineType ElectricMachineType { get; }
 		Watt R85RatedPower { get; }
@@ -793,7 +829,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData DragCurve { get; }
 
 		TableData Conditioning { get; }
-		
+
 		//double OverloadRecoveryFactor { get; }
 	}
 
@@ -819,10 +855,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// OverloadDuration
 		/// </summary>
 		Second OverloadTime { get; }
-		/// <summary>
-		/// MaxTorqueCurve
-		/// </summary>
-		TableData FullLoadCurve { get; }
+        /// <summary>
+        /// MaxTorqueCurve
+        /// </summary>
+        IList<IElectricMotorLoadCurve> FullLoadCurve { get; }
 
 		IList<IElectricMotorPowerMap> PowerMap { get; }
 	}
@@ -835,7 +871,14 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PowerMap { get; }
 	}
-	
+
+	public interface IElectricMotorLoadCurve
+	{
+        int Gear { get; }
+
+		TableData LoadCurve { get; }
+    }
+
 	public interface IElectricMachinesDeclarationInputData
 	{
 		IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> Entries { get; }
@@ -877,7 +920,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// If not overridden RatioADC == ADC?.Ratio ?? 1;
 		/// Can only be overridden when ADC == null;
 		/// </summary>
-		public double RatioADC { 
+		public double RatioADC {
 			get
 			{
 				//Engineering mode sets RatioADC, decl mode sets ADC
@@ -912,8 +955,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		public IADCDeclarationInputData ADC {get; set; }
 	}
-	
-	public interface IADCDeclarationInputData : IComponentInputData
+
+    public interface IADCDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P176
@@ -927,12 +970,12 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 
-	public interface IIEPCDeclarationInputData : IComponentInputData 
+	public interface IIEPCDeclarationInputData : IComponentInputData
 	{
 		ElectricMachineType ElectricMachineType { get; }
-		
+
 		Watt R85RatedPower { get; }
-		
+
 		Watt TotalRatedPowerCalculated { get; }
 
 		KilogramSquareMeter Inertia { get; } //RotationalInertia
@@ -950,7 +993,9 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IDragCurve> DragCurves { get; }
 
 		TableData Conditioning { get; }
-	}
+
+		bool DisengagementClutch { get; }
+    }
 
 	public interface IDragCurve
 	{
@@ -966,11 +1011,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		double Ratio { get; }
 		NewtonMeter MaxOutputShaftTorque { get; }
-		
+
 		PerSecond MaxOutputShaftSpeed { get; }
 	}
-	
-	public interface IElectricStorageSystemDeclarationInputData 
+
+	public interface IElectricStorageSystemDeclarationInputData
 	{
 		IList<IElectricStorageDeclarationInputData> ElectricStorageElements { get; }
 	}
@@ -1002,7 +1047,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		double? MaxSOC { get; }
 
-		BatteryType BatteryType { get; }
+		double? DeteriorationPerformanceRatio { get; }
+
+        BatteryType BatteryType { get; }
 
 		AmpereSecond Capacity { get; }
 
@@ -1142,7 +1189,7 @@ namespace TUGraz.VectoCommon.InputData
 		HeatPumpType? HeatPumpTypeHeatingDriverCompartment { get; }
 
 		HeatPumpType? HeatPumpTypeCoolingPassengerCompartment { get; }
-		
+
 		HeatPumpType? HeatPumpTypeHeatingPassengerCompartment { get; }
 
 		Watt AuxHeaterPower { get; }
@@ -1160,7 +1207,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool? OtherHeatingTechnology { get; }
 
 		bool? AdjustableCoolantThermostat { get; }
-	
+
 		bool EngineWasteGasHeatExchanger { get; }
 	}
 
@@ -1240,7 +1287,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		public static VehicleDeclarationType Parse(string parse)
 		{
-			switch (parse) 
+			switch (parse)
 			{
 				case nameof(VehicleDeclarationType.interim):
 					return VehicleDeclarationType.interim;
@@ -1269,7 +1316,7 @@ namespace TUGraz.VectoCommon.InputData
 		[GuiLabel("Mechanically")]
 		mechanically
 	}
-	
+
 	public static class CompressorDriveHelper
 	{
 		public static CompressorDrive Parse(string parse)
@@ -1335,7 +1382,11 @@ namespace TUGraz.VectoCommon.InputData
 		S2,
 		S3,
 		S4,
-		S_IEPC
+		S_IEPC,
+		F2,
+		F3,
+		F4,
+		F_IEPC
 	}
 
 
@@ -1344,6 +1395,7 @@ namespace TUGraz.VectoCommon.InputData
 		private const string E_IEPC_ID = "E-IEPC";
 		private const string P2_5_ID = "P2.5";
 		private const string S_IEPC_ID = "S-IEPC";
+		private const string F_IEPC_ID = "F-IEPC";
 
 		public static ArchitectureID Parse(string parse)
 		{
@@ -1359,6 +1411,9 @@ namespace TUGraz.VectoCommon.InputData
 				case nameof(ArchitectureID.S2):
 				case nameof(ArchitectureID.S3):
 				case nameof(ArchitectureID.S4):
+				case nameof(ArchitectureID.F2):
+				case nameof(ArchitectureID.F3):
+				case nameof(ArchitectureID.F4):
 					return parse.ParseEnum<ArchitectureID>();
 				case E_IEPC_ID:
 					return ArchitectureID.E_IEPC;
@@ -1366,6 +1421,8 @@ namespace TUGraz.VectoCommon.InputData
 					return ArchitectureID.P2_5;
 				case S_IEPC_ID:
 					return ArchitectureID.S_IEPC;
+				case F_IEPC_ID:
+					return ArchitectureID.F_IEPC;
 				default:
 					throw new ArgumentOutOfRangeException($"{nameof(ArchitectureID)}");
 			}
@@ -1380,6 +1437,8 @@ namespace TUGraz.VectoCommon.InputData
 					return P2_5_ID;
 				case ArchitectureID.S_IEPC:
 					return S_IEPC_ID;
+				case ArchitectureID.F_IEPC:
+					return F_IEPC_ID;
 				default:
 					return type.ToString();
 			}
@@ -1424,6 +1483,20 @@ namespace TUGraz.VectoCommon.InputData
 				case ArchitectureID.S3:
 				case ArchitectureID.S4:
 				case ArchitectureID.S_IEPC:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		public static bool IsFuelCellVehicle(this ArchitectureID type)
+		{
+			switch (type)
+			{
+				case ArchitectureID.F2:
+				case ArchitectureID.F3:
+				case ArchitectureID.F4:
+				case ArchitectureID.F_IEPC:
 					return true;
 				default:
 					return false;

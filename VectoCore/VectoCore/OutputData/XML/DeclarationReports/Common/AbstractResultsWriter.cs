@@ -72,9 +72,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         protected virtual List<IOVCResultEntry> GetOrderedResultsOVC(List<IResultEntry> results)
         {
             if (!results.All(x => x.OVCMode.IsOneOf(OvcHevMode.ChargeSustaining, OvcHevMode.ChargeDepleting))) {
-                throw new VectoException(
-                    "Simulation runs for OVC vehicles must be either Charge Sustaining or Charge Depleting!");
-            }
+				throw new VectoException(
+					"Simulation runs for OVC vehicles must be either Charge Sustaining or Charge Depleting!");
+			}
 
             var retVal = new List<IOVCResultEntry>(results.Count / 2);
             var cdEntries = results.Where(x => x.OVCMode == OvcHevMode.ChargeDepleting)
@@ -90,12 +90,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                                                         x.Mission == cdEntry.Mission &&
                                                         x.LoadingType == cdEntry.LoadingType);
                 if (csEntry == null) {
-                    throw new VectoException(
-                        $"no matching result for {cdEntry.Mission}, {cdEntry.LoadingType}, {cdEntry.FuelMode} found!");
-                }
+					throw new VectoException(
+						$"no matching result for {cdEntry.Mission}, {cdEntry.LoadingType}, {cdEntry.FuelMode} found!");
+				}
 
-				
-				var weightedResult = cdEntry.VehicleClass.IsCompletedBus() ? 
+
+				var weightedResult = cdEntry.VehicleClass.IsCompletedBus() ?
 					DeclarationData.CalculateWeightedResultCompletedBus(cdEntry, csEntry) :
 					DeclarationData.CalculateWeightedResult(cdEntry, csEntry);
 
@@ -111,7 +111,29 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         }
 
 
-		
-		
+		protected virtual List<IOVCResultEntry> GetOrderedResultsOVCFCHV(List<IResultEntry> results)
+		{
+			if (!results.All(r => r.OVCMode == OvcHevMode.ChargeSustaining))
+			{
+				throw new VectoException("All simulation runs for OVC-FCHV vehicles must be Charge Sustaining!");
+			}
+
+			return results.Where(x => x.OVCMode == OvcHevMode.ChargeSustaining)
+				.OrderBy(x => x.VehicleClass)
+				.ThenBy(x => x.FuelMode)
+				.ThenBy(x => x.Mission)
+				.ThenBy(x => x.LoadingType)
+				.Select(cs =>
+				{
+					var cd = cs.Clone(OvcHevMode.ChargeDepleting);
+					return new OvcResultEntry()
+					{
+						ChargeDepletingResult = cd,
+						ChargeSustainingResult = cs,
+						Weighted = null
+					};
+				})
+				.ToList<IOVCResultEntry>();
+		}
 	}
 }

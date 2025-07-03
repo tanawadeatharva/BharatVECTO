@@ -2178,6 +2178,12 @@
   <data name="XMLCustomerReportIsVocational" xml:space="preserve">
     <value>Vocational</value>
   </data>
+  <data name="AxleWheels_Axles_Axle_WheelEnd" xml:space="preserve">
+    <value>WheelEnd</value>
+  </data>
+  <data name="AxleWheels_Axles_Axle_Friction" xml:space="preserve">
+    <value>WheelEndFriction</value>
+  </data>
   <data name="CompletedBusManufacturerOutputDataType" xml:space="preserve">
     <value>CompletedBusManufacturerOutputDataType</value>
   </data>
@@ -2199,4 +2205,91 @@
   <data name="MonitoringFuelType" xml:space="preserve">
     <value>FuelType</value>
   </data>
+  <data name="TorqueCurve_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="TorqueCurve_Gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="IEPC_DisengagementClutch" xml:space="preserve">
+    <value>DisengagementClutch</value>
+  </data>
+  <data name="MaxTorqueCurve_attr_gear" xml:space="preserve">
+    <value>gear</value>
+  </data>
+  <data name="FuelCell_Consumption" xml:space="preserve">
+    <value>fuelConsumption</value>
+  </data>
+  <data name="FuelCell_ConsumptionEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="FuelCell_FCSRatedPower" xml:space="preserve">
+    <value>FCSRatedPower</value>
+  </data>
+  <data name="FuelCell_PowerOutput" xml:space="preserve">
+    <value>powerOutput</value>
+  </data>
+  <data name="FuelCell_PowerOutputConsumptionMap" xml:space="preserve">
+    <value>FuelCellPowerOutputConsumptionMap</value>
+  </data>
+  <data name="FuelCell_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="FuelCell_Cell" xml:space="preserve">
+    <value>FuelCell</value>
+  </data>
+  <data name="FuelCell_Module" xml:space="preserve">
+    <value>FuelCellModule</value>
+  </data>
+  <data name="FuelCell_MaxPower" xml:space="preserve">
+    <value>MaxPower</value>
+  </data>
+  <data name="FuelCell_MinPower" xml:space="preserve">
+    <value>MinPower</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F2_LorryOutputType" xml:space="preserve">
+    <value>HEV_F2_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F3_LorryOutputType" xml:space="preserve">
+    <value>HEV_F3_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_F4_LorryOutputType" xml:space="preserve">
+    <value>HEV_F4_LorryOutputType</value>
+  </data>
+  <data name="CIF_OutputDataType_HEV_IEPC_F_LorryOutputType" xml:space="preserve">
+    <value>HEV_IEPC_F_LorryOutputType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>FCHV-F2_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>FCHV-F3_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>FCHV-F4_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType" xml:space="preserve">
+    <value>FCHV-IEPC-F_LorryManufacturerOutputDataType</value>
+  </data>
+  <data name="Vehicle_H2StorageTechnology" xml:space="preserve">
+    <value>HydrogenStorageTechnology</value>
+  </data>
+  <data name="Vehicle_H2StorageUsableCapacity" xml:space="preserve">
+    <value>H2StorageUsableCapacity</value>
+  </data>
+<data name="Report_ResultEntry_Ranges" xml:space="preserve">
+	<value>Ranges</value>
+</data>
+<data name="Report_ResultEntry_Ranges_Lifetime_Attr" xml:space="preserve">
+	<value>lifetime</value>
+</data>
+<data name="Report_ResultEntry_Ranges_Lifetime_BOL_Val" xml:space="preserve">
+	<value>begin of life</value>
+</data>
+<data name="Report_ResultEntry_Ranges_Lifetime_EOL_Val" xml:space="preserve">
+	<value>end of life</value>
+</data>
+<data name="Report_ResultEntry_HydrogenRange" xml:space="preserve">
+	<value>HydrogenRange</value>
+</data>
 </root>

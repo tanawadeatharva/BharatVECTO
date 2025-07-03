@@ -59,7 +59,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool TwinTyres { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
-		
 
 		public static ValidationResult ValidateAxleData(Axle axle, ValidationContext validationContext)
 		{

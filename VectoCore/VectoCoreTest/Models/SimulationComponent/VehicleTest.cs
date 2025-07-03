@@ -126,7 +126,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.46.SI<SquareMeter>(),
-				_airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				0.SI<SquareMeter>(),
+                _airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.46.SI<SquareMeter>(), height.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 			var vehicle = new Vehicle(container, vehicleData,airdragData);
 			new DummyCycle(container);
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var nextSpeed = vehicleSpeed.KMPHtoMeterPerSecond() + acceleration.SI<MeterPerSquareSecond>() * dt.SI<Second>();
 			var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), nextSpeed);
-			Assert.AreEqual(expected, avgForce.Value(), Tolerance);
+			Assert.AreEqual(expected, avgForce.AirdragForce.Value(), Tolerance);
 		}
 
 		[TestCase]
@@ -149,7 +150,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
-				_airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				0.SI<SquareMeter>(),
+                _airdragDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var container = VehicleContainer.CreateVehicleContainer(new VectoRunData() {
@@ -224,8 +226,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			correctionData.Seek(0, SeekOrigin.Begin);
 
 			var cwcc =
-				new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-					CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurveFromStream(correctionData,
+				new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(), 0.SI<SquareMeter>(),
+                    CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurveFromStream(correctionData,
 						crossSectionArea.SI<SquareMeter>()), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 
 			Assert.AreEqual(crossSectionArea * expectedFactor,

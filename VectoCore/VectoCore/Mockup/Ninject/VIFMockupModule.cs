@@ -181,6 +181,26 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevS4VehicleType();
 			}
 
+			public IXmlTypeWriter GetHevF2VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevF2VehicleType();
+			}
+
+			public IXmlTypeWriter GetHevF3VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevF3VehicleType();
+			}
+
+			public IXmlTypeWriter GetHevF4VehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevF4VehicleType();
+			}
+
+			public IXmlTypeWriter GetHevIepcFVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcFVehicleType();
+			}
+
 			public IXmlTypeWriter GetIepcVehicleType()
 			{
 				return _vifReportFactoryImplementation.GetIepcVehicleType();
@@ -239,6 +259,26 @@ namespace TUGraz.VectoMockup.Ninject
 			public IXmlTypeWriter GetHevS4ComponentVIFType()
 			{
 				return _vifReportFactoryImplementation.GetHevS4ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevF2ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevF2ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevF3ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevF3ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevF4ComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevF4ComponentVIFType();
+			}
+
+			public IXmlTypeWriter GetHevIepcFComponentVIFType()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcFComponentVIFType();
 			}
 
 			public IXmlTypeWriter GetPevE2ComponentVIFType()
@@ -444,6 +484,21 @@ namespace TUGraz.VectoMockup.Ninject
 			public IXmlTypeWriter GetEngineType()
 			{
 				return _vifReportFactoryImplementation.GetEngineType();
+			}
+
+			public IReportOutputGroup GetHevIepcFVehicleParameterGroup()
+			{
+				return _vifReportFactoryImplementation.GetHevIepcFVehicleParameterGroup();
+			}
+
+			public IXmlTypeWriter GetFuelCellType()
+			{
+				return _vifReportFactoryImplementation.GetFuelCellType();
+			}
+
+			public IXmlTypeWriter GetAuxiliaryHevFType()
+			{
+				return _vifReportFactoryImplementation.GetAuxiliaryHevFType();
 			}
 
 			#endregion

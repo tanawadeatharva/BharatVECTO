@@ -13,6 +13,7 @@
 1-user-interface/M_BatteryPackEditor.md
 1-user-interface/N_IEPC.md
 1-user-interface/O_IHPC.md
+1-user-interface/P_FuelCellSystemEditor.md
 1-user-interface/I_Graph.md
 4-command-line-arguments/cmd.md
 2-calculation-modes/calculation-modes.md
@@ -46,6 +47,7 @@
 3-simulation-models/Auxiliaries.md
 3-simulation-models/BusAuxiliaries.md
 3-simulation-models/PwheelInput.md
+3-simulation-models/FuelCell.md
 3-simulation-models/PTO.md
 3-simulation-models/Electric_Motor.md
 3-simulation-models/IEPC.md
@@ -53,6 +55,7 @@
 3-simulation-models/Electric_Storage.md
 3-simulation-models/ParallelHybridControlStrategy.md
 3-simulation-models/SerialHybridControlStrategy.md
+3-simulation-models/InMotionCharging.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/XML_Job-File_DeclarationMode.md
 5-input-and-output-files/XML_DeclarationReport.md
@@ -88,4 +91,6 @@
 5-input-and-output-files/VMOD.md
 5-input-and-output-files/VSUM.md
 5-input-and-output-files/App.md
+5-input-and-output-files/VFCM.md
+5-input-and-output-files/VFCC.md
 6-changelog/changelog.md

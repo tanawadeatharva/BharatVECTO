@@ -49,6 +49,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IManufacturerReport ManufacturerReportInputData { get; }
 
+		ICompletedVIF CompletedVIFInputData { get; }
+
 		IVectoHash VectoJobHash { get; }
 
 		IVectoHash VectoManufacturerReportHash { get; }
@@ -79,12 +81,19 @@ namespace TUGraz.VectoCommon.InputData
 		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
 
 		DigestData JobDigest { get; }
-		Meter VehicleLength { get; }
-		VehicleClass VehicleClass { get; }
-		VehicleCode VehicleCode { get; }
 
 		void ValidateSimulationToolVersion();
 
 		void ValidateHash();
 	}
+
+	public interface ICompletedVIF
+	{
+		string Source { get; }
+
+		Meter VehicleLength {  get; }
+
+		VehicleCode BodyworkCode { get; }
+	}
+
 }

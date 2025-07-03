@@ -64,14 +64,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 						MotorSpeed = 0.RPMtoRad(),
 						FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque,
-							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad())?.Abs() ?? 0.SI<NewtonMeter>() * ratioAdc))
+							(em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(0.RPMtoRad(), key)?.Abs() ?? 0.SI<NewtonMeter>() * ratioAdc))
 					});
                     foreach (var iceEntry in engineData.FullLoadCurves[0].FullLoadEntries) {
 						gbxLimit.Add(new VehicleMaxPropulsionTorque.FullLoadEntry() {
 							MotorSpeed = iceEntry.EngineSpeed,
 							FullDriveTorque = VectoMath.Min(gearboxData.Gears[key].MaxTorque, 
 								iceEntry.TorqueFullLoad + (em?.EfficiencyData.VoltageLevels.Last().FullLoadDriveTorque(
-									iceEntry.EngineSpeed * ratioAdc).Abs() * ratioAdc ?? 0.SI<NewtonMeter>()))
+									iceEntry.EngineSpeed * ratioAdc, key).Abs() * ratioAdc ?? 0.SI<NewtonMeter>()))
 						});
 					}
 					var bKey = isAtGearbox

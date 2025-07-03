@@ -189,5 +189,30 @@ namespace TUGraz.VectoCommon.Hashing
 					return false;
 			}
 		}
+
+		public static bool IsVehicleComponent(this VectoComponents component)
+		{
+            switch (component)
+            {
+                case VectoComponents.Engine:
+                case VectoComponents.Gearbox:
+                case VectoComponents.Axlegear:
+                case VectoComponents.Retarder:
+                case VectoComponents.TorqueConverter:
+                case VectoComponents.Angledrive:
+                case VectoComponents.Airdrag:
+                case VectoComponents.Tyre:
+                case VectoComponents.BatterySystem:
+                case VectoComponents.CapacitorSystem:
+                case VectoComponents.ElectricMachineSystem:
+                case VectoComponents.IEPC:
+                case VectoComponents.ADC:
+                case VectoComponents.FuelCell:
+                case VectoComponents.ElectricEnergyStorage:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 	}
 }

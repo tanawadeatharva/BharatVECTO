@@ -66,8 +66,7 @@ Public Class BusAuxiliariesEngParametersForm
         pnCurrentDemand.Enabled = True
 
         select case JobType
-            case VectoSimulationJobType.BatteryElectricVehicle:
-            case VectoSimulationJobType.IEPC_E:
+            Case VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.FCHV, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV_IEPC
                 bgPneumaticSystem.Enabled = False
                 gbHVAC.Enabled = False
                 cbES_HEVREESS.Checked = True
@@ -199,12 +198,12 @@ Public Class BusAuxiliariesEngParametersForm
         tbCurrentDemandEngineOffDriving.Text = inputData.ElectricSystem.CurrentDemandEngineOffDriving.ToGUIFormat()
         tbCurrentDemandEngineOffStandstill.Text = inputData.ElectricSystem.CurrentDemandEngineOffStandstill.ToGUIFormat()
         tbDCDCEff.Text = inputData.ElectricSystem.DCDCConverterEfficiency.ToGUIFormat()
-        if (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E) Then
+        If (JobType <> VectoSimulationJobType.BatteryElectricVehicle AndAlso JobType <> VectoSimulationJobType.IEPC_E AndAlso JobType <> VectoSimulationJobType.FCHV AndAlso JobType <> VectoSimulationJobType.FCHV_IEPC) Then
             tbAlternatorEfficiency.Text = inputData.ElectricSystem.AlternatorEfficiency.ToGUIFormat()
-            cbAlternatorTechnology.SelectedValue  = inputData.ElectricSystem.AlternatorType
+            cbAlternatorTechnology.SelectedValue = inputData.ElectricSystem.AlternatorType
             tbMaxAlternatorPower.Text = inputData.ElectricSystem.MaxAlternatorPower.ToGUIFormat()
             tbElectricStorageCapacity.Text = inputData.ElectricSystem.ElectricStorageCapacity.ConvertToWattHour().Value.ToGUIFormat()
-            tbBatEfficiency.Text = inputData.ElectricSystem.ElectricStorageEfficiency.ToGuiFormat()
+            tbBatEfficiency.Text = inputData.ElectricSystem.ElectricStorageEfficiency.ToGUIFormat()
 
             tbCompressorMap.Text = GetRelativePath(inputData.PneumaticSystem.CompressorMap.Source, basePath)
             tbAverageAirDemand.Text = inputData.PneumaticSystem.AverageAirConsumed.ToGUIFormat()
@@ -214,14 +213,14 @@ Public Class BusAuxiliariesEngParametersForm
             tbHvacElectricPowerDemand.Text = inputData.HVACData.ElectricalPowerDemand.ToGUIFormat()
             tbHvacMechPowerDemand.Text = inputData.HVACData.MechanicalPowerDemand.ToGUIFormat()
             tbHvacAuxHeaterPwr.Text = inputData.HVACData.AuxHeaterPower.ToGUIFormat()
-            tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1e6).ToGUIFormat()
+            tbHvacHeatingDemand.Text = (inputData.HVACData.AverageHeatingDemand.Value() / 1000000.0).ToGUIFormat()
 
             pnSmartElectricParams.Enabled = inputData.ElectricSystem.AlternatorType = AlternatorType.Smart
 
             cbES_HEVREESS.Checked = inputData.ElectricSystem.ESSupplyFromHEVREESS
             pnDCDCEff.Enabled = cbES_HEVREESS.Checked
         End If
-        
+
 
         DeclInit()
 
@@ -261,12 +260,12 @@ Public Class BusAuxiliariesEngParametersForm
         busAuxParams.MaxAlternatorPower = tbMaxAlternatorPower.Text.ToDouble(0)
         busAuxParams.ElectricStorageCapacity = tbElectricStorageCapacity.Text.ToDouble(0)
         busAuxParams.ElectricStorageEfficiency = tbBatEfficiency.Text.ToDouble(1)
-        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(0)
+        busAuxParams.DCDCEfficiency = tbDCDCEff.Text.ToDouble(1)
         busAuxParams.SupplyESFromHEVREESS = cbES_HEVREESS.Checked
 
-        if (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle) then
+        If (JobType = VectoSimulationJobType.IEPC_E OrElse JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse JobType = VectoSimulationJobType.FCHV OrElse JobType = VectoSimulationJobType.FCHV_IEPC) Then
             busAuxParams.CompressorMap = Nothing
-        Else 
+        Else
             busAuxParams.CompressorMap = new SubPath()
             busAuxParams.PathCompressorMap = tbCompressorMap.Text
         End If

@@ -30,9 +30,19 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		protected bool _isPresent;
 		public bool IsPresent => _isPresent;
 
+        public bool BatteryOnlyMode { get; }
 
+        public string VehicleMonitoringData { get; }
 
-		protected readonly IComponentViewModelFactory _componentViewModelFactory;
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+
+        public Kilogram H2StorageUsableCapacity { get; }
+
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; }
+
+        public string SimulationToolLicenseNumber { get; }
+
+        protected readonly IComponentViewModelFactory _componentViewModelFactory;
 
 		protected ICommonComponentViewModel _commonComponentViewModel;
 
@@ -252,6 +262,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => throw new NotImplementedException();
 		}
 
+		public IVehicleInMotionChargingDeclaration InMotionCharging { get; }
+
 		public virtual bool ZeroEmissionVehicle
 		{
 			get => throw new NotImplementedException();
@@ -354,7 +366,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 
 		public string VehicleTypeApprovalNumber => throw new NotImplementedException();
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
