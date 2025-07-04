@@ -261,12 +261,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
 			{
 				var conditioningAux = data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond);
-				var emConditioning = DeclarationData.Conditioning.LookupPowerDemand(
-					data.VehicleData.VehicleClass,
-					VectoSimulationJobType.BatteryElectricVehicle,
-					data.Mission.MissionType);
+				var emConditioning = data.JobType.IsFCHV() 
+					? DeclarationData.Conditioning.LookupPowerDemand(
+						data.VehicleData.VehicleClass,
+						VectoSimulationJobType.BatteryElectricVehicle,
+						data.Mission.MissionType)
+					: null;
 
-				elAux.AddAuxiliary(new Conditioning(conditioningAux, epto, data.JobType.IsFCHV() ? emConditioning : null));
+				elAux.AddAuxiliary(new Conditioning(conditioningAux, epto, emConditioning));
 			}
 
 			var hvElectricAuxiliaries = ConfigureHVElectricAuxilariesData(data);
