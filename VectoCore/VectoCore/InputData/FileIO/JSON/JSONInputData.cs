@@ -612,9 +612,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private Meter _vehicleLength;
 		private VehicleCode _bodyworkCode;
 		private string _coolingFanTech;
-
-		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
-			data, filename, tolerateMissing)
+		private AirdragData _airDragData;
+		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false)
+			: base(data, filename, tolerateMissing)
 		{
 			var baseFullPath = Path.GetFullPath(BasePath);
 			string declPath = Path.Combine(baseFullPath, Body["DeclarationVehicle"].Value<string>());
@@ -711,8 +711,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return new FanBusCoolingCoefficient().GetTechnologyCoefficient(_coolingFanTech); 
 			}
 		}
-
-
 
 		public IList<ICycleData> Cycles
 		{
@@ -821,6 +819,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public AirdragData AirDragData
+		{
+			get
+			{
+				if (_airDragData == null)
+				{
+					_airDragData = ReadAirDragComponent();
+				}
+
+				return _airDragData;
+			}
+		}
+
 		public void ValidateSimulationToolVersion()
 		{
 			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
@@ -897,8 +908,64 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 
+			// todo amogoda: does this apply to all VTP reports? lorries et all?
 			_coolingFanTech = xmlDoc.SelectSingleNode("//*[local-name() = 'Auxiliaries']//*[local-name()='CoolingFanTechnology']")?.InnerText 
 				?? throw new ArgumentException("Auxiliary fan technology is missing. Please provide a Primary Manufacturer Report file.");
+
+		}
+
+		private AirdragData ReadAirDragComponent()
+		{
+			Segment segment = Vehicle.VehicleCategory.IsBus() ?
+				DeclarationData.PrimaryBusSegments.Lookup(
+				Vehicle.VehicleCategory,
+				Vehicle.AxleConfiguration,
+				Vehicle.Articulated) :
+				DeclarationData.TruckSegments.Lookup(
+				Vehicle.VehicleCategory,
+				Vehicle.AxleConfiguration,
+				Vehicle.GrossVehicleMassRating,
+				Vehicle.CurbMassChassis,
+				Vehicle.VocationalVehicle);
+
+			string model = null;
+			string certificationNumber = null;
+			SquareMeter cdxa = segment.Missions.First().DefaultCDxA;
+			CertificationMethod certificationMethod = CertificationMethod.StandardValues;
+
+			var xmlDoc = XMLHelper.SecureLoadXML(Path.Combine(Path.GetFullPath(BasePath), Body["CompletedVIF"].Value<string>()));
+			var mrfSteps = xmlDoc
+				.SelectNodes($"//*[local-name() = 'VectoOutputMultistep']//*[local-name()='ManufacturingStep']")
+				.Cast<XmlNode>()
+				.ToList();
+
+			for (int i = 0; i < mrfSteps.Count; i++)
+			{
+				string airDragXPath =
+					"//*[local-name()='Data']" +
+					"//*[local-name()='Vehicle']" +
+					"//*[local-name()='Components']" +
+					"//*[local-name()='AirDrag']" +
+					"//*[local-name()='Data']";
+
+				var mrfStep = mrfSteps.SingleOrDefault(s => s.Attributes.GetNamedItem("stepCount").Value.ToInt() == i + 2);
+				var airDragComponent = mrfStep.SelectSingleNode(airDragXPath);
+				if (airDragComponent != null && airDragComponent.SelectSingleNode($"{airDragXPath}//*[local-name()='CdxA_0']") != null)
+				{
+					model = airDragComponent.SelectSingleNode($"{airDragXPath}//*[local-name()='Model']").InnerText;
+					cdxa = airDragComponent.SelectSingleNode($"{airDragXPath}//*[local-name()='CdxA_0']").InnerText.ToDouble().SI<SquareMeter>();
+					certificationNumber = airDragComponent.SelectSingleNode($"{airDragXPath}//*[local-name()='CertificationNumber']").InnerText;
+					certificationMethod = CertificationMethod.Measured;
+				}
+			}
+
+			return new AirdragData()
+			{
+				ModelName = model,
+				CertificationMethod = certificationMethod,
+				CertificationNumber = certificationNumber,
+				DeclaredAirdragArea = cdxa
+			};
 		}
 	}
 

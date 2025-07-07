@@ -56,10 +56,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
-using static TUGraz.VectoCore.Models.Simulation.Data.VectoRunData;
-using static TUGraz.VectoCore.Models.Declaration.PT1;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.CustomerInformationFile;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -638,7 +635,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleMass.ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.InputData.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbMass.ToXMLFormat(0)),
 				modelData.Retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, modelData.Retarder.Ratio.ToXMLFormat(3))

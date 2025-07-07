@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
@@ -103,15 +104,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
         {
             var vehicle = JobInputData.Vehicle;
             var tempVehicle = DataAdapter.CreateVehicleData(
-                vehicle, Segment, Segment.Missions.First(),
-                Segment.Missions.First().Loadings.First(), _allowVocational);
+                vehicle, 
+				Segment, 
+				Segment.Missions.First(),
+                Segment.Missions.First().Loadings.First(), 
+				_allowVocational);
+            
+			tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
             tempVehicle.VehicleClass = Segment.VehicleClass;
-            tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
-            var powertrainConfig = new VectoRunData()
+
+			//var airDragData = vehicle.VehicleCategory.IsBus() ? JobInputData.AirDragData : AirdragData;
+
+			var powertrainConfig = new VectoRunData()
             {
                 VehicleData = tempVehicle,
                 AirdragData = AirdragData,
-                EngineData = EngineData,
+				EngineData = EngineData,
                 GearboxData = GearboxData,
                 AxleGearData = AxlegearData,
                 Retarder = RetarderData,
@@ -124,10 +132,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
 			Report.PrimaryVIFHash   = JobInputData.VectoPrimaryVIFHash;
 			Report.CompletedVIFHash = JobInputData.VectoCompletedVIFHash;
-			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
-                                        x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
-                                            .ToList())
-                                    .ToList();
             Report.InitializeReport(powertrainConfig);
         }
 

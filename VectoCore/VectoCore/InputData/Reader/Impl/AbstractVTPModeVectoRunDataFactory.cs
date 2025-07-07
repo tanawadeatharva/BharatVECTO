@@ -48,11 +48,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected virtual void InitializeReport()
 		{
-			var powertrainConfig = new VectoRunData() {
-				VehicleData =
-					Dao.CreateVehicleData(
-						JobInputData.Vehicle, Segment, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First(), _allowVocational),
+			//var airDragData = JobInputData.Vehicle.VehicleCategory.IsBus() ?
+			//	JobInputData.AirDrag :
+			//	AirdragData;
+
+			var powertrainConfig = new VectoRunData()
+			{
+				VehicleData = Dao.CreateVehicleData(
+					JobInputData.Vehicle,
+					Segment,
+					Segment.Missions.First(),
+					Segment.Missions.First().Loadings.First(),
+					_allowVocational),
 				AirdragData = AirdragData,
 				EngineData = EngineData,
 				GearboxData = GearboxData,
@@ -60,15 +67,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				Retarder = RetarderData,
 				Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
 			};
+
 			powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
 			Report.InputDataHash = JobInputData.VectoJobHash;
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
-			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
-										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
-											.ToList())
-									.ToList();
 			Report.InitializeReport(powertrainConfig);
 		}
 

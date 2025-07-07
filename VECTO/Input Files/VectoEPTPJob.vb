@@ -333,6 +333,12 @@ Public Class VectoVTPJob
         End Get
     End Property
 
+    Public ReadOnly Property AirDragData As Models.SimulationComponent.Data.AirdragData Implements ICompletedVIF.AirDragData
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
     Public ReadOnly Property CIFInputData As IReportFile Implements IVTPDeclarationJobInputData.CIFInputData
         Get
             Return New ReportFile(_vehicleCIF.FullPath)

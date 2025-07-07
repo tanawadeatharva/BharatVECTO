@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
@@ -71,7 +70,7 @@ namespace TUGraz.VectoCommon.InputData
 		IVectoHash VectoCustomerFileHash { get; }
 
 		IVectoHash VectoPrimaryVIFHash { get; }
-		
+
 		IVectoHash VectoCompletedVIFHash { get; }
 
 		Meter Mileage { get; }
@@ -94,7 +93,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IManufacturerReport
 	{
 		string Source { get; }
-		
+
 		IResultsInputData Results { get; }
 
 		IDictionary<VectoComponents, IList<string>> ComponentDigests { get; }
@@ -115,6 +114,8 @@ namespace TUGraz.VectoCommon.InputData
 		Meter VehicleLength { get; }
 
 		VehicleCode BodyworkCode { get; }
+
+		AirdragData AirDragData { get; }
 	}
 
 	public interface IReportFile
