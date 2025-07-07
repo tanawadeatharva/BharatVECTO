@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					? DeclarationData.Conditioning.LookupPowerDemand(
 						data.VehicleData.VehicleClass,
 						VectoSimulationJobType.BatteryElectricVehicle,
-						data.Mission.MissionType)
+						data.Mission.MissionType.GetNonEMSMissionType())
 					: null;
 
 				elAux.AddAuxiliary(new Conditioning(conditioningAux, epto, emConditioning));
