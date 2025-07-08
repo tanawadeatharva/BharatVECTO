@@ -113,12 +113,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
             tempVehicle.VehicleClass = Segment.VehicleClass;
 
-			//var airDragData = vehicle.VehicleCategory.IsBus() ? JobInputData.AirDragData : AirdragData;
+			var airDragData = vehicle.VehicleCategory.IsBus() ? JobInputData.CompletedVIFInputData.AirDragData : AirdragData;
 
 			var powertrainConfig = new VectoRunData()
             {
                 VehicleData = tempVehicle,
-                AirdragData = AirdragData,
+                AirdragData = airDragData,
 				EngineData = EngineData,
                 GearboxData = GearboxData,
                 AxleGearData = AxlegearData,

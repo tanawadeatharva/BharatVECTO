@@ -48,9 +48,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		protected virtual void InitializeReport()
 		{
-			//var airDragData = JobInputData.Vehicle.VehicleCategory.IsBus() ?
-			//	JobInputData.AirDrag :
-			//	AirdragData;
+			var airDragData = JobInputData.Vehicle.VehicleCategory.IsBus() ?
+				JobInputData.CompletedVIFInputData.AirDragData :
+				AirdragData;
 
 			var powertrainConfig = new VectoRunData()
 			{
