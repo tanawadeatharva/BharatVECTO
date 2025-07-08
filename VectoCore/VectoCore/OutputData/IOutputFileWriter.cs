@@ -29,23 +29,27 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData;
-using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData
+namespace TUGraz.VectoCommon.OutputData
 {
-	public interface IVTPReport : IDeclarationReport
+	public interface IOutputFileWriter
 	{
-		IVectoHash InputDataHash { set; }
+		void SaveEngine(IEngineEngineeringInputData eng, string filename, bool declMode);
 
-		IManufacturerReport ManufacturerRecord { set; }
+		void SaveGearbox(IGearboxEngineeringInputData gbx, IAxleGearInputData axl, ITorqueConverterEngineeringInputData torqueConverter, IGearshiftEngineeringInputData gshift, string filename, bool declMode);
 
-		IVectoHash ManufacturerRecordHash { set; }
+		void SaveVehicle(IVehicleEngineeringInputData vehicle, IAirdragEngineeringInputData airdrag,
+			IRetarderInputData retarder,
+			IPTOTransmissionInputData pto, IAngledriveInputData angledrive, string filename, bool declMode);
 
-		IVectoHash CustomerFileHash { set; }
+		void SaveJob(IEngineeringInputDataProvider input, string filename, bool declMode);
 
-		IVectoHash PrimaryVIFHash { set; }
-		
-		IVectoHash CompletedVIFHash { set; }
+		void SaveJob(IVTPEngineeringInputDataProvider input, string filename, bool declMode);
+
+		void SaveJob(IVTPDeclarationInputDataProvider input, string filename, bool declMode);
+
+		void ExportJob(IEngineeringInputDataProvider input, string filename, bool separateFiles);
 	}
 }

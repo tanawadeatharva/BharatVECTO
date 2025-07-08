@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-namespace TUGraz.VectoCommon.InputData
+using TUGraz.VectoCommon.InputData;
+
+namespace TUGraz.VectoCore.InputData
 {
 	public interface IVTPEngineeringInputDataProvider : IInputDataProvider
 	{

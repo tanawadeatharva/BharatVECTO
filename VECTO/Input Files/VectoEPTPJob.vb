@@ -16,6 +16,7 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
+Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoHashing
 
 <CustomValidation(GetType(VectoVTPJob), "ValidateJob")>

@@ -34,8 +34,10 @@ using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
-namespace TUGraz.VectoCommon.InputData
+namespace TUGraz.VectoCore.InputData
 {
 	public interface IVTPDeclarationInputDataProvider : IInputDataProvider
 	{

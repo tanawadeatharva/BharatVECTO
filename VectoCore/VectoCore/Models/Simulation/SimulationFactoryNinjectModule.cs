@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.Models.Simulation

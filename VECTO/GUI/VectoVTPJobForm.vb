@@ -27,6 +27,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)

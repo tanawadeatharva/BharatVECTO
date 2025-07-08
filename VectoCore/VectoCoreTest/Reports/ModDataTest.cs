@@ -50,6 +50,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
 using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -417,7 +418,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
-			// mod files will be stored in e.g. 
+			// mod files will be stored in e.g.
 			// VectoCoreTest/bin/Debug/TestData/Integration/EngineeringMode/Class2_RigidTruck_4x2/Class2_RigidTruck_ENG.vecto_00.vmod
 			//fileWriter.WriteModData(Path.GetFileName(jobName), "0", "0", modData[0].Item1);
 			//fileWriter.WriteModData(Path.GetFileName(jobName), "1", "1", modData[1].Item1);

@@ -1,7 +1,6 @@
 ﻿using System.IO.Compression;
 using System.IO;
-
-using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Configuration;
