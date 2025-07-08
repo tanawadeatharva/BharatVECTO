@@ -65,7 +65,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLAngledriveInputData>().To<XMLDeclarationAngledriveDataProviderV10>().Named(
 				XMLDeclarationAngledriveDataProviderV10.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLAxleGearInputData>().To<XMLDeclarationAxlegearDataProviderV10>().Named(
+            Bind<IXMLAngledriveInputData>().To<XMLDeclarationAngledriveDataProviderV10>().Named(
+                XMLDeclarationAngledriveDataProviderV10.AXLE_NUMBER_VERSION);
+
+            Bind<IXMLAxleGearInputData>().To<XMLDeclarationAxlegearDataProviderV10>().Named(
 				XMLDeclarationAxlegearDataProviderV10.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV10>().Named(
@@ -73,6 +76,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLRetarderInputData>().To<XMLDeclarationRetarderDataProviderV10>().Named(
 				XMLDeclarationRetarderDataProviderV10.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLRetarderInputData>().To<XMLDeclarationRetarderDataProviderV10>().Named(
+                XMLDeclarationRetarderDataProviderV10.AXLE_NUMBER_VERSION);
 
 			Bind<IXMLGearboxDeclarationInputData>().To<XMLDeclarationGearboxDataProviderV10>()
 				.Named(XMLDeclarationGearboxDataProviderV10.QUALIFIED_XSD_TYPE);

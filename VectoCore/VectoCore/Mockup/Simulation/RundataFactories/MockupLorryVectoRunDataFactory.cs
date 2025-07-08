@@ -83,6 +83,9 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 case VectoSimulationJobType.IEPC_E:
                 case VectoSimulationJobType.FCHV:
                 case VectoSimulationJobType.FCHV_IEPC:
+                case VectoSimulationJobType.Multiple_FCHV:
+                case VectoSimulationJobType.Multiple_PEV:
+                case VectoSimulationJobType.Multiple_SHEV:
                     return VectoRunDataBatteryElectricVehicle();
 				case VectoSimulationJobType.EngineOnlySimulation:
 				default:

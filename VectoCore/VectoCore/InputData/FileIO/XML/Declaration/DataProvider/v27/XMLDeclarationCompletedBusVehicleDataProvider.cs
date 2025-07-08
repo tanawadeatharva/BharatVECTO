@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             base(jobData, xmlNode, sourceFile)
         { }
 
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_SHEV;
 
         public override bool HybridElectricHDV => true;
     }
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             base(jobData, xmlNode, sourceFile)
         { }
 
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_PEV;
     }
 
     public class XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             base(jobData, xmlNode, sourceFile)
         { }
 
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_FCHV;
 
         public override bool HybridElectricHDV => true;
     }

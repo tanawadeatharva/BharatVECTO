@@ -14,6 +14,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 {
@@ -31,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public override bool VocationalVehicle => false;
 
-        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+        public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
         public override XmlElement PTONode => null;
 
@@ -226,6 +227,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public override XmlElement PTONode => null;
 
-        public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+        public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
     }
 }

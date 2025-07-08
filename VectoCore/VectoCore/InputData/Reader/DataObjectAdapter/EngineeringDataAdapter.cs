@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
 			ElectricMachineEntry<IElectricMotorEngineeringInputData> em,
-			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
 			GearList gearlist = null
 			)
 		{
@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						em.RatioPerGear, 
 						em.MechanicalTransmissionEfficiency,
 						em.MechanicalTransmissionLossMap, 
-						torqueLimits?.First(t => t.Key == em.Position).Value, 
+						torqueLimits?.First(t => t.Key.Position == em.Position).Value, 
 						averageVoltage, 
 						gearlist));
 		}
@@ -801,7 +801,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var busAux = auxInputData.BusAuxiliariesData;
-			return jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.MultiplePowertrains)
+			return jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.Multiple_PEV, VectoSimulationJobType.Multiple_FCHV)
 				? GetBatteryElectricBusAuxiliariesData(vehicleData, busAux)
 				: GetBusAuxiliariesData(vehicleData, busAux);
 		}
@@ -1368,7 +1368,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(
 			IElectricMachinesEngineeringInputData electricMachines,
-			IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
+			IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
 			GearList gearlist = null)
 		{
 			if (electricMachines == null) {
@@ -1386,7 +1386,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return electricMachines.Entries
 				.Select(x => Tuple.Create(x.Position,
 					CreateElectricMachine(x.Position, x.ElectricMachine, x.Count, x.RatioADC, x.RatioPerGear, x.MechanicalTransmissionEfficiency,
-						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key == x.Position).Value, averageVoltage, gearlist))).ToList();
+						x.MechanicalTransmissionLossMap, torqueLimits?.First(t =>t.Key.Position == x.Position).Value, averageVoltage, gearlist))).ToList();
 		}
 
 		private ElectricMotorData CreateElectricMachine(PowertrainPosition powertrainPosition,

@@ -10,22 +10,22 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType axleNumber="1">None</RetarderType>
-		<RetarderType axleNumber="2">None</RetarderType>
+		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
+		<RetarderType axleNumber="2">Transmission Input Retarder</RetarderType>
 		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
-		<RetarderRatio axleNumber="2">1.000</RetarderRatio>
-		<AngledriveType axleNumber="1">None</AngledriveType>
+		<RetarderRatio axleNumber="2">2.000</RetarderRatio>
+		<AngledriveType axleNumber="1">Separate Angledrive</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>F2</ArchitectureID>
 		<ArchitectureIDPwt2>F-IEPC</ArchitectureIDPwt2>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<ElectricMotorTorqueLimits>
 			<ElectricMachine axleNumber="1">
@@ -123,6 +123,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 				<Battery>
 					<StringID>1</StringID>
@@ -163,6 +165,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<Powertrain axleNumber="1" xsi:type="xEV_EM2_Powertrain_Type">
@@ -11780,7 +11784,7 @@
 					</SteeringPump>
 					<PneumaticSystem>
 						<CompressorDrive>electrically</CompressorDrive>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 					</PneumaticSystem>
 					<HVAC>

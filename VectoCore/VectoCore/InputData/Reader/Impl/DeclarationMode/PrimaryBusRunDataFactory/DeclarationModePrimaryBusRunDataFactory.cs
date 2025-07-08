@@ -104,10 +104,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var segment = DeclarationData.PrimaryBusSegments.Lookup(
 					Vehicle.VehicleCategory, Vehicle.AxleConfiguration, Vehicle.Articulated);
+
 				if (!segment.Found)
 				{
 					throw new VectoException(
-						"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
+						"no segment found for vehicle configuration: vehicle category: {0}, axle configuration: {1}, articulated: {2}, primary",
 						Vehicle.VehicleCategory, Vehicle.AxleConfiguration,
 						Vehicle.Articulated);
 				}

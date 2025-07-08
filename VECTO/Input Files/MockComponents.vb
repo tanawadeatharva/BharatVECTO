@@ -34,4 +34,7 @@ Public Class MockComponents
     Public ReadOnly Property ElectricMachines As IElectricMachinesDeclarationInputData Implements IVehicleComponentsDeclaration.ElectricMachines
     Public ReadOnly Property IEPC As IIEPCDeclarationInputData Implements IVehicleComponentsDeclaration.IEPC
     Public ReadOnly Property FuelCellSystem As IFuelCellSystemDeclarationInputData Implements IVehicleComponentsDeclaration.FuelCellSystem
+    Public ReadOnly Property AxlePowertrainInputData As IList(Of IAxlePowertrainDeclarationInputData) Implements IVehicleComponentsDeclaration.AxlePowertrainInputData
+    Public ReadOnly Property Generator As ElectricMachineEntry(Of IElectricMotorDeclarationInputData) Implements IVehicleComponentsDeclaration.Generator
+
 End Class

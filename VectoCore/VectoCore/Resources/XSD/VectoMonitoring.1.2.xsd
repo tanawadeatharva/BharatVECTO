@@ -13,6 +13,7 @@
 
 	<!-- Changelog
 	13-05-2025: Updated to MRF v1.0 and added FCHV vehicle types.
+	11-06-2025: Added VectoMonitoringOutputType types for multiple powertrain lorries. 
 	-->
 	
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0" schemaLocation="VectoOutputManufacturer.1.0.xsd"/>
@@ -228,6 +229,40 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="HEV-Multiple-Sx-LorryDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:HEV-Sx_LorryManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_SHEV_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HEV-Multiple-Sx-PrimaryBusDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:HEV-Sx_PrimaryBusManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_SHEV_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="HEV-IEPC-S-PrimaryBusDataType">
 		<xs:complexContent>
 			<xs:extension base="VectoMonitoringOutputType">
@@ -381,6 +416,40 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="PEV-Multiple-Ex-LorryDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:PEV-Ex-IEPC_LorryManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_PEV_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PEV-Multiple-Ex-PrimaryBusDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:PEV-Ex-IEPC_PrimaryBusManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_PEV_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="PEV-IEPC-PrimaryBusDataType">
 		<xs:complexContent>
 			<xs:extension base="VectoMonitoringOutputType">
@@ -530,6 +599,40 @@
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="AdditionalData" type="FCHV_IEPC_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Multiple-Fx-LorryDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:FCHV-Fx_LorryManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_FCHV_DataType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FCHV-Multiple-Fx-PrimaryBusDataType">
+		<xs:complexContent>
+			<xs:extension base="VectoMonitoringOutputType">
+				<xs:sequence>
+					<xs:element name="ManufacturerRecord">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Data" type="mrf:FCHV-Fx_PrimaryBusManufacturerOutputDataType"/>
+								<xs:element name="Signature" type="v1.0:SignatureType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdditionalData" type="Multiple_FCHV_DataType"></xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

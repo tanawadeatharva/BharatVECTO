@@ -65,7 +65,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => GetString(XMLNames.Vehicle_CrossWindCorrectionMode).ParseEnum<CrossWindCorrectionMode>();
+        public SquareMeter DeltaCdxA_CFD => null;
+
+        public SquareMeter DeltaCdxA_declared => null;
+
+        public SquareMeter DeltaTransferredCdxA => null;
+
+        public string LicenseNumberCFDMethod => null;
+
+        public virtual CrossWindCorrectionMode CrossWindCorrectionMode => GetString(XMLNames.Vehicle_CrossWindCorrectionMode).ParseEnum<CrossWindCorrectionMode>();
 
 		public virtual TableData CrosswindCorrectionMap =>
 			XMLHelper.ReadEntriesOrResource(

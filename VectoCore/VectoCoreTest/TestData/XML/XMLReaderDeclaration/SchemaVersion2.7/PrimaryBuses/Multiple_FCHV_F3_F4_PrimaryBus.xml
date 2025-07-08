@@ -10,22 +10,21 @@
 		<LegislativeCategory>M3</LegislativeCategory>
 		<ChassisConfiguration>Bus</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
-		<Articulated>false</Articulated>
+		<Articulated>true</Articulated>
 		<TechnicalPermissibleMaximumLadenMass>28000</TechnicalPermissibleMaximumLadenMass>
-		<RetarderType axleNumber="1">None</RetarderType>
+		<RetarderType axleNumber="1">Transmission Input Retarder</RetarderType>
 		<RetarderType axleNumber="2">None</RetarderType>
 		<RetarderRatio axleNumber="1">1.000</RetarderRatio>
-		<RetarderRatio axleNumber="2">1.000</RetarderRatio>
 		<AngledriveType axleNumber="1">None</AngledriveType>
 		<AngledriveType axleNumber="2">None</AngledriveType>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<ArchitectureID>F3</ArchitectureID>
 		<ArchitectureIDPwt2>F4</ArchitectureIDPwt2>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>None</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
 		<ElectricMotorTorqueLimits>
 			<ElectricMachine axleNumber="1">
@@ -140,6 +139,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 				<Battery>
 					<StringID>1</StringID>
@@ -180,6 +181,8 @@
 							</di:Reference>
 						</v2.3:Signature>
 					</REESS>
+					<SOCmin>8.0</SOCmin>
+					<SOCmax>92.0</SOCmax>
 				</Battery>
 			</ElectricEnergyStorage>
 			<Powertrain axleNumber="1" xsi:type="xEV_EM3_Powertrain_Type">
@@ -4650,31 +4653,6 @@
 						</v2.3:Signature>
 					</ElectricMachineSystem>
 				</ElectricMachine>
-				<Retarder>
-					<!-- optional -->
-					<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-						<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
-						<Model>Generic Retarder</Model>
-						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
-						<Date>2017-01-11T11:00:00Z</Date>
-						<AppVersion>3.0.1</AppVersion>
-						<CertificationMethod>Standard values</CertificationMethod>
-						<RetarderLossMap>
-							<Entry retarderSpeed="0.00" torqueLoss="10.00"/>
-							<Entry retarderSpeed="2300.00" torqueLoss="20.58"/>
-						</RetarderLossMap>
-					</v2.0:Data>
-					<v2.0:Signature>
-						<di:Reference URI="#RET-Shai9imi">
-							<di:Transforms>
-								<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-								<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-							</di:Transforms>
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-							<di:DigestValue>xcfok6Uo1kvFefSRo+W/oMfEfS5BdTklBugAjby2DUQ=</di:DigestValue>
-						</di:Reference>
-					</v2.0:Signature>
-				</Retarder>	
 			</Powertrain>
 			<AxleWheels>
 				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
@@ -4743,7 +4721,7 @@
 					</SteeringPump>
 					<PneumaticSystem>
 						<CompressorDrive>electrically</CompressorDrive>
-						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<SmartRegenerationSystem>true</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 					</PneumaticSystem>
 					<HVAC>
@@ -4752,5 +4730,68 @@
 				</Data>
 			</Auxiliaries>
 		</Components>
+		<MonitoringData>
+			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
+			<Vehicle>
+				<Make>##VEHICLE_MAKE##</Make>
+			</Vehicle>
+			<FuelCell>
+				<Manufacturer>##FUEL_CELL_MANUFACTURER##</Manufacturer>
+				<ManufacturerAddress>##FUEL_CELL_MANUFACTURERADDRESS##</ManufacturerAddress>
+				<Make>##FUEL_CELL_MAKE##</Make>
+			</FuelCell>
+			<ElectricEnergyStorage>
+				<Manufacturer>##ELECTRIC_ENERGY_STORAGE_MANUFACTURER##</Manufacturer>
+				<ManufacturerAddress>##ELECTRIC_ENERGY_STORAGE_MANUFACTURERADDRESS##</ManufacturerAddress>
+				<Make>##ELECTRIC_ENERGY_STORAGE_MAKE##</Make>
+			</ElectricEnergyStorage>
+			<Powertrain axleNumber="1" xsi:type="xEV_EM3_Powertrain_DataType">
+				<ElectricMachine>
+					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
+					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
+					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
+				</ElectricMachine>
+				<Axlegear>
+					<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
+					<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
+					<Make>##AXLEGEAR_MAKE##</Make>
+				</Axlegear>
+			</Powertrain>
+			<Powertrain axleNumber="2" xsi:type="xEV_EM4_Powertrain_DataType">
+				<ElectricMachine>
+					<Manufacturer>##ELECTRIC_MACHINE_MANUFACTURER##</Manufacturer>
+					<ManufacturerAddress>##ELECTRIC_MACHINE_MANUFACTURERADDRESS##</ManufacturerAddress>
+					<Make>##ELECTRIC_MACHINE_MAKE##</Make>
+				</ElectricMachine>
+			</Powertrain>
+			<AxleWheels>
+				<Axle axleNumber="1">
+					<Tyre>
+						<Manufacturer>##TYRE_1_MANUFACTURER##</Manufacturer>
+						<ManufacturerAddress>##TYRE_1_MANUFACTURERADDRESS##</ManufacturerAddress>
+						<Make>##TYRE_1_MAKE##</Make>
+					</Tyre>
+				</Axle>
+				<Axle axleNumber="2">
+					<Tyre>
+						<Manufacturer>##TYRE_2_MANUFACTURER##</Manufacturer>
+						<ManufacturerAddress>##TYRE_2_MANUFACTURERADDRESS##</ManufacturerAddress>
+						<Make>##TYRE_2_MAKE##</Make>
+					</Tyre>
+				</Axle>
+			</AxleWheels>
+			<AdvancedReducingTechnologies>
+				<!--
+<Entry category="advanced aerodynamic measures">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced rolling resistance measures">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced drivetrain technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced engine technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced auxiliary technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="additional ADAS technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced powertrain integration and hybridisation">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="other">##TECHNOLOGY_BRAND_NAME##</Entry>
+-->
+			</AdvancedReducingTechnologies>
+		</MonitoringData>
 	</Vehicle>
 </tns:VectoInputDeclaration>

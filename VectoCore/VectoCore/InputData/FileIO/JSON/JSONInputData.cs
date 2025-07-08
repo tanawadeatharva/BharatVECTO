@@ -136,8 +136,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case "IEPC_S":
 				case "IEPC-S": return VectoSimulationJobType.IEPC_S;
 				case "IHPC": return VectoSimulationJobType.IHPC;
-				case "MultiplePowertrains": return VectoSimulationJobType.MultiplePowertrains;
-				default: throw new VectoException("Invalid parameter value {0}", json.GetEx<String>(field));
+				case "Multiple_FCHV": return VectoSimulationJobType.Multiple_FCHV;
+				case "Mulitple_SHEV": return VectoSimulationJobType.Multiple_SHEV;
+				case "Multiple_PEV": return VectoSimulationJobType.Multiple_PEV;
+                default: throw new VectoException("Invalid parameter value {0}", json.GetEx<String>(field));
 			}
 		}
 	}
@@ -1290,7 +1292,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			VehicleData = ReadVehicle();
 		}
 
-		public override VectoSimulationJobType JobType => VectoSimulationJobType.MultiplePowertrains;
+		public override VectoSimulationJobType JobType => base.JobType;
 	}
 
 

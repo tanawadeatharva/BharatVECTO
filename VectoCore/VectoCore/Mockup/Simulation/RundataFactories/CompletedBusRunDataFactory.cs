@@ -109,11 +109,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
                 EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
                 //ElectricMachinesData = PrimaryBusMockupRunDataFactory.CreateMockupElectricMachineData()
-                AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle),
+                AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle.Components.AngledriveInputData),
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
                 Mission = mission,
-                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
+                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
                 InputData = DataProvider.MultistageJobInputData,
                 SimulationType = SimulationType.DistanceCycle,
                 ExecutionMode = ExecutionMode.Declaration,
@@ -235,8 +235,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 Report = Report,
                 ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
 				InputData = DataProvider.MultistageJobInputData,
-                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
+                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData)
             };
         }
 

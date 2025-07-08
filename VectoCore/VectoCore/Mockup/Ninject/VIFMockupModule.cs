@@ -45,20 +45,18 @@ namespace TUGraz.VectoMockup.Ninject
 
 			#region Implementation of IVIFReportFactory
 
-			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId,
+			public IXMLVehicleInformationFile GetVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType, ArchitectureID archId, 
 				bool exempted, bool iepc, bool ihpc)
 			{
 				return new MockupPrimaryVehicleInformationFile(
-					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc,
-						ihpc));
+					_vifReportFactoryImplementation.GetVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
 			}
 			
 			public IXMLMultistepIntermediateReport GetInterimVIFReport(VehicleCategory vehicleType, VectoSimulationJobType jobType,
 				ArchitectureID archId, bool exempted, bool iepc, bool ihpc)
 			{
 				return new MockupInterimVehicleInformationFile(
-					_interimFactory.GetInterimVIFReport(vehicleType, jobType, archId, exempted,
-						iepc, ihpc));
+					_interimFactory.GetInterimVIFReport(vehicleType, jobType, archId, exempted, iepc, ihpc));
 			}
 
 			IXmlMultistepTypeWriter IVIFReportInterimFactory.GetConventionalVehicleType()
@@ -181,7 +179,22 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevS4VehicleType();
 			}
 
-			public IXmlTypeWriter GetHevF2VehicleType()
+            public IXmlTypeWriter GetMultiplePEVVehicleType()
+            {
+                return _vifReportFactoryImplementation.GetMultiplePEVVehicleType();
+            }
+
+            public IXmlTypeWriter GetMultipleSHEVVehicleType()
+            {
+                return _vifReportFactoryImplementation.GetMultipleSHEVVehicleType();
+            }
+
+            public IXmlTypeWriter GetMultipleFCHVVehicleType()
+			{
+				return _vifReportFactoryImplementation.GetMultipleFCHVVehicleType();
+            }
+
+            public IXmlTypeWriter GetHevF2VehicleType()
 			{
 				return _vifReportFactoryImplementation.GetHevF2VehicleType();
 			}
