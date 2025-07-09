@@ -517,6 +517,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
             Bind<IXmlTypeWriter>().To<MultipleSHEVVehicleType>().When(AccessedViaVIFFactory)
                 .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleSHEVVehicleType());
 
+			Bind<IXmlTypeWriter>().To<MultipleFCHVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleFCHVVehicleType());
+
+            Bind<IXmlTypeWriter>().To<MultiplePEVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultiplePEVVehicleType());
+
+            Bind<IXmlTypeWriter>().To<MultipleSHEVVehicleType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleSHEVVehicleType());
+
             Bind<IXmlTypeWriter>().To<HevF2VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF2VehicleType());
 

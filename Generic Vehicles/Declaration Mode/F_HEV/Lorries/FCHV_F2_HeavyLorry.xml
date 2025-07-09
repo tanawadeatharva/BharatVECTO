@@ -217,13 +217,13 @@ xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3">
 							<CertificationMethod>Measured</CertificationMethod>
 							<FCSRatedPower>100</FCSRatedPower>
 							<FuelCellPowerOutputConsumptionMap>
-								<Entry powerOutput="10000.00" fuelConsumption="662.00" />
-								<Entry powerOutput="20000.00" fuelConsumption="1001.00" />
-								<Entry powerOutput="35000.00" fuelConsumption="1812.50" />
-								<Entry powerOutput="50000.00" fuelConsumption="2887.50" />
-								<Entry powerOutput="65000.00" fuelConsumption="4069.70" />
-								<Entry powerOutput="85000.00" fuelConsumption="5672.00" />
-								<Entry powerOutput="100000.00" fuelConsumption="7150.00" />
+								<Entry powerOutput="10.00" fuelConsumption="662.00" />
+								<Entry powerOutput="20.00" fuelConsumption="1001.00" />
+								<Entry powerOutput="35.00" fuelConsumption="1812.50" />
+								<Entry powerOutput="50.00" fuelConsumption="2887.50" />
+								<Entry powerOutput="65.00" fuelConsumption="4069.70" />
+								<Entry powerOutput="85.00" fuelConsumption="5672.00" />
+								<Entry powerOutput="100.00" fuelConsumption="7150.00" />
 							</FuelCellPowerOutputConsumptionMap>
 						</Data>
 						<v2.6:Signature>

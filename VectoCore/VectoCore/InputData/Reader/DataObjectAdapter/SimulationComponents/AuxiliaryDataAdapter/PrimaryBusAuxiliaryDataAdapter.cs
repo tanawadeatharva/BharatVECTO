@@ -643,7 +643,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				{
 					DemandType = AuxiliaryDemandType.Constant,
 					//Technology = auxData.Technology,
-					MissionType = mission,
+					MissionType = mission.GetNonEMSMissionType(),
 				};
 
 				switch (auxType)

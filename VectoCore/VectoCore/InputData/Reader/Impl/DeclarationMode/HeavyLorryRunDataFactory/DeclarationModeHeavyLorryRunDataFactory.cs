@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						Vehicle.EngineIdleSpeed,
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
@@ -443,7 +443,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						null,
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count

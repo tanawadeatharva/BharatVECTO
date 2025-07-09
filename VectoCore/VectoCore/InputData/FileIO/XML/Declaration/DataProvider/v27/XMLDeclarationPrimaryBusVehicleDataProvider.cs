@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -65,6 +66,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
 		protected override DataSourceType SourceType { get; }
 
+		/// <summary>
+		/// For any vehicle primary bus the tank system is compressed by default.
+		/// During completed bus simulation this will be set to the actual tank system used by the vehicle.
+		/// </summary>
+		public override TankSystem? TankSystem => VectoCommon.InputData.TankSystem.Compressed;
+
 		#endregion
 	}
 
@@ -77,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             : base(jobData, xmlNode, sourceFile) { }
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
-    }
+	}
 
     public class XMLDeclaration_PHEV_PrimaryBus_DataProviderV27 : AbstractXMLDeclarationPrimaryBusVehicleDataProviderV27
     {
@@ -193,7 +200,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
 
         public override DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(GetString("DynamicChargingTechnology"));
-    }
+	}
 
 	public class XMLDeclaration_FCHV_IEPC_PrimaryBus_DataProviderV27 : XMLDeclaration_FCHV_PrimaryBus_DataProviderV27
     {
