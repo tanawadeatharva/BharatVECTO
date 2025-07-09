@@ -182,7 +182,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			-10,
 			1000,
 			1,
-			2, TestName = "UpShift")]
+			2, TestName = "EarlyUpShift")]
 		public void EarlyUpshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear)
 		{
@@ -514,10 +514,11 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 						.Returns(100E3.SI<Watt>());
 					response
 						.Setup(mr => mr.RESSPowerDemand).Returns(powerDemand);
-						
-						
-					
-					
+					var reessResponse = new Mock<IRESSResponse>();
+					reessResponse.SetupGet(r => r.MaxDischargePower).Returns(0.SI<Watt>());
+					reessResponse.SetupGet(r => r.PowerDemand).Returns(0.SI<Watt>());
+					response.Setup(r => r.RESSResponse).Returns(reessResponse.Object);
+
 					return response.Object;
 				});
 

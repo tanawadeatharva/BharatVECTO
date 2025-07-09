@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetIepcVehicleParameterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.GetPevIEPCVehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetPevIEPCComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,

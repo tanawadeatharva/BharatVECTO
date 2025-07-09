@@ -613,7 +613,7 @@ public class ATShiftStrategyOptimizedTests
 		cycleInfo.Setup(c => c.CycleData).Returns(
 			GetCycleData());
 		cycleInfo.Setup(c => c.RoadGradient).Returns(0.SI<Radian>());
-
+		cycleInfo.SetupGet(c => c.TargetSpeed).Returns(50.KMPHtoMeterPerSecond());
 
 		cycleInfo.Setup(c => c.CycleLookAhead(It.IsAny<Meter>())).Returns(new DrivingCycleData.DrivingCycleEntry() {
 			Altitude = 0.SI<Meter>()
@@ -668,6 +668,9 @@ public class ATShiftStrategyOptimizedTests
 		return new CycleData() {
 			LeftSample = new DrivingCycleData.DrivingCycleEntry() {
 				PTOActive = PTOActivity.Inactive,
+				VehicleTargetSpeed = 10.KMPHtoMeterPerSecond()
+			},
+			RightSample = new DrivingCycleData.DrivingCycleEntry() {
 				VehicleTargetSpeed = 10.KMPHtoMeterPerSecond()
 			}
 		};

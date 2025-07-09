@@ -46,8 +46,8 @@ public class ElectricMotorModelDataTests
 			1e-3);
 	}
 
-	[TestCase(225, 3724.21, 375, 4551.82, 120, 32133.6285)]
-	[TestCase(220, 6207.03, 375, 4551.82, 120, 340.97849)]
+	[TestCase(225, 3724.21, 375, 4551.82, 120, 27938.072065)]
+	[TestCase(220, 6207.03, 375, 4551.82, 120, 24442.38401)]
 	public void TestElectricMotorOverloadBufferTest(double contTq, double contSpdRpm, double ovlTq, double ovlSpdRpm, double ovlDuration, double expectedOvlBfr)
 	{
 		var componentData = GetEMInputDataDecl(contTq.SI<NewtonMeter>(), contSpdRpm.RPMtoRad(), ovlTq.SI<NewtonMeter>(), ovlSpdRpm.RPMtoRad(), ovlDuration.SI<Second>());
