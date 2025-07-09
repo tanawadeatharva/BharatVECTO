@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             retVal.Add(new VectoRunData.AuxData()
             {
                 DemandType = AuxiliaryDemandType.Direct,
-                Technology = new List<string>() { "default" },
+                Technology = new List<string>() { JobInputData.Vehicle.Components.BusAuxiliaries.FanTechnology },
                 ID = Constants.Auxiliaries.IDs.Fan,
                 PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry)
             });
