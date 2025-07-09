@@ -6397,6 +6397,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
+        /// </summary>
+        public static string Vehicle_TechnicalPermissibleMaximumLadenMass {
+            get {
+                return ResourceManager.GetString("Vehicle_TechnicalPermissibleMaximumLadenMass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TorqueLimits.
         /// </summary>
         public static string Vehicle_TorqueLimits {

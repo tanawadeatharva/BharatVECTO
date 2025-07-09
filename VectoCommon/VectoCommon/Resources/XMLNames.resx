@@ -2292,4 +2292,7 @@
   <data name="Report_ResultEntry_HydrogenRange" xml:space="preserve">
     <value>HydrogenRange</value>
   </data>
+  <data name="Vehicle_TechnicalPermissibleMaximumLadenMass" xml:space="preserve">
+    <value>TechnicalPermissibleMaximumLadenMass</value>
+  </data>
 </root>
