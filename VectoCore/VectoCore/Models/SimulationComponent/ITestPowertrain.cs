@@ -5,18 +5,19 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 
-    public interface ITestPowertrain<T> where T : class, IHybridControlledGearbox, IGearbox
+    public interface ITestPowertrain 
     {
         void UpdateComponents();
 
-        T Gearbox { get; }
+		ITestPowertrainVehicle Vehicle { get; }
 
-        ICombustionEngine CombustionEngine { get; }
+        ITestPowertrainTransmission Gearbox { get; }
+
+		ITestpowertrainCombustionEngine CombustionEngine { get; }
 
         ISimpleVehicleContainer Container { get; }
 
@@ -28,20 +29,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
         IBrakes Brakes { get; }
 
-        IElectricMotor ElectricMotor { get; }
-		SimpleElectricMotorControl ElectricMotorControl { get; }
-        Dictionary<PowertrainPosition, ElectricMotor> ElectricMotorsUpstreamTransmission { get; }
+		ITestpowertrainElectricMotor ElectricMotor { get; }
+		//ITestPowertrainElectricMotorControl ElectricMotorControl { get; }
+		Dictionary<PowertrainPosition, ITestpowertrainElectricMotor> ElectricMotors { get; } 
+		Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; }
         IDCDCConverter DCDCConverter { get; }
         ITorqueConverter TorqueConverter { get; }
-        IElectricChargerPort Charger { get; }
-		IElectricEnergyStorage BatterySystem { get; }
+		ITestpowertrainGensetChargerAdapter Charger { get; }
+		IRESSInfo BatterySystem { get; }
+
     }
 
     public interface ITestGenset
     {
-        ICombustionEngine CombustionEngine { get; }
+		ITestpowertrainCombustionEngine CombustionEngine { get; }
 
-        IElectricMotor ElectricMotor { get; }
+		ITestpowertrainElectricMotor ElectricMotor { get; }
 
         IGensetMotorController ElectricMotorCtl { get; }
 

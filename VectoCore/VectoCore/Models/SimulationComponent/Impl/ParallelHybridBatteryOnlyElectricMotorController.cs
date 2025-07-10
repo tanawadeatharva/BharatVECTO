@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -18,26 +19,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected IVehicleContainer DataBus;
 		public VectoRunData ModelData;
-		private ElectricSystem ElectricSystem;
-		protected ElectricMotorData ElectricMotorData;
+		//private IElectricSystem ElectricSystem;
+		//protected ElectricMotorData ElectricMotorData;
 
 		protected Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> ElectricMotorsOff;
 
-		protected ITestPowertrain<DisengagedGearbox> TestPowertrain;
+		protected ITestPowertrain TestPowertrain;
 
-		public ParallelHybridBatteryOnlyElectricMotorController(IVehicleContainer container, ElectricSystem es)
+		public ParallelHybridBatteryOnlyElectricMotorController(IVehicleContainer container, IElectricSystem es)
 		{
 			DataBus = container;
 			ModelData = container.RunData;
-			ElectricMotorData = container.RunData.ElectricMachinesData.FirstOrDefault()?.Item2;
-			ElectricSystem = es;
+			//ElectricMotorData = container.RunData.ElectricMachinesData.FirstOrDefault()?.Item2;
+			//ElectricSystem = es;
 
 			ElectricMotorsOff = ModelData.ElectricMachinesData
 				.Select(x => new KeyValuePair<PowertrainPosition, NewtonMeter>(x.Item1, null))
 				.ToDictionary(x => x.Key, x => new Tuple<PerSecond, NewtonMeter>(null, x.Value));
 
 			var testContainer = container.SimplePowertrainBuilder.BuildSimpleHybridBatteryOnlyPowertrain(container.RunData);
-			TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain<DisengagedGearbox>(testContainer, DataBus);
+			TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(testContainer, false);
 		}
 
 		#region Implementation of IElectricMotorControl
@@ -103,9 +104,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gear = DataBus.GearboxInfo.Gear;
 			TestPowertrain.UpdateComponents();
 
-			TestPowertrain.ElectricMotorControl.EmOff = false;
+			var emPos = ElectricMotorsOff.Keys.First();
+			var emCtl = TestPowertrain.ElectricMotors[emPos].Control as ITestPowertrainElectricMotorControl;
 
-            var emPos = ElectricMotorsOff.Keys.First();
+            emCtl.EmOff = false;
 
 			var emTorqueICEOff = SearchAlgorithm.Search(
 				emOffResponse.ElectricMotor.ElectricMotorPowerMech / emOffResponse.ElectricMotor.AngularVelocity,
@@ -124,7 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//	}
 					//};
 					//TestPowertrain.HybridController.ApplyStrategySettings(cfg);
-					TestPowertrain.ElectricMotorControl.EMTorque = emTq;
+					emCtl.EMTorque = emTq;
 					var retVal = TestPowertrain.ElectricMotor.Request(absTime, dt, outTorque,
 							outAngularVelocity, true);
 					//retVal.HybridController.StrategySettings = cfg;
@@ -145,10 +147,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			
 			var gear = DataBus.GearboxInfo.Gear;
-			TestPowertrain.UpdateComponents();
+			var emPos = ElectricMotorsOff.Keys.First();
+			var emCtl = TestPowertrain.ElectricMotors[emPos].Control as ITestPowertrainElectricMotorControl;
 
-			TestPowertrain.ElectricMotorControl.EmOff = true;
-			TestPowertrain.ElectricMotorControl.EMTorque = null;
+            TestPowertrain.UpdateComponents();
+
+			emCtl.EmOff = true;
+			emCtl.EMTorque = null;
 			
 			var emOffResponse =
 				TestPowertrain.ElectricMotor.Request(absTime, dt, outTorque, outAngularVelocity, true);

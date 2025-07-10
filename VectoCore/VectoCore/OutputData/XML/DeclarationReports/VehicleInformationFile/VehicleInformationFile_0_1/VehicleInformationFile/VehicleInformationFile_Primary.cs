@@ -10,20 +10,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	internal abstract class VehicleInformationFile_PrimaryStep : AbstractVehicleInformationFile
 	{
-		private string _outputDataType;
-
 		public VehicleInformationFile_PrimaryStep(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory)
 		{
 			_tns = VIF;
 		}
-
-		#region Overrides of AbstractVIFReport
-
-		public override string OutputDataType => _outputDataType;
-
-		
-
-		#endregion
 	}
 
 	internal class Conventional_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
@@ -85,6 +75,36 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Vehicle = _vifFactory.GetHevIepcSVehicleType().GetElement(inputData);
 		}
 	}
+
+	internal class Multiple_SHEV_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
+	{
+        public Multiple_SHEV_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _vifFactory.GetMultipleSHEVVehicleType().GetElement(inputData);
+        }
+    }
+
+	internal class Multiple_PEV_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
+	{
+        public Multiple_PEV_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _vifFactory.GetMultiplePEVVehicleType().GetElement(inputData);
+        }
+    }
+
+    internal class Multiple_FCHV_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
+	{
+        public Multiple_FCHV_PrimaryBus_VIF(IVIFReportFactory vifFactory, IResultsWriterFactory resultFactory) : base(vifFactory, resultFactory) { }
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _vifFactory.GetMultipleFCHVVehicleType().GetElement(inputData);
+        }
+    }
 
 	internal class HEV_F2_PrimaryBus_VIF : VehicleInformationFile_PrimaryStep
 	{

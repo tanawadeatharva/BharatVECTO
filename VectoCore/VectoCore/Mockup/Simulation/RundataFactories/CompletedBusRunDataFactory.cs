@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
@@ -17,7 +14,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoMockup.Simulation.RundataFactories
+namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
 {
 	internal class MockupMultistageCompletedBusRunDataFactory : DeclarationModeCompletedBusRunDataFactory.CompletedBusBase
     {
@@ -109,11 +106,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
                 EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
                 //ElectricMachinesData = PrimaryBusMockupRunDataFactory.CreateMockupElectricMachineData()
-                AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle),
+                AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle.Components.AngledriveInputData),
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
                 Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
                 Mission = mission,
-                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
+                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
                 InputData = DataProvider.MultistageJobInputData,
                 SimulationType = SimulationType.DistanceCycle,
                 ExecutionMode = ExecutionMode.Declaration,
@@ -235,8 +232,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 Report = Report,
                 ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
 				InputData = DataProvider.MultistageJobInputData,
-                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle)
+                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData)
             };
         }
 
