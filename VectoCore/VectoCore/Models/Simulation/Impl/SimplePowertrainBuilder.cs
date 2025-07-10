@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			switch (jobType) {
 				case VectoSimulationJobType.ConventionalVehicle:
 					return BuildSimplePowertrainConventional(data);
+				case VectoSimulationJobType.ParallelHybridVehicle when data.BatteryOnlyHybridMode:
+					return BuildSimpleHybridBatteryOnlyPowertrain(data);
 				case VectoSimulationJobType.ParallelHybridVehicle:
 				case VectoSimulationJobType.IHPC:
 					return data.Cycle.CycleType == CycleType.MeasuredSpeedGear
@@ -475,29 +477,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         {
             var container = GetVehicleContainer(data);
             var es = ConnectREESS(data, container);
-            var dcdc = new DCDCConverter(container, data.DCDCData.DCDCEfficiency);
+            var dcdc = ComponentFactory.CreateDCDCConverter(container, data.DCDCData.DCDCEfficiency);
             AddHighVoltageAuxiliaries(data, container, es, dcdc);
 
             //IMPORTANT HINT: add engine BEFORE gearbox to container that gearbox can obtain if an ICE is available
-            var engine = new AlwaysOffCombustionEngine(container, data.EngineData);
-            var gearbox = new DisengagedGearbox(container);
+            var engine = ComponentFactory.CreateCombustionEngineBatteryOnlyHybrid(data.Cycle.CycleType, container, data.EngineData);
+            var gearbox = ComponentFactory.CreateGearboxBatteryOnlyHybrid(data.JobType, data.Cycle.CycleType, data.GearboxData.Type, container.RunData.ElectricMachinesData.First().Item1
+			,container, null);
             
             var idleController = GetIdleController(data.PTO, engine, container);
             var clutch = (data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC)
-                ? new Clutch(container, data.EngineData)
+                ? ComponentFactory.CreateClutch(data.JobType, container, data.EngineData)
                 : null;
 
 
-            var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+            var vehicle = ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData);
 
             // TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
             //       should be a reference/proxy to the main driving cyle. but how to access it?
             switch (data.Cycle.CycleType) {
                 case CycleType.DistanceBased:
-                    container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+                    ComponentFactory.CreateDistanceBasedDrivingCycle( container, data.Cycle);
                     break;
                 case CycleType.MeasuredSpeed:
-                    new MeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
+					ComponentFactory.CreateMeasuredSpeedDrivingCycle(container, GetMeasuredSpeedDummyCycle()).AddComponent(vehicle);
                     break;
                 case CycleType.EngineOnly:
                     break;
@@ -507,34 +510,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
             if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
                 var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
-                var whrCharger = new WHRCharger(container, dcDcConverterEfficiency);
+                var whrCharger = ComponentFactory.CreateWHRCharger(container, dcDcConverterEfficiency);
                 es.Connect(whrCharger);
                 engine.WHRCharger = whrCharger;
             }
 
-            vehicle.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius,
+			var ctl = ComponentFactory.CreateElectricMotorControllerBatteryOnlyHybrid(data.Cycle.CycleType, container, es);
+            vehicle.AddComponent(ComponentFactory.CreateWheels(container, data.VehicleData.DynamicTyreRadius,
                     data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
-                .AddComponent(new WheelEnd(container, data.WheelEndData))
+				.AddComponent(ComponentFactory.CreateBrakes(container))
+                .AddComponent(ComponentFactory.CreateWheelEnd(container, data.WheelEndData))
                 .AddComponent(
-                    GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
-                .AddComponent(new AxleGear(container, data.AxleGearData))
+                    GetElectricMachine(PowertrainPosition.HybridP4, data.ElectricMachinesData, container, es, ctl))
+                .AddComponent(ComponentFactory.CreateAxleGear(container, data.AxleGearData))
                 .AddComponent(
-                    GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
-                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                    GetElectricMachine(PowertrainPosition.HybridP3, data.ElectricMachinesData, container, es, ctl))
+                .AddComponent(data.AngledriveData != null ? ComponentFactory.CreateAngledrive(container, data.AngledriveData) : null)
                 .AddComponent(GetRetarder(RetarderType.TransmissionOutputRetarder, data.Retarder, container))
                 .AddComponent(gearbox)
                 .AddComponent(GetRetarder(RetarderType.TransmissionInputRetarder, data.Retarder, container))
                 .AddComponent(GetElectricMachine(PowertrainPosition.HybridP2_5, data.ElectricMachinesData, container,
-                    es,
-                    new SimpleElectricMotorControl()))
+                    es, ctl))
                 .AddComponent(
-                    GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                    GetElectricMachine(PowertrainPosition.HybridP2, data.ElectricMachinesData, container, es, ctl))
                 .AddComponent(
-                    GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                    GetElectricMachine(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl))
                 .AddComponent(clutch)
                 .AddComponent(
-                    GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, new SimpleElectricMotorControl()))
+                    GetElectricMachine(PowertrainPosition.HybridP1, data.ElectricMachinesData, container, es, ctl))
                 .AddComponent(engine, idleController);
             AddAuxiliaries(engine, container, data);
 
@@ -550,10 +553,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 }
 
                 var auxCfg = data.BusAuxiliaries;
-                var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
-                    ? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
-                        auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency)
-                    : (ISimpleBattery)new NoBattery(container);
+				var electricStorage = ComponentFactory.CreateSimpleBattery(
+					auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart, container,
+					auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
+					auxCfg.ElectricalUserInputsConfig.StoredEnergyEfficiency);
                 busAux.ElectricStorage = electricStorage;
                 if (data.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS) {
                     busAux.DCDCConverter = dcdc;

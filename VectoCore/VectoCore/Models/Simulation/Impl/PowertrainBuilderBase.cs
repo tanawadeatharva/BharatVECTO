@@ -398,7 +398,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			//container.ModData?.AddElectricMotor(pos);
-			var motor = new ElectricMotor(container, motorData.Item2, ctl, PowertrainPosition.BatteryElectricE2);
+			var motor = ComponentFactory.CreateElectricMotor(false, container, motorData.Item2, ctl,
+				PowertrainPosition.BatteryElectricE2);
+			//var motor = new ElectricMotor(container, motorData.Item2, ctl, PowertrainPosition.BatteryElectricE2);
 			motor.Connect(es);
 			return motor;
 		}

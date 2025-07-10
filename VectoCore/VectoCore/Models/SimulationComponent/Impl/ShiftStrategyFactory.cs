@@ -18,12 +18,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _internalFactory = internalFactory;
         }
 
-        public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType)
+        public string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
         {
             switch (gearboxType) {
                 case GearboxType.AMT:
                     switch (jobType) {
                         case VectoSimulationJobType.ConventionalVehicle:
+							return AMTShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when batteryOnlyHybridMode:
+							return ParallelHybridBatteryOnlyModeShiftStrategy.Name;
                         case VectoSimulationJobType.ParallelHybridVehicle:
                             return AMTShiftStrategyOptimized.Name;
                         case VectoSimulationJobType.BatteryElectricVehicle:
@@ -41,9 +44,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 case GearboxType.ATPowerSplit:
                 case GearboxType.ATSerial:
                     switch (jobType) {
-                        case VectoSimulationJobType.ParallelHybridVehicle:
                         case VectoSimulationJobType.ConventionalVehicle:
                             return ATShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when !batteryOnlyHybridMode:
+                            return ATShiftStrategyOptimized.Name;
+						case VectoSimulationJobType.ParallelHybridVehicle when batteryOnlyHybridMode:
                         case VectoSimulationJobType.SerialHybridVehicle:
                         case VectoSimulationJobType.BatteryElectricVehicle:
                         case VectoSimulationJobType.FCHV:

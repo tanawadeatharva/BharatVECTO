@@ -536,6 +536,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.BatteryOnlyHybridMode && data.OVCMode == OvcHevMode.ChargeDepleting) {
 				switch (data.ElectricMachinesData.First().Item1) {
 					case PowertrainPosition.HybridP2:
+					case PowertrainPosition.IHPC:
 						return BuildFullPowertrainParallelHybridBatteryOnlyModeP2(data, modData, sumWriter);
 					case PowertrainPosition.HybridP3:
 					case PowertrainPosition.HybridP4:
@@ -668,8 +669,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(GetElectricMachineBatteryOnlyP2(PowertrainPosition.IHPC, data.ElectricMachinesData, container, es, ctl));
 
             //new ATClutchInfo(container);
+			ComponentFactory.CreateATClutchInfo(container);
 
-			var engine = ComponentFactory.CreateCombustionEngine(CycleType.DistanceBased, container, data.EngineData);
+			var engine = ComponentFactory.CreateCombustionEngineBatteryOnlyHybrid(CycleType.DistanceBased, container, data.EngineData);
 			//new AlwaysOffCombustionEngine(container, data.EngineData);
 			AddAuxiliaries(engine, container, data);
 
@@ -701,12 +703,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             var es = ConnectREESS(data, container);
 
             // add engine before gearbox in the container, that gearbox can obtain it
-			var engine = ComponentFactory.CreateCombustionEngine(CycleType.DistanceBased, container, data.EngineData);
+			var engine = ComponentFactory.CreateCombustionEngineBatteryOnlyHybrid(CycleType.DistanceBased, container, data.EngineData);
 				//new AlwaysOffCombustionEngine(container, data.EngineData);
 
             var gearbox = GetGearbox(container); //new DisengagedGearbox(container);
 
-            var clutch = ComponentFactory.CreateClutch(data.JobType, container, data.EngineData);
+			var clutch = ComponentFactory.CreateClutchBatteryOnlyHybrid(data.JobType, container, data.EngineData);
 
             if ((data.SuperCapData != null || data.BatteryData != null) && data.EngineData.WHRType.IsElectrical()) {
                 var dcDcConverterEfficiency = DeclarationData.WHRChargerEfficiency;
@@ -715,13 +717,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 engine.WHRCharger = whrCharger;
             }
 
-			var ctl = ComponentFactory.CreateElectricMotorController(CycleType.DistanceBased, container, es);
+			var ctl = ComponentFactory.CreateElectricMotorControllerBatteryOnlyHybrid(CycleType.DistanceBased, container, es);
 				//new ParallelHybridBatteryOnlyElectricMotorController(container, es);
 
             var cycle = ComponentFactory.CreateDistanceBasedDrivingCycle(container, data.Cycle);
             var idleController = GetIdleController(data.PTO, engine, container);
             cycle.IdleController = idleController as IdleControllerSwitcher;
-            cycle.AddComponent(ComponentFactory.CreateDriver(container, data.DriverData, new DefaultDriverStrategy(container)))
+            cycle.AddComponent(ComponentFactory.CreateDriver(container, data.DriverData, ComponentFactory.CreateDriverStrategy(container)))
                 .AddComponent(ComponentFactory.CreateVehicle(container, data.VehicleData, data.AirdragData))
                 .AddComponent(ComponentFactory.CreateWheels( container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
                 .AddComponent(ComponentFactory.CreateBrakes(container))
@@ -1681,9 +1683,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected IGearbox GetGearbox(IVehicleContainer container, IShiftStrategy strategy = null)
 		{
-			strategy = strategy ?? GetShiftStrategy(container);
+			if (container.RunData.BatteryOnlyHybridMode && container.RunData.OVCMode == OvcHevMode.ChargeDepleting) {
+				var emPos = container.RunData.ElectricMachinesData.First().Item1;
+				var gsStrategy = emPos.GetPositionNumber() == PowertrainPosition.BatteryElectricE2.GetPositionNumber()
+					? strategy ?? GetShiftStrategy(container)
+					: null;
+				return ComponentFactory.CreateGearboxBatteryOnlyHybrid(container.RunData.JobType,
+					container.RunData.Cycle.CycleType, container.RunData.GearboxData.Type, emPos, container,
+					gsStrategy);
+			}
 
-			if (container.RunData.GearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit)) {
+			strategy = strategy ?? GetShiftStrategy(container);
+            if (container.RunData.GearboxData.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit)) {
 				ComponentFactory.CreateATClutchInfo(container);
             }
 

@@ -103,9 +103,20 @@ namespace TUGraz.VectoCore.Models.Simulation
 		IElectricMotorControl CreateElectricMotorController(CycleType cycle, IVehicleContainer container, IElectricSystem es);
 
 		IWheelEnd CreateWheelEnd(IVehicleContainer container, WheelEndData modelData);
-	}
 
-	public interface IIEPCGearboxFactory
+
+		IElectricMotorControl CreateElectricMotorControllerBatteryOnlyHybrid(CycleType cycle, IVehicleContainer container, IElectricSystem es);
+		
+		ICombustionEngine CreateCombustionEngineBatteryOnlyHybrid(CycleType cycleType, IVehicleContainer container, CombustionEngineData modelData,
+			bool pt1Disabled = false);
+
+		IGearbox CreateGearboxBatteryOnlyHybrid(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType, PowertrainPosition emPos, IVehicleContainer container, IShiftStrategy strategy);
+
+		IClutch CreateClutchBatteryOnlyHybrid(VectoSimulationJobType jobType, IVehicleContainer container,
+			CombustionEngineData engineData);
+    }
+
+    public interface IIEPCGearboxFactory
 	{
 		IGearbox CreateIEPCGearbox(bool singleSpeed, IVehicleContainer container, IShiftStrategy strategy);
 	}

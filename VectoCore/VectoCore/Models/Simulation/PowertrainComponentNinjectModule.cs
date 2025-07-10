@@ -73,6 +73,8 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<ICombustionEngine>().To<EngineOnlyCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.EngineOnly));
 			Bind<ICombustionEngine>().To<VTPCombustionEngine>().Named(_realPowertrain.ICEName(CycleType.VTP));
 
+
+
             Bind<IElectricSystem>().To<ElectricSystem>().Named(_realPowertrain.Prefix);
 			Bind<IElectricChargerPort>().To<GensetChargerAdapter>().Named(_realPowertrain.Prefix);
 			Bind<IElectricMotor>().To<ElectricMotor>().Named(_realPowertrain.ElectricMotorName(false));
@@ -136,6 +138,28 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<IGearbox>().To<IEPCGearboxMultipleGears>().Named(_realPowertrain.IEPCName(false));
 			Bind<IGearbox>().To<IEPCGearboxSingleSpeed>().Named(_realPowertrain.IEPCName(true));
 
+			Bind<IElectricMotorControl>().To<ParallelHybridBatteryOnlyElectricMotorController>()
+				.Named(_realPowertrain.ElectricMotorControllerBatteryOnlyHybridName(CycleType.DistanceBased));
+			
+			Bind<ICombustionEngine>().To<AlwaysOffCombustionEngine>().Named(_realPowertrain.ICENameBatteryOnlyHybrid(CycleType.DistanceBased));
+
+			foreach (var gbxType in new[] {GearboxType.AMT, GearboxType.ATSerial, GearboxType.ATPowerSplit}) {
+				foreach (var arch in new[] {PowertrainPosition.HybridP3, PowertrainPosition.HybridP4}) {
+					Bind<IGearbox>().To<DisengagedGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
+						VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, gbxType,
+						arch));
+				}
+            }
+
+			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
+				VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, GearboxType.AMT,
+				PowertrainPosition.HybridP2));
+			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
+				VectoSimulationJobType.IHPC, CycleType.DistanceBased, GearboxType.IHPC, PowertrainPosition.IHPC));
+
+			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.ParallelHybridVehicle));
+			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.IHPC));
+
             #endregion
 
             #region Test Powertrain
@@ -167,6 +191,18 @@ namespace TUGraz.VectoCore.Models.Simulation
             Bind<IGearbox>().To<TestpowertrainIEPCGearboxMultipleGears>().Named(_testPowertrain.IEPCName(false));
 			Bind<IGearbox>().To<TestpowertrainIEPCGearboxSingleSpeed>().Named(_testPowertrain.IEPCName(true));
 
+			Bind<ICombustionEngine>().To<AlwaysOffCombustionEngine>().Named(_testPowertrain.ICENameBatteryOnlyHybrid(CycleType.DistanceBased));
+
+			foreach (var gbxType in new[] { GearboxType.AMT, GearboxType.ATSerial, GearboxType.ATPowerSplit }) {
+				foreach (var arch in new[] { PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5, PowertrainPosition.HybridP3, PowertrainPosition.HybridP4 }) {
+					Bind<IGearbox>().To<DisengagedGearbox>().Named(_testPowertrain.GearboxNameBatteryOnlyHybrid(
+						VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, gbxType,
+						arch));
+				}
+			}
+
+			Bind<IElectricMotorControl>().To<SimpleElectricMotorControl>()
+				.Named(_testPowertrain.ElectricMotorControllerBatteryOnlyHybridName(CycleType.DistanceBased));
             #endregion
 
         }
@@ -495,28 +531,40 @@ namespace TUGraz.VectoCore.Models.Simulation
 				GetMethodSettings(namingHelper.CreatICEName, 1, typeof(IPowertrainComponentFactory).GetMethod(
 					nameof(IPowertrainComponentFactory
 						.CreateCombustionEngine))),
-				// method settings for creating name bindings for gearbox
-				GetMethodSettings(namingHelper.CreateGearboxName, 3, typeof(IPowertrainComponentFactory).GetMethod(
+				GetMethodSettings(namingHelper.CreatICENameBatteryOnlyHybrid, 1, typeof(IPowertrainComponentFactory).GetMethod(
+					nameof(IPowertrainComponentFactory
+						.CreateCombustionEngineBatteryOnlyHybrid))),
+                // method settings for creating name bindings for gearbox
+                GetMethodSettings(namingHelper.CreateGearboxName, 3, typeof(IPowertrainComponentFactory).GetMethod(
 					nameof(IPowertrainComponentFactory
 						.CreateGearbox))),
+				GetMethodSettings(namingHelper.CreateGearboxNameBatteryOnlyHybrid, 4, typeof(IPowertrainComponentFactory).GetMethod(
+					nameof(IPowertrainComponentFactory
+						.CreateGearboxBatteryOnlyHybrid))),
 				// method settings for creating name bindings for gearboxInfo
-				GetMethodSettings(namingHelper.CreateGearboxInfoName, 1, typeof(IPowertrainComponentFactory).GetMethod(
+                GetMethodSettings(namingHelper.CreateGearboxInfoName, 1, typeof(IPowertrainComponentFactory).GetMethod(
 					nameof(IPowertrainComponentFactory
 						.CreateDummyGearboxInfo))),
 				// method settings for creating name bindings for clutch
 				GetMethodSettings(namingHelper.CreateClutchName, 1, typeof(IPowertrainComponentFactory).GetMethod(
 					nameof(IPowertrainComponentFactory
 						.CreateClutch))),
+				GetMethodSettings(namingHelper.CreateClutchBatteryOnlyHybridName, 1, typeof(IPowertrainComponentFactory).GetMethod(
+					nameof(IPowertrainComponentFactory
+						.CreateClutchBatteryOnlyHybrid))),
 				// method settings for creating electric motor/IEPC
-				GetMethodSettings(namingHelper.CreateElectricMotorName, 1,
+                GetMethodSettings(namingHelper.CreateElectricMotorName, 1,
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
 						.CreateElectricMotor))),
 				// method settings for creating electric motor controller
 				GetMethodSettings(namingHelper.CreateElectricMotorControllerName, 1,
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
 						.CreateElectricMotorController))),
-				// method settings for creating hybrid controller
-				GetMethodSettings(namingHelper.CreateHybridControllerName, 1,
+				GetMethodSettings(namingHelper.CreateElectricMotorControllerBatteryOnlyHybridName, 1,
+					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
+						.CreateElectricMotorControllerBatteryOnlyHybrid))),
+                // method settings for creating hybrid controller
+                GetMethodSettings(namingHelper.CreateHybridControllerName, 1,
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
 						.CreateHybridController)),
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
@@ -572,8 +620,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 		public string CreateGearboxName(object[] arguments) => CheckArguments<VectoSimulationJobType, CycleType, GearboxType>(arguments, GearboxName);
 
 		public string GearboxName(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType) => $"{_prefix}_{jobType.ToString()}_{cycle.ToString()}_{gbxType.ToString()}";
-		
-		public string CreateElectricMotorName(object[] arguments) => CheckArguments<bool>(arguments, ElectricMotorName);
+
+		public string CreateGearboxNameBatteryOnlyHybrid(object[] arguments) => CheckArguments<VectoSimulationJobType, CycleType, GearboxType, PowertrainPosition>(arguments, GearboxNameBatteryOnlyHybrid);
+
+		public string GearboxNameBatteryOnlyHybrid(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType, PowertrainPosition emPos) => $"{_prefix}_BatteryOnlyHybrid_{jobType.ToString()}_{cycle.ToString()}_{gbxType.ToString()}_{emPos.ToString()}";
+
+        public string CreateElectricMotorName(object[] arguments) => CheckArguments<bool>(arguments, ElectricMotorName);
 
 		public string ElectricMotorName(bool isIepc) => $"{_prefix}_{(isIepc ? "_IEPC" : "_EM")}";
 
@@ -593,7 +645,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public string ICEName(CycleType cycleType) => $"{_prefix}_{cycleType.ToString()}";
 
-		public string CreateHybridStrategyName(object[] arguments) => CheckArguments<VectoSimulationJobType,CycleType, bool>(arguments, HybridStrategyName);
+		public string CreatICENameBatteryOnlyHybrid(object[] arguments) => CheckArguments<CycleType>(arguments, ICENameBatteryOnlyHybrid);
+
+		public string ICENameBatteryOnlyHybrid(CycleType cycleType) => $"{_prefix}_BatteryOnlyHybrid_{cycleType.ToString()}";
+
+        public string CreateHybridStrategyName(object[] arguments) => CheckArguments<VectoSimulationJobType,CycleType, bool>(arguments, HybridStrategyName);
 
         public string HybridStrategyName(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission) => $"{_prefix}_{jobType}_{cycleType}_{(atTransmission ? "AT" : "AMT")}";
 
@@ -605,11 +661,19 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public string ClutchName(VectoSimulationJobType jobType) => $"{_prefix}_{jobType.ToString()}";
 
-		public string CreateElectricMotorControllerName(object[] arguments) => CheckArguments<CycleType>(arguments, ElectricMotorControllerName);
+		public string CreateClutchBatteryOnlyHybridName(object[] arguments) => CheckArguments<VectoSimulationJobType>(arguments, ClutchBatteryOnlyHybridName);
+
+		public string ClutchBatteryOnlyHybridName(VectoSimulationJobType jobType) => $"{_prefix}_BatteryOnlyHybrid_{jobType.ToString()}";
+
+        public string CreateElectricMotorControllerName(object[] arguments) => CheckArguments<CycleType>(arguments, ElectricMotorControllerName);
 
 		public string ElectricMotorControllerName(CycleType cycle) => $"{_prefix}_{cycle}";
 
-		public string CreateIEPCName(object[] arguments) => CheckArguments<bool>(arguments, IEPCName);
+		public string ElectricMotorControllerBatteryOnlyHybridName(CycleType cycle) => $"{_prefix}_BatteryOnlyHybrid_{cycle}";
+
+		public string CreateElectricMotorControllerBatteryOnlyHybridName(object[] arguments) => CheckArguments<CycleType>(arguments, ElectricMotorControllerBatteryOnlyHybridName);
+
+        public string CreateIEPCName(object[] arguments) => CheckArguments<bool>(arguments, IEPCName);
 
 		public string IEPCName(bool singleSpeed) => $"{_prefix}_IEPC_{singleSpeed}";
 
@@ -639,6 +703,14 @@ namespace TUGraz.VectoCore.Models.Simulation
 			throw new ArgumentException($"exactly three arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name}");
 		}
 
-	}
+		protected string CheckArguments<T1, T2, T3, T4>(object[] arguments, Func<T1, T2, T3, T4, string> func, [CallerMemberName] string callerName = "")
+		{
+			if (arguments.Length == 4 && arguments[0] is T1 p1 && arguments[1] is T2 p2 && arguments[2] is T3 p3 && arguments[3] is T4 p4) {
+				return func(p1, p2, p3, p4);
+			}
+			throw new ArgumentException($"exactly three arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name}");
+		}
+
+    }
 
 }

@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return;
 				case null when !TestPowertrain.Container.HasGearbox:
 				case IGearboxInfo _ when !TestPowertrain.Container.HasGearbox:
+				case DisengagedGearbox _:
 					RunPreprocessingNoGearbox();
 					return;
 				default:

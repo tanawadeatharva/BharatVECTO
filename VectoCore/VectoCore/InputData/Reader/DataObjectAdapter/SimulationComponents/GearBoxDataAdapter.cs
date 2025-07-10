@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							dynamicTyreRadius);
 				}
 
-				var deratedEmShiftPolygon = isBatteryElectric
+				var deratedEmShiftPolygon = isBatteryElectric || runData.BatteryOnlyHybridMode
 					? CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalculator, gearbox, i, axlegearRatio,
 						dynamicTyreRadius)
 					: null;

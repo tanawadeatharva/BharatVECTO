@@ -37,8 +37,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				.Select(x => new KeyValuePair<PowertrainPosition, NewtonMeter>(x.Item1, null))
 				.ToDictionary(x => x.Key, x => new Tuple<PerSecond, NewtonMeter>(null, x.Value));
 
-			var testContainer = container.SimplePowertrainBuilder.BuildSimpleHybridBatteryOnlyPowertrain(container.RunData);
-			TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(testContainer, false);
+			//var testContainer = container.SimplePowertrainBuilder.BuildSimpleHybridBatteryOnlyPowertrain(container.RunData);
+			//TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(testContainer, false);
+			TestPowertrain = container.SimplePowertrainBuilder.CreateTestPowertrain(container, false);
 		}
 
 		#region Implementation of IElectricMotorControl
@@ -76,7 +77,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var emTorque = emTorqueICEOff.LimitTo(maxDriveTorque,
 				maxRecuperationTorque ?? VectoMath.Max(maxDriveTorque, 0.SI<NewtonMeter>()));
-
 
 
 			return emTorque;

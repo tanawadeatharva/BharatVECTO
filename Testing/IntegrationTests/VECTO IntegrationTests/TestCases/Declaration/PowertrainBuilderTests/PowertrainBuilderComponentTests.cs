@@ -1447,7 +1447,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                 LossMap = TransmissionLossMapReader.Create(1.0, 0.9, "Gear 2")
                         } }
                     },
-                    ShiftStrategy = _kernel.Get<IShiftStrategyFactory>().GetShiftStrategyName(gbxType, jobType),
+                    ShiftStrategy = _kernel.Get<IShiftStrategyFactory>().GetShiftStrategyName(gbxType, jobType, false),
                 },
                 GearshiftParameters = new ShiftStrategyParameters() {
                     StartSpeed = 8.KMPHtoMeterPerSecond(),

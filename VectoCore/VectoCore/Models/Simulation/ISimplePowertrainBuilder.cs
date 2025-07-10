@@ -32,10 +32,8 @@ namespace TUGraz.VectoCore.Models.Simulation
         /// </summary>
 		//ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData data);
 
-		ISimpleVehicleContainer BuildSimpleHybridBatteryOnlyPowertrain(VectoRunData data);
-		//ISimpleVehicleContainer BuildSimpleHybridPowertrainGear(VectoRunData data);
-
-        ISimpleVehicleContainer BuildSimpleHybridPowertrainGear(VectoRunData data);
+		//ISimpleVehicleContainer BuildSimpleHybridBatteryOnlyPowertrain(VectoRunData data);
+		
 
 		/// <summary>
         /// Builds a simple serial hybrid powertrain with either E4, E3, or E2.
