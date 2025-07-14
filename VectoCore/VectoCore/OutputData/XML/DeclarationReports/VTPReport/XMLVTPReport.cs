@@ -654,7 +654,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						GetAngledriveDescription(modelData.AngledriveData),
 						GetAirDragDescription(modelData.AirdragData),
 						GetAxleWheelsDescription(modelData.VehicleData),
-						GetAuxiliariesDescription(modelData.Aux)
+						GetAuxiliariesDescription(modelData)
 					));
 			} else {
 				VehiclePart.Add(
@@ -669,7 +669,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						GetAxlegearDescription(modelData.AxleGearData),
 						GetAirDragDescription(modelData.AirdragData),
 						GetAxleWheelsDescription(modelData.VehicleData),
-						GetAuxiliariesDescription(modelData.Aux)
+						GetAuxiliariesDescription(modelData)
 					));
 			}
 
@@ -968,27 +968,118 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axle.TwinTyres));
 		}
 
-		private XElement GetAuxiliariesDescription(IEnumerable<VectoRunData.AuxData> aux)
+		private XElement GetAuxiliariesDescription(VectoRunData modelData)
 		{
-			var auxData = aux.ToDictionary(a => a.ID);
-			var auxList = new[] {
-				AuxiliaryType.Fan, AuxiliaryType.SteeringPump, AuxiliaryType.ElectricSystem, AuxiliaryType.PneumaticSystem,
-				AuxiliaryType.HVAC
-			};
+			var auxList = modelData.VehicleData.VehicleCategory.IsBus() ?
+				new[]
+				{
+					AuxiliaryType.Fan,
+					AuxiliaryType.SteeringPump,
+					AuxiliaryType.PneumaticSystem,
+					AuxiliaryType.ElectricSystem,
+					AuxiliaryType.HVAC
+				} : 
+				new[] 
+				{
+					AuxiliaryType.Fan,
+					AuxiliaryType.SteeringPump,
+					AuxiliaryType.ElectricSystem,
+					AuxiliaryType.PneumaticSystem,
+					AuxiliaryType.HVAC
+				};
+
+			var auxData = modelData.Aux.ToDictionary(a => a.ID);
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
-			foreach (var auxId in auxList) {
+			foreach (var auxId in auxList)
+			{
+				if (modelData.VehicleData.VehicleCategory.IsBus() && auxId == AuxiliaryType.ElectricSystem && modelData.BusAuxiliaries.InputData.ElectricConsumers != null)
+				{
+					retVal.Add(GetElectricSystemGroupElements(modelData.BusAuxiliaries.InputData));
+					continue;
+				}
+
+				if (modelData.VehicleData.VehicleCategory.IsBus() && auxId == AuxiliaryType.HVAC && modelData.BusAuxiliaries.InputData.HVACAux != null)
+				{
+					retVal.Add(GetHVACBusAuxiliaryDescription(modelData.BusAuxiliaries.InputData));
+					continue;
+				}
+
 				if (auxData.TryGetValue(auxId.Key(), out var auxValue)) {
 					foreach (var entry in auxValue.Technology) {
 						retVal.Add(new XElement(tns + GetTagName(auxId), entry));
 					}
 				}
 			}
+
 			return retVal;
 		}
 
 		private string GetTagName(AuxiliaryType auxId)
 		{
 			return auxId + "Technology";
+		}
+
+		private XElement GetHVACBusAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			bool isHVACxEV = aux.HVACAux.WaterElectricHeater.HasValue || aux.HVACAux.AirElectricHeater.HasValue || aux.HVACAux.OtherHeatingTechnology.HasValue;
+			
+			return isHVACxEV ? GetEVHVACBusAuxiliaryDescription(aux) : GetConventionalBusHVACAuxiliaryDescription(aux);
+		}
+
+		public XElement GetElectricSystemGroupElements(IBusAuxiliariesDeclarationData aux)
+		{
+			var elements = new XElement[] {
+				new XElement(tns + XMLNames.Bus_Interiorlights, aux.ElectricConsumers.InteriorLightsLED),
+				new XElement(tns + XMLNames.Bus_Dayrunninglights, aux.ElectricConsumers.DayrunninglightsLED),
+				new XElement(tns + XMLNames.Bus_Positionlights, aux.ElectricConsumers.PositionlightsLED),
+				new XElement(tns + XMLNames.Bus_Brakelights, aux.ElectricConsumers.BrakelightsLED),
+				new XElement(tns + XMLNames.Bus_Headlights, aux.ElectricConsumers.HeadlightsLED),
+			};
+
+			var nonEmptyElements = elements.Where(xel => !xel.Value.IsNullOrEmpty()).ToArray();
+			var electricSystemElement = new XElement(tns + XMLNames.BusAux_ElectricSystem, new XElement(tns + "LEDLights"), nonEmptyElements);
+
+			return new XElement(
+					tns + XMLNames.BusAux_ElectricSystem,
+					new XElement(tns + "LEDLights", nonEmptyElements));
+		}
+
+		private XElement GetConventionalBusHVACAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			XElement GetLabelElement(string xmlName, string value)
+			{
+				return value != "~null~" ? new XElement(tns + xmlName, value) : null;
+			}
+
+			var groupElements = new XElement[] {
+				new XElement(tns + XMLNames.Bus_SystemConfiguration, aux.HVACAux.SystemConfiguration?.ToXmlFormat()),
+				new XElement(tns + XMLNames.Bus_HeatPumpTypeDriver,
+					GetLabelElement(XMLNames.BusHVACHeatPumpCooling, aux.HVACAux.HeatPumpTypeCoolingDriverCompartment.GetLabel()),
+					GetLabelElement(XMLNames.BusHVACHeatPumpHeating, aux.HVACAux.HeatPumpTypeHeatingDriverCompartment.GetLabel())),
+				new XElement(tns + XMLNames.Bus_HeatPumpTypePassenger,
+					GetLabelElement(XMLNames.BusHVACHeatPumpCooling, aux.HVACAux.HeatPumpTypeCoolingPassengerCompartment.GetLabel()),
+					GetLabelElement(XMLNames.BusHVACHeatPumpHeating, aux.HVACAux.HeatPumpTypeHeatingPassengerCompartment.GetLabel())),
+			};
+			
+			var elements = new List<XElement>();
+			elements.AddRange(groupElements);
+			elements.Add(new XElement(tns + XMLNames.Bus_AuxiliaryHeaterPower, aux.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
+			elements.Add(new XElement(tns + XMLNames.Bus_DoubleGlazing, aux.HVACAux.DoubleGlazing));
+			elements.Add(new XElement(tns + XMLNames.Bus_AdjustableAuxiliaryHeater, aux.HVACAux.AdjustableAuxiliaryHeater));
+			elements.Add(new XElement(tns + XMLNames.Bus_SeparateAirDistributionDucts, aux.HVACAux.SeparateAirDistributionDucts));
+
+			return new XElement(tns + "HVAC", elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray());
+		}
+
+		public XElement GetEVHVACBusAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			var elements = new List<XElement>() {
+				new XElement(tns + XMLNames.Bus_WaterElectricHeater, aux.HVACAux.WaterElectricHeater),
+				new XElement(tns + XMLNames.Bus_AirElectricHeater, aux.HVACAux.AirElectricHeater),
+				new XElement(tns + XMLNames.Bus_OtherHeatingTechnology, aux.HVACAux.OtherHeatingTechnology)
+			};
+
+			return new XElement(tns + "HVAC", elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray());
 		}
 
 		private object[] GetCommonDescription(CombustionEngineData data)

@@ -7,14 +7,12 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -98,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle.Components.GearboxInputData.Gears.Count);
 
             AuxVTP = CreateVTPAuxData(vehicle);
-        }
+		}
 
         protected override void InitializeReport()
         {
@@ -114,6 +112,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             tempVehicle.VehicleClass = Segment.VehicleClass;
 
 			var airDragData = vehicle.VehicleCategory.IsBus() ? JobInputData.CompletedVIFInputData.AirDragData : AirdragData;
+			var busAuxiliaries = new AuxiliaryConfig()
+			{
+				InputData = JobInputData.CompletedVIFInputData?.BusAuxiliaries
+			};
 
 			var powertrainConfig = new VectoRunData()
             {
@@ -124,7 +126,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 AxleGearData = AxlegearData,
                 Retarder = RetarderData,
                 Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
-            };
+				BusAuxiliaries = busAuxiliaries,
+			};
             //powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
             Report.InputDataHash = JobInputData.VectoJobHash;
             Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
@@ -132,14 +135,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
 			Report.PrimaryVIFHash   = JobInputData.VectoPrimaryVIFHash;
 			Report.CompletedVIFHash = JobInputData.VectoCompletedVIFHash;
-            Report.InitializeReport(powertrainConfig);
+			Report.InitializeReport(powertrainConfig);
         }
 
         protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
         {
-            // used to fill VECTO RunData for VTP mission.
-
-            var retVal = new List<VectoRunData.AuxData>();
+			// used to fill VECTO RunData for VTP mission.
+			var retVal = new List<VectoRunData.AuxData>();
 
             var electricEfficiency =
                 Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency *
@@ -162,23 +164,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     PowerDemandMech = spPowerDemand
                 });
 
-            retVal.Add(
-                new VectoRunData.AuxData()
-                {
-                    DemandType = AuxiliaryDemandType.Constant,
-                    Technology = new List<string>() { "default" },
-                    ID = Constants.Auxiliaries.IDs.ElectricSystem,
-                    PowerDemandMech = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
-                });
-            retVal.Add(new VectoRunData.AuxData()
-            {
-                DemandType = AuxiliaryDemandType.Constant,
-                Technology = new List<string>() { "default" },
-                ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
-                PowerDemandMech = 350.SI<Watt>()
-            });
+			retVal.Add(
+				new VectoRunData.AuxData()
+				{
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = new List<string>() { "default" },
+					ID = Constants.Auxiliaries.IDs.ElectricSystem,
+					PowerDemandMech = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
+				});
+			retVal.Add(new VectoRunData.AuxData()
+			{
+				DemandType = AuxiliaryDemandType.Constant,
+				Technology = new List<string>() { "default" },
+				ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+				PowerDemandMech = 350.SI<Watt>()
+			});
 
-            var busAux = vehicle.Components.BusAuxiliaries;
+			var busAux = vehicle.Components.BusAuxiliaries;
             var psCompressor = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply);
             retVal.Add(new VectoRunData.AuxData()
             {

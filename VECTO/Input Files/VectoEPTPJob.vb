@@ -357,4 +357,10 @@ Public Class VectoVTPJob
             Throw New NotImplementedException()
         End Get
     End Property
+
+    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements ICompletedVIF.BusAuxiliaries
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
 End Class

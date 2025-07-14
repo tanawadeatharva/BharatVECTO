@@ -5,7 +5,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -26,17 +25,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected RetarderData RetarderData;
 		protected PTOData PTOTransmissionData;
 		protected List<VectoRunData.AuxData> AuxVTP;
+
 		protected Segment Segment;
 		protected bool _allowVocational;
 		private DrivingCycleProxy _VTPCycle;
 		
 		public IVTPReport Report;
 		protected ShiftStrategyParameters GearshiftData;
-
-		
+				
 		protected abstract IDeclarationDataAdapter Dao { get; }
 
-		
 		protected AbstractVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job, IVTPReport report)
 		{
 			JobInputData = job;

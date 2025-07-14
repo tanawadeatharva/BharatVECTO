@@ -118,6 +118,8 @@ namespace TUGraz.VectoCore.InputData
 		VehicleCode BodyworkCode { get; }
 
 		AirdragData AirDragData { get; }
+
+		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
 	}
 
 	public interface IReportFile

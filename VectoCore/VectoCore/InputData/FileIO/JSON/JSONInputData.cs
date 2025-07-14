@@ -54,6 +54,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -613,6 +614,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private VehicleCode _bodyworkCode;
 		private string _coolingFanTech;
 		private AirdragData _airDragData;
+		private IXMLMultistageInputDataProvider _completeVifInputData;
+
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
 		{
@@ -631,8 +634,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_inputReader = kernel.Get<IXMLInputDataReader>();
-
 			_bodyworkCode = VehicleCode.NOT_APPLICABLE;
+
+			_completeVifInputData = (IXMLMultistageInputDataProvider)_inputReader.CreateDeclaration(completedVifPath);
 		}
 
 		public IVTPEngineeringJobInputData JobInputData => this;
@@ -664,6 +668,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IReportFile PrimaryVIFInputData => new ReportFile(Body["PrimaryVIF"]?.Value<string>());
 
 		public IReportFile CIFInputData => new ReportFile(Body["CustomerInformationFile"]?.Value<string>());
+
+		public IBusAuxiliariesDeclarationData BusAuxiliaries => _completeVifInputData.JobInputData.ConsolidateManufacturingStage.Vehicle.Components.BusAuxiliaries;
 
 		public Meter VehicleLength
 		{
