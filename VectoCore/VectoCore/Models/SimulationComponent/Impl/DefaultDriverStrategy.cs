@@ -84,6 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal PCCStates pccState = PCCStates.OutsideSegment;
 		protected internal bool ATEcoRollReleaseLockupClutch;
 
+		private readonly VectoSimulationJobType PowertrainArchitecture;
+
 		public DefaultDriverStrategy(IVehicleContainer container)
 		{
 			PTODriveMinSpeed = container.RunData.DriverData.PTODriveMinSpeed;
@@ -110,6 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 
 			PCCSegments = new PCCSegments();
+
+			PowertrainArchitecture = data.JobType;
 
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				// create a dummy powertrain for pre-processing and estimations
@@ -449,8 +453,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLoss = DataBus.GearboxInfo.GearboxLoss();
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 			var emDragLoss = CalculateElectricMotorDragLoss();
+			var iceDragLoss = GetICEDragLoss(dataBus);
+
+			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
+			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
+			return coastingResistanceForce;
+		}
+
+		private Watt GetICEDragLoss(IDataBus dataBus)
+		{
+			if (PowertrainArchitecture.IsOneOf(VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.IEPC_S)) {
+				return 0.SI<Watt>();
+			}
 			var iceDragLoss = 0.SI<Watt>();
-			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission() && dataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
+			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+				dataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
 				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
 					iceDragLoss = DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
 				}
@@ -460,9 +478,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
-			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
-			return coastingResistanceForce;
+			return iceDragLoss;
 		}
 
 		private Joule CalculateEnergy(Meter altitude, MeterPerSecond velocity, Kilogram mass) =>
@@ -747,7 +763,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLossPower = DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();
 			var axleLossPower = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.SI<Watt>();
 			var emDragLossPower = CalculateElectricMotorDragLoss();
-			var iceDragLossPower = DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
+			var iceDragLossPower = GetICEDragLoss(DataBus); //DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
 
 			var totalComponentLossPowers = gearboxLossPower + axleLossPower + emDragLossPower - iceDragLossPower;
 			var coastingResistanceForce = airDrag.AirdragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
