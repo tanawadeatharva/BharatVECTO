@@ -20,19 +20,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
     internal class DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary : AbstractVTPModeVectoRunDataFactory
     {
-        private IPrimaryBusDeclarationDataAdapter _dao;
 
         protected readonly IInputDataProvider InputDataProvider;
 
         public DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(
-            IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(ivtpProvider.JobInputData, report)
-        {
+            IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report,
+			IPrimaryBusDeclarationDataAdapter declarationDataAdapter) : base(ivtpProvider.JobInputData, report)
+		{
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report) : 
+        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter) : 
             base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report) 
         {
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = inputProvider;
         }
 
@@ -41,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
         public override IInputDataProvider DataProvider => InputDataProvider;
 
-        protected IPrimaryBusDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus.Conventional());
+        protected IPrimaryBusDeclarationDataAdapter DataAdapter { get; } // => _dao ?? (_dao = new DeclarationDataAdapterPrimaryBus.Conventional());
 
         #endregion
 
@@ -210,15 +212,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             };
         }
 
-        public override IEnumerable<VectoRunData> NextRun()
+        protected override IEnumerable<VectoRunData> GetNextRun()
         {
-            if (InitException != null)
-            {
-                throw InitException;
-            }
-
-
-            // simulate the Measured cycle
+			// simulate the Measured cycle
             var vtpCycle = JobInputData.Cycles.FirstOrDefault();
             if (vtpCycle == null)
             {

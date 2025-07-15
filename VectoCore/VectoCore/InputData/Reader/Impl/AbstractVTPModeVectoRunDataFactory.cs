@@ -30,8 +30,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected bool _allowVocational;
 		private DrivingCycleProxy _VTPCycle;
 		
-		protected Exception InitException;
-
 		public IVTPReport Report;
 		protected ShiftStrategyParameters GearshiftData;
 
@@ -44,14 +42,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			JobInputData = job;
 			Report = report;
 			_allowVocational = true;
-			try {
-				Initialize();
-				if (Report != null) {
-					InitializeReport();
-				}
-			} catch (Exception e) {
-				InitException = e;
-			}
 		}
 
 		protected abstract void Initialize();
@@ -104,9 +94,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IVectoRunDataFactory
 
-		public abstract IEnumerable<VectoRunData> NextRun();
+		public virtual IEnumerable<VectoRunData> NextRun()
+		{
+			Initialize();
+			if (Report != null) {
+				InitializeReport();
+			}
 
-		public abstract IInputDataProvider DataProvider { get; }
+			return GetNextRun();
+        }
+
+		protected abstract IEnumerable<VectoRunData> GetNextRun();
+
+        public abstract IInputDataProvider DataProvider { get; }
 
         public IVehicleDeclarationInputData CompletedVehicle { get; set; }
 

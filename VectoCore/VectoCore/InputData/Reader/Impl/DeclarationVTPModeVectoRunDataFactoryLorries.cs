@@ -49,19 +49,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
     internal class DeclarationVTPModeVectoRunDataFactoryLorries : AbstractVTPModeVectoRunDataFactory
     {
-        private ILorryDeclarationDataAdapter _dao;
+		protected readonly IInputDataProvider InputDataProvider;
 
-        protected readonly IInputDataProvider InputDataProvider;
-
-        public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(
+        public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report,
+			ILorryDeclarationDataAdapter declarationDataAdapter) : base(
             ivtpProvider.JobInputData, report)
-        {
+		{
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report) : 
+        protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report,
+			ILorryDeclarationDataAdapter declarationDataAdapter) : 
             base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
-        { 
+		{
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = inputProvider;
         }
 
@@ -71,8 +73,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		protected override IDeclarationDataAdapter Dao => DataAdapter;
-		private ILorryDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional());
-        protected override void Initialize()
+
+		private ILorryDeclarationDataAdapter DataAdapter { get; } //return _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional()); }
+	
+
+		protected override void Initialize()
         {
             var vehicle = JobInputData.Vehicle;
             try
@@ -180,14 +185,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             return aux;
         }
 
-        public override IEnumerable<VectoRunData> NextRun()
+        protected override IEnumerable<VectoRunData> GetNextRun()
         {
-            if (InitException != null)
-            {
-                throw InitException;
-            }
-
-            // Loading is not relevant as we use P_wheel
+			// Loading is not relevant as we use P_wheel
             var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
             vtpRunData.Cycle = VTPCycle;
             vtpRunData.Aux = AuxVTP;
