@@ -778,7 +778,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var sum = 0.SI<Watt>();
 			var db = DataBus;
-			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions)
+			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.GEN))
 				sum += db.ElectricMotorInfo(pos).DragPower(
 					db.BatteryInfo.InternalVoltage,
 					db.ElectricMotorInfo(pos).ElectricMotorSpeed, db.GearboxInfo.Gear);
