@@ -46,7 +46,7 @@ namespace TUGraz.VectoMockup
 				
 
 				//VIF //TODO: seperate namespaces
-				"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1",
+				XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION,
 			};
 
 			private static HashSet<string> hev = new HashSet<string>() {

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	public abstract class AbstractVehicleInformationFileCompleted : IXMLMultistepIntermediateReport
 	{
-		protected XNamespace VIF = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace VIF = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
 
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
@@ -273,24 +273,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	// ----------------------------------
 
-	internal class IEPC_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	internal class FCHV_CompletedBus_VIF : VehicleInformationFile_InterimStep
 	{
-		public IEPC_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+        public FCHV_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
 
+        protected override XElement GetVehicleElement()
+        {
+            return _vifFactory.Get_FCHV_VehicleType().GetElement(_inputData);
+        }
+    }
 
-		#region Overrides of VehicleInformationFile_InterimStep
+    // ----------------------------------
 
-		protected override XElement GetVehicleElement()
-		{
-			return _vifFactory.GetIEPCVehicleType().GetElement(_inputData);
-		}
-
-		#endregion
-	}
-
-	// ----------------------------------
-
-	internal class Exempted_CompletedBus_VIF : VehicleInformationFile_InterimStep
+    internal class Exempted_CompletedBus_VIF : VehicleInformationFile_InterimStep
 	{
 		public Exempted_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
 

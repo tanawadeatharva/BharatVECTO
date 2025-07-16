@@ -11,15 +11,22 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFTorqueConverterType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFTorqueConverterType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFTorqueConverterType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.TorqueConverterInputData);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.TorqueConverterInputData);
+        }
+
+        private XElement GetElement(ITorqueConverterDeclarationInputData torque)
 		{
-			var torque = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
 			if (torque == null)
 				return null;
 
@@ -40,6 +47,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				));
 		}
 
-		#endregion
+		
 	}
 }

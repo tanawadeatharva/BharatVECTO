@@ -441,7 +441,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLBatteryPackDeclarationInputDataStandardV01 : AbstractBatteryPackDeclarationInputDataProvider
+    public class XMLBatteryPackDeclarationInputDataMeasuredV11 : XMLBatteryPackDeclarationInputDataMeasuredV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLBatteryPackDeclarationInputDataMeasuredV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
+
+    public class XMLBatteryPackDeclarationInputDataStandardV01 : AbstractBatteryPackDeclarationInputDataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 		public const string XSD_TYPE = "BatterySystemStandardValuesDataType";
@@ -455,6 +464,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+    public class XMLBatteryPackDeclarationInputDataStandardV11 : XMLBatteryPackDeclarationInputDataStandardV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLBatteryPackDeclarationInputDataStandardV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
 
     // ---------------------------------------------------------------------------------------
 
@@ -540,10 +558,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV23
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		public const string XSD_TYPE = "CapacitorSystemDataType";
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public new const string XSD_TYPE = "CapacitorSystemDataType";
 
-		public static readonly string QUALIFIED_XSD_TYPE =
+		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile, false) { }
@@ -555,15 +573,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLSuperCapDeclarationInputDataV11 : XMLSuperCapDeclarationInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLSuperCapDeclarationInputDataV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
+
 	//===================
 
 	public class XMLElectricStorageSystemDeclarationInputDataV01 : XMLElectricStorageSystemDeclarationInputDataV24
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		public const string XSD_TYPE = "ElectricEnergyStorageType";
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public new const string XSD_TYPE = "ElectricEnergyStorageType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLElectricStorageSystemDeclarationInputDataV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
+
+    public class XMLElectricStorageSystemDeclarationInputDataV11 : XMLElectricStorageSystemDeclarationInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLElectricStorageSystemDeclarationInputDataV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
 }

@@ -144,4 +144,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			};
 		}
 	}
+
+    public class XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV11 : XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01
+	{
+        public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV11(XmlNode resultsNode) : base(resultsNode)
+		{ }
+    }
 }

@@ -49,8 +49,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		IXmlTypeWriter GetPEV_E4_CompletedBusVehicleType();
 		IXmlTypeWriter GetPEV_IEPC_CompletedBusVehicleType();
 
+        IXmlTypeWriter Get_Multiple_FCHV_CompletedBusVehicleType();
+        IXmlTypeWriter Get_Multiple_PEV_CompletedBusVehicleType();
+        IXmlTypeWriter Get_Multiple_SHEV_CompletedBusVehicleType();
 
-		IXmlTypeWriter GetConventional_SingleBusVehicleType();
+        IXmlTypeWriter Get_FCHV_F2_CompletedBusVehicleType();
+        IXmlTypeWriter Get_FCHV_F3_CompletedBusVehicleType();
+        IXmlTypeWriter Get_FCHV_F4_CompletedBusVehicleType();
+        IXmlTypeWriter Get_FCHV_IEPC_CompletedBusVehicleType();
+
+        IXmlTypeWriter GetConventional_SingleBusVehicleType();
 
 
 
@@ -89,7 +97,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		IReportOutputGroup GetPEV_LorryVehicleSequenceGroupWriter();
 		IReportOutputGroup GetPEV_CompletedBusVehicleSequenceGroupWriter();
-		IReportOutputGroup GetCompletedBusVehicleTypeGroup();
+
+		IReportOutputGroup GetFCHV_CompletedBusVehicleSequenceGroupWriter();
+        IReportOutputGroup GetCompletedBusVehicleTypeGroup();
 		IReportOutputGroup GetExemptedCompletedBusVehicleTypeGroup();
 		
 		IReportCompletedBusOutputGroup GetGeneralVehicleSequenceGroupWriterCompletedBus();

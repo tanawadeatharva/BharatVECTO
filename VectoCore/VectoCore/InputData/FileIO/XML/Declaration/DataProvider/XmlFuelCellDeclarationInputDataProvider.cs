@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
@@ -152,6 +153,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			NAMESPACE_URI.NamespaceName,
 			"FuelCellSystemDeclarationType");
 	}
+
+	public class XMLDeclarationMultistagePrimaryVehicleBusFuelCellDataProviderV11 : XMLFuelCellSystemDeclarationInputDataProviderV27
+	{
+        public XMLDeclarationMultistagePrimaryVehicleBusFuelCellDataProviderV11(XmlNode componentNode, string sourceFile)
+            : base(componentNode, sourceFile)
+        {}
+
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public static new string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "FuelCellSystemType");
+
+        public override List<IFuelCellModuleDeclarationInputData> CreateFuelCellModule()
+        {
+            var modules = new List<IFuelCellModuleDeclarationInputData>();
+
+            var xmlFuelCellModules = GetNodes(XMLNames.FuelCell_Module);
+            foreach (XmlNode moduleNode in xmlFuelCellModules)
+            {
+                var componentNode = GetNode("Data", moduleNode);
+
+                var fuelCellData = new FuelCellInputData();
+
+				fuelCellData.Manufacturer = GetString("Manufacturer");
+				fuelCellData.Model = GetString("Model");
+				fuelCellData.CertificationMethod = GetString("CertificationMethod").ParseEnum<CertificationMethod>();
+				fuelCellData.CertificationNumber = GetString("CertificationNumber");
+				fuelCellData.AppVersion = GetString("AppVersion");
+				fuelCellData.FCSRatedPower = GetDouble("FCSRatedPower").SI<Watt>();
+
+                var cellModule = new FuelCellModule()
+                {
+                    Count = Count,
+                    FuelCell = fuelCellData,
+                    MinPower = MinPower,
+                    MaxPower = MaxPower,
+                };
+
+                modules.Add(cellModule);
+            }
+
+            return modules;
+        }
+    }
 
 	public interface IXMLFuelCellSystemDeclarationInputData : IFuelCellSystemDeclarationInputData, IXMLResource
 	{

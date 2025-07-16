@@ -233,11 +233,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
-	public abstract class CIF_Multiple_LorryVehicleWriter : VehicleWriter
+	public abstract class CIF_Multiple_VehicleWriter : VehicleWriter
 	{
         protected readonly Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>> _getPowertrain;
 
-        public CIF_Multiple_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+        public CIF_Multiple_VehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
 			: base(cifFactory, mrfFactory) 
 		{
             _getPowertrain = new Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>>();
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         }
     }
 
-    public class CIF_Multiple_FCHV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    public class CIF_Multiple_FCHV_LorryVehicleWriter : CIF_Multiple_VehicleWriter
     {
         public CIF_Multiple_FCHV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) 
 			: base(cifFactory, mrfFactory) 
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         }
     }
 
-    public class CIF_Multiple_PEV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    public class CIF_Multiple_PEV_LorryVehicleWriter : CIF_Multiple_VehicleWriter
     {
         public CIF_Multiple_PEV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
             : base(cifFactory, mrfFactory) 
@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
         }
     }
 
-    public class CIF_Multiple_SHEV_LorryVehicleWriter : CIF_Multiple_LorryVehicleWriter
+    public class CIF_Multiple_SHEV_LorryVehicleWriter : CIF_Multiple_VehicleWriter
     {
         public CIF_Multiple_SHEV_LorryVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
             : base(cifFactory, mrfFactory) 
@@ -911,8 +911,200 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class CIF_Multiple_FCHV_CompletedBusVehicleWriter : CIF_Multiple_VehicleWriter
+    {
+        public CIF_Multiple_FCHV_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) 
+			: base(cifFactory, mrfFactory) 
+		{
+            _getPowertrain.Add(ArchitectureID.F2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.F3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.F4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.F_IEPC, GetIEPCPowertrain);
+        }
 
-	public class CIF_ExemptedCompletedBusVehicleWriter : VehicleWriter
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+			var axlePts = ((IMultistepBusInputDataProvider)inputData).JobInputData.PrimaryVehicle.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "FCHV_Multiple-Fx_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+	public class CIF_Multiple_SHEV_CompletedBusVehicleWriter : CIF_Multiple_VehicleWriter
+	{
+        public CIF_Multiple_SHEV_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+            : base(cifFactory, mrfFactory)
+        {
+            _getPowertrain.Add(ArchitectureID.S2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.S3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.S4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.S_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = ((IMultistepBusInputDataProvider)inputData).JobInputData.PrimaryVehicle.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "HEV_Multiple-Sx_CompletedBusVehicleType"),
+                _cifFactory.GetCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetHEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetHEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetEngineGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetHEV_Sx_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_Multiple_PEV_CompletedBusVehicleWriter : CIF_Multiple_VehicleWriter
+    {
+        public CIF_Multiple_PEV_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory)
+            : base(cifFactory, mrfFactory)
+        {
+            _getPowertrain.Add(ArchitectureID.E2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.E3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.E4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.E_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = ((IMultistepBusInputDataProvider)inputData).JobInputData.PrimaryVehicle.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "PEV_Multiple-Ex_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_FCHV_F2_CompletedBusVehicleWriter : VehicleWriter
+    {
+        public CIF_FCHV_F2_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "FCHV_F2_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+				_cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _cifFactory.GetElectricMachineGroup().GetElements(inputData),
+                _cifFactory.GetTransmissionGroup().GetElements(inputData),
+                GetRetarder(inputData),
+                GetAxleRatio(inputData),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+	public class CIF_FCHV_F3_CompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_FCHV_F3_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "FCHV_F3_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _cifFactory.GetElectricMachineGroup().GetElements(inputData),
+                _cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+                GetRetarder(inputData),
+                GetAxleRatio(inputData),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+	public class CIF_FCHV_F4_CompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_FCHV_F4_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "FCHV_F4_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _cifFactory.GetElectricMachineGroup().GetElements(inputData),
+                _cifFactory.GetTransmissionGroupNoGearbox().GetElements(inputData),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+	public class CIF_FCHV_IEPC_CompletedBusVehicleWriter : VehicleWriter
+	{
+		public CIF_FCHV_IEPC_CompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_cif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "FCHV_IEPC-F_CompletedBusVehicleType"),
+                _cifFactory.GetPEVCompletedBusVehicleTypeGroup().GetElements(inputData),
+                _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter().GetElements(inputData),
+                _cifFactory.GetPEVADASType().GetXmlType(((IMultistepBusInputDataProvider)inputData)
+                    .JobInputData
+                    .ConsolidateManufacturingStage.Vehicle.ADAS).WithXName(_cif + "ADAS"),
+                _cifFactory.GetFuelCellGroup().GetElements(inputData),
+                _cifFactory.GetREESSGroup().GetElements(inputData),
+                _cifFactory.GetElectricMachineGroup().GetElements(inputData),
+                _cifFactory.GetIEPCTransmissionGroup().GetElements(inputData),
+                GetRetarder(inputData),
+                GetAxleRatio(inputData, true),
+                _cifFactory.GetAxleWheelsGroup().GetElements(inputData),
+                _cifFactory.GetPEV_CompletedBusAuxGroup().GetElements(inputData)
+            );
+        }
+    }
+
+    public class CIF_ExemptedCompletedBusVehicleWriter : VehicleWriter
 	{
 		public CIF_ExemptedCompletedBusVehicleWriter(ICustomerInformationFileFactory cifFactory, IManufacturerReportFactory mrfFactory) : base(cifFactory, mrfFactory) { }
 

@@ -74,10 +74,19 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 
         protected virtual IEnumerable<VectoRunData> VectoRunDataHeavyBusCompleted()
 		{
-            if (PrimaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.BatteryElectricVehicle)) {
-				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, ""))
+            if (PrimaryVehicle.VehicleType.IsOneOf(
+                VectoSimulationJobType.IEPC_E, 
+                VectoSimulationJobType.BatteryElectricVehicle,
+                VectoSimulationJobType.FCHV,
+                VectoSimulationJobType.FCHV_IEPC,
+                VectoSimulationJobType.Multiple_FCHV,
+                VectoSimulationJobType.Multiple_PEV)) 
+            {
+				foreach (var vectoRunData in CreateVectoRunDataForMissions(0, "", OvcHevMode.NotApplicable))
 					yield return vectoRunData;
-			} else {
+			} 
+            else 
+            {
 				var engineModes = PrimaryVehicle.Components.EngineInputData
 					?.EngineModes;
 
@@ -87,8 +96,22 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 						fuelMode = "dual fuel mode";
 					}
 
-					foreach (var vectoRunData in CreateVectoRunDataForMissions(modeIdx, fuelMode))
-						yield return vectoRunData;
+					foreach (var vectoRunData in CreateVectoRunDataForMissions(
+                        modeIdx, 
+                        fuelMode,
+                        PrimaryVehicle.VehicleType.IsOneOf(
+                                VectoSimulationJobType.SerialHybridVehicle,
+                                VectoSimulationJobType.ParallelHybridVehicle,
+                                VectoSimulationJobType.IEPC_S,
+                                VectoSimulationJobType.IHPC,
+                                VectoSimulationJobType.Multiple_SHEV
+                            ) 
+                            ? OvcHevMode.ChargeDepleting
+                            : OvcHevMode.NotApplicable)
+                        ) 
+                    {  
+                        yield return vectoRunData; 
+                    }	
 				}
 			}
 		}
@@ -100,49 +123,89 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 		{
 			var cycle = CycleFactory.GetDeclarationCycle(mission);
 
-            var simulationRunData = new VectoRunData
-            {
-                Loading = loading.Key,
-                VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
-                    mission, loading),
-                Retarder = PrimaryBusMockupRunDataFactory.CreateMockupRetarder(PrimaryVehicle),
-                AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
-                EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
-                //ElectricMachinesData = PrimaryBusMockupRunDataFactory.CreateMockupElectricMachineData()
-                AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle.Components.AngledriveInputData),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
-                Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-                Mission = mission,
-                GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
-                InputData = DataProvider.MultistageJobInputData,
-                SimulationType = SimulationType.DistanceCycle,
-                ExecutionMode = ExecutionMode.Declaration,
-                JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
-                Report = Report,
-				//Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
+            VectoRunData simulationRunData = null;
 
-                //            //AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
-                //            //EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
-                //            //ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-                //            //GearboxData = _gearboxData,
-                //            //AxleGearData = _axlegearData,
-                //            //AngledriveData = _angledriveData,
-                //            Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
-                //                PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length,
-                //                PrimaryVehicle.Components.AxleWheels.NumSteeredAxles),
-                //Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-                //Retarder = _retarderData,
-                ////DriverData = _driverData,
-                //ExecutionMode = ExecutionMode.Declaration,
-                //JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
-                ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
-                //Report = Report,
-                //Mission = mission,
-                //InputDataHash = InputDataProvider.XMLHash,// right hash?!?
-                //SimulationType = SimulationType.DistanceCycle,
-                //VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
-                //GearshiftParameters = _gearshiftData,
-            };
+            if (PrimaryVehicle.VehicleType.IsMultiplePowertrains())
+            {
+                simulationRunData = new VectoRunData()
+                {
+                    Loading = loading.Key,
+                    VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment, mission, loading),
+                    AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
+                    Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+                    Mission = mission,
+                    InputData = DataProvider.MultistageJobInputData,
+                    SimulationType = SimulationType.DistanceCycle,
+                    ExecutionMode = ExecutionMode.Declaration,
+                    JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+                    Report = Report,
+                    OVCMode = ovcMode,
+                    ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
+                    AxlePowertrainsData = new List<AxlePowertrainData>()
+                };
+
+                foreach (var axlePt in PrimaryVehicle.Components.AxlePowertrainInputData)
+                {
+                    var axlePowertrainData = new AxlePowertrainData()
+                    {
+                        AxleNumber = axlePt.AxleNumber,
+                        Retarder = PrimaryBusMockupRunDataFactory.CreateMockupRetarder(axlePt),
+                        AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(axlePt.AxleGearInputData),
+                        GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(axlePt.GearboxInputData),
+                        AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(axlePt.AngledriveInputData),
+                    };
+
+                    simulationRunData.AxlePowertrainsData.Add(axlePowertrainData);
+                }
+            }
+            else
+            {
+                simulationRunData = new VectoRunData
+                {
+                    Loading = loading.Key,
+                    VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment,
+                        mission, loading),
+                    Retarder = PrimaryBusMockupRunDataFactory.CreateMockupRetarder(PrimaryVehicle),
+                    AirdragData = PrimaryBusMockupRunDataFactory.CreateMockupAirdragData(CompletedVehicle),
+                    EngineData = PrimaryBusMockupRunDataFactory.CreateMockupEngineData(PrimaryVehicle, modeIdx, CompletedVehicle.TankSystem),
+                    //ElectricMachinesData = PrimaryBusMockupRunDataFactory.CreateMockupElectricMachineData()
+                    AngledriveData = PrimaryBusMockupRunDataFactory.CreateMockupAngleDriveData(PrimaryVehicle.Components.AngledriveInputData),
+                    AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
+                    Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+                    Mission = mission,
+                    GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
+                    InputData = DataProvider.MultistageJobInputData,
+                    SimulationType = SimulationType.DistanceCycle,
+                    ExecutionMode = ExecutionMode.Declaration,
+                    JobName = DataProvider.MultistageJobInputData.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,
+                    Report = Report,
+                    OVCMode = ovcMode,
+                    //Aux = PrimaryBusMockupRunDataFactory.CreateMockupBusAux(CompletedVehicle),
+
+                    //            //AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission),
+                    //            //EngineData = DataAdapterSpecific.CreateEngineData(PrimaryVehicle, modeIdx, mission),
+                    //            //ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
+                    //            //GearboxData = _gearboxData,
+                    //            //AxleGearData = _axlegearData,
+                    //            //AngledriveData = _angledriveData,
+                    //            Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+                    //                PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segmentCompletedBus.VehicleClass, CompletedVehicle.Length,
+                    //                PrimaryVehicle.Components.AxleWheels.NumSteeredAxles),
+                    //Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+                    //Retarder = _retarderData,
+                    ////DriverData = _driverData,
+                    //ExecutionMode = ExecutionMode.Declaration,
+                    //JobName = InputDataProvider.JobInputData.ManufacturingStages.Last().Vehicle.Identifier,//?!? Jobname
+                    ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Specific_{loading.Key}",
+                    //Report = Report,
+                    //Mission = mission,
+                    //InputDataHash = InputDataProvider.XMLHash,// right hash?!?
+                    //SimulationType = SimulationType.DistanceCycle,
+                    //VehicleDesignSpeed = _segmentCompletedBus.DesignSpeed,
+                    //GearshiftParameters = _gearshiftData,
+                };
+            }
+
             if (simulationRunData.EngineData != null)
             {
                 simulationRunData.EngineData.FuelMode = 0;
@@ -160,12 +223,12 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 			throw new NotImplementedException();
 		}
 
-		private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode)
+		private IEnumerable<VectoRunData> CreateVectoRunDataForMissions(int modeIdx, string fuelMode, OvcHevMode ovcHevMode)
         {
 			var InputDataProvider = DataProvider.MultistageJobInputData;
             foreach (var mission in _segment.Missions) {
                 foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
-                    var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx);
+                    var simulationRunData = CreateVectoRunDataSpecific(mission, loading, modeIdx, ovcHevMode);
                     if (simulationRunData != null) {
                         yield return simulationRunData;
                     }
@@ -182,11 +245,11 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                         primaryMission,
                         new KeyValuePair<LoadingType, Tuple<Kilogram, double?>>(loading.Key,
 							primaryMission.Loadings[loading.Key]),
-                        primarySegment, modeIdx);
+                        primarySegment, modeIdx, ovcHevMode);
 
                     var primaryResult = InputDataProvider.JobInputData.PrimaryVehicle.GetResult(
                         simulationRunData.Mission.BusParameter.BusGroup, simulationRunData.Mission.MissionType, fuelMode,
-                        simulationRunData.VehicleData.Loading, OvcHevMode.NotApplicable);
+                        simulationRunData.VehicleData.Loading, simulationRunData.OVCMode);
 					if (primaryResult == null) {
 						throw new VectoException(
 							"Failed to find results in PrimaryVehicleReport for vehicle group: {0},  mission: {1}, fuel mode: '{2}', payload: {3}. Make sure PIF and completed vehicle data match!",
@@ -236,7 +299,8 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 ModFileSuffix = $"_{_segment.VehicleClass.GetClassNumber()}-Generic_{loading.Key}",
 				InputData = DataProvider.MultistageJobInputData,
                 GearboxData = PrimaryBusMockupRunDataFactory.CreateMockupGearboxData(PrimaryVehicle.Components.GearboxInputData),
-                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData)
+                AxleGearData = PrimaryBusMockupRunDataFactory.CreateMockupAxleGearData(PrimaryVehicle.Components.AxleGearInputData),
+                OVCMode = ovcHevMode
             };
         }
 

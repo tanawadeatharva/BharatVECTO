@@ -55,10 +55,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationInputDataProviderMultistageV11 : XMLDeclarationInputDataProviderMultistageV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationInputDataProviderMultistageV11(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
+    }
+
+    // ---------------------------------------------------------------------------------------
 
 
-	public class XMLDeclarationMultistageJobInputDataV01 : AbstractXMLResource, IXMLDeclarationMultistageJobInputData
+    public class XMLDeclarationMultistageJobInputDataV01 : AbstractXMLResource, IXMLDeclarationMultistageJobInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI =
 			XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -101,6 +110,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 	}
 
+	public class XMLDeclarationMultistageJobInputDataV11 : XMLDeclarationMultistageJobInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistageJobInputDataV11(XmlNode node, IXMLMultistageInputDataProvider inputProvider, string fileName) : 
+			base(node, inputProvider, fileName) 
+		{ }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -180,6 +199,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	}
 
+	public class XMLDeclarationMultistagePrimaryVehicleInputDataV11 : XMLDeclarationMultistagePrimaryVehicleInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistagePrimaryVehicleInputDataV11(XmlNode xmlNode, string fileName)
+			: base(xmlNode, fileName)
+		{ }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -222,6 +251,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public IXMLMultistageReader Reader { protected get; set; }
 	}
+
+	public class XMLDeclarationMultistageTypeInputDataV11 : XMLDeclarationMultistageTypeInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistageTypeInputDataV11(XmlNode xmlNode, string fileName) : base(xmlNode, fileName) 
+		{ }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
