@@ -58,8 +58,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var LARGE_STEP_THRESHOLD = 1000;
 
 			var defaultEngineSpeed = 5000;
-			var maxRetarderSpeed = retarderData.Ratio * defaultEngineSpeed;
-			if (engineSpeedRPM != 0 && gearboxRatio != 0)
+			var defaultMaxRetarderSpeed = retarderData.Ratio * defaultEngineSpeed;
+			var maxRetarderSpeed = defaultMaxRetarderSpeed;
+
+            if (engineSpeedRPM != 0 && gearboxRatio != 0)
 			{
 				maxRetarderSpeed = retarderData.Ratio * engineSpeedRPM;
 
@@ -67,6 +69,8 @@ namespace TUGraz.VectoCore.Models.Declaration
                     maxRetarderSpeed = retarderData.Ratio * (engineSpeedRPM / gearboxRatio);
 				}
 			}
+
+			maxRetarderSpeed = Math.Max(maxRetarderSpeed, defaultMaxRetarderSpeed);
 
 			var step = SMALL_STEP;
 			var retarderSpeeds = new List<double>();

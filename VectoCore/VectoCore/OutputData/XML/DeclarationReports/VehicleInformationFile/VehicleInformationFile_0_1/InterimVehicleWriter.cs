@@ -61,8 +61,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				? null
 				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
-            var isH2ICE = primaryVehicle.H2StorageUsableCapacity != null;
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var h2PropertiesVehicle = (vehicleInput.H2StorageUsableCapacity != null) ? vehicleInput : primaryVehicle;
+			var isH2ICE = h2PropertiesVehicle.H2StorageUsableCapacity != null;
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
@@ -81,8 +82,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
 				_vifReportFactory.GetConventionalInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
-				isH2ICE ? new XElement(_v27 + "H2StorageUsableCapacity", primaryVehicle.H2StorageUsableCapacity.ToXMLFormat(1)) : null,
-                isH2ICE ? new XElement(_v27 + "HydrogenStorageTechnology", primaryVehicle.HydrogenStorageTechnology) : null,
+				isH2ICE ? new XElement(_v27 + "H2StorageUsableCapacity", h2PropertiesVehicle.H2StorageUsableCapacity.ToXMLFormat(1)) : null,
+                isH2ICE ? new XElement(_v27 + "HydrogenStorageTechnology", h2PropertiesVehicle.HydrogenStorageTechnology?.ToXMLFormat()) : null,
                 _vifReportFactory.GetConventionalInterimComponentsType().GetElement(inputData)
 			);
 		}

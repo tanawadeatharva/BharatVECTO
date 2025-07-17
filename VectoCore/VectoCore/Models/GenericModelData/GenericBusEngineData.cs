@@ -28,7 +28,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static string GenericEngineCM_Normed_PI =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_normalized.vmap";
 
-		private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+		private static string GenericEngineCM_Normed_H2_PI =
+            $"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_H2_normalized.vmap";
+
+        private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
 		private static readonly double[] PIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
 
 		private static GenericBusEngineData _instance;
@@ -117,16 +120,37 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		private bool UseH2PI(IList<IEngineFuelDeclarationInputData> fuels)
+		{
+            var fuelType = fuels.First().FuelType;
+            var isDualFuel = fuels.Count > 1;
+
+            return !isDualFuel && fuels.Any(x => x.FuelType == FuelType.H2PI);
+        }
+
+		private bool UseH2CI(IList<IEngineFuelDeclarationInputData> fuels)
+		{
+            var isDualFuel = fuels.Count > 1;
+
+            return !isDualFuel && fuels.Any(x => x.FuelType == FuelType.H2CI);
+        }
+
 		private string GetEngineRessourceId(IList<IEngineFuelDeclarationInputData> fuels)
 		{
-			return UseDieselFuel(fuels) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
+			return UseH2PI(fuels) 
+				? GenericEngineCM_Normed_H2_PI
+                : (UseDieselFuel(fuels) || UseH2CI(fuels)) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
 		}
 
 		private IFuelProperties GetFuelData(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			return UseDieselFuel(fuels)
 				? FuelData.Diesel
-				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+				: UseH2CI(fuels) 
+					? FuelData.H2_CI 
+					: (UseH2PI(fuels) 
+						? FuelData.H2_PI
+						: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed));
 		}
 
 		private double[] GetEngineCorrectionFactors(IList<IEngineFuelDeclarationInputData> fuels)

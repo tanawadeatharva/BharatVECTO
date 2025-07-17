@@ -679,9 +679,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
         public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
 
-		public Kilogram H2StorageUsableCapacity => _primaryVehicle.Vehicle.H2StorageUsableCapacity;
+		public Kilogram H2StorageUsableCapacity => GetVehiclePropertyValue<Kilogram>(nameof(H2StorageUsableCapacity)); 
 
-		public HydrogenStorageTechnology? HydrogenStorageTechnology => _primaryVehicle.Vehicle.HydrogenStorageTechnology;
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => GetVehiclePropertyValue<HydrogenStorageTechnology?>(nameof(HydrogenStorageTechnology)); 
 
         public bool BatteryOnlyMode => _primaryVehicle.Vehicle.BatteryOnlyMode;
 
