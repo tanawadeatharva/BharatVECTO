@@ -127,6 +127,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 Retarder = RetarderData,
                 Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
 				BusAuxiliaries = busAuxiliaries,
+				Cycle = VTPCycle
 			};
             //powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
             Report.InputDataHash = JobInputData.VectoJobHash;
@@ -135,6 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
 			Report.PrimaryVIFHash   = JobInputData.VectoPrimaryVIFHash;
 			Report.CompletedVIFHash = JobInputData.VectoCompletedVIFHash;
+			// todo amogoda: OBFCM Json input data should be added to the report here
 			Report.InitializeReport(powertrainConfig);
         }
 
