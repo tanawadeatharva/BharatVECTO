@@ -606,37 +606,47 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
 		IVTPDeclarationInputDataProvider, IManufacturerReport, ICompletedVIF
 	{
-		private IDictionary<VectoComponents, IList<string>> _componentDigests;
-		private DigestData _jobDigest;
-		private IXMLInputDataReader _inputReader;
-		private IResultsInputData _manufacturerResults;
 		private Meter _vehicleLength;
-		private VehicleCode _bodyworkCode;
 		private string _coolingFanTech;
 		private AirdragData _airDragData;
+		private VehicleCode _bodyworkCode;
+
+		private IXMLInputDataReader _xmlInputReader;
+		private IResultsInputData _manufacturerResults;
+		private IDeclarationJobInputData _declarationJobInputData;
 		private IXMLMultistageInputDataProvider _completeVifInputData;
+
+		private DigestData _jobDigest;
+		private IDictionary<VectoComponents, IList<string>> _componentDigests;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
 		{
+			VerifyInput();
+
 			var baseFullPath = Path.GetFullPath(BasePath);
 			string declPath = Path.Combine(baseFullPath, Body["DeclarationVehicle"].Value<string>());
 			string mrfPath  = Path.Combine(baseFullPath, Body["ManufacturerRecord"].Value<string>());
-			string vifPath  = Path.Combine(baseFullPath, Body["PrimaryVIF"]?.Value<string>() ?? string.Empty);
 			string cifPath  = Path.Combine(baseFullPath, Body["CustomerInformationFile"]?.Value<string>() ?? string.Empty);
+			string vifPath  = Path.Combine(baseFullPath, Body["PrimaryVIF"]?.Value<string>() ?? string.Empty);
 			string completedVifPath = Path.Combine(baseFullPath, Body["CompletedVIF"]?.Value<string>() ?? string.Empty);
 
-			VectoJobHash                = VectoHash.Load(declPath);
+			_xmlInputReader = new StandardKernel(new VectoNinjectModule()).Get<IXMLInputDataReader>();
+			_declarationJobInputData = _xmlInputReader.CreateDeclaration(declPath, true).JobInputData;
+
+			if (Vehicle.VehicleCategory.IsBus())
+			{
+				VectoPrimaryVIFHash = Body["PrimaryVIF"] != null ? VectoHash.Load(vifPath) : null;
+				VectoCompletedVIFHash = Body["CompletedVIF"] != null ? VectoHash.Load(completedVifPath) : null;
+				
+				_completeVifInputData = (IXMLMultistageInputDataProvider)_xmlInputReader.CreateDeclaration(completedVifPath);
+			}
+
+			VectoJobHash = VectoHash.Load(declPath);
 			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(mrfPath) : null;
-			VectoPrimaryVIFHash         = Body["PrimaryVIF"] != null ? VectoHash.Load(vifPath) : null;
-			VectoCompletedVIFHash       = Body["CompletedVIF"] != null ? VectoHash.Load(completedVifPath) : null;
-			VectoCustomerFileHash	    = Body["CustomerInformationFile"] != null ? VectoHash.Load(cifPath) : null;
-
-			var kernel = new StandardKernel(new VectoNinjectModule());
-			_inputReader = kernel.Get<IXMLInputDataReader>();
+			VectoCustomerFileHash = Body["CustomerInformationFile"] != null ? VectoHash.Load(cifPath) : null;
+			
 			_bodyworkCode = VehicleCode.NOT_APPLICABLE;
-
-			_completeVifInputData = (IXMLMultistageInputDataProvider)_inputReader.CreateDeclaration(completedVifPath);
 		}
 
 		public IVTPEngineeringJobInputData JobInputData => this;
@@ -645,9 +655,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public ICompletedVIF CompletedVIFInputData => this;
 
-		public IVehicleDeclarationInputData Vehicle =>
-			_inputReader.CreateDeclaration(
-				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()), true).JobInputData.Vehicle;
+		public IVehicleDeclarationInputData Vehicle => _declarationJobInputData.Vehicle;
 
 		public IVectoHash VectoJobHash { get; }
 
@@ -870,6 +878,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
+
+		private void VerifyInput()
+		{
+			string missingInputMsg = "Missing JSON parameter: {0}";
+			
+			string declVeh = Body["DeclarationVehicle"]?.Value<string>() 
+				?? throw new ArgumentException(string.Format(missingInputMsg, "DeclarationVehicle"));
+			_ = Body["ManufacturerRecord"]		
+				?? throw new ArgumentException(string.Format(missingInputMsg, "ManufacturerRecord"));
+			_ = Body["CustomerInformationFile"] 
+				?? throw new ArgumentException(string.Format(missingInputMsg, "CustomerInformationFile"));
+
+			string declPath = Path.Combine(Path.GetFullPath(BasePath), declVeh);
+			var vehicle = new StandardKernel(new VectoNinjectModule())
+				.Get<IXMLInputDataReader>()
+				.CreateDeclaration(declPath, true)
+				.JobInputData
+				.Vehicle;
+
+			if (vehicle.VehicleCategory.IsBus())
+			{
+				_ = Body["PrimaryVIF"]   ?? throw new ArgumentException(string.Format(missingInputMsg, "PrimaryVIF"));
+				_ = Body["CompletedVIF"] ?? throw new ArgumentException(string.Format(missingInputMsg, "CompletedVIF"));
+			}
+		}
 
 		private void ReadCompletedVIF()
 		{

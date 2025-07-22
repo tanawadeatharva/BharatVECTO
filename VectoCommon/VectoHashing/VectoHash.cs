@@ -56,7 +56,7 @@ namespace TUGraz.VectoHashing
 				reader = new XmlTextReader(filename);
 				doc.Load(reader);
 			} catch (Exception e) {
-				throw new Exception("failed to read XML document", e);
+				throw new Exception($"Failed to read XML document. {e.Message}", e);
 			} finally {
 				if (reader != null) {
 					reader.Close();
@@ -71,7 +71,7 @@ namespace TUGraz.VectoHashing
 			try {
 				doc.Load(new XmlTextReader(stream));
 			} catch (Exception e) {
-				throw new Exception("failed to read XML document", e);
+				throw new Exception($"Failed to read XML document. {e.Message}", e);
 			}
 			return new VectoHash(doc);
 		}
