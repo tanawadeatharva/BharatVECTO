@@ -99,7 +99,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Speci
         
 		public class PEV_E_IEPC : BatteryElectric { }
 
-		public class Exempted : CompletedBusDeclarationBase
+		public abstract class FCHV : BatteryElectric { }
+
+		public class FCHV_F2 : FCHV { }
+
+        public class FCHV_F3 : FCHV { }
+
+        public class FCHV_F4 : FCHV { }
+
+        public class FCHV_IEPC : FCHV { }
+
+        public class Exempted : CompletedBusDeclarationBase
 		{
 			protected override IVehicleDataAdapter VehicleDataAdapter { get; } =
 				new ExemptedCompletedBusSpecificVehicleDataAdapter();

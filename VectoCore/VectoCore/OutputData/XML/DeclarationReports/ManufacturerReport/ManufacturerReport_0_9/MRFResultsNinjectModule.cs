@@ -53,9 +53,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.FCHVNonOVCBus>().Named(
-				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, false));
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, false));
 			Bind<IResultsWriter>().To<MRFResultsWriter.FCHVOVCBus>().Named(
-				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, true));
+				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, true));
             Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.PureElectric, true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(
@@ -67,7 +67,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<MRFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.Hybrid, true));
-			Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
+            Bind<IResultsWriter>().To<MRFResultsWriter.FCHVNonOVCBus>().Named(
+                _namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, false));
+            Bind<IResultsWriter>().To<MRFResultsWriter.FCHVOVCBus>().Named(
+                _namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.FuelCell, true));
+            Bind<IResultsWriter>().To<MRFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, VectoSimulationJobTypeHelper.PureElectric,true));
 			Bind<IResultsWriter>().To<MRFResultsWriter.ExemptedVehicle>().Named(
 				_namingHelper.GetName(mrf, VehicleCategoryHelper.CompletedBus, true));
@@ -171,9 +175,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusHEVNonOVCSuccessResultWriter(null, XNamespace.None));
             Bind<IResultGroupWriter>().To<BusHEVOVCMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusFCHVNonOVCResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusFCHVNonOVC_MRF_ResultWriter>().When(AccessedViaMRFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusFCHVNonOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusFCHVOVCResultWriter>().When(AccessedViaMRFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusFCHVOVC_MRF_ResultWriter>().When(AccessedViaMRFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusFCHVOVCSuccessResultWriter(null, XNamespace.None));
             Bind<IResultGroupWriter>().To<BusPEVMRFResultWriter>().When(AccessedViaMRFResultsWriterFactory)
                 .NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));

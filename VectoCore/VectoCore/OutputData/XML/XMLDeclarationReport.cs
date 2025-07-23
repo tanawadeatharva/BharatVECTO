@@ -325,6 +325,13 @@ namespace TUGraz.VectoCore.OutputData.XML
                     BeginOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, BEGIN_OF_LIFE_DETERIORATION);
                     EndOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, END_OF_LIFE_DETERIORATION);
                     ElectricEnergyConsumption = (BeginOfLifeRanges.ElectricEnergyConsumption + EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+
+                    var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault(x => x.Fuel.FuelType != FuelType.H2FC);
+                    if (fc != null)
+                    {
+                        ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
+                        AuxHeaterFuel = fc.Fuel;
+                    }
                 }
 
                 if (data.HasGearbox && !runData.JobType.IsOneOf(VectoSimulationJobType.IEPC_E, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV_IEPC)) {

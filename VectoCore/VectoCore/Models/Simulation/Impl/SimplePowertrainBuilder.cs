@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						: BuildSimpleHybridPowertrain(data);
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
+				case VectoSimulationJobType.FCHV:
+				case VectoSimulationJobType.FCHV_IEPC:
 					return BuildSimplePowertrainElectric(data);
 				case VectoSimulationJobType.SerialHybridVehicle:
 					return BuildSimpleSerialHybridPowertrain(data);

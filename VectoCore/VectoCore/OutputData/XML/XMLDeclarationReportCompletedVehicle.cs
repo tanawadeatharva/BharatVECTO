@@ -284,7 +284,39 @@ namespace TUGraz.VectoCore.OutputData.XML
                 result.ZeroCO2EmissionsRange = elRanges.ZeroCO2EmissionsRange;
             }
 
-			return result;
+            if (result.VectoRunData.JobType.IsFCHV())
+            {
+                var totalFc = result.FuelConsumptionFinal(FuelType.H2FC)?.TotalFuelConsumptionCorrected;
+
+                var completedVehicle = (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.ConsolidateManufacturingStage.Vehicle;
+				
+				var H2Vehicle = (completedVehicle.H2StorageUsableCapacity != null)
+					? completedVehicle
+					: (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.PrimaryVehicle.Vehicle;
+
+                var range = ((totalFc != null) && (totalFc > 0))
+                    ? result.Distance * (H2Vehicle.H2StorageUsableCapacity / totalFc)
+                    : null;
+                
+                result.HydrogenRange = range;
+                result.ZeroCO2EmissionsRange = range;
+
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesFCHVCompletedBus(
+					result.ElectricEnergyConsumption, 
+					result.Distance, 
+					result.VectoRunData, 
+					ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+                
+				result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesFCHVCompletedBus(
+					result.ElectricEnergyConsumption, 
+					result.Distance, 
+					result.VectoRunData, 
+					ResultEntry.END_OF_LIFE_DETERIORATION);
+                
+				result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+            }
+
+            return result;
 		}
 
 
@@ -346,8 +378,8 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }
             public Meter HydrogenRange { get; set; }
-            public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; private set; }
-            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; private set; }
+            public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; set; }
+            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; set; }
             public IFuelProperties AuxHeaterFuel { get; set; }
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }

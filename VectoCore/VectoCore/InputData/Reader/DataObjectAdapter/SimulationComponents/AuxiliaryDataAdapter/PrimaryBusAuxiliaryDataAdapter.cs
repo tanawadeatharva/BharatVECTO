@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			if (!vehicleData.ArchitectureID.IsBatteryElectricVehicle()) {
+			if (!vehicleData.ArchitectureID.IsBatteryElectricVehicle() && !vehicleData.ArchitectureID.IsFuelCellVehicle()) {
 				var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
 					vehicleClass, mission.MissionType, busAux.FanTechnology);
 				retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(busAux.ElectricSupply.ElectricStorage);
 			retVal.MaxAlternatorPower = CalculateMaxAlternatorPower(busAux);
 
-			if (vehicleData.ArchitectureID.IsBatteryElectricVehicle())
+			if (vehicleData.ArchitectureID.IsBatteryElectricVehicle() || vehicleData.ArchitectureID.IsFuelCellVehicle())
 			{
 				retVal.ConnectESToREESS = true;
 			}

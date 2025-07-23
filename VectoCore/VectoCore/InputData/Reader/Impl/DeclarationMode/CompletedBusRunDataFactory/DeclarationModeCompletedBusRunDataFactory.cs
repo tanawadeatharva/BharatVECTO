@@ -13,9 +13,11 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory
 {
@@ -928,9 +930,349 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					ptBuilder) { }
 		}
 
-		#endregion ParallelHybrid
-		#endregion Hybrid
+        #endregion ParallelHybrid
+        #endregion Hybrid
 
+        #region FCHV
+        public abstract class FCHV : CompletedBusBase
+		{
+            public FCHV(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+                    // the following parameters are injected
+                    ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+                    IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+                    IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+                    : base(dataProvider, report,
+                        dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter, ptBuilder)
+            { }
+
+            public virtual VectoSimulationJobType FuelCellJobType => VectoSimulationJobType.FCHV;
+
+            protected override IEnumerable<VectoRunData> GetNextRun()
+			{
+				foreach (var mission in _segment.Missions)
+				{
+					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
+					{
+                        var ovcMode = PrimaryVehicle.OVC ? OvcHevMode.ChargeSustaining : OvcHevMode.NotApplicable;
+                        
+                        foreach (var run in CreateVectoRunData(mission, loading, ovcMode: ovcMode))
+                        {
+                            yield return run;
+                        }
+                    }
+				}
+			}
+
+            protected override VectoRunData CreateVectoRunDataGeneric(Mission mission,
+                KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, Segment primarySegment, int? modeIdx,
+                OvcHevMode ovcHevMode)
+            {
+                var result = CreateCommonRunData(mission, loading, _modSuffixGeneric, ovcHevMode);
+                
+				result.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+                result.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
+
+                DataAdapterGeneric.CreateREESSData(
+                    componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
+                    PrimaryVehicle.VehicleType,
+                    PrimaryVehicle.OVC,
+                    (bs) => result.BatteryData = bs,
+                    (sc) => result.SuperCapData = sc);
+
+                result.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
+
+                if (PrimaryVehicle.VehicleType == VectoSimulationJobType.FCHV_IEPC)
+                {
+                    result.ElectricMachinesData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
+                        result.BatteryData.CalculateVoltageCenterSoc());
+                }
+                else
+                {
+                    result.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
+                        PrimaryVehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateVoltageCenterSoc(), null);
+                }
+
+                result.VehicleData = DataAdapterGeneric.CreateVehicleData(PrimaryVehicle, _segment, mission, loading, _allowVocational);
+                
+				result.AirdragData = DataAdapterGeneric.CreateAirdragData(PrimaryVehicle, mission, _segment, ovcHevMode);
+                
+				if (AxleGearRequired() || PrimaryVehicle.Components.AxleGearInputData != null)
+                {
+                    result.AxleGearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
+                }
+
+                result.AngledriveData = DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+                
+				result.Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+                    PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+                    CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
+                    PrimaryVehicle.VehicleType, result.BatteryOnlyHybridMode);
+                
+				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
+                result.VehicleData.VehicleClass = _segment.VehicleClass;
+
+                CreateGearboxAndGearshiftData(result);
+
+                result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
+
+				result.BusAuxiliaries = DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, result);
+
+                result.ModFileSuffix += "_pre";
+                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result);
+
+                return result;
+            }
+
+            protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
+                KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, int? modeIdx,
+                OvcHevMode ovcMode = OvcHevMode.NotApplicable)
+            {
+                var result = CreateCommonRunData(mission, loading, _modSuffixSpecific, ovcMode);
+
+                result.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
+                result.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
+
+                DataAdapterGeneric.CreateREESSData(
+                    componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
+                    PrimaryVehicle.VehicleType,
+                    PrimaryVehicle.OVC,
+                    (bs) => result.BatteryData = bs,
+                    (sc) => result.SuperCapData = sc);
+
+                result.BatteryData.Batteries.ForEach(b => b.Item2.ChargeDepletingBattery = true);
+
+                if (PrimaryVehicle.VehicleType == VectoSimulationJobType.FCHV_IEPC)
+                {
+                    result.ElectricMachinesData = DataAdapterGeneric.CreateIEPCElectricMachines(PrimaryVehicle.Components.IEPC,
+                        result.BatteryData.CalculateVoltageCenterSoc());
+                }
+                else
+                {
+                    result.ElectricMachinesData = DataAdapterGeneric.CreateElectricMachines(PrimaryVehicle.Components.ElectricMachines,
+                        PrimaryVehicle.ElectricMotorTorqueLimits, result.BatteryData.CalculateVoltageCenterSoc(), null);
+                }
+
+                result.VehicleData = DataAdapterSpecific.CreateVehicleData(PrimaryVehicle, CompletedVehicle, _segment, mission, loading);
+                
+				result.AirdragData = DataAdapterSpecific.CreateAirdragData(CompletedVehicle, mission, _segment, ovcMode);
+                
+				if (AxleGearRequired() || PrimaryVehicle.Components.AxleGearInputData != null)
+                {
+                    result.AxleGearData = DataAdapterGeneric.CreateAxleGearData(PrimaryVehicle.Components.AxleGearInputData);
+                }
+
+                result.AngledriveData = DataAdapterGeneric.CreateAngledriveData(PrimaryVehicle.Components.AngledriveInputData);
+                
+				result.Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
+                    PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+                    CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
+                    PrimaryVehicle.VehicleType, result.BatteryOnlyHybridMode);
+                
+				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
+                result.VehicleData.VehicleClass = _segment.VehicleClass;
+
+                CreateGearboxAndGearshiftData(result);
+
+                result.Retarder = DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, result);
+                
+				result.BusAuxiliaries = DataAdapterSpecific.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, result);
+
+                result.ModFileSuffix += "_pre";
+                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result);
+
+                return result;
+            }
+
+            private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData)
+            {
+                var iterativeRunStrategy = SetUpFCHEVIterativeRunStrategy();
+                var fuelCellData = DataAdapterGeneric.CreateFuelCells(PrimaryVehicle.Components.FuelCellSystem).ConvertToEngineeringData();
+
+                iterativeRunStrategy.Update = (modData, iterationRunData) =>
+                {
+                    var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
+
+                    /// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
+                    /// Comment from [1]:
+                    ///		In case the battery is modified after creating the rundata
+                    ///		(testing, do not create new battery data).
+                    iterationRunData.BatteryData = fchvDataAdapter.CreateFuelCellPreProcessingBattery(
+                        fuelCellData,
+                        iterationRunData.BatteryData,
+                        out var fcBatteries);
+
+                    runData.BatteryData.Batteries = runData.BatteryData.Batteries
+                        .Where(b => b.Item1 != fcBatteries.Item1)
+                        .ToList();
+
+                    iterationRunData.JobType = FuelCellJobType;
+                    iterationRunData.ModFileSuffix = string.Empty;
+                    iterationRunData.FuelCellSystemData = fuelCellData;
+                    modData.PostProcessingCorrection = new FCHVPostProcessingCorrection()
+                    {
+                        FCHVElectricEnergyConsumptionSoC = FCHVPostProcessingCorrection.CalculateElectricEnergyConsumption(modData),
+                    };
+
+                    iterationRunData.FuelCellSystemData.FuelCellPowerMap =
+                        fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
+                    iterationRunData.FuelCellSystemData.FuelCellShareMap = fchvDataAdapter.CreateFuelCellShareMap(fuelCellData);
+
+                    /// Comment from [1]: In the real run we don't use a charge sustaining battery
+                    runData.BatteryData.ChargeSustainingBatterySystem = false;
+                    runData.ModFileSuffix += runData.Loading;
+                    runData.Iteration++;
+                };
+
+                return iterativeRunStrategy;
+            }
+
+            private FCHEVIterativeRunStrategy SetUpFCHEVIterativeRunStrategy()
+            {
+                return new FCHEVIterativeRunStrategy(
+                        new[]
+                        {
+							// Pre-run, iteration 0.
+							new PreRunOptions()
+                            {
+                                WriteModAndSumData = true
+//#if TRACE_FC
+//								WriteModAndSumData = true,
+//#else
+//								WriteModAndSumData = false
+//#endif
+							},
+
+							// Real run, iteration 1.
+							new PreRunOptions()
+                            {
+                                WriteModAndSumData = true
+                            }
+                        });
+            }
+
+            protected virtual bool AxleGearRequired()
+            {
+                var req = PrimaryVehicle.ArchitectureID != ArchitectureID.F4;
+                if (req && PrimaryVehicle.Components.AxleGearInputData == null)
+                {
+                    throw new VectoException("Axlegear required");
+                }
+                return req;
+            }
+
+            protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+            {
+                if (PrimaryVehicle.ArchitectureID == ArchitectureID.F2)
+                {
+                    throw new ArgumentException();
+                }
+
+                runData.GearshiftParameters = new ShiftStrategyParameters()
+                {
+                    StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
+                    StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+                };
+			}
+		}
+
+		public class FCHV_F2 : FCHV
+		{
+            public FCHV_F2(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+                    // the following parameters are injected
+                    ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+                    IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+                    IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+                    : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+                        ptBuilder)
+            { }
+
+            protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+            {
+                if (PrimaryVehicle.ArchitectureID != ArchitectureID.F2)
+                {
+                    throw new ArgumentException(nameof(PrimaryVehicle));
+                }
+
+                var gbxInput = PrimaryVehicle.Components.GearboxInputData;
+                
+				runData.GearshiftParameters =
+                    DataAdapterGeneric.CreateGearshiftData(
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
+                        null, 
+						gbxInput.Type, 
+						gbxInput.Gears.Count);
+
+				runData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, runData);
+			}
+		}
+
+		public class FCHV_F3 : FCHV
+		{
+            public FCHV_F3(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+                    // the following parameters are injected
+                    ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+                    IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+                    IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+                    : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+                        ptBuilder)
+            { }
+		}
+
+		public class FCHV_F4 : FCHV
+		{
+            public FCHV_F4(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+                    // the following parameters are injected
+                    ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+                    IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+                    IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+                    : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+                        ptBuilder)
+            { }
+        }
+
+		public class FCHV_IEPC : FCHV
+		{
+            public FCHV_IEPC(IMultistageVIFInputData dataProvider, IDeclarationReport report,
+                // the following parameters are injected
+                ISpecificCompletedBusDeclarationDataAdapter dataAdapterSpecific,
+                IGenericCompletedBusDeclarationDataAdapter dataAdapterGeneric, IDeclarationCycleFactory cycleFactory,
+                IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
+                : base(dataProvider, report, dataAdapterSpecific, dataAdapterGeneric, cycleFactory, missionFilter,
+                    ptBuilder)
+            { }
+
+            public override VectoSimulationJobType FuelCellJobType => VectoSimulationJobType.FCHV_IEPC;
+
+            protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+            {
+                runData.GearshiftParameters =
+                    DataAdapterGeneric.CreateGearshiftData(
+                        runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+                        null,
+                        GearboxType.APTN,
+                        PrimaryVehicle.Components.IEPC.Gears.Count
+                    );
+
+                runData.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, runData, GearboxType.APTN);
+            }
+
+            protected override bool AxleGearRequired()
+            {
+                var vehicle = PrimaryVehicle;
+                var iepcInput = vehicle.Components.IEPC;
+                var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+                
+				if (axleGearRequired && vehicle.Components.AxleGearInputData == null)
+                {
+                    throw new VectoException(
+                        $"Axlegear required for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+                }
+
+                return axleGearRequired || vehicle.Components.AxleGearInputData != null;
+            }
+        }
+
+		#endregion FCHV
 
 		#region BatteryElectric
 		public abstract class BatteryElectric : CompletedBusBase

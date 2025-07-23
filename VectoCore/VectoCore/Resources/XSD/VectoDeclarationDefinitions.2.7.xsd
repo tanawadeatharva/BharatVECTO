@@ -35,6 +35,7 @@
 	17-06-2025: Removed Retarder from components of X4 architectures.
 	15-07-2025: Removed redundant types: Vehicle_Multiple_SHEV_CompletedBusDeclarationType, Vehicle_Multiple_PEV_CompletedBusDeclarationType,
 		Vehicle_Multiple_FCHV_CompletedBusDeclarationType.
+	23-07-2025: FCHV Completed Bus: H2 properties appear both or not at all.
 	04-08-2025: Added missing type: AirDragModifiedUseStandardValueType.
 	-->
 
@@ -1552,8 +1553,10 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType" minOccurs="0" />
-					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType" minOccurs="0" />
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType" minOccurs="0" />
 					<xs:element name="ADAS" type="ADAS_PEV_Type" minOccurs="0"/>
 					<xs:element name="Components" type="Components_xEV_CompletedBusType" minOccurs="0"/>
