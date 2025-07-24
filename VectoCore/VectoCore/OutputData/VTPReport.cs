@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData
@@ -47,5 +49,7 @@ namespace TUGraz.VectoCore.OutputData
 		IVectoHash PrimaryVIFHash { set; }
 		
 		IVectoHash CompletedVIFHash { set; }
+
+		VTPOBFCMDeclarationData OBFCMDeclarationInputData { set; }
 	}
 }

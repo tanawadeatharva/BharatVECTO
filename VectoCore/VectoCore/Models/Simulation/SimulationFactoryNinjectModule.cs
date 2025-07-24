@@ -32,7 +32,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Ninject.Extensions.Factory;
-using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
@@ -45,6 +44,8 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoHashing;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
@@ -140,6 +141,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		public IVectoHash PrimaryVIFHash { set { } }
 
 		public IVectoHash CompletedVIFHash { set { } }
+
+		public VTPOBFCMDeclarationData OBFCMDeclarationInputData { set { } }
 
 		#endregion
 	}

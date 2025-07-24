@@ -73,6 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
+			Report.OBFCMDeclarationInputData = JobInputData.OBFCMDeclarationInputData;
 			Report.InitializeReport(powertrainConfig);
 		}
 

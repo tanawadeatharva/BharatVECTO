@@ -37,6 +37,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
@@ -55,6 +56,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using Castle.Core.Internal;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -669,6 +671,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Meter Mileage => Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 
+		public VTPOBFCMDeclarationData OBFCMDeclarationInputData => new VTPOBFCMDeclarationData(Body);
+
 		string IManufacturerReport.Source => Body["ManufacturerRecord"].Value<string>();
 
 		string ICompletedVIF.Source => Body[JsonKeys.VTP_CompletedVIF]?.Value<string>();
@@ -1055,6 +1059,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+	public class VTPOBFCMDeclarationData
+	{
+		private readonly JObject _body;
+		private readonly Dictionary<string, double> _rawLifetimeFuelConsumption;
+
+		public VTPOBFCMDeclarationData(JObject body)
+		{
+			_body = body ?? throw new ArgumentNullException(nameof(body));
+
+			var rawOBFCMJson = body["OBFCM"]?.ToString();
+
+			_rawLifetimeFuelConsumption = rawOBFCMJson != null
+				? JsonConvert.DeserializeObject<Dictionary<string, double>>(rawOBFCMJson) : null;
+		}
+
+		public Meter OdometerReading => _body["MileageEndOfTest"]?.Value<double>().SI(Unit.SI.Kilo.Meter).Cast<Meter>() ?? null;
+
+		public Dictionary<string, Kilogram> LifetimeFuelConsumptionMass => _rawLifetimeFuelConsumption != null 
+			? _rawLifetimeFuelConsumption
+				.Where(f => f.Key == "LifetimeFuelConsumptionMassStart" || f.Key == "LifetimeFuelConsumptionMassEnd")?
+				.Select(f => new KeyValuePair<string, Kilogram>(f.Key, f.Value.SI<Kilogram>()))
+				.ToDictionary(f => f.Key, f => f.Value)
+			: null;
+
+		public Dictionary<string, Liter> LifetimeFuelConsumptionVolume => _rawLifetimeFuelConsumption != null 
+			? _rawLifetimeFuelConsumption
+				.Where(f => f.Key == "LifetimeFuelConsumptionVolStart" || f.Key == "LifetimeFuelConsumptionVolEnd")?
+				.Select(f => new KeyValuePair<string, Liter>(f.Key, f.Value.SI<Liter>()))
+				.ToDictionary(f => f.Key, f => f.Value)
+			: null;
+
+		public Kilogram TotalLifetimeFuelConsumptionMass => !LifetimeFuelConsumptionMass.IsNullOrEmpty()
+			? (LifetimeFuelConsumptionMass.Last().Value - LifetimeFuelConsumptionMass.First().Value) 
+			: null;
+
+		public Liter TotalLifetimeFuelConsumptionVolume => !LifetimeFuelConsumptionVolume.IsNullOrEmpty() 
+			? (LifetimeFuelConsumptionVolume.Last().Value - LifetimeFuelConsumptionVolume.First().Value) 
+			: null;
+	}
 
 	public class JSONInputDataV5 : JSONInputDataV4
 	{

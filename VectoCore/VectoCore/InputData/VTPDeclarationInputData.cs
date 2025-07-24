@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 
 namespace TUGraz.VectoCore.InputData
 {
@@ -76,7 +77,7 @@ namespace TUGraz.VectoCore.InputData
 		IVectoHash VectoCompletedVIFHash { get; }
 
 		Meter Mileage { get; }
-
+		
 		IList<ICycleData> Cycles { get; }
 
 		IEnumerable<double> FanPowerCoefficents { get; }
@@ -90,6 +91,8 @@ namespace TUGraz.VectoCore.InputData
 		NewtonMeter TorqueDriftLeftWheel { get; }
 
 		NewtonMeter TorqueDriftRightWheel { get; }
+
+		VTPOBFCMDeclarationData OBFCMDeclarationInputData { get; }
 	}
 
 	public interface IManufacturerReport

@@ -1,8 +1,6 @@
 ﻿
-Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
-Imports System.Linq
 Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -18,6 +16,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoHashing
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 <CustomValidation(GetType(VectoVTPJob), "ValidateJob")>
 Public Class VectoVTPJob
@@ -359,6 +358,12 @@ Public Class VectoVTPJob
     End Property
 
     Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements ICompletedVIF.BusAuxiliaries
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property OBFCMDeclarationInputData As VTPOBFCMDeclarationData Implements IVTPDeclarationJobInputData.OBFCMDeclarationInputData
         Get
             Throw New NotImplementedException()
         End Get

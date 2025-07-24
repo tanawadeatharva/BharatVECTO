@@ -59,6 +59,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Castle.Core.Internal;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -588,34 +589,44 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement CreateOBFCMElement()
 		{
+			var obfcmFcPart = GenerateOBFCMFuelConsumptionSection(OBFCMData);
+			var totalFcPart = GenerateOBFCMTotalFuelConsumptionSection(OBFCMData);
+			
 			var mileagePart = OBFCMData.StartMileage != null || OBFCMData.EndMileage != null
 				? new XElement(tns + "Mileage",
 					new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMData.StartMileage, "km", 2)),
 					new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMData.EndMileage, "km", 2)))
 				: null;
+			
+			var averageMassPart = OBFCMData.AverageMass != null 
+				? new XElement(tns + "TotalAverageMass", XMLHelper.ValueAsUnit(OBFCMData.AverageMass, "kg", 2)) 
+				: null;
 
-			var averageMassPart = OBFCMData.AverageMass != null ? new XElement(tns + "TotalAverageMass", XMLHelper.ValueAsUnit(OBFCMData.AverageMass, "kg", 2)) : null;
-
-			List<XElement> obfcmElements = new List<XElement> { mileagePart, averageMassPart };
-			obfcmElements.AddRange(GenerateOBFCMFuelConsumptionSection(OBFCMData));
-			obfcmElements.AddRange(GenerateOBFCMTotalFuelConsumptionSection(OBFCMData));
-
-			if (obfcmElements.Where(e => e != null).IsNullOrEmpty())
+			if (mileagePart == null && 
+				averageMassPart == null && 
+				obfcmFcPart.IsNullOrEmpty() && 
+				totalFcPart.IsNullOrEmpty())
 			{
 				return null;
 			}
+
+			bool isOdometerAvailable = OBFCMDeclarationInputData.OdometerReading != null;
+			bool isLifeFCAvailableMass = !OBFCMDeclarationInputData.LifetimeFuelConsumptionMass.IsNullOrEmpty();
+			bool isLifeFCAvailableVolume = !OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume.IsNullOrEmpty();
 
 			return new XElement(
 				tns + "OBFCM",
 				mileagePart,
 				averageMassPart,
-				// todo amogoda: these inputs are missing from JSON, to be clarified from CLIMA/alixgui
-				//new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit(OBFCMData.StartMileage, "km", 2),
-				//new XElement(tns + "LifetimeFuelConsumption",
-				//	new XElement(tns + "Mass", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass, "kg", 2)),
-				//	new XElement(tns + "Volume", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "ltr", 2))),
-				GenerateOBFCMFuelConsumptionSection(OBFCMData),
-				GenerateOBFCMTotalFuelConsumptionSection(OBFCMData)
+				isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.OdometerReading, "km", 2)) : null,
+				new XElement(tns + "LifetimeFuelConsumption",
+					isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : null,
+					isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : null,
+					isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : null,
+					isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : null),
+				obfcmFcPart,
+				totalFcPart,
+				GenerateFuelConsumptionDeltasSection(OBFCMDeclarationInputData, OBFCMData)
 			);
 		}
 
@@ -637,9 +648,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				r.Add(new XElement(tns + "FuelConsumption", 
 					new XAttribute("fuelType", fuelType),
 					new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
-					measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : null,
+					measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured"),
 					new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass[fuelType], "kg", 2)),
-					cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)): null));
+					cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)): NotApplyElement("OBFCM")));
 			}
 
 			return r.ToArray();
@@ -656,12 +667,54 @@ namespace TUGraz.VectoCore.OutputData.XML
 			r.Add(new XElement(tns + "TotalFuelConsumption",
 				new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionMass, "kg", 2)),
 				OBFCMData.TotalMeasuredConsumptionVolume != null 
-					? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null,
+					? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured"),
 				new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionMass, "kg", 2)),
 				OBFCMData.TotalCumulativeFuelConsumptionVolume != null 
-					? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null));
+					? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null,
+				OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass != null
+					? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass, "kg", 2)) : null,
+				OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume != null
+					? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null));
 
 			return r.ToArray();
+		}
+
+		private XElement GenerateFuelConsumptionDeltasSection(VTPOBFCMDeclarationData jsonObfcmData, VTPOBFCMData vdriObfcmData)
+		{
+			bool isLifetimeFcAvailable = jsonObfcmData.TotalLifetimeFuelConsumptionMass != null;
+			bool isMeasuredFcAvailable = vdriObfcmData.TotalMeasuredConsumptionMass != null;
+			bool isOBFCMFcAvailable = vdriObfcmData.TotalCumulativeFuelConsumptionMass != null;
+
+			var deltas = new List<XElement>();
+			if (isLifetimeFcAvailable && isOBFCMFcAvailable)
+			{
+				var delta1 = (jsonObfcmData.TotalLifetimeFuelConsumptionMass - vdriObfcmData.TotalCumulativeFuelConsumptionMass) / jsonObfcmData.TotalLifetimeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassLifetimeVSobfcm", XMLHelper.ValueAsUnit(delta1, "%", 2)));
+			}
+
+			if(isLifetimeFcAvailable && isMeasuredFcAvailable)
+			{
+				var delta2 = (jsonObfcmData.TotalLifetimeFuelConsumptionMass - vdriObfcmData.TotalMeasuredConsumptionMass) / jsonObfcmData.TotalLifetimeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassLifetimeVSmeasured", XMLHelper.ValueAsUnit(delta2, "%", 2)));
+			}
+
+			if (isOBFCMFcAvailable && isMeasuredFcAvailable)
+			{
+				var delta3 = (vdriObfcmData.TotalCumulativeFuelConsumptionMass - vdriObfcmData.TotalMeasuredConsumptionMass) / vdriObfcmData.TotalCumulativeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassObfcmVSmeasured", XMLHelper.ValueAsUnit(delta3, "%", 2)));
+			}
+
+			if (deltas.IsNullOrEmpty())
+			{
+				return null;
+			}
+
+			return new XElement(tns + "TotalFuelConsumptionDelta", deltas);
+		}
+
+		private XElement NotApplyElement(string name)
+		{
+			return new XElement(tns + name, "N/A");
 		}
 
 		private XDocument GenerateReport()
@@ -1200,6 +1253,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public IVectoHash PrimaryVIFHash { protected get; set; }
 		
 		public IVectoHash CompletedVIFHash { protected get; set; }
+		
+		public VTPOBFCMDeclarationData OBFCMDeclarationInputData { protected get; set; }
 
 		#endregion
 	}

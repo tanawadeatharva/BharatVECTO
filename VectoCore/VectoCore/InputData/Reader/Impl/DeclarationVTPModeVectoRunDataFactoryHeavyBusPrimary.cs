@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
 			Report.PrimaryVIFHash   = JobInputData.VectoPrimaryVIFHash;
 			Report.CompletedVIFHash = JobInputData.VectoCompletedVIFHash;
-			// todo amogoda: OBFCM Json input data should be added to the report here
+			Report.OBFCMDeclarationInputData = JobInputData.OBFCMDeclarationInputData;
 			Report.InitializeReport(powertrainConfig);
         }
 
