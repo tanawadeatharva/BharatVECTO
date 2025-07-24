@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
                     false,
                     false)));
 
-            Bind<IXMLVehicleInformationFile>().To<HEV_F2_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+            Bind<IXMLVehicleInformationFile>().To<FCHV_F2_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.FCHV,
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
-			Bind<IXMLVehicleInformationFile>().To<HEV_F3_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+			Bind<IXMLVehicleInformationFile>().To<FCHV_F3_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.FCHV,
@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
-			Bind<IXMLVehicleInformationFile>().To<HEV_F4_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+			Bind<IXMLVehicleInformationFile>().To<FCHV_F4_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.FCHV,
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
-			Bind<IXMLVehicleInformationFile>().To<HEV_IEPC_F_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+			Bind<IXMLVehicleInformationFile>().To<FCHV_IEPC_PrimaryBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.FCHV_IEPC,
@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
-			Bind<IXMLMultistepIntermediateReport>().To<IEPC_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+			Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.IEPC_E,
@@ -409,7 +409,79 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					true,
 					false)));
 
-			Bind<IXMLMultistepIntermediateReport>().To<Exempted_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.FCHV,
+                    ArchitectureID.F2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.FCHV,
+                    ArchitectureID.F3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.FCHV,
+                    ArchitectureID.F4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.FCHV_IEPC,
+                    ArchitectureID.F_IEPC,
+                    false,
+                    true,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<FCHV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_FCHV,
+                    ArchitectureID.F_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<Exempted_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
 				MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
 					VehicleCategoryHelper.PrimaryBus,
 					VectoSimulationJobType.ConventionalVehicle,
@@ -418,9 +490,81 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					false,
 					false)));
 
-			// -- Vehicle type writers
+            Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E2,
+                    false,
+                    false,
+                    false)));
 
-			Bind<IXmlMultistepTypeWriter>().To<ConventionalInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+            Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<PEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_PEV,
+                    ArchitectureID.E_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S2,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S3,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S4,
+                    false,
+                    false,
+                    false)));
+
+            Bind<IXMLMultistepIntermediateReport>().To<HEV_CompletedBus_VIF>().Named(MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.CreateName.Invoke(
+                MRFNinjectModule.VehicleTypeAndArchitectureStringHelper.ToParams(
+                    VehicleCategoryHelper.PrimaryBus,
+                    VectoSimulationJobType.Multiple_SHEV,
+                    ArchitectureID.S_IEPC,
+                    false,
+                    false,
+                    false)));
+
+            // -- Vehicle type writers
+
+            Bind<IXmlMultistepTypeWriter>().To<ConventionalInterimVehicleType>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetConventionalVehicleType());
 
 			Bind<IXmlMultistepTypeWriter>().To<HEVInterimVehicleType>().When(AccessedViaInterimVIFFactory)
@@ -429,11 +573,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlMultistepTypeWriter>().To<PEVInterimVehicleType>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetPEVVehicleType());
 
-			Bind<IXmlMultistepTypeWriter>().To<IEPCInterimVehicleType>().When(AccessedViaInterimVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetIEPCVehicleType());
+            Bind<IXmlMultistepTypeWriter>().To<FCHV_InterimVehicleType>().When(AccessedViaInterimVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.Get_FCHV_VehicleType());
 
-
-			Bind<IXmlMultistepTypeWriter>().To<ExemptedInterimVehicleType>().When(AccessedViaInterimVIFFactory)
+            Bind<IXmlMultistepTypeWriter>().To<ExemptedInterimVehicleType>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetExemptedVehicleType());
 
 			// -- Components type writers
@@ -454,10 +597,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			Bind<IVIFFAdasType>().To<VIFCompletedPEVAdasType>().When(AccessedViaInterimVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetPEVInterimADASType());
-
-			Bind<IVIFFAdasType>().To<VIFCompletedIEPCAdasType>().When(AccessedViaInterimVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportInterimFactory f) => f.GetIEPCInterimADASType());
-
 
 			// -- Airdrag type writers
 
@@ -517,27 +656,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
             Bind<IXmlTypeWriter>().To<MultipleSHEVVehicleType>().When(AccessedViaVIFFactory)
                 .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleSHEVVehicleType());
 
-			Bind<IXmlTypeWriter>().To<MultipleFCHVVehicleType>().When(AccessedViaVIFFactory)
+			Bind<IXmlTypeWriter>().To<Multiple_FCHV_VehicleType>().When(AccessedViaVIFFactory)
                 .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleFCHVVehicleType());
 
-            Bind<IXmlTypeWriter>().To<MultiplePEVVehicleType>().When(AccessedViaVIFFactory)
+            Bind<IXmlTypeWriter>().To<Multiple_PEV_VehicleType>().When(AccessedViaVIFFactory)
                 .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultiplePEVVehicleType());
 
-            Bind<IXmlTypeWriter>().To<MultipleSHEVVehicleType>().When(AccessedViaVIFFactory)
+            Bind<IXmlTypeWriter>().To<Multiple_SHEV_VehicleType>().When(AccessedViaVIFFactory)
                 .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetMultipleSHEVVehicleType());
 
-            Bind<IXmlTypeWriter>().To<HevF2VehicleType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF2VehicleType());
+            Bind<IXmlTypeWriter>().To<FCHV_F2_VehicleType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F2_VehicleType());
 
-			Bind<IXmlTypeWriter>().To<HevF3VehicleType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF3VehicleType());
+			Bind<IXmlTypeWriter>().To<FCHV_F3_VehicleType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F3_VehicleType());
 
-			// todo amogoda: vif - is implementation correct?
-			Bind<IXmlTypeWriter>().To<HevF4VehicleType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF4VehicleType());
+			Bind<IXmlTypeWriter>().To<FCHV_F4_VehicleType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F4_VehicleType());
 
-			Bind<IXmlTypeWriter>().To<IepcFVehicleType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevIepcFVehicleType());
+			Bind<IXmlTypeWriter>().To<FCHV_IEPC_VehicleType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_IEPC_VehicleType());
 
 			Bind<IXmlTypeWriter>().To<PevE2VehicleType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPevE2VehicleType());
@@ -577,16 +715,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<HevS4ComponentVIFType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevS4ComponentVIFType());
 
-			Bind<IXmlTypeWriter>().To<HevF2ComponentVIFType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF2ComponentVIFType());
+            Bind<IXmlTypeWriter>().To<Multiple_PEV_ComponentVIFType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_PEV_ComponentVIFType());
 
-			Bind<IXmlTypeWriter>().To<HevF3ComponentVIFType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF3ComponentVIFType());
+            Bind<IXmlTypeWriter>().To<Multiple_SHEV_ComponentVIFType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_SHEV_ComponentVIFType());
 
-			Bind<IXmlTypeWriter>().To<HevF4ComponentVIFType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevF4ComponentVIFType());
+            Bind<IXmlTypeWriter>().To<Multiple_FCHV_ComponentVIFType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_FCHV_ComponentVIFType());
 
-			Bind<IXmlTypeWriter>().To<HevIepcFComponentVIFType>().When(AccessedViaVIFFactory)
+            Bind<IXmlTypeWriter>().To<FCHV_F2_ComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F2_ComponentVIFType());
+
+			Bind<IXmlTypeWriter>().To<FCHV_F3_ComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F3_ComponentVIFType());
+
+			Bind<IXmlTypeWriter>().To<FCHV_F4_ComponentVIFType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_F4_ComponentVIFType());
+
+			Bind<IXmlTypeWriter>().To<FCHV_IEPC_ComponentVIFType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetHevIepcFComponentVIFType());
 
 			Bind<IXmlTypeWriter>().To<PevE2ComponentVIFType>().When(AccessedViaVIFFactory)
@@ -628,8 +775,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			Bind<IReportOutputGroup>().To<PevExVehicleParameterGroup>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPevExVehicleParmeterGroup());
-			
-			Bind<IReportOutputGroup>().To<PevIEPCVehicleParameterGroup>().When(AccessedViaVIFFactory)
+
+            Bind<IReportOutputGroup>().To<Multiple_PEV_VehicleParameterGroup>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_PEV_VehicleParmeterGroup());
+
+            Bind<IReportOutputGroup>().To<Multiple_SHEV_VehicleParameterGroup>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_SHEV_VehicleParmeterGroup());
+
+            Bind<IReportOutputGroup>().To<Multiple_FCHV_VehicleParameterGroup>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_Multiple_FCHV_VehicleParmeterGroup());
+
+            Bind<IReportOutputGroup>().To<FCHV_Fx_VehicleParameterGroup>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_Fx_VehicleParmeterGroup());
+
+            Bind<IReportOutputGroup>().To<FCHV_IEPC_VehicleParameterGroup>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.Get_FCHV_IEPC_VehicleParmeterGroup());
+
+            Bind<IReportOutputGroup>().To<PevIEPCVehicleParameterGroup>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPevIEPCVehicleParmeterGroup());
 			
 			Bind<IReportOutputGroup>().To<HevPxVehicleParameterGroup>().When(AccessedViaVIFFactory)
@@ -652,20 +814,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IVIFFAdasType>().To<VIFPEVAdasType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetPEVADASType());
 
-			Bind<IVIFFAdasType>().To<VIFIEPCAdasType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetIEPCADASType());
-
 			Bind<IXmlTypeWriter>().To<VIFAngleDriveType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAngelDriveType());
 
-			Bind<IXmlTypeWriter>().To<VIFAuxiliaryType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFAngleDriveType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainAngleDriveType());
+
+            Bind<IXmlTypeWriter>().To<VIFAuxiliaryType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryType());
 
 			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevSType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevSType());
 
-			Bind<IXmlTypeWriter>().To<VIFAuxiliaryHevFType>().When(AccessedViaVIFFactory)
-				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryHevFType());
+			Bind<IXmlTypeWriter>().To<VIFAuxiliaryFCHVType>().When(AccessedViaVIFFactory)
+				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryFCHVType());
 
 			Bind<IXmlTypeWriter>().To<VIFAuxiliaryIEPC_SType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAuxiliaryIEPC_SType());
@@ -682,10 +844,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<VIFAxlegearType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlegearType());
 
-			Bind<IXmlTypeWriter>().To<VIFRetarderType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFAxlegearType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainAxleGearType());
+
+            Bind<IXmlTypeWriter>().To<VIFRetarderType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetRetarderType());
 
-			Bind<IXmlTypeWriter>().To<VIFAxleWheelsType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFRetarderType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainRetarderType());
+
+            Bind<IXmlTypeWriter>().To<VIFAxleWheelsType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxleWheelsType());
 
 			Bind<IXmlTypeWriter>().To<VIFBoostingLimitationsType>().When(AccessedViaVIFFactory)
@@ -702,8 +870,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			Bind<IXmlTypeWriter>().To<VIFElectricMachineType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMachineType());
-			
-			Bind<IXmlTypeWriter>().To<VIFElectricMotorTorqueLimitsType>().When(AccessedViaVIFFactory)
+
+            Bind<IXmlTypeWriter>().To<VIFGeneratorType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetGeneratorType());
+
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFElectricMachineType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainElectricMachineType());
+
+            Bind<IXmlTypeWriter>().To<VIFElectricMotorTorqueLimitsType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetElectricMotorTorqueLimitsType());
 
 			Bind<IXmlTypeWriter>().To<VIFEngineType>().When(AccessedViaVIFFactory)
@@ -712,16 +886,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			Bind<IXmlTypeWriter>().To<VIFTorqueConverterType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetTorqueConvertType());
 
-			Bind<IXmlTypeWriter>().To<VIFIepcType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFTorqueConverterType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainTorqueConverterType());
+
+            Bind<IXmlTypeWriter>().To<VIFIepcType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetIepcType());
 
-			Bind<IXmlTypeWriter>().To<VIFTorqueLimitsType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFIepcType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainIEPCType());
+
+            Bind<IXmlTypeWriter>().To<VIFTorqueLimitsType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetTorqueLimitsType());
 
 			Bind<IXmlTypeWriter>().To<VIFTransmissionType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetTransmissionType());
 
-			Bind<IXmlTypeWriter>().To<VIFFuelCellType>().When(AccessedViaVIFFactory)
+            Bind<IXmlAxlePowertrainTypeWriter>().To<VIFTransmissionType>().When(AccessedViaVIFFactory)
+                .NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetAxlePowertrainTransmissionType());
+
+            Bind<IXmlTypeWriter>().To<VIFFuelCellType>().When(AccessedViaVIFFactory)
 				.NamedLikeFactoryMethod((IVIFReportFactory f) => f.GetFuelCellType());
 
 			#endregion

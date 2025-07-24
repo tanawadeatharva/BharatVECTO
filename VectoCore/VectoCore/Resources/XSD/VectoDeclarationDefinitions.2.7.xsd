@@ -33,6 +33,8 @@
 	27-05-2025: Making new fields of completed buses optional (multiple OEMs can be involved in completed buses).
 	17-06-2025: Removed NgTankSystem from multiple-SHEV Primary Bus.
 	17-06-2025: Removed Retarder from components of X4 architectures.
+	15-07-2025: Removed redundant types: Vehicle_Multiple_SHEV_CompletedBusDeclarationType, Vehicle_Multiple_PEV_CompletedBusDeclarationType,
+		Vehicle_Multiple_FCHV_CompletedBusDeclarationType
 	-->
 
 	<!--                      JOB                           -->
@@ -1557,21 +1559,6 @@
 					<xs:element name="MonitoringData" type="Completed_DataType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_SHEV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_HEV_CompletedBusDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_PEV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_PEV_CompletedBusDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_FCHV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_FCHV_CompletedBusDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
 

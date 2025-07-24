@@ -14,15 +14,22 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFIepcType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFIepcType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFIepcType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.IEPC);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.IEPCInputData);
+        }
+
+        private XElement GetElement(IIEPCDeclarationInputData iepc)
 		{
-			var iepc = inputData.JobInputData.Vehicle.Components.IEPC;
 			if (iepc == null)
 				return null;
 
@@ -36,34 +43,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
             return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(XNamespace.Xmlns + "vif1.0", _vif10.NamespaceName),
-                        new XAttribute(_xsi + XMLNames.XSIType, "vif1.0:IEPCDataDeclarationType"),
+						new XAttribute(XNamespace.Xmlns + "vif", _vif.NamespaceName),
+                        new XAttribute(_xsi + XMLNames.XSIType, "vif:IEPCDataDeclarationType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, iepc.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, iepc.Model),
 						new XElement(_vif + XMLNames.Component_CertificationNumber, iepc.CertificationNumber),
 						new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(iepc.Date, XmlDateTimeSerializationMode.Utc)),
 						new XElement(_vif + XMLNames.Component_AppVersion, iepc.AppVersion),
 						new XElement(_vif + XMLNames.ElectricMachine_ElectricMachineType, iepc.ElectricMachineType.ToString()),
-						new XElement(_vif10 + XMLNames.Component_CertificationMethod, certificationMethod),
+						new XElement(_vif + XMLNames.Component_CertificationMethod, certificationMethod),
 						new XElement(_vif + XMLNames.ElectricMachine_R85RatedPower, iepc.R85RatedPower.ToXMLFormat(0)),
 						new XElement(_vif + XMLNames.ElectricMachine_RotationalInertia, iepc.Inertia.ToXMLFormat(2)),
-						new XElement(_vif10 + XMLNames.IEPC_DifferentialIncluded, iepc.DifferentialIncluded),
-						new XElement(_vif10 + XMLNames.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor),
+						new XElement(_vif + XMLNames.IEPC_DifferentialIncluded, iepc.DifferentialIncluded),
+						new XElement(_vif + XMLNames.IEPC_DesignTypeWheelMotor, iepc.DesignTypeWheelMotor),
 						iepc.NrOfDesignTypeWheelMotorMeasured == null
 							? null
-							: new XElement(_vif10 + XMLNames.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured.Value),
+							: new XElement(_vif + XMLNames.IEPC_NrOfDesignTypeWheelMotorMeasured, iepc.NrOfDesignTypeWheelMotorMeasured.Value),
 						GetGears(iepc.Gears),
 						GetVoltageLevels(iepc.VoltageLevels),
 						GetDragCurves(iepc.DragCurves),
 						GetConditioning(iepc.Conditioning),
-                        new XElement(_vif10 + XMLNames.IEPC_DisengagementClutch, iepc.DisengagementClutch)
+                        new XElement(_vif + XMLNames.IEPC_DisengagementClutch, iepc.DisengagementClutch)
                     )
 			);
 		}
 		
-		#endregion
-
-
 		private XElement GetGears(IList<IGearEntry> gearsData)
 		{
 			var gears = new List<XElement>();
@@ -84,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				gears.Add(currentGear);
 			}
 			
-			return new XElement(_vif10 + XMLNames.Gearbox_Gears, 
+			return new XElement(_vif + XMLNames.Gearbox_Gears, 
 				new XAttribute(_xsi + XMLNames.XSIType, "IEPCGearsDeclarationType"),
 				gears);
 		}
@@ -96,15 +100,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			foreach (var voltageEntry in voltageData) {
 
-				var voltage = new XElement(_vif10 + XMLNames.ElectricMachine_VoltageLevel,
+				var voltage = new XElement(_vif + XMLNames.ElectricMachine_VoltageLevel,
 					voltageEntry.VoltageLevel == null 
 						? null 
-						: new XElement(_vif10 + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
-					new XElement(_vif10 + XMLNames.ElectricMachine_ContinuousTorque, voltageEntry.ContinuousTorque.ToXMLFormat(2)),
-					new XElement(_vif10 + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.AsRPM.ToXMLFormat(2)),
-					new XElement(_vif10 + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
-					new XElement(_vif10 + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.AsRPM.ToXMLFormat(2)),
-					new XElement(_vif10 + XMLNames.ElectricMachine_OverloadDuration, voltageEntry.OverloadTime.ToXMLFormat(2)),
+						: new XElement(_vif + XMLNames.VoltageLevel_Voltage, voltageEntry.VoltageLevel.ToXMLFormat(0)),
+					new XElement(_vif + XMLNames.ElectricMachine_ContinuousTorque, voltageEntry.ContinuousTorque.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedContinuousTorque, voltageEntry.ContinuousTorqueSpeed.AsRPM.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.AsRPM.ToXMLFormat(2)),
+					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageEntry.OverloadTime.ToXMLFormat(2)),
 					voltageEntry.FullLoadCurve.Select(x => GetMaxTorqueCurve(x))
 					//GetPowerMap(voltageEntry.PowerMap)
                 );
@@ -135,8 +139,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
             
             return (curve.Gear > 0)
-				? new XElement(_vif10 + XMLNames.MaxTorqueCurve, new XAttribute(XMLNames.MaxTorqueCurve_attr_gear, curve.Gear), maxTorqueCurveEntries)
-				: new XElement(_vif10 + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
+				? new XElement(_vif + XMLNames.MaxTorqueCurve, new XAttribute(XMLNames.MaxTorqueCurve_attr_gear, curve.Gear), maxTorqueCurveEntries)
+				: new XElement(_vif + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
 		}
 		
 		private IList<XElement> GetDragCurves(IList<IDragCurve> dragCurves)
@@ -149,14 +153,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					var outShaftSpeed = dragCurve.DragCurve.Rows[r][XMLNames.DragCurve_OutShaftSpeed].ToString().ToDouble();
 					var dragTorque = dragCurve.DragCurve.Rows[r][XMLNames.DragCurve_DragTorque].ToString().ToDouble();
 
-					var entry = new XElement(_vif10 + XMLNames.DragCurve_Entry,
+					var entry = new XElement(_vif + XMLNames.DragCurve_Entry,
 						new XAttribute(XMLNames.DragCurve_OutShaftSpeed, outShaftSpeed.ToXMLFormat(2)),
 						new XAttribute(XMLNames.DragCurve_DragTorque, dragTorque.ToXMLFormat(2)));
 
 					entries.Add(entry);
 				}
 
-				result.Add(new  XElement(_vif10 + XMLNames.DragCurve, 
+				result.Add(new  XElement(_vif + XMLNames.DragCurve, 
 					dragCurves.Count == 1 && !dragCurve.Gear.HasValue ? null : new XAttribute(XMLNames.DragCurve_Gear, dragCurve.Gear.Value),
 					entries));
 			}
@@ -175,12 +179,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				var coolantTempInLet = iepcData.Rows[r][XMLNames.Conditioning_CoolantTempInlet];
 				var coolingPower = iepcData.Rows[r][XMLNames.Conditioning_CoolingPower];
 
-				entries.Add(new XElement(_vif10 + XMLNames.Conditioning_Entry, 
+				entries.Add(new XElement(_vif + XMLNames.Conditioning_Entry, 
 					new XAttribute(XMLNames.Conditioning_CoolantTempInlet, coolantTempInLet),
 					new XAttribute(XMLNames.Conditioning_CoolingPower, coolingPower)));
 			}
 			
-			return new XElement(_vif10 + XMLNames.Conditioning, entries);
+			return new XElement(_vif + XMLNames.Conditioning, entries);
 		}
 	}
 }

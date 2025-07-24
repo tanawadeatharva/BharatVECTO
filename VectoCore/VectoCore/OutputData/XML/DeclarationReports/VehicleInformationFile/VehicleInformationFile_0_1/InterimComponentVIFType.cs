@@ -1,14 +1,15 @@
 ﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
 	public abstract class CompletedComponentVIFType : IReportMultistepCompletedBusTypeWriter
 	{
 		protected readonly IVIFReportInterimFactory _vifReportFactory;
-		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
-		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
+		protected XNamespace _vif = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
+		protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		protected CompletedComponentVIFType(IVIFReportInterimFactory vifReportFactory)
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return null;
 			}
 
-			return new XElement(_v24 + XMLNames.Vehicle_Components,
+			return new XElement(_v27 + XMLNames.Vehicle_Components,
 				new XAttribute(_xsi + XMLNames.XSIType, "Components_Conventional_CompletedBusType"),
 				airDrag,
 				auxiliaries);
@@ -65,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				return null;
 			}
 
-			return new XElement(_v24 + XMLNames.Vehicle_Components,
+			return new XElement(_v27 + XMLNames.Vehicle_Components,
 				new XAttribute(_xsi + XMLNames.XSIType, "Components_xEV_CompletedBusType"),
 				airDrag,
 				auxiliaries);

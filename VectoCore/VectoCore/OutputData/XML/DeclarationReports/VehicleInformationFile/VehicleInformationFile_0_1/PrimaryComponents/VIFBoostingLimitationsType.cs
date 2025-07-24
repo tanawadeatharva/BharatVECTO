@@ -22,10 +22,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			
 			var boostingLimitationsXElement = new XElement(_vif + XMLNames.Vehicle_BoostingLimitation,
 				new XAttribute(_xsi + XMLNames.XSIType, "BoostingLimitationsType"),
-				new XAttribute("xmlns", _v24.NamespaceName));
+				new XAttribute("xmlns", _v27));
 			foreach (DataRow row in boostingLimitations.Rows)
 			{
-				boostingLimitationsXElement.Add(new XElement(_v24 + XMLNames.BoostingLimitation_Entry,
+				boostingLimitationsXElement.Add(new XElement(_v27 + XMLNames.BoostingLimitation_Entry,
 					new XAttribute(XMLNames.BoostingLimitation_RotationalSpeed, row[MaxBoostingTorqueReader.Fields.MotorSpeed]),
 					new XAttribute(XMLNames.BoostingLimitation_BoostingTorque, row[MaxBoostingTorqueReader.Fields.DrivingTorque])
 				));

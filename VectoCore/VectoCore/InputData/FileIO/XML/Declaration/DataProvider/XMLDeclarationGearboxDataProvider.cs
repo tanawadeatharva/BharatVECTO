@@ -193,9 +193,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationMultistagePrimaryVehicleBusGearboxDataProviderV11 : XMLDeclarationMultistagePrimaryVehicleBusGearboxDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLDeclarationGearboxDataProviderV23 : XMLDeclarationGearboxDataProviderV10
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistagePrimaryVehicleBusGearboxDataProviderV11(
+			IXMLDeclarationVehicleData vehicle,
+            XmlNode componentNode, 
+			string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationGearboxDataProviderV23 : XMLDeclarationGearboxDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
 		public new const string XSD_TYPE = "GearboxDataDeclarationType";

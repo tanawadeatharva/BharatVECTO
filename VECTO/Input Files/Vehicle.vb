@@ -115,6 +115,7 @@ Public Class Vehicle
     Public ElectricMotorPerGearRatios As Double()
     Public IEPCFile As SubPath
 
+    Private _maxWindowsSize As Meter
 
     Public Sub New()
         _path = ""
@@ -321,6 +322,16 @@ Public Class Vehicle
 #End Region
 
 #Region "IInputData"
+
+    Public Property EngineeringMaxWindowsSize As Meter
+        Get
+            Return _maxWindowsSize
+        End Get
+
+        Set
+            _maxWindowsSize = Value
+        End Set
+    End Property
 
     Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
         Get
@@ -1205,22 +1216,23 @@ End Class
 Public Class FuelCellSystemWrapper
 	Implements IFuelCellSystemEngineeringInputData
 
-	Protected Vehicle As Vehicle
-	Public Sub New(veh As Vehicle)
-		Vehicle = veh
-	End Sub
+    Protected Vehicle As Vehicle
 
-	Public ReadOnly Property MaxWindowSize As Meter Implements IFuelCellSystemEngineeringInputData.MaxWindowSize
-		Get
-			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
-				Return Nothing
-			End If
+    Public Sub New(veh As Vehicle)
+        Vehicle = veh
+    End Sub
 
-			Return Vehicle.FuelCellSystemInputData.MaxWindowSize
-		End Get
-	End Property
+    Public ReadOnly Property MaxWindowSize As Meter Implements IFuelCellSystemEngineeringInputData.MaxWindowSize
+        Get
+            If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
+                Return Nothing
+            End If
 
-	Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
+            Return Vehicle.EngineeringMaxWindowsSize
+        End Get
+    End Property
+
+    Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
 		Get
 			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
 				Return Nothing

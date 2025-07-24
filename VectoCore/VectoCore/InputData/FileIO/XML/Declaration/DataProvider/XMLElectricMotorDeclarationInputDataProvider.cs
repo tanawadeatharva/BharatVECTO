@@ -721,6 +721,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 	}
 
+	public class XMLElectricMotorDeclarationInputDataProviderV11 : XMLElectricMotorDeclarationInputDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+        
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLElectricMotorDeclarationInputDataProviderV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+        {}
+    }
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLElectricMotorIEPCIInputDataProviderV01 : XMLElectricMotorIEPCIInputDataProviderV23
@@ -751,5 +761,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
     
 		protected override void ValidateGearCount() { }
 	}
+
+    public class XMLElectricMotorIEPCIInputDataProviderV11 : XMLElectricMotorIEPCIInputDataProviderV10
+    {
+        public static new readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+        
+		public static new readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLElectricMotorIEPCIInputDataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+    }
 
 }

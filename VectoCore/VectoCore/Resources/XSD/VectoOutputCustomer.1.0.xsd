@@ -12,6 +12,8 @@
 
 	<!-- Changelog
 	2025-05-12: Fixed type of Engine FuelType to include all new types (e.g. H2).
+	2025-07-15: Fixed auxiliaries type for FCHV Completed Bus (PEV_CompletedBusAuxGroup).
+	2025-07-16: Fixed auxiliaries type for Multiple FCHV Completed Bus (PEV_CompletedBusAuxGroup).
 	-->
 	
 	<xs:element name="VectoMockResults">
@@ -313,7 +315,7 @@
 					<xs:group ref="REESSGroup"/>
 					<xs:group ref="Powertrain-E2-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -344,7 +346,7 @@
 					<xs:group ref="REESSGroup"/>
 					<xs:group ref="Powertrain-E3-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -375,7 +377,7 @@
 					<xs:group ref="REESSGroup"/>
 					<xs:group ref="Powertrain-E4-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -432,7 +434,7 @@
 					<xs:group ref="REESSGroup"/>
 					<xs:group ref="Powertrain-IEPC-Group"/>
 					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -448,7 +450,7 @@
 					<xs:group ref="REESSGroup"/>
 					<xs:element name="Powertrain" type="AbstractPowertrainType" minOccurs="2" maxOccurs="2"/>
 					<xs:group ref="AxleWheelsGroup"/>
-					<xs:group ref="HEV_Sx_CompletedBusAuxGroup"/>
+					<xs:group ref="PEV_CompletedBusAuxGroup"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

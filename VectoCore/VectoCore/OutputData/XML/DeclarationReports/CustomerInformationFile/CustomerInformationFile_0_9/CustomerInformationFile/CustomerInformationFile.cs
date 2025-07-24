@@ -509,8 +509,102 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		}
 	}
 
+	public class Multiple_SHEV_CompletedBusCIF : CustomerInformationFileCompletedBus
+	{
+        public override string OutputDataType => "HEV_CompletedBusOutputType";
 
-	public class Exempted_CompletedBusCIF : CustomerInformationFileCompletedBus
+        public Multiple_SHEV_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory)
+            : base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_Multiple_SHEV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+
+    public class Multiple_PEV_CompletedBusCIF : CustomerInformationFileCompletedBus
+	{
+        public override string OutputDataType => "PEV_CompletedBusOutputType";
+
+        public Multiple_PEV_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory)
+            : base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_Multiple_PEV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+	public class Multiple_FCHV_CompletedBusCIF : CustomerInformationFileCompletedBus
+	{
+        public override string OutputDataType => "FCHV_CompletedBusOutputType";
+
+        public Multiple_FCHV_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) 
+			: base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_Multiple_FCHV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class FCHV_F2_CompletedBusCIF : CustomerInformationFileCompletedBus
+    {
+        public override string OutputDataType => "FCHV_CompletedBusOutputType";
+
+        public FCHV_F2_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
+        {}
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_FCHV_F2_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class FCHV_F3_CompletedBusCIF : CustomerInformationFileCompletedBus
+    {
+        public override string OutputDataType => "FCHV_CompletedBusOutputType";
+
+        public FCHV_F3_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_FCHV_F3_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class FCHV_F4_CompletedBusCIF : CustomerInformationFileCompletedBus
+    {
+        public override string OutputDataType => "FCHV_CompletedBusOutputType";
+
+        public FCHV_F4_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_FCHV_F4_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class FCHV_IEPC_CompletedBusCIF : CustomerInformationFileCompletedBus
+    {
+        public override string OutputDataType => "FCHV_CompletedBusOutputType";
+
+        public FCHV_IEPC_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory)
+        { }
+
+        public override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _cifFactory.Get_FCHV_IEPC_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    public class Exempted_CompletedBusCIF : CustomerInformationFileCompletedBus
 	{
 		public Exempted_CompletedBusCIF(ICustomerInformationFileFactory cifFactory, IResultsWriterFactory resultWriterFactory) : base(cifFactory, resultWriterFactory) { }
 

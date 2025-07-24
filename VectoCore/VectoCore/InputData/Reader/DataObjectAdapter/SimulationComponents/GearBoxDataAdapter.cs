@@ -283,22 +283,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.SerialHybridVehicle);
-			if (isBatteryElectric && (runData.ElectricMachinesData == null || runData.ElectricMachinesData.Count == 0)) {
-				throw new VectoException(
-					"Electric motor data has to be set for battery electric vehicles before creating gearbox data!");
-			}
-
-			if (isBatteryElectric && runData.GearshiftParameters == null) {
-				throw new VectoException(
-					"Gearshift parameters have to be set for battery electric vehicles before creating gearbox data!");
-			}
-
-            if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
+            if (inputData.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle, 
+					VectoSimulationJobType.SerialHybridVehicle, 
+					VectoSimulationJobType.FCHV) 
+				&&
 				gearbox.Type.AutomaticTransmission())
 			{
-
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
 				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
 					retVal.Type = GearboxType.APTN;
