@@ -58,10 +58,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 
 		public bool DeRatingActive { get; protected internal set; }
-		public bool EmOff => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
+		public bool EmOffPrev => PreviousState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
 			? true : false;
 
-		public IBusAuxiliariesAdapter BusAux { protected get; set; }
+		public bool? EmOffCurr => CurrentState == null
+			? (bool?)null
+			: CurrentState.EMTorque == null /*|| PreviousState.EMTorque.IsEqual(0)*/
+				? true
+				: false;
+
+        public IBusAuxiliariesAdapter BusAux { protected get; set; }
 
 		public ElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
 			PowertrainPosition position) : this(container, data, control, position, false)

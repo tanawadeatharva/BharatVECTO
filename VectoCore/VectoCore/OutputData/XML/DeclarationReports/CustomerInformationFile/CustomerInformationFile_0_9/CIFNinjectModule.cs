@@ -818,9 +818,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetPEV_CompletedBusVehicleSequenceGroupWriter());
             Bind<IReportOutputGroup>().To<FCHV_CompletedBusVehicleSequenceGroupWriter>().When(AccessedViaCIFFactory)
                 .NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetFCHV_CompletedBusVehicleSequenceGroupWriter());
-            Bind<IReportOutputGroup>().To<ConventionalCompletedBusVehicleSequenceGroupCIF>().When(AccessedViaCIFFactory)
-				.NamedLikeFactoryMethod((ICustomerInformationFileFactory f) => f.GetConventionalCompletedBusVehicleSequenceGroupWriter());
-
+            
 			#endregion
 			#region ComponentGroups
 			Bind<IReportOutputGroup>().To<EngineGroup>().When(AccessedViaCIFFactory)

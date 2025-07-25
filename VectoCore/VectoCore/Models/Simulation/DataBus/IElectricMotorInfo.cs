@@ -18,7 +18,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Watt MaxPowerDrive(Volt volt, PerSecond inAngularVelocity, GearshiftPosition gear);
 		NewtonMeter GetTorqueForElectricPower(Volt volt, Watt electricPower, PerSecond avgEmSpeed, Second dt, GearshiftPosition gear, bool allowExtrapolation);
 
-		bool EmOff { get; }
+		bool EmOffPrev { get; }
+		bool? EmOffCurr { get; }
 		bool DeRatingActive { get; }
 	}
 }

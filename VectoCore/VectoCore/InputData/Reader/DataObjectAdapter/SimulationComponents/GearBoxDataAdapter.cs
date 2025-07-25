@@ -331,7 +331,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
 				: inputData.VehicleCategory;
-			for (uint i = 0; i < gearsInput.Count; i++)
+			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.FCHV);
+            for (uint i = 0; i < gearsInput.Count; i++)
 			{
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, false, vehicleCategory, gearbox.Type);
