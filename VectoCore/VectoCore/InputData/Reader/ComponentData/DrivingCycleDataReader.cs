@@ -990,7 +990,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 								: null,
 							PMNumberFlow = row.ParseDouble(Fields.PMNumberFlow).SI<PerSecond>(),
 							CO2MassFlow = row.ParseDouble(Fields.CO2MassFlow).SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>(),
-							OBFCMMileage = table.Columns.Contains(Fields.OBFCMMass)
+							OBFCMMileage = table.Columns.Contains(Fields.OBFCMMileage)
 								? row.ParseDouble(Fields.OBFCMMileage).SI(Unit.SI.Meter.Kilo).Cast<Meter>() : null,
 							OBFCMMass = table.Columns.Contains(Fields.OBFCMMass)
 								? row.ParseDouble(Fields.OBFCMMass).SI(Unit.SI.Gramm.Kilo).Cast<Kilogram>() : null,

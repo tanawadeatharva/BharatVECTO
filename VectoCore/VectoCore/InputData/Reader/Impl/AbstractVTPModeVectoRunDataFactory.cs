@@ -173,6 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		private Dictionary<FuelType, Kilogram> _cumulativeFuelConsumptionMass = null;
 
 		private bool isOBFCMMassAvailable = false;
+		private bool isOBFCMMileageAvailable = false;
 		private bool isOBFCMFuelConsumptionMassFlowAvailable = false;
 		private bool isOBFCMFuelConsumptionVolumeFlowAvailable = false;
 
@@ -182,10 +183,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			AvailableFuels = _cycleData.Entries.First().Fuelconsumption.Keys.ToArray();
 
 			var firstEntry = _cycleData.Entries.First();
-			isOBFCMMassAvailable= firstEntry.OBFCMMass != null;
+			isOBFCMMassAvailable = firstEntry.OBFCMMass != null;
+			isOBFCMMileageAvailable = firstEntry.OBFCMMileage != null;
 			isOBFCMFuelConsumptionMassFlowAvailable = firstEntry.OBFCMFuelConsumptionMassFlow.First().Value != null;
 			isOBFCMFuelConsumptionVolumeFlowAvailable = firstEntry.OBFCMFuelConsumptionVolumeFlow.First().Value != null;
 		}
+
+		public bool IsOBFCM => isOBFCMMassAvailable
+			|| isOBFCMMileageAvailable
+			|| isOBFCMFuelConsumptionMassFlowAvailable
+			|| isOBFCMFuelConsumptionVolumeFlowAvailable;
 
 		public Meter StartMileage => _cycleData.Entries.First()?.OBFCMMileage ?? null;
 

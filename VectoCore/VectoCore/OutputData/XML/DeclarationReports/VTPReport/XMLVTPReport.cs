@@ -589,8 +589,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement CreateOBFCMElement()
 		{
-			var obfcmFcPart = GenerateOBFCMFuelConsumptionSection(OBFCMData);
-			var totalFcPart = GenerateOBFCMTotalFuelConsumptionSection(OBFCMData);
+			var obfcmFcPart = GenerateOBFCMFuelConsumptionSection();
+			var totalFcPart = GenerateOBFCMTotalFuelConsumptionSection();
 			
 			var mileagePart = OBFCMData.StartMileage != null || OBFCMData.EndMileage != null
 				? new XElement(tns + "Mileage",
@@ -619,64 +619,85 @@ namespace TUGraz.VectoCore.OutputData.XML
 				mileagePart,
 				averageMassPart,
 				isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.OdometerReading, "km", 2)) : null,
-				new XElement(tns + "LifetimeFuelConsumption",
-					isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : null,
-					isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : null,
-					isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : null,
-					isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : null),
+				!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty() && (isLifeFCAvailableMass || isLifeFCAvailableVolume)
+					? new XElement(tns + "LifetimeFuelConsumption",
+						isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : null,
+						isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : null,
+						isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : null,
+						isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : null)
+					: null,
 				obfcmFcPart,
 				totalFcPart,
 				GenerateFuelConsumptionDeltasSection(OBFCMDeclarationInputData, OBFCMData)
 			);
 		}
 
-		private XElement[] GenerateOBFCMFuelConsumptionSection(VTPOBFCMData obfcmData)
+		private XElement[] GenerateOBFCMFuelConsumptionSection()
 		{
 			var r = new List<XElement>();
-			if(obfcmData.CumulativeFuelConsumptionMass.IsNullOrEmpty())
+
+			if (!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty())
 			{
-				return r.ToArray();
+				foreach (var fuelType in OBFCMData.MeasuredConsumptionMass.Keys)
+				{
+					var measuredVolumeConsumption = OBFCMData.MeasuredConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.MeasuredConsumptionVolume[fuelType] : null;
+					var cumulativeVolumeConsumption = OBFCMData.CumulativeFuelConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.CumulativeFuelConsumptionVolume[fuelType] : null;
+
+					r.Add(new XElement(tns + "FuelConsumption",
+						new XAttribute("fuelType", fuelType),
+						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
+						measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured", "l"),
+						new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass[fuelType], "kg", 2)),
+						cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("OBFCM", "l")));
+				}
+			}
+			else if (OBFCMData.IsOBFCM)
+			{
+				foreach (var fuelType in OBFCMData.MeasuredConsumptionMass.Keys)
+				{
+					var measuredVolumeConsumption = OBFCMData.MeasuredConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.MeasuredConsumptionVolume[fuelType] : null;
+
+					r.Add(new XElement(tns + "FuelConsumption",
+						new XAttribute("fuelType", fuelType),
+						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
+						measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured", "l")));
+				}
 			}
 
-			foreach (var fuelType in OBFCMData.MeasuredConsumptionMass.Keys)
-			{
-				var measuredVolumeConsumption = OBFCMData.MeasuredConsumptionVolume.ContainsKey(fuelType) 
-					? OBFCMData.MeasuredConsumptionVolume[fuelType] : null;
-				var cumulativeVolumeConsumption = OBFCMData.CumulativeFuelConsumptionVolume.ContainsKey(fuelType)
-					? OBFCMData.CumulativeFuelConsumptionVolume[fuelType] : null;
-
-				r.Add(new XElement(tns + "FuelConsumption", 
-					new XAttribute("fuelType", fuelType),
-					new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
-					measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured"),
-					new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass[fuelType], "kg", 2)),
-					cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)): NotApplyElement("OBFCM")));
-			}
-
-			return r.ToArray();
+			return !r.IsNullOrEmpty() ? r.ToArray() : null;
 		}
 
-		private XElement[] GenerateOBFCMTotalFuelConsumptionSection(VTPOBFCMData obfcmData)
+		private XElement[] GenerateOBFCMTotalFuelConsumptionSection()
 		{
 			var r = new List<XElement>();
-			if (obfcmData.TotalCumulativeFuelConsumptionMass == null)
+			if (OBFCMData.IsOBFCM)
 			{
-				return r.ToArray();
+				r.AddRange(new List<XElement>()
+				{
+					new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionMass, "kg", 2)),
+					NotApplyElement("Measured", "l")
+				});
 			}
 
-			r.Add(new XElement(tns + "TotalFuelConsumption",
-				new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionMass, "kg", 2)),
-				OBFCMData.TotalMeasuredConsumptionVolume != null 
-					? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured"),
-				new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionMass, "kg", 2)),
-				OBFCMData.TotalCumulativeFuelConsumptionVolume != null 
-					? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null,
-				OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass != null
-					? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass, "kg", 2)) : null,
-				OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume != null
-					? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null));
-
-			return r.ToArray();
+			if (OBFCMData.TotalCumulativeFuelConsumptionMass != null)
+			{
+				r.AddRange(new List<XElement>()
+				{
+					OBFCMData.TotalCumulativeFuelConsumptionMass != null
+						? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionMass, "kg", 2)) : null,
+					OBFCMData.TotalCumulativeFuelConsumptionVolume != null
+						? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("OBFCM", "l"),
+					OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass != null
+						? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass, "kg", 2)) : null,
+					OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume != null
+						? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null
+				});
+			}
+			
+			return !r.IsNullOrEmpty() ? new List<XElement>() { new XElement(tns + "TotalFuelConsumption", r) }.ToArray() : null;
 		}
 
 		private XElement GenerateFuelConsumptionDeltasSection(VTPOBFCMDeclarationData jsonObfcmData, VTPOBFCMData vdriObfcmData)
@@ -712,9 +733,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + "TotalFuelConsumptionDelta", deltas);
 		}
 
-		private XElement NotApplyElement(string name)
+		private XElement NotApplyElement(string name, string unit = null)
 		{
-			return new XElement(tns + name, "N/A");
+			return new XElement(tns + name, 
+				!unit.IsNullOrEmpty() ? new XAttribute("unit", unit) : null,
+				"N/A");
 		}
 
 		private XDocument GenerateReport()
