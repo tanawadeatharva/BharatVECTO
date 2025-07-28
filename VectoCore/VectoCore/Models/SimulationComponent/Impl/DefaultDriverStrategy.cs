@@ -453,24 +453,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLoss = DataBus.GearboxInfo.GearboxLoss();
 			var axleLoss = DataBus.AxlegearInfo.AxlegearLoss();
 			var emDragLoss = CalculateElectricMotorDragLoss();
-			var iceDragLoss = GetICEDragLoss(dataBus);
+			var iceDragLoss = GetICEDragLossPCC(dataBus);
 
 			var totalComponentLossPowers = gearboxLoss + axleLoss + emDragLoss - iceDragLoss;
 			var coastingResistanceForce = airDrag.AirdragForce + rollResistanceForce + totalComponentLossPowers / vehicleSpeed;
 			return coastingResistanceForce;
 		}
 
-		private Watt GetICEDragLoss(IDataBus dataBus)
+		private Watt GetICEDragLossLookAheadCoasting(IDataBus dataBus)
 		{
 			if (PowertrainArchitecture.IsOneOf(VectoSimulationJobType.SerialHybridVehicle,
-					VectoSimulationJobType.IEPC_S)) {
+					VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC)) {
+				return 0.SI<Watt>();
+			}
+			return DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
+        }
+
+		private Watt GetICEDragLossPCC(IDataBus dataBus)
+		{
+			if (PowertrainArchitecture.IsOneOf(VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.IEPC_S, VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC)) {
 				return 0.SI<Watt>();
 			}
 			var iceDragLoss = 0.SI<Watt>();
 			if (dataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
 				dataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
-				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
-					iceDragLoss = DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
+				switch (ADAS.EcoRoll) {
+					case EcoRollType.None:
+						iceDragLoss = DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
+                        break;
+					case EcoRollType.WithoutEngineStop:
+						iceDragLoss = ATEcoRollReleaseLockupClutch
+							? 0.SI<Watt>()
+							: DataBus.EngineInfo.EngineDragPower(DataBus.EngineInfo.EngineSpeed);
+						break;
+					case EcoRollType.WithEngineStop:
+						iceDragLoss = 0.SI<Watt>();
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 			} else {
 				if (ADAS.EcoRoll == EcoRollType.None) {
@@ -763,7 +784,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxLossPower = DataBus.GearboxInfo?.GearboxLoss() ?? 0.SI<Watt>();
 			var axleLossPower = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.SI<Watt>();
 			var emDragLossPower = CalculateElectricMotorDragLoss();
-			var iceDragLossPower = GetICEDragLoss(DataBus); //DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
+			var iceDragLossPower = GetICEDragLossLookAheadCoasting(DataBus); //DataBus.EngineInfo?.EngineDragPower(DataBus.EngineInfo.EngineSpeed) ?? 0.SI<Watt>();
 
 			var totalComponentLossPowers = gearboxLossPower + axleLossPower + emDragLossPower - iceDragLossPower;
 			var coastingResistanceForce = airDrag.AirdragForce + rollingResistanceForce + totalComponentLossPowers / vehicleSpeed;
