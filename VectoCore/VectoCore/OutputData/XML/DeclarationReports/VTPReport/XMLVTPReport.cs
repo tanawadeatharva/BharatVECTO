@@ -648,7 +648,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					r.Add(new XElement(tns + "FuelConsumption",
 						new XAttribute("fuelType", fuelType),
 						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
-						measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured", "l"),
+						NotApplyElement("Measured", "l"),
 						new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass[fuelType], "kg", 2)),
 						cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("OBFCM", "l")));
 				}
@@ -663,7 +663,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					r.Add(new XElement(tns + "FuelConsumption",
 						new XAttribute("fuelType", fuelType),
 						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
-						measuredVolumeConsumption != null ? new XElement(tns + "Measured", XMLHelper.ValueAsUnit(measuredVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Measured", "l")));
+						NotApplyElement("Measured", "l")));
 				}
 			}
 
