@@ -619,12 +619,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				mileagePart,
 				averageMassPart,
 				OBFCMData.IsOBFCM ? (isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit( OBFCMDeclarationInputData.OdometerReading , "km", 2)) : NotApplyElement("OdometerReadingEnd", "km")) : null,
-				!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty() && (isLifeFCAvailableMass || isLifeFCAvailableVolume)
+				!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty()
 					? new XElement(tns + "LifetimeFuelConsumption",
-						isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : null,
-						isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : null,
-						isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : null,
-						isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : null)
+						isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : NotApplyElement("Start", "kg"),
+						isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : NotApplyElement("End", "kg"),
+						isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Start", "l"),
+						isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : NotApplyElement("End", "l"))
 					: null,
 				obfcmFcPart,
 				totalFcPart,
