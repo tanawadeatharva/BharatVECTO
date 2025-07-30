@@ -1672,6 +1672,11 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp9_BO-Mode.xml", 16)] // MU Low loading
 
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0)]
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group2_HEV_S2_BO-Mode_ovc.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 16)] // MU Low loading
+
         public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
 		{
 			if (cycleIdx < 0) {

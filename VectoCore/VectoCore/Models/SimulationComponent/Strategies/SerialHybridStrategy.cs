@@ -19,6 +19,38 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
+	public class SerialHybridStrategyBatteryOnly : SerialHybridStrategy
+	{
+		public SerialHybridStrategyBatteryOnly(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
+
+		#region Overrides of AbstractSerialHybridStrategy
+
+		protected override StateMachineState GetStateAccelerate(DrivetrainDemand drivetrainDemand, GenSetOperatingPoint maxPowerGenset, Second dt)
+		{
+			return StateMachineState.Acc_S0;
+		}
+
+		#endregion
+
+    }
+
+    // =======================================================================
+
+    public class SerialHybridStrategyBatteryOnlyAT : SerialHybridStrategyAT
+	{
+		public SerialHybridStrategyBatteryOnlyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }
+
+		#region Overrides of AbstractSerialHybridStrategy
+
+		protected override StateMachineState GetStateAccelerate(DrivetrainDemand drivetrainDemand, GenSetOperatingPoint maxPowerGenset, Second dt)
+		{
+			return StateMachineState.Acc_S0;
+		}
+
+		#endregion
+	}
+    // =======================================================================
+
     public class SerialHybridStrategyAT : AbstractSerialHybridStrategy
 	{
 		public SerialHybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container) { }

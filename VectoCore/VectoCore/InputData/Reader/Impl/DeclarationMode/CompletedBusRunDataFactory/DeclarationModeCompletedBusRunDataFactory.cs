@@ -451,8 +451,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
 
+				if (ovcHevMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
 
-				DataAdapterGeneric.CreateREESSData(
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -512,8 +515,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
 
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
 
-				DataAdapterGeneric.CreateREESSData(
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -737,13 +743,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				
-				rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd);
 				rd.GearshiftParameters =
 					DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 															(rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						PrimaryVehicle.EngineIdleSpeed, PrimaryVehicle.Components.GearboxInputData.Type, PrimaryVehicle.Components.GearboxInputData.Gears.Count);
+				rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd);
 
-				rd.Retarder =
+                rd.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, rd);
 				rd.BusAuxiliaries =
 					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, rd);

@@ -103,8 +103,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var engineMode = engineModes[modeIdx.Value];
 				var runData = CreateCommonRunData(Vehicle, mission, loading, _segment, engineModes, modeIdx.Value);
 
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
+				}
 
-				runData.DriverData = DriverData;
+                runData.DriverData = DriverData;
 				runData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);

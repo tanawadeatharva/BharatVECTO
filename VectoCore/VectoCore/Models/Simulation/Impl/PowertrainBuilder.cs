@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var isATTransmission =
 				!(data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC);
-			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, data, container);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, false, data, container);
 			
 			// add engine before gearbox so that gearbox can obtain if an ICE is available already in constructor
 			var engine = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);
@@ -557,7 +557,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (!isAtTransmission) {
 				clutch = ComponentFactory.CreateClutch(data.JobType, container, data.EngineData);
 			}
-			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isAtTransmission, data, container);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isAtTransmission, data.BatteryOnlyHybridMode, data, container);
 			var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, strategy, es);
 			
             // add engine before gearbox in the container, that gearbox can obtain it
@@ -784,7 +784,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var clutch = AddClutch(data, container);
 
 			var isATTransmission = !(data.GearboxData.Type.ManualTransmission() || data.GearboxData.Type == GearboxType.IHPC);
-			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, data, container);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, isATTransmission, false, data, container);
 
             var ctl = ComponentFactory.CreateHybridController(data.Cycle.CycleType, container, strategy, es);
 
@@ -869,7 +869,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var es = ConnectREESS(data, container);
 			
 			var atTransmission = data.GearboxData != null && data.GearboxData.Type.AutomaticTransmission();
-			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, atTransmission,
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, atTransmission, data.BatteryOnlyHybridMode,
 				data, container);
 
 			var ctl = ComponentFactory.CreateSerialHybridController(data.Cycle.CycleType, container, strategy,
@@ -1603,7 +1603,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
 			var es = ConnectREESS(data, container);
 
-			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, false, data, container);
+			var strategy = ComponentFactory.CreateHybridStrategy(data.JobType, data.Cycle.CycleType, false, data.BatteryOnlyHybridMode, data, container);
 			var ctl = ComponentFactory.CreateSerialHybridController(data.Cycle.CycleType, container, strategy, es);
 
 			var engine = ComponentFactory.CreateCombustionEngine(data.Cycle.CycleType, container, data.EngineData);

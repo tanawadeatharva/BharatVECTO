@@ -93,38 +93,45 @@ namespace TUGraz.VectoCore.Models.Simulation
 			Bind<ISerialHybridController>().To<SerialHybridController>().Named(_realPowertrain.HybridControllerName(CycleType.DistanceBased));
 
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, false, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearATHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeedGear, true, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, false, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedGearATHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeedGear, true, false));
 
             Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle,CycleType.MeasuredSpeed, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle,CycleType.MeasuredSpeed, false, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategyAT>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeed, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.MeasuredSpeed, true, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeed, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeed, false, false));
 			Bind<IHybridControlStrategy>().To<MeasuredSpeedHybridStrategyAT>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeed, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.MeasuredSpeed, true, false));
 
             Bind<IHybridControlStrategy>().To<HybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, false, false));
 			Bind<IHybridControlStrategy>().To<HybridStrategyAT>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.ParallelHybridVehicle, CycleType.DistanceBased, true, false));
 			Bind<IHybridControlStrategy>().To<HybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.DistanceBased, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.DistanceBased, false, false));
 			Bind<IHybridControlStrategy>().To<HybridStrategyAT>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.DistanceBased, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IHPC, CycleType.DistanceBased, true, false));
 
 			Bind<IHybridControlStrategy>().To<SerialHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, false, false));
 			Bind<IHybridControlStrategy>().To<SerialHybridStrategyAT>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, true));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, true, false));
 			Bind<IHybridControlStrategy>().To<SerialHybridStrategy>()
-				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IEPC_S, CycleType.DistanceBased, false));
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IEPC_S, CycleType.DistanceBased, false, false));
+
+			Bind<IHybridControlStrategy>().To<SerialHybridStrategyBatteryOnly>()
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, false, true));
+			Bind<IHybridControlStrategy>().To<SerialHybridStrategyBatteryOnlyAT>()
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.SerialHybridVehicle, CycleType.DistanceBased, true, true));
+			Bind<IHybridControlStrategy>().To<SerialHybridStrategyBatteryOnly>()
+				.Named(_realPowertrain.HybridStrategyName(VectoSimulationJobType.IEPC_S, CycleType.DistanceBased, false, true));
 
             Bind<IElectricMotorControl>().To<BatteryElectricMotorController>()
 				.Named(_realPowertrain.ElectricMotorControllerName(CycleType.DistanceBased));
@@ -570,7 +577,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
 						.CreateSerialHybridController))),
 				// method settings for creating hybrid strategy
-				GetMethodSettings(namingHelper.CreateHybridStrategyName, 3,
+				GetMethodSettings(namingHelper.CreateHybridStrategyName, 4,
 					typeof(IPowertrainComponentFactory).GetMethod(nameof(IPowertrainComponentFactory
 						.CreateHybridStrategy))),
 				// method settings for creating SimpleBattery (bus aux)
@@ -649,9 +656,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public string ICENameBatteryOnlyHybrid(CycleType cycleType) => $"{_prefix}_BatteryOnlyHybrid_{cycleType.ToString()}";
 
-        public string CreateHybridStrategyName(object[] arguments) => CheckArguments<VectoSimulationJobType,CycleType, bool>(arguments, HybridStrategyName);
+        public string CreateHybridStrategyName(object[] arguments) => CheckArguments<VectoSimulationJobType,CycleType, bool, bool>(arguments, HybridStrategyName);
 
-        public string HybridStrategyName(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission) => $"{_prefix}_{jobType}_{cycleType}_{(atTransmission ? "AT" : "AMT")}";
+        public string HybridStrategyName(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission, bool batteryOnlyMode) => $"{_prefix}_{jobType}_{cycleType}_{(atTransmission ? "AT" : "AMT")}{(batteryOnlyMode ? "_BO" : "")}";
 
 		public string CreateHybridControllerName(object[] arguments) => CheckArguments<CycleType>(arguments, HybridControllerName);
 
@@ -708,7 +715,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 			if (arguments.Length == 4 && arguments[0] is T1 p1 && arguments[1] is T2 p2 && arguments[2] is T3 p3 && arguments[3] is T4 p4) {
 				return func(p1, p2, p3, p4);
 			}
-			throw new ArgumentException($"exactly three arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name}");
+			throw new ArgumentException($"exactly four arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name} {typeof(T4).Name}");
 		}
 
     }

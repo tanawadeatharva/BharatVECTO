@@ -345,7 +345,7 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
-	public IHybridControlStrategy CreateHybridStrategy(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission,
+	public IHybridControlStrategy CreateHybridStrategy(VectoSimulationJobType jobType, CycleType cycleType, bool atTransmission, bool batteryOnlyMode,
 		VectoRunData runData, IVehicleContainer container)
 	{
 		throw new NotImplementedException();

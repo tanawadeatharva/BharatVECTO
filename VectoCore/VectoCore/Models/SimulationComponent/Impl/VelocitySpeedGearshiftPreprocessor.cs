@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Tuple<PowertrainPosition, ElectricMotorData> GetEMPos(VectoRunData runData)
 		{
-			if (runData.BatteryOnlyHybridMode) {
+			if (runData.JobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC) && runData.BatteryOnlyHybridMode) {
 				return runData.ElectricMachinesData
 					.FirstOrDefault(x => x.Item1.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5, PowertrainPosition.IHPC));
             }

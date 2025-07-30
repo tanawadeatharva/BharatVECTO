@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		IEngineAuxiliary CreateEngineAuxiliary(IVehicleContainer container);
 		
 		IHybridControlStrategy CreateHybridStrategy(VectoSimulationJobType jobType, CycleType cycleType,
-			bool atTransmission, VectoRunData runData, IVehicleContainer container);
+			bool atTransmission, bool batteryOnlyMode, VectoRunData runData, IVehicleContainer container);
 		
 		IHybridController CreateHybridController(CycleType cycleType,
 			IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es);
