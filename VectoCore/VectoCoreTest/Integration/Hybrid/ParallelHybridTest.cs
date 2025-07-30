@@ -1677,6 +1677,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 0)]
 		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 16)] // MU Low loading
 
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_S2_Base_AMT.xml", 0)]
+
         public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
 		{
 			if (cycleIdx < 0) {
@@ -1690,6 +1692,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 		[TestCase("PrimaryCoach_E2_PEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 1)]
 		[TestCase("PrimaryCoach_P2_HEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 2)] // generic
 		[TestCase("PrimaryCoach_P2_HEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 3)] // specific
+		[TestCase("PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", "HEV_completedBus_2.xml", 2)] // specific
+		[TestCase("PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", "HEV_completedBus_2.xml", 3)] // specific
 		public void TestHybridBatteryDominantModeCompletedBus(string vif, string complete, int cycleIdx)
 		{
 			const string basePath = "TestData/Integration/HEV-BatteryDominantMode";
