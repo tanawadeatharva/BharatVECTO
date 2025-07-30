@@ -618,7 +618,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				tns + "OBFCM",
 				mileagePart,
 				averageMassPart,
-				isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.OdometerReading, "km", 2)) : null,
+				OBFCMData.IsOBFCM ? (isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit( OBFCMDeclarationInputData.OdometerReading , "km", 2)) : NotApplyElement("OdometerReadingEnd", "km")) : null,
 				!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty() && (isLifeFCAvailableMass || isLifeFCAvailableVolume)
 					? new XElement(tns + "LifetimeFuelConsumption",
 						isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : null,
