@@ -107,17 +107,17 @@ public class CompletedBusFullReportTests : FullReportTestsBase
     [TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus")]
     [TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput,"Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
     [TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput,"Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
-    [TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Axl")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Whl")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2_drag")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
-    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
-    [TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
-    [TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
+    [TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Axl")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Whl")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2_drag")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+    [TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
+    [TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
+    [TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
 
     [TestCase(Exempted_PrimaryBus, Exempted_InterimBus, Exempted_CompletedBus, "Exempted", TestName = "Completed Exempted Bus")]
     public void CompletedBusFullReportSuccessTest(string primaryBusInput, string completeBusInput, string completedBusInput, params string[] expectedType)
@@ -247,7 +247,7 @@ public class CompletedBusFullReportTests : FullReportTestsBase
 	[TestCase(HEV_Px_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Px", "HEV", TestName = "Completed HEV_Px_PrimaryBus Ignore")]
 	[TestCase(HEV_S4_PrimaryBus, HEV_InterimBusInput, HEV_CompletedBusInput, "Sx", "HEV", TestName = "Completed HEV_S4_PrimaryBus Ignore")]
 	[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus Ignore")]
-	[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus Ignore")]
+	[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, PEV_IEPC_CompletedBusInput, "IEPC", "PEV", TestName = "Completed PEV_IEPC_PrimaryBus Ignore")]
     public void CompletedBusFullReportIgnoreTest(string primaryBusInput, string completeBusInput, string completedBusInput, params string[] expectedType)
     {
         var completeCopy = CopyInputFile(completeBusInput);
