@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
         IXmlMultistepTypeWriter Get_FCHV_VehicleType();
 
-        IXmlMultistepTypeWriter GetExemptedVehicleType();
+		IXmlMultistepTypeWriter GetExemptedVehicleType();
 
 		#endregion
 

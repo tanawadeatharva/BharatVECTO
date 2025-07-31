@@ -92,14 +92,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             response.ConnectionSystemResistance = ModelData?.ConnectionSystemResistance ?? 0.SI<Ohm>();
             response.ConsumerPower = powerDemand;
             response.AuxPower = auxDemand;
-            response.ChargingPower = chargePower;
+            response.ChargingPower = chargePower + fcPower;
             return response;
         }
 
         public Watt ElectricAuxPower => PreviousState.AuxPower;
         public Watt ChargePower => PreviousState.ChargePower;
         public Watt BatteryPower => PreviousState.BatteryPower;
-        public Watt ConsumerPower => PreviousState.ConsumerPower;
+		public Watt ConsumerPower => PreviousState.ConsumerPower;
 		public Watt FuelCellPower => PreviousState.FuelCellPower;
 
         protected override void DoWriteModalResults(Second absTime, Second dt, IModalDataContainer container)

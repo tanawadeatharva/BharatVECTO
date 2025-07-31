@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				return currentGear;
 			}
 
-			if (DataBus.ElectricMotorInfo(EMPos).EmOff) {
+			if (DataBus.ElectricMotorInfo(EMPos).EmOffCurr.HasValue && DataBus.ElectricMotorInfo(EMPos).EmOffCurr.Value) {
 				return currentGear;
 			}
 			if ((absTime - _gearbox.LastDownshift).IsSmaller(GearshiftParams.UpshiftAfterDownshiftDelay)) {

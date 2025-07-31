@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = SetCommonGearboxData(gearbox);
 
 			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.SerialHybridVehicle);
+				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.FCHV);
 			if (isBatteryElectric && (runData.ElectricMachinesData == null || runData.ElectricMachinesData.Count == 0)) {
 				throw new VectoException(
 					"Electric motor data has to be set for battery electric vehicles before creating gearbox data!");
@@ -342,7 +342,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
 				: inputData.VehicleCategory;
-			for (uint i = 0; i < gearsInput.Count; i++)
+			
+            for (uint i = 0; i < gearsInput.Count; i++)
 			{
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, false, vehicleCategory, gearbox.Type);
