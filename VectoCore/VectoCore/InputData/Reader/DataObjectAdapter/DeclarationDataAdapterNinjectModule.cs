@@ -3,20 +3,18 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Specific;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus;
-using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterNinjectModule : AbstractNinjectModule
 	{
 		#region Overrides of NinjectModule
-
-		private VehicleTypeAndArchitectureStringHelperRundata _vehicleStringHelper =
-			new VehicleTypeAndArchitectureStringHelperRundata();
+		
 		public override void Load()
 		{
 			#region HeavyLorry
@@ -79,10 +77,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.Exempted>()
 				.WhenInjectedExactlyInto<DeclarationModeHeavyLorryRunDataFactory.Exempted>();
-			#endregion HeavyLorry
 
-			#region PrimaryBus
-			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Conventional>()
+			Bind<ILorryDeclarationDataAdapter>().To<DeclarationDataAdapterHeavyLorry.Conventional>()
+				.WhenInjectedExactlyInto<DeclarationVTPModeVectoRunDataFactoryLorries>();
+            #endregion HeavyLorry
+
+            #region PrimaryBus
+            Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Conventional>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.Conventional>();
 
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.HEV_S2>()
@@ -141,10 +142,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Exempted>()
 				.WhenInjectedExactlyInto<DeclarationModePrimaryBusRunDataFactory.Exempted>();
-			#endregion
 
-			#region CompletedBus Generic
-			Bind<IGenericCompletedBusDeclarationDataAdapter>()
+			Bind<IPrimaryBusDeclarationDataAdapter>().To<DeclarationDataAdapterPrimaryBus.Conventional>()
+				.WhenInjectedExactlyInto<DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary>();
+            #endregion
+
+            #region CompletedBus Generic
+            Bind<IGenericCompletedBusDeclarationDataAdapter>()
 				.To<DeclarationDeclarationDataAdapterGenericCompletedBusDeclaration.Conventional>()
 				.WhenInjectedExactlyInto<DeclarationModeCompletedBusRunDataFactory.Conventional>();
 

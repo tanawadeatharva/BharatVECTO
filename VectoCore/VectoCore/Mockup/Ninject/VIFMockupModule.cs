@@ -209,11 +209,6 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.Get_FCHV_IEPC_VehicleType();
 			}
 
-			public IXmlTypeWriter GetIepcVehicleType()
-			{
-				return _vifReportFactoryImplementation.GetIepcVehicleType();
-			}
-
 			public IXmlTypeWriter GetPevE2VehicleType()
 			{
 				return _vifReportFactoryImplementation.GetPevE2VehicleType();
@@ -407,11 +402,6 @@ namespace TUGraz.VectoMockup.Ninject
 			public IReportOutputGroup GetHevSxVehicleParameterGroup()
 			{
 				return _vifReportFactoryImplementation.GetHevSxVehicleParameterGroup();
-			}
-
-			public IReportOutputGroup GetIepcVehicleParameterGroup()
-			{
-				return _vifReportFactoryImplementation.GetIepcVehicleParameterGroup();
 			}
 
 			public IReportOutputGroup GetPevExVehicleParmeterGroup()

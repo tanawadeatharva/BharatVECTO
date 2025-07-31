@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
         IXmlMultistepTypeWriter Get_FCHV_VehicleType();
 
-        IXmlMultistepTypeWriter GetExemptedVehicleType();
+		IXmlMultistepTypeWriter GetExemptedVehicleType();
 
 		#endregion
 
@@ -87,7 +87,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
         IXmlTypeWriter Get_FCHV_F2_VehicleType();
 		IXmlTypeWriter Get_FCHV_F3_VehicleType();
 		IXmlTypeWriter Get_FCHV_F4_VehicleType();
-		IXmlTypeWriter GetIepcVehicleType();
 		IXmlTypeWriter GetPevE2VehicleType();
 		IXmlTypeWriter GetPevE3VehicleType();
 		IXmlTypeWriter GetPevE4VehicleType();
@@ -179,7 +178,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		IReportOutputGroup GetHevIepcSVehicleParameterGroup();
 		IReportOutputGroup GetHevIepcFVehicleParameterGroup();
 		IReportOutputGroup GetHevSxVehicleParameterGroup();
-		IReportOutputGroup GetIepcVehicleParameterGroup();
 		IReportOutputGroup GetPevExVehicleParmeterGroup();
         IReportOutputGroup Get_Multiple_PEV_VehicleParmeterGroup();
         IReportOutputGroup Get_Multiple_SHEV_VehicleParmeterGroup();
