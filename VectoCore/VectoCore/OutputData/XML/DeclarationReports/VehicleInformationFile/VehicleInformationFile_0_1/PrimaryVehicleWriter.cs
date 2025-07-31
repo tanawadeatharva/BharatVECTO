@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
@@ -10,7 +11,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		protected readonly IVIFReportFactory _vifReportFactory;
 
-		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace _vif = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		protected VehicleWriter(IVIFReportFactory vifReportFactory)
@@ -195,82 +196,112 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
         }
     }
 
-    public class HevF2VehicleType : VehicleWriter
+	public class Multiple_SHEV_VehicleType : VehicleWriter
 	{
-		public HevF2VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+        public Multiple_SHEV_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of VehicleWriter
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var vehicleData = _vifReportFactory.Get_Multiple_SHEV_VehicleParmeterGroup().GetElements(inputData);
+            vehicleData.Add(_vifReportFactory.Get_Multiple_SHEV_ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "Multiple_SHEV_VehicleType"),
+                vehicleData
+            );
+        }
+    }
+
+	public class Multiple_PEV_VehicleType : VehicleWriter
+	{
+        public Multiple_PEV_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var vehicleData = _vifReportFactory.Get_Multiple_PEV_VehicleParmeterGroup().GetElements(inputData);
+            vehicleData.Add(_vifReportFactory.Get_Multiple_PEV_ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "Multiple_PEV_VehicleType"),
+                vehicleData
+            );
+        }
+    }
+
+	public class Multiple_FCHV_VehicleType : VehicleWriter
+	{
+        public Multiple_FCHV_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var vehicleData = _vifReportFactory.Get_Multiple_FCHV_VehicleParmeterGroup().GetElements(inputData);
+            vehicleData.Add(_vifReportFactory.Get_Multiple_FCHV_ComponentVIFType().GetElement(inputData));
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(_xsi + XMLNames.XSIType, "Multiple_FCHV_VehicleType"),
+                vehicleData
+			);
+        }
+    }
+
+    public class FCHV_F2_VehicleType : VehicleWriter
+	{
+		public FCHV_F2_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
-			vehicleData.Add(_vifReportFactory.GetHevF2ComponentVIFType().GetElement(inputData));
+			var vehicleData = _vifReportFactory.Get_FCHV_Fx_VehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.Get_FCHV_F2_ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "FCHV_Fx_VehicleVIFType"),
 				vehicleData);
 		}
-
-		#endregion
 	}
 
-
-	public class HevF3VehicleType : VehicleWriter
+	public class FCHV_F3_VehicleType : VehicleWriter
 	{
-		public HevF3VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of VehicleWriter
+		public FCHV_F3_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
-			vehicleData.Add(_vifReportFactory.GetHevF3ComponentVIFType().GetElement(inputData));
+			var vehicleData = _vifReportFactory.Get_FCHV_Fx_VehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.Get_FCHV_F3_ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "FCHV_Fx_VehicleVIFType"),
 				vehicleData);
 		}
-
-		#endregion
 	}
 
-
-	public class HevF4VehicleType : VehicleWriter
+	public class FCHV_F4_VehicleType : VehicleWriter
 	{
-		public HevF4VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of VehicleWriter
+		public FCHV_F4_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
-			vehicleData.Add(_vifReportFactory.GetHevF4ComponentVIFType().GetElement(inputData));
+			var vehicleData = _vifReportFactory.Get_FCHV_Fx_VehicleParmeterGroup().GetElements(inputData);
+			vehicleData.Add(_vifReportFactory.Get_FCHV_F4_ComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + XMLNames.XSIType, "HEV-Fx_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "FCHV_Fx_VehicleVIFType"),
 				vehicleData);
 		}
-
-		#endregion
 	}
 
-	public class IepcFVehicleType : VehicleWriter
+	public class FCHV_IEPC_VehicleType : VehicleWriter
 	{
-		public IepcFVehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of VehicleWriter
+		public FCHV_IEPC_VehicleType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
-			var vehicleData = _vifReportFactory.GetPevExVehicleParmeterGroup().GetElements(inputData);
+			var vehicleData = _vifReportFactory.Get_FCHV_IEPC_VehicleParmeterGroup().GetElements(inputData);
 			vehicleData.Add(_vifReportFactory.GetHevIepcFComponentVIFType().GetElement(inputData));
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(_xsi + XMLNames.XSIType, "IEPC_F_VehicleVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "FCHV_IEPC_VehicleVIFType"),
 				vehicleData);
 		}
-
-		#endregion
 	}
 
 	public class PevE2VehicleType : VehicleWriter

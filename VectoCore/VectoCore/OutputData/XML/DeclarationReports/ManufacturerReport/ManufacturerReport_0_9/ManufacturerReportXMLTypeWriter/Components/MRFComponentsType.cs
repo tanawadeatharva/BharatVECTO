@@ -648,7 +648,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
 				_mrfFactory.GetIEPCSpecifications().GetElement(inputData),
 				components.RetarderInputData != null ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
-				_mrfFactory.GetAxleGearType().GetElement(inputData),
+				(components.AxleGearInputData != null) ? _mrfFactory.GetAxleGearType().GetElement(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
 				_mrfFactory.GetPrimaryBusAuxType_HEV_S().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
 			);
@@ -773,9 +773,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
                 new XAttribute(AbstractManufacturerReport.XSI + XMLNames.XSIType, "FCHV-F3-PrimaryBusComponentsType"),
 
                 _mrfFactory.GetFuelCellSystemType().GetElement(inputData),
+                _mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
                 _mrfFactory.GetElectricMachineType().GetElement(inputData),
-				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
-				(components.RetarderInputData != null) ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
+                (components.RetarderInputData != null) ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
 				_mrfFactory.GetAxleGearType().GetElement(inputData),
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
                 _mrfFactory.GetPrimaryBusAuxType_PEV().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
@@ -794,8 +794,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				new XAttribute(AbstractManufacturerReport.XSI + XMLNames.XSIType, "FCHV-F4-PrimaryBusComponentsType"),
 
                 _mrfFactory.GetFuelCellSystemType().GetElement(inputData),
+                _mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
                 _mrfFactory.GetElectricMachineType().GetElement(inputData),
-				_mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),
                 _mrfFactory.GetPrimaryBusAuxType_PEV().GetElement(inputData.JobInputData.Vehicle.Components.BusAuxiliaries)
             );
@@ -814,7 +814,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
                 _mrfFactory.GetFuelCellSystemType().GetElement(inputData),
                 _mrfFactory.GetREESSSpecificationsType().GetElement(inputData),
-				_mrfFactory.GetIEPCSpecifications().GetElement(inputData),
+                _mrfFactory.GetIEPCSpecifications().GetElement(inputData),
 				(components.RetarderInputData != null) ? _mrfFactory.GetRetarderType().GetElement(inputData) : null,
 				(components.AxleGearInputData != null) ? _mrfFactory.GetAxleGearType().GetElement(inputData) : null,
 				_mrfFactory.GetAxleWheelsType().GetElement(inputData),

@@ -1,14 +1,17 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
 	public abstract class PrimaryComponentVIFType : IXmlTypeWriter
 	{
 		protected readonly IVIFReportFactory _vifReportFactory;
-		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace _vif = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
 		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		protected PrimaryComponentVIFType(IVIFReportFactory vifReportFactory)
@@ -168,11 +171,140 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class HevF2ComponentVIFType : PrimaryComponentVIFType
+	public abstract class MultipleComponentVIFType : PrimaryComponentVIFType
 	{
-		public HevF2ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+        protected readonly Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>> _getPowertrain;
 
-		#region Overrides of ComponentVIFType
+        public MultipleComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) 
+		{
+            _getPowertrain = new Dictionary<ArchitectureID, Func<IAxlePowertrainDeclarationInputData, XElement>>();
+        }
+
+        protected XElement GetEM2Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_vif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractVehicleInformationFile.XSI + XMLNames.XSIType, "xEV_EM2_Powertrain_VIFType"),
+                _vifReportFactory.GetAxlePowertrainElectricMachineType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainTransmissionType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainTorqueConverterType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainAngleDriveType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainRetarderType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainAxleGearType().GetElement(axlePt)
+            );
+        }
+
+        protected XElement GetEM3Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_vif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractVehicleInformationFile.XSI + XMLNames.XSIType, "xEV_EM3_Powertrain_VIFType"),
+                _vifReportFactory.GetAxlePowertrainElectricMachineType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainAngleDriveType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainRetarderType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainAxleGearType().GetElement(axlePt)
+            );
+        }
+
+        protected XElement GetEM4Powertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_vif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractVehicleInformationFile.XSI + XMLNames.XSIType, "xEV_EM4_Powertrain_VIFType"),
+                _vifReportFactory.GetAxlePowertrainElectricMachineType().GetElement(axlePt)
+            );
+        }
+
+        protected XElement GetIEPCPowertrain(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return new XElement(_vif + "Powertrain",
+                new XAttribute("axleNumber", axlePt.AxleNumber),
+                new XAttribute(AbstractVehicleInformationFile.XSI + XMLNames.XSIType, "xEV_IEPC_Powertrain_VIFType"),
+                _vifReportFactory.GetAxlePowertrainIEPCType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainRetarderType().GetElement(axlePt),
+                _vifReportFactory.GetAxlePowertrainAxleGearType().GetElement(axlePt)
+            );
+		}
+	}
+
+	public class Multiple_FCHV_ComponentVIFType : MultipleComponentVIFType
+	{
+        public Multiple_FCHV_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory)
+        {
+            _getPowertrain.Add(ArchitectureID.F2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.F3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.F4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.F_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_vif + XMLNames.Vehicle_Components,
+                new XAttribute(_xsi + XMLNames.XSIType, "Components_Multiple_FCHV_VIFType"),
+				_vifReportFactory.GetFuelCellType().GetElement(inputData),
+                _vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+                _vifReportFactory.GetAuxiliaryFCHVType().GetElement(inputData));
+		}
+	}
+
+	public class Multiple_SHEV_ComponentVIFType : MultipleComponentVIFType
+	{
+        public Multiple_SHEV_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory)
+        {
+            _getPowertrain.Add(ArchitectureID.S2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.S3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.S4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.S_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_vif + XMLNames.Vehicle_Components,
+                new XAttribute(_xsi + XMLNames.XSIType, "Components_Multiple_SHEV_VIFType"),
+                _vifReportFactory.GetEngineType().GetElement(inputData),
+                _vifReportFactory.GetGeneratorType().GetElement(inputData),
+                _vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+                _vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
+        }
+    }
+
+	public class Multiple_PEV_ComponentVIFType : MultipleComponentVIFType
+    {
+        public Multiple_PEV_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) 
+		{
+            _getPowertrain.Add(ArchitectureID.E2, GetEM2Powertrain);
+            _getPowertrain.Add(ArchitectureID.E3, GetEM3Powertrain);
+            _getPowertrain.Add(ArchitectureID.E4, GetEM4Powertrain);
+            _getPowertrain.Add(ArchitectureID.E_IEPC, GetIEPCPowertrain);
+        }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var axlePts = inputData.JobInputData.Vehicle.Components.AxlePowertrainInputData;
+
+            return new XElement(_vif + XMLNames.Vehicle_Components,
+                new XAttribute(_xsi + XMLNames.XSIType, "Components_Multiple_PEV_VIFType"),
+                _vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
+                _getPowertrain[axlePts[0].Architecture](axlePts[0]),
+                _getPowertrain[axlePts[1].Architecture](axlePts[1]),
+                _vifReportFactory.GetAxleWheelsType().GetElement(inputData),
+                _vifReportFactory.GetAuxiliaryPEVType().GetElement(inputData));
+        }
+    }
+
+	public class FCHV_F2_ComponentVIFType : PrimaryComponentVIFType
+	{
+		public FCHV_F2_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -187,18 +319,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryHevFType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryFCHVType().GetElement(inputData));
 		}
-
-		#endregion
 	}
 
-
-	public class HevF3ComponentVIFType : PrimaryComponentVIFType
+	public class FCHV_F3_ComponentVIFType : PrimaryComponentVIFType
 	{
-		public HevF3ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of ComponentVIFType
+		public FCHV_F3_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -210,18 +337,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryFCHVType().GetElement(inputData));
 		}
-
-		#endregion
 	}
 
-
-	public class HevF4ComponentVIFType : PrimaryComponentVIFType
+	public class FCHV_F4_ComponentVIFType : PrimaryComponentVIFType
 	{
-		public HevF4ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of ComponentVIFType
+		public FCHV_F4_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
@@ -231,32 +353,26 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetElectricMachineType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryHevSType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryFCHVType().GetElement(inputData));
 		}
-
-		#endregion
 	}
 
-	public class HevIepcFComponentVIFType : PrimaryComponentVIFType
+	public class FCHV_IEPC_ComponentVIFType : PrimaryComponentVIFType
 	{
-		public HevIepcFComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
-
-		#region Overrides of ComponentVIFType
+		public FCHV_IEPC_ComponentVIFType(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
 		public override XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			return new XElement(_vif + XMLNames.Vehicle_Components,
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_IEPC_F_ComponentsVIFType"),
+				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_FCHV_IEPC_ComponentsVIFType"),
 				_vifReportFactory.GetFuelCellType().GetElement(inputData),
-				_vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
-				_vifReportFactory.GetIepcType().GetElement(inputData),
+                _vifReportFactory.GetIepcType().GetElement(inputData),
+                _vifReportFactory.GetElectricEnergyStorageType().GetElement(inputData),
 				_vifReportFactory.GetRetarderType().GetElement(inputData),
 				_vifReportFactory.GetAxlegearType().GetElement(inputData),
 				_vifReportFactory.GetAxleWheelsType().GetElement(inputData),
-				_vifReportFactory.GetAuxiliaryIEPC_SType().GetElement(inputData));
+				_vifReportFactory.GetAuxiliaryFCHVType().GetElement(inputData));
 		}
-
-		#endregion
 	}
 
 	public class PevE2ComponentVIFType : PrimaryComponentVIFType

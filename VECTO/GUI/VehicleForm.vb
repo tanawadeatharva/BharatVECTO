@@ -76,8 +76,9 @@ Public Class VehicleForm
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
 	Private _emRatioPerGearDlog As EMGearRatioDialog
 	Private _reessPackDlg As REESSPackDialog
-	Private _fcComponentDlg As FuelCellComponentDialog
-	Friend VehicleType As VectoSimulationJobType
+    Private _fcComponentDlg As FuelCellComponentDialog
+    Private fuelCellSystemEngineeringInput As IFuelCellSystemEngineeringInputData
+    Friend VehicleType As VectoSimulationJobType
 
 	Public Sub New()
 
@@ -574,13 +575,13 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (vehicle.VehicleType = VectoSimulationJobType.FCHV OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
-			Dim fcs = vehicle.Components.FuelCellSystemInputData
-			lvFuelCellComponents.Items.Clear()
-			For Each entry In fcs.FuelCellStrings
-				lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
-			Next
-		End If
+        If (vehicle.VehicleType = VectoSimulationJobType.FCHV OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
+            fuelCellSystemEngineeringInput = vehicle.Components.FuelCellSystemInputData
+            lvFuelCellComponents.Items.Clear()
+            For Each entry In fuelCellSystemEngineeringInput.FuelCellStrings
+                lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
+            Next
+        End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
 			Dim gen As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position = PowertrainPosition.GEN)
@@ -1021,7 +1022,8 @@ Public Class VehicleForm
 
 		veh.MassMax = TbMassMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
-		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+        veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+        veh.EngineeringMaxWindowsSize = fuelCellSystemEngineeringInput.MaxWindowSize
 
 		Dim relCheck As Double = 0
 		Dim hasDrivenAxle As Boolean = False

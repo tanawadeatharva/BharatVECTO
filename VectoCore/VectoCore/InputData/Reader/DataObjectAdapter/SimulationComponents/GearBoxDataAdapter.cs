@@ -295,10 +295,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					"Gearshift parameters have to be set for battery electric vehicles before creating gearbox data!");
 			}
 
-            if ((inputData.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || inputData.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
+            if (inputData.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle, 
+					VectoSimulationJobType.SerialHybridVehicle, 
+					VectoSimulationJobType.FCHV) &&
 				gearbox.Type.AutomaticTransmission())
 			{
-
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
 				if (retVal.Type.IsOneOf(GearboxType.ATPowerSplit, GearboxType.ATSerial)) {
 					retVal.Type = GearboxType.APTN;

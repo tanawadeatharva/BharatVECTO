@@ -90,7 +90,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.Battery_StringID, reess.StringId),
 				new XElement(_vif + "REESS", GetReess(battery)),
 				battery.MinSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmin, Math.Round(battery.MinSOC.Value * 100, MidpointRounding.AwayFromZero)) : null,
-				battery.MaxSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmax, Math.Round(battery.MaxSOC.Value * 100, MidpointRounding.AwayFromZero)) : null
+				battery.MaxSOC.HasValue ? new XElement(_vif + XMLNames.Battery_SOCmax, Math.Round(battery.MaxSOC.Value * 100, MidpointRounding.AwayFromZero)) : null,
+				battery.DeteriorationPerformanceRatio.HasValue 
+					? new XElement(_vif + "DeteriorationPerformanceRatio", Math.Round(battery.DeteriorationPerformanceRatio.Value * 100, MidpointRounding.AwayFromZero)) 
+					: null
 			);
 			
 			return result;

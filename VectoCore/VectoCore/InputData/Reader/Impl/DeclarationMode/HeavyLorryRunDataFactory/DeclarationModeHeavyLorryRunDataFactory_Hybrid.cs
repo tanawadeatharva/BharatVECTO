@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						null,
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						null,
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
@@ -483,7 +483,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					(sc) => runData.SuperCapData = sc);
 
                 runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits, runData.BatteryData.CalculateVoltageCenterSoc(), null);
-				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
+				if (Vehicle.VehicleType == VectoSimulationJobType.FCHV_IEPC)
 				{
 					runData.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
 						runData.BatteryData.CalculateVoltageCenterSoc());
@@ -637,7 +637,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
-						runData.AxleGearData?.AxleGear.Ratio ?? 1.0,
+						(runData.AxleGearData?.AxleGear.Ratio ?? 1.0) * (runData.AngledriveData?.Angledrive.Ratio ?? 1.0),
 						null,
 						Vehicle.Components.GearboxInputData.Type,
 						Vehicle.Components.GearboxInputData.Gears.Count
@@ -700,17 +700,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					  ptBuilder) { }
 
 			public override VectoSimulationJobType FuelCellJobType => VectoSimulationJobType.FCHV_IEPC;
-
-			protected override VectoRunData CreateVectoRunData(Mission mission,
-				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading,
-				int? modeIdx,
-				OvcHevMode ovcMode = OvcHevMode.NotApplicable)
-			{
-				var runData = base.CreateVectoRunData(mission, loading, modeIdx, ovcMode);
-				runData.JobType = VectoSimulationJobType.IEPC_E;
-
-				return runData;
-			}
 
 			#region Overrides of LorryBase
 

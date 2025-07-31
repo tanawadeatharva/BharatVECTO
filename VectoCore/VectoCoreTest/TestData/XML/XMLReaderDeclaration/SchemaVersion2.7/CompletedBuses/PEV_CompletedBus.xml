@@ -77,7 +77,7 @@
 							<Heating>none</Heating>
 						</HeatPumpTypeDriverCompartment>
 						<HeatPumpTypePassengerCompartment>
-							<Cooling>non R-744 3-stage</Cooling>
+							<Cooling>R-744</Cooling>
 							<Heating>none</Heating>
 						</HeatPumpTypePassengerCompartment>
 						<AuxiliaryHeaterPower>50000</AuxiliaryHeaterPower>

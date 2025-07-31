@@ -553,7 +553,10 @@ Public Class VectoJob
                 If Not vehicleInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Vehicle File is not in Declaration Mode"))
                 End If
-                If  Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E) AndAlso Not engineInputData.SavedInDeclarationMode Then
+                If Not (vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle _
+                        OrElse vectoJob.JobType = VectoSimulationJobType.IEPC_E _
+                        OrElse vectoJob.JobType = VectoSimulationJobType.FCHV _
+                        OrElse vectoJob.JobType = VectoSimulationJobType.FCHV_IEPC) AndAlso Not engineInputData.SavedInDeclarationMode Then
                     result.Add(New ValidationResult("Engine File is not in Declaration Mode"))
                 End If
                 If Not vectoJob.JobType = VectoSimulationJobType.BatteryElectricVehicle _ 

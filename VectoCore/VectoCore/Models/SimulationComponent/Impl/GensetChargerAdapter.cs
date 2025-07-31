@@ -67,6 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Watt ChargePower => 0.SI<Watt>();
 			public Watt BatteryPower => 0.SI<Watt>();
 			public Watt ConsumerPower => 0.SI<Watt>();
+			public Watt FuelCellPower => 0.SI<Watt>();
+
 			public IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false)
 			{
 				if (!dryRun) {

@@ -58,8 +58,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		IXmlTypeWriter GetConventional_CompletedBusVehicleType();
 		IXmlTypeWriter GetHEV_CompletedBusVehicleType();
 		IXmlTypeWriter GetPEV_CompletedBusVehicleType();
-
-		IXmlTypeWriter GetExempted_CompletedBusVehicleType();
+        IXmlTypeWriter GetFCHV_CompletedBusVehicleType();
+        IXmlTypeWriter GetExempted_CompletedBusVehicleType();
 
 
 		IXmlTypeWriter GetConventionalLorryComponentsType();

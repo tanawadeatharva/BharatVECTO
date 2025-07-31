@@ -24,4 +24,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public DateTime Date => XmlConvert.ToDateTime(GetString(XMLNames.Report_ApplicationInfo_Date), XmlDateTimeSerializationMode.Utc);
 	}
+
+    public class XMLDeclarationMultistagePrimaryVehicleBusApplicationInformationDataProviderV11 : 
+		XMLDeclarationMultistagePrimaryVehicleBusApplicationInformationDataProviderV01
+	{
+        public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistagePrimaryVehicleBusApplicationInformationDataProviderV11(XmlNode applicationNode) : base(applicationNode) { }
+    }
 }

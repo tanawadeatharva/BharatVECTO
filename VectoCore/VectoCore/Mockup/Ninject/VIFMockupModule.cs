@@ -74,12 +74,12 @@ namespace TUGraz.VectoMockup.Ninject
 				return _interimFactory.GetPEVVehicleType();
 			}
 
-			public IXmlMultistepTypeWriter GetIEPCVehicleType()
-			{
-				return _interimFactory.GetIEPCVehicleType();
-			}
+            public IXmlMultistepTypeWriter Get_FCHV_VehicleType()
+            {
+                return _interimFactory.Get_FCHV_VehicleType();
+            }
 
-			IXmlMultistepTypeWriter IVIFReportInterimFactory.GetExemptedVehicleType()
+            IXmlMultistepTypeWriter IVIFReportInterimFactory.GetExemptedVehicleType()
 			{
 				return _interimFactory.GetExemptedVehicleType();
 			}
@@ -127,11 +127,6 @@ namespace TUGraz.VectoMockup.Ninject
 			public IVIFFAdasType GetPEVInterimADASType()
 			{
 				return _interimFactory.GetPEVInterimADASType();
-			}
-
-			public IVIFFAdasType GetIEPCInterimADASType()
-			{
-				return _interimFactory.GetIEPCInterimADASType();
 			}
 
 			public IReportMultistepCompletedBusTypeWriter GetConventionalInterimComponentsType()
@@ -194,24 +189,24 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetMultipleFCHVVehicleType();
             }
 
-            public IXmlTypeWriter GetHevF2VehicleType()
+            public IXmlTypeWriter Get_FCHV_F2_VehicleType()
 			{
-				return _vifReportFactoryImplementation.GetHevF2VehicleType();
+				return _vifReportFactoryImplementation.Get_FCHV_F2_VehicleType();
 			}
 
-			public IXmlTypeWriter GetHevF3VehicleType()
+			public IXmlTypeWriter Get_FCHV_F3_VehicleType()
 			{
-				return _vifReportFactoryImplementation.GetHevF3VehicleType();
+				return _vifReportFactoryImplementation.Get_FCHV_F3_VehicleType();
 			}
 
-			public IXmlTypeWriter GetHevF4VehicleType()
+			public IXmlTypeWriter Get_FCHV_F4_VehicleType()
 			{
-				return _vifReportFactoryImplementation.GetHevF4VehicleType();
+				return _vifReportFactoryImplementation.Get_FCHV_F4_VehicleType();
 			}
 
-			public IXmlTypeWriter GetHevIepcFVehicleType()
+			public IXmlTypeWriter Get_FCHV_IEPC_VehicleType()
 			{
-				return _vifReportFactoryImplementation.GetHevIepcFVehicleType();
+				return _vifReportFactoryImplementation.Get_FCHV_IEPC_VehicleType();
 			}
 
 			public IXmlTypeWriter GetPevE2VehicleType()
@@ -269,19 +264,34 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetHevS4ComponentVIFType();
 			}
 
-			public IXmlTypeWriter GetHevF2ComponentVIFType()
+            public IXmlTypeWriter Get_Multiple_PEV_ComponentVIFType()
+            {
+                return _vifReportFactoryImplementation.Get_Multiple_PEV_ComponentVIFType();
+            }
+
+            public IXmlTypeWriter Get_Multiple_SHEV_ComponentVIFType()
+            {
+                return _vifReportFactoryImplementation.Get_Multiple_SHEV_ComponentVIFType();
+            }
+
+            public IXmlTypeWriter Get_Multiple_FCHV_ComponentVIFType()
+            {
+                return _vifReportFactoryImplementation.Get_Multiple_FCHV_ComponentVIFType();
+            }
+
+            public IXmlTypeWriter Get_FCHV_F2_ComponentVIFType()
 			{
-				return _vifReportFactoryImplementation.GetHevF2ComponentVIFType();
+				return _vifReportFactoryImplementation.Get_FCHV_F2_ComponentVIFType();
 			}
 
-			public IXmlTypeWriter GetHevF3ComponentVIFType()
+			public IXmlTypeWriter Get_FCHV_F3_ComponentVIFType()
 			{
-				return _vifReportFactoryImplementation.GetHevF3ComponentVIFType();
+				return _vifReportFactoryImplementation.Get_FCHV_F3_ComponentVIFType();
 			}
 
-			public IXmlTypeWriter GetHevF4ComponentVIFType()
+			public IXmlTypeWriter Get_FCHV_F4_ComponentVIFType()
 			{
-				return _vifReportFactoryImplementation.GetHevF4ComponentVIFType();
+				return _vifReportFactoryImplementation.Get_FCHV_F4_ComponentVIFType();
 			}
 
 			public IXmlTypeWriter GetHevIepcFComponentVIFType()
@@ -324,22 +334,27 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetPEVADASType();
 			}
 
-			public IVIFFAdasType GetIEPCADASType()
-			{
-				return _vifReportFactoryImplementation.GetIEPCADASType();
-			}
-
 			public IXmlTypeWriter GetTorqueConvertType()
 			{
 				return _vifReportFactoryImplementation.GetTorqueConvertType();
 			}
 
-			public IXmlTypeWriter GetIepcType()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainTorqueConverterType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainTorqueConverterType();
+            }
+
+            public IXmlTypeWriter GetIepcType()
 			{
 				return _vifReportFactoryImplementation.GetIepcType();
 			}
 
-			public IXmlTypeWriter GetTorqueLimitsType()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainIEPCType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainIEPCType();
+            }
+
+            public IXmlTypeWriter GetTorqueLimitsType()
 			{
 				return _vifReportFactoryImplementation.GetTorqueLimitsType();
 			}
@@ -349,7 +364,12 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetTransmissionType();
 			}
 
-			public IReportOutputGroup GetConventionalVehicleGroup()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainTransmissionType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainTransmissionType();
+            }
+
+            public IReportOutputGroup GetConventionalVehicleGroup()
 			{
 				return _vifReportFactoryImplementation.GetConventionalVehicleGroup();
 			}
@@ -389,7 +409,32 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetPevExVehicleParmeterGroup();
 			}
 
-			public IReportOutputGroup GetPevIEPCVehicleParmeterGroup()
+            public IReportOutputGroup Get_Multiple_PEV_VehicleParmeterGroup()
+			{
+				return _vifReportFactoryImplementation.Get_Multiple_PEV_VehicleParmeterGroup();
+            }
+
+            public IReportOutputGroup Get_Multiple_SHEV_VehicleParmeterGroup()
+            {
+                return _vifReportFactoryImplementation.Get_Multiple_SHEV_VehicleParmeterGroup();
+            }
+
+            public IReportOutputGroup Get_Multiple_FCHV_VehicleParmeterGroup()
+            {
+                return _vifReportFactoryImplementation.Get_Multiple_FCHV_VehicleParmeterGroup();
+            }
+
+            public IReportOutputGroup Get_FCHV_Fx_VehicleParmeterGroup()
+			{
+				return _vifReportFactoryImplementation.Get_FCHV_Fx_VehicleParmeterGroup();
+            }
+
+            public IReportOutputGroup Get_FCHV_IEPC_VehicleParmeterGroup()
+            {
+                return _vifReportFactoryImplementation.Get_FCHV_IEPC_VehicleParmeterGroup();
+            }
+
+            public IReportOutputGroup GetPevIEPCVehicleParmeterGroup()
 			{
 				return _vifReportFactoryImplementation.GetPevIEPCVehicleParmeterGroup();
 			}
@@ -409,12 +454,22 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetAngelDriveType();
 			}
 
-			public IXmlTypeWriter GetRetarderType()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainAngleDriveType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainAngleDriveType();
+            }
+
+            public IXmlTypeWriter GetRetarderType()
 			{
 				return _vifReportFactoryImplementation.GetRetarderType();
 			}
 
-			public IXmlTypeWriter GetAuxiliaryType()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainRetarderType()
+			{
+				return _vifReportFactoryImplementation.GetAxlePowertrainRetarderType();
+            }
+
+            public IXmlTypeWriter GetAuxiliaryType()
 			{
 				return _vifReportFactoryImplementation.GetAuxiliaryType();
 			}
@@ -449,7 +504,12 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetAxlegearType();
 			}
 
-			public IXmlTypeWriter GetAxleWheelsType()
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainAxleGearType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainAxleGearType();
+            }
+
+            public IXmlTypeWriter GetAxleWheelsType()
 			{
 				return _vifReportFactoryImplementation.GetAxleWheelsType();
 			}
@@ -479,7 +539,17 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetElectricMachineType();
 			}
 
-			public IXmlTypeWriter GetElectricMotorTorqueLimitsType()
+            public IXmlTypeWriter GetGeneratorType()
+            {
+                return _vifReportFactoryImplementation.GetGeneratorType();
+            }
+
+            public IXmlAxlePowertrainTypeWriter GetAxlePowertrainElectricMachineType()
+            {
+                return _vifReportFactoryImplementation.GetAxlePowertrainElectricMachineType();
+            }
+
+            public IXmlTypeWriter GetElectricMotorTorqueLimitsType()
 			{
 				return _vifReportFactoryImplementation.GetElectricMotorTorqueLimitsType();
 			}
@@ -499,9 +569,9 @@ namespace TUGraz.VectoMockup.Ninject
 				return _vifReportFactoryImplementation.GetFuelCellType();
 			}
 
-			public IXmlTypeWriter GetAuxiliaryHevFType()
+			public IXmlTypeWriter GetAuxiliaryFCHVType()
 			{
-				return _vifReportFactoryImplementation.GetAuxiliaryHevFType();
+				return _vifReportFactoryImplementation.GetAuxiliaryFCHVType();
 			}
 
 			#endregion

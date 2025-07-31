@@ -30,21 +30,18 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				var fcXElement = new XElement(_vif + XMLNames.FuelCell_Module,
 					new XElement(_vif + XMLNames.FuelCell_Count, module.Count),
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + XMLNames.XSIType, "FuelCellDataVIFType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, module.FuelCell.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, module.FuelCell.Model),
-						new XElement(_vif + XMLNames.Component_CertificationMethod,
-							module.FuelCell.CertificationMethod.ToXMLFormat()),
+						new XElement(_vif + XMLNames.Component_CertificationMethod, module.FuelCell.CertificationMethod.ToXMLFormat()),
 						module.FuelCell.CertificationMethod == CertificationMethod.StandardValues
 							? null
 							: new XElement(_vif + XMLNames.Component_CertificationNumber, module.FuelCell.CertificationNumber),
-						new XElement(_vif + XMLNames.Component_Date,
-							XmlConvert.ToString(module.FuelCell.Date, XmlDateTimeSerializationMode.Utc)),
+						new XElement(_vif + XMLNames.Component_Date, XmlConvert.ToString(module.FuelCell.Date, XmlDateTimeSerializationMode.Utc)),
 						new XElement(_vif + XMLNames.Component_AppVersion, module.FuelCell.AppVersion),
-						new XElement(_vif + XMLNames.FuelCell_FCSRatedPower, module.FuelCell.FCSRatedPower.ToXMLFormat(2))
+						new XElement(_vif + XMLNames.FuelCell_FCSRatedPower, module.FuelCell.FCSRatedPower.ToXMLFormat(0))
 					),
-					new XElement(_vif + XMLNames.FuelCell_MinPower, module.MinPower),
-					new XElement(_vif + XMLNames.FuelCell_MaxPower, module.MaxPower)
+				 	(module.MinPower != null) ? new XElement(_vif + XMLNames.FuelCell_MinPower, module.MinPower.ToXMLFormat(0)) : null,
+					(module.MaxPower != null) ? new XElement(_vif + XMLNames.FuelCell_MaxPower, module.MaxPower.ToXMLFormat(0)) : null
 				);
 
 				moduleContent.Add(fcXElement);

@@ -22,8 +22,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected XNamespace v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
 		protected XNamespace v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
+        protected XNamespace v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
 
-		public AirdragInterimType() {}
+        public AirdragInterimType() {}
 
 		#region Implementation of IReportMultistepCompletedBusTypeWriter
 
@@ -43,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV10 airdrag)
 		{
-			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
+			var retVal = new XElement(v27 + XMLNames.Component_AirDrag);
 			var tmp = XElement.Load(airdrag.XMLSource.CreateNavigator().ReadSubtree());
 			retVal.Add(tmp.Elements());
 			return retVal;
@@ -51,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV20 airdrag)
 		{
-			var retVal = new XElement(v24 + XMLNames.Component_AirDrag//, 
+			var retVal = new XElement(v27 + XMLNames.Component_AirDrag//, 
 				//new XAttribute("xmlns", v20.NamespaceName)
 				);
 			var tmp = XElement.Load(airdrag.XMLSource.CreateNavigator().ReadSubtree());
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV24 airdrag)
 		{
-			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
+			var retVal = new XElement(v27 + XMLNames.Component_AirDrag);
 			var tmp = XElement.Load(airdrag.XMLSource.CreateNavigator().ReadSubtree());
 			retVal.Add(tmp.Elements());
 			return retVal;
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected XElement GetAirdragElement(IAirdragDeclarationInputData inputData, string version)
 		{
-			var retVal = new XElement(v24 + XMLNames.Component_AirDrag);
+			var retVal = new XElement(v27 + XMLNames.Component_AirDrag);
 			
 			var tmp = XElement.Load(inputData.XMLSource.CreateNavigator().ReadSubtree());
 			var dataElement = tmp.Descendants().Where(e => e.Name.LocalName == XMLNames.ComponentDataWrapper).First();
@@ -153,7 +154,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var id = $"{VectoComponents.Airdrag.HashIdPrefix()}{XMLHelper.GetGUID()}";
 
-			return new XElement(v24 + XMLNames.Component_AirDrag,
+			return new XElement(v27 + XMLNames.Component_AirDrag,
 				new XElement(v20 + XMLNames.ComponentDataWrapper,
 					new XAttribute(xsi + XMLNames.Attr_Type, "AirDragModifiedUseStandardValueType"),
 					new XAttribute(XMLNames.Component_ID_Attr, id)

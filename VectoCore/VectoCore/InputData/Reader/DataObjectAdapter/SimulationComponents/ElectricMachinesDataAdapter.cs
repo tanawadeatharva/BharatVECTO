@@ -586,6 +586,39 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             var peakPwrLossGen = continuousTorqueSpeed * maxTorqueGenFldContSpeed - peakElPwrGen; // losses need to be positive
             var peakPwrLossGenEtaOVL = (1 - etaOvl.Value()) * continuousTorqueSpeed * maxTorqueGenFldContSpeed; // losses need to be positive
 
+            // additional saturation taking into account all the operating points of the FullLoadCurve
+
+			var peakElPwr_i = peakElPwr * 0.0;
+			var peakPwrLossGen_i = peakElPwr * 0.0;
+			var peakPwrLoss_i = peakElPwr * 0.0;
+
+            foreach (var OP in FullLoadCurve.FullLoadEntries)
+            {
+				if (OP.MotorSpeed.IsGreater(0.0)) {
+                    peakElPwr_i = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel,
+                    OP.MotorSpeed,
+                    OP.FullDriveTorque, // OP.FullGenerationTorque
+                    gear,
+                    true)
+                    .ElectricalPower;
+
+                    peakPwrLoss_i = OP.MotorSpeed * OP.FullDriveTorque - peakElPwr_i; // operation reversed to fit sign rule
+
+                    peakElPwr_i = voltageLevel.LookupElectricPower(voltageEntry.VoltageLevel,
+                        OP.MotorSpeed,
+                        OP.FullGenerationTorque, // OP.FullGenerationTorque
+                        gear,
+                        true)
+                        .ElectricalPower;
+
+                    peakPwrLossGen_i = OP.MotorSpeed * OP.FullGenerationTorque - peakElPwr_i; // operation reversed to fit sign rule
+
+                    peakPwrLoss = VectoMath.Max(peakPwrLoss, peakPwrLoss_i);
+                    peakPwrLossGen = VectoMath.Max(peakPwrLossGen, peakPwrLossGen_i);
+                }
+                
+            }
+
 			// BUFFER
 			// buffer is the difference of power losses between the OVL point (a Max Torque point for 3s) and the CONT point,
 			// two computation methods:
@@ -593,7 +626,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			// - iso efficiency assumption for both leads to a difference of mechanical power in expression, which has to be positive
 
 			var dPloss = VectoMath.Max(peakPwrLoss, peakPwrLossGen) - continuousPowerLoss;
-            var dPlossEtaOVL = VectoMath.Max(peakPwrLossEtaOVL, peakPwrLossGenEtaOVL) - continuousPowerLossEtaOVL;
+			var dPlossEtaOVL = VectoMath.Max(peakPwrLossEtaOVL, peakPwrLossGenEtaOVL) - continuousPowerLossEtaOVL;
 
             var OverloadTime = 3.SI<Second>();
 

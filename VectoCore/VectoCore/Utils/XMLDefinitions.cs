@@ -117,14 +117,15 @@ namespace TUGraz.VectoCore.Utils
 
 		public const string DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation";
 
-		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE =
-			"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile";
+		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile";
 
-		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 =
-			DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
+		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1 = DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v0.1";
 
-        public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V10 =
-            DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.0";
+        public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V10 = DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.0";
+
+		public const string DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11 = DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE + ":v1.1";
+
+		public static string VEHICLE_INTERIM_FILE_TARGET_VERSION => DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
         public const string MONITORING_NAMESPACE_URI = "urn:tugraz:ivt:VectoAPI:MonitoringOutput:v1.2";
 
