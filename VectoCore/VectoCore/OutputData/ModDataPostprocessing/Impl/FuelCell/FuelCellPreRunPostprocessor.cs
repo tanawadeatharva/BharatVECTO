@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		private ElectricSystem GetElectricSystem(IElectricEnergyStorage batSystem, BatterySystemData batData)
 		{
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 			return es;
@@ -534,7 +534,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             batSystem.Initialize(SoC);
             var dummyContainer = new SimpleModDataContainer();
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 

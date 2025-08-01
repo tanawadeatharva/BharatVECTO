@@ -314,6 +314,8 @@ namespace TUGraz.VectoCore.Models.Simulation
                     { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
                     { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
                     { Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
+					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.FCHV) , GbxClass_Distance_PEV},
+					{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.FCHV_IEPC) , GbxClass_Distance_EIEPC},
 					// measured speed cycles
 					{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasSpd_Conv},
                     { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasSpd_PHEV},
@@ -427,8 +429,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_S) , GbxClass_Distance_SIEPC},
 				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_Distance_PEV},
 				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.IEPC_E) , GbxClass_Distance_EIEPC},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.FCHV) , GbxClass_Distance_PEV},
+				{ Tuple.Create(CycleType.DistanceBased, VectoSimulationJobType.FCHV_IEPC) , GbxClass_Distance_EIEPC},
 
-				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasuredSpd_Conv},
+                { Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ConventionalVehicle) , GbxClass_MeasuredSpd_Conv},
 				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.ParallelHybridVehicle) , GbxClass_MeasuredSpd_PHEV},
 				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.IHPC) , GbxClass_MeasuredSpd_IHPC},
 				{ Tuple.Create(CycleType.MeasuredSpeed, VectoSimulationJobType.BatteryElectricVehicle) , GbxClass_MeasuredSpd_PEV},

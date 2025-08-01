@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public TestpowertrainElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData) : base(container,
 			batterySystemData, false)
 		{
-			if (!container.IsTestPowertrain) {
+			if (container != null && !container.IsTestPowertrain) {
 				throw new VectoException(
                     "TestpowertrainElectricSystem component must not be used in real powertrain - use dedicated component instead");
 			}
