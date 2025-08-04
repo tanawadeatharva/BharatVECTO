@@ -135,8 +135,6 @@ Partial Class VectoVTPJobForm
         '
         'GrCycles
         '
-        Me.GrCycles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GrCycles.Controls.Add(Me.Label2)
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
@@ -164,9 +162,8 @@ Partial Class VectoVTPJobForm
         '
         'LvCycles
         '
-        Me.LvCycles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LvCycles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LvCycles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
         Me.LvCycles.FullRowSelect = True
         Me.LvCycles.GridLines = True
@@ -190,8 +187,7 @@ Partial Class VectoVTPJobForm
         '
         'BtDRIrem
         '
-        Me.BtDRIrem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIrem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
         Me.BtDRIrem.Location = New System.Drawing.Point(44, 155)
         Me.BtDRIrem.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -202,8 +198,7 @@ Partial Class VectoVTPJobForm
         '
         'BtDRIadd
         '
-        Me.BtDRIadd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIadd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
         Me.BtDRIadd.Location = New System.Drawing.Point(8, 155)
         Me.BtDRIadd.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -226,8 +221,6 @@ Partial Class VectoVTPJobForm
         '
         'GrAux
         '
-        Me.GrAux.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GrAux.Controls.Add(Me.LvAux)
         Me.GrAux.Location = New System.Drawing.Point(25, 426)
         Me.GrAux.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -240,9 +233,8 @@ Partial Class VectoVTPJobForm
         '
         'LvAux
         '
-        Me.LvAux.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LvAux.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LvAux.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader5, Me.ColumnHeader6})
         Me.LvAux.FullRowSelect = True
         Me.LvAux.GridLines = True
@@ -274,8 +266,6 @@ Partial Class VectoVTPJobForm
         '
         'TbVEH
         '
-        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbVEH.Location = New System.Drawing.Point(192, 132)
         Me.TbVEH.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.TbVEH.Name = "TbVEH"
@@ -284,7 +274,6 @@ Partial Class VectoVTPJobForm
         '
         'ButtonVEH
         '
-        Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonVEH.Image = CType(resources.GetObject("ButtonVEH.Image"), System.Drawing.Image)
         Me.ButtonVEH.Location = New System.Drawing.Point(753, 129)
         Me.ButtonVEH.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
@@ -298,10 +287,10 @@ Partial Class VectoVTPJobForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 1095)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 1097)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 21, 0)
-        Me.StatusStrip1.Size = New System.Drawing.Size(1416, 32)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1438, 32)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 6
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -315,7 +304,7 @@ Partial Class VectoVTPJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(1167, 1055)
+        Me.ButOK.Location = New System.Drawing.Point(1172, 1057)
         Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(112, 35)
@@ -327,7 +316,7 @@ Partial Class VectoVTPJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(1288, 1055)
+        Me.ButCancel.Location = New System.Drawing.Point(1289, 1057)
         Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(112, 35)
@@ -342,7 +331,7 @@ Partial Class VectoVTPJobForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1416, 29)
+        Me.ToolStrip1.Size = New System.Drawing.Size(1438, 29)
         Me.ToolStrip1.TabIndex = 20
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -424,7 +413,7 @@ Partial Class VectoVTPJobForm
         Me.PictureBox1.Location = New System.Drawing.Point(0, 42)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(1416, 61)
+        Me.PictureBox1.Size = New System.Drawing.Size(1438, 61)
         Me.PictureBox1.TabIndex = 21
         Me.PictureBox1.TabStop = False
         '
@@ -1054,8 +1043,9 @@ Partial Class VectoVTPJobForm
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoScroll = True
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1416, 1127)
+        Me.ClientSize = New System.Drawing.Size(1438, 1129)
         Me.Controls.Add(Me._wheelTorqueDriftGrpbox)
         Me.Controls.Add(Me._ncvGrpBox)
         Me.Controls.Add(Me.pnManufacturerRecord)
@@ -1079,10 +1069,9 @@ Partial Class VectoVTPJobForm
         Me.Controls.Add(Me.ButCancel)
         Me.Controls.Add(Me.ButOK)
         Me.Controls.Add(Me.StatusStrip1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.MaximizeBox = False
+        Me.MinimumSize = New System.Drawing.Size(1460, 1185)
         Me.Name = "VectoVTPJobForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Job Editor"
