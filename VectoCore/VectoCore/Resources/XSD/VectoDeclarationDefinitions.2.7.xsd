@@ -34,7 +34,8 @@
 	17-06-2025: Removed NgTankSystem from multiple-SHEV Primary Bus.
 	17-06-2025: Removed Retarder from components of X4 architectures.
 	15-07-2025: Removed redundant types: Vehicle_Multiple_SHEV_CompletedBusDeclarationType, Vehicle_Multiple_PEV_CompletedBusDeclarationType,
-		Vehicle_Multiple_FCHV_CompletedBusDeclarationType
+		Vehicle_Multiple_FCHV_CompletedBusDeclarationType.
+	04-08-2025: Added missing type: AirDragModifiedUseStandardValueType.
 	-->
 
 	<!--                      JOB                           -->
@@ -3215,7 +3216,12 @@
 			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-
+	<xs:complexType name="AirDragModifiedUseStandardValueType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!--                   AUXILIARIES                      -->
 	<!-- Lorry -->
 	<xs:complexType name="AUX_Component_Conventional_Lorry_Type">

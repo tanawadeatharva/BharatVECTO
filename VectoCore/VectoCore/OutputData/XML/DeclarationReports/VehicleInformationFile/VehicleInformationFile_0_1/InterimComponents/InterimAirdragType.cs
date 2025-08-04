@@ -49,8 +49,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			retVal.Add(tmp.Elements());
 			return retVal;
 		}
+        protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV27 airdrag)
+        {
+            var retVal = new XElement(v27 + XMLNames.Component_AirDrag);
+            var tmp = XElement.Load(airdrag.XMLSource.CreateNavigator().ReadSubtree());
+            retVal.Add(tmp.Elements());
+            return retVal;
+        }
 
-		protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV20 airdrag)
+        protected XElement GetAirdragElement(XMLDeclarationAirdragDataProviderV20 airdrag)
 		{
 			var retVal = new XElement(v27 + XMLNames.Component_AirDrag//, 
 				//new XAttribute("xmlns", v20.NamespaceName)
@@ -100,9 +107,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					return GetAirdragElement(av20);
 				case XMLDeclarationAirdragDataProviderV24 av24:
 					return GetAirdragElement(av24);
-				case XMLDeclarationAirdragDataProviderV10 av10:
+                case XMLDeclarationAirdragDataProviderV27 av27:
+                    return GetAirdragElement(av27);
+                case XMLDeclarationAirdragDataProviderV10 av10:
 					return GetAirdragElement(av10);
-			}
+            }
 
 
 			var sourceVersion = airdrag.DataSource.SourceVersion;

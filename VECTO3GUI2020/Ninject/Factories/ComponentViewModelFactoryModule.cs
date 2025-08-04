@@ -56,11 +56,8 @@ namespace VECTO3GUI2020.Ninject.Factories
 			AddInternalComponentBinding<AirDragViewModel_v1_0>(XMLDeclarationAirdragDataProviderV10.NAMESPACE_URI, XMLDeclarationAirdragDataProviderV10.XSD_TYPE);
 			AddInternalComponentBinding<AirDragViewModel_v2_0>(XMLDeclarationAirdragDataProviderV20.NAMESPACE_URI, XMLDeclarationAirdragDataProviderV20.XSD_TYPE);
 			AddInternalComponentBinding<AirDragViewModel_v2_4>(XMLDeclarationAirdragDataProviderV24.NAMESPACE_URI, XMLDeclarationAirdragDataProviderV24.XSD_TYPE);
-
-
-
-
-		}
+            AddInternalComponentBinding<AirDragViewModel_v2_7>(XMLDeclarationAirdragDataProviderV27.NAMESPACE_URI, XMLDeclarationAirdragDataProviderV27.XSD_TYPE);
+        }
 
 		private void AddInternalComponentBinding<TConcrete>(XNamespace ns, string type) where TConcrete : IComponentViewModel
 		{
