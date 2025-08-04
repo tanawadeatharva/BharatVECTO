@@ -11,9 +11,9 @@ using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Mockup;
+using TUGraz.VectoCore.Mockup.Simulation;
 using TUGraz.VectoCore.Mockup.Simulation.RundataFactories;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.OutputData.XML;
@@ -37,6 +37,8 @@ namespace TUGraz.VectoMockup.Ninject
 			Rebind<IXMLDeclarationReportFactory>().To<MockupReportFactory>();
 			Rebind<IXMLInputDataReader>().To<MockupXMLInputDataFactory>();
 			Rebind<IResultsWriterFactory>().To<MockupReportResultsFactory>().InSingletonScope();
+
+			Rebind<IPowertrainBuilder>().To<MockupPowertrainBuilder>();
 
 			Rebind<IModalDataPostProcessor>().To<MockupModalDataPostprocessingCorrection>();
 
@@ -82,5 +84,4 @@ namespace TUGraz.VectoMockup.Ninject
 
 		#endregion
 	}
-
 }
