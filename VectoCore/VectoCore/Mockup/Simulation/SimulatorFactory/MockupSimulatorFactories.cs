@@ -86,8 +86,12 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
-			return new MockupRun(VehicleContainer.CreateVehicleContainer(data,
-					new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null), addReportResult), null));
+			var container = PowertrainBuilder.Build(// VehicleContainer.CreateVehicleContainer(
+				data,
+				new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null),
+					addReportResult), null);
+
+            return new MockupRun(container);
 			
 		}
 		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)
