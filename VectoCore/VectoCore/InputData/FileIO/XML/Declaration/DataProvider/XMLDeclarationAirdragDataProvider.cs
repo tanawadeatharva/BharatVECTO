@@ -128,6 +128,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
+    public class XMLDeclarationAirdragDataProviderV27 : XMLDeclarationAirdragDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+        public new const string XSD_TYPE = "AirDragModifiedUseStandardValueType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationAirdragDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+            string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+    }
+
     public class XMLDeclarationAirdragDataProviderV26 : XMLDeclarationAirdragDataProviderV10
     {
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;

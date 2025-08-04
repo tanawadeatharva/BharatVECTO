@@ -384,6 +384,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLAuxiliaryReader>().To<XMLLorryComponentReaderV27>().Named(XMLLorryComponentReaderV27.AUXILIARIES_PEV_QUALIFIED_XSD_TYPE);
             Bind<IXMLAuxiliaryReader>().To<XMLLorryComponentReaderV27>().Named(XMLLorryComponentReaderV27.AUXILIARIES_FCHV_QUALIFIED_XSD_TYPE);
 
+            // Air Drag
+            Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV27>().Named(
+                XMLDeclarationAirdragDataProviderV27.QUALIFIED_XSD_TYPE);
+
             // Fuel Cell
             Bind<IXMLFuelCellDeclarationInputData>().To<XMLFuelCellDeclarationInputDataProviderV27>().Named(XMLFuelCellDeclarationInputDataProviderV27.QUALIFIED_XSD_TYPE);
 			
