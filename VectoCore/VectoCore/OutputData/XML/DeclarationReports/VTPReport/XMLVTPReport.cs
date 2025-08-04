@@ -730,7 +730,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return null;
 			}
 
-			return new XElement(tns + "TotalFuelConsumptionDelta", deltas);
+			return isOBFCMFcAvailable ? new XElement(tns + "TotalFuelConsumptionDelta", deltas) : null ;
 		}
 
 		private XElement NotApplyElement(string name, string unit = null)
