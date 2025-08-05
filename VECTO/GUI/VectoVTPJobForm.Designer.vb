@@ -117,6 +117,24 @@ Partial Class VectoVTPJobForm
         Me._tqDriftLeftTextbox = New System.Windows.Forms.TextBox()
         Me._tqDriftRightLbl = New System.Windows.Forms.Label()
         Me._tqDriftLeftLbl = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.tbLifetimeFCVolumeEnd = New System.Windows.Forms.TextBox()
+        Me.tbLifetimeFCVolumeStart = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.groupBoxLftmFcMass = New System.Windows.Forms.GroupBox()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.tbLifetimeFCMassEnd = New System.Windows.Forms.TextBox()
+        Me.tbLifetimeFCMassStart = New System.Windows.Forms.TextBox()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.tbOdometerReading = New System.Windows.Forms.TextBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.gbOBFCM = New System.Windows.Forms.GroupBox()
         Me.GrCycles.SuspendLayout()
         Me.GrAux.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
@@ -131,6 +149,9 @@ Partial Class VectoVTPJobForm
         Me.pnManufacturerRecord.SuspendLayout()
         Me._ncvGrpBox.SuspendLayout()
         Me._wheelTorqueDriftGrpbox.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.groupBoxLftmFcMass.SuspendLayout()
+        Me.gbOBFCM.SuspendLayout()
         Me.SuspendLayout()
         '
         'GrCycles
@@ -287,7 +308,7 @@ Partial Class VectoVTPJobForm
         '
         Me.StatusStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 1097)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 1297)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Padding = New System.Windows.Forms.Padding(1, 0, 21, 0)
         Me.StatusStrip1.Size = New System.Drawing.Size(1438, 32)
@@ -304,7 +325,7 @@ Partial Class VectoVTPJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(1172, 1057)
+        Me.ButOK.Location = New System.Drawing.Point(1172, 1257)
         Me.ButOK.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(112, 35)
@@ -316,7 +337,7 @@ Partial Class VectoVTPJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(1289, 1057)
+        Me.ButCancel.Location = New System.Drawing.Point(1289, 1257)
         Me.ButCancel.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(112, 35)
@@ -1038,6 +1059,184 @@ Partial Class VectoVTPJobForm
         Me._tqDriftLeftLbl.TabIndex = 0
         Me._tqDriftLeftLbl.Text = "Left"
         '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.Label8)
+        Me.GroupBox2.Controls.Add(Me.Label15)
+        Me.GroupBox2.Controls.Add(Me.tbLifetimeFCVolumeEnd)
+        Me.GroupBox2.Controls.Add(Me.tbLifetimeFCVolumeStart)
+        Me.GroupBox2.Controls.Add(Me.Label16)
+        Me.GroupBox2.Controls.Add(Me.Label17)
+        Me.GroupBox2.Location = New System.Drawing.Point(328, 58)
+        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox2.Size = New System.Drawing.Size(259, 112)
+        Me.GroupBox2.TabIndex = 45
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "Lifetime Consumption by Volume"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(202, 75)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(26, 20)
+        Me.Label8.TabIndex = 5
+        Me.Label8.Text = "[L]"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(202, 35)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(26, 20)
+        Me.Label15.TabIndex = 4
+        Me.Label15.Text = "[L]"
+        '
+        'tbLifetimeFCVolumeEnd
+        '
+        Me.tbLifetimeFCVolumeEnd.Location = New System.Drawing.Point(79, 71)
+        Me.tbLifetimeFCVolumeEnd.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.tbLifetimeFCVolumeEnd.Name = "tbLifetimeFCVolumeEnd"
+        Me.tbLifetimeFCVolumeEnd.Size = New System.Drawing.Size(112, 26)
+        Me.tbLifetimeFCVolumeEnd.TabIndex = 3
+        '
+        'tbLifetimeFCVolumeStart
+        '
+        Me.tbLifetimeFCVolumeStart.Location = New System.Drawing.Point(79, 31)
+        Me.tbLifetimeFCVolumeStart.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.tbLifetimeFCVolumeStart.Name = "tbLifetimeFCVolumeStart"
+        Me.tbLifetimeFCVolumeStart.Size = New System.Drawing.Size(112, 26)
+        Me.tbLifetimeFCVolumeStart.TabIndex = 2
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(20, 75)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(38, 20)
+        Me.Label16.TabIndex = 1
+        Me.Label16.Text = "End"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(20, 35)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(44, 20)
+        Me.Label17.TabIndex = 0
+        Me.Label17.Text = "Start"
+        '
+        'groupBoxLftmFcMass
+        '
+        Me.groupBoxLftmFcMass.Controls.Add(Me.Label18)
+        Me.groupBoxLftmFcMass.Controls.Add(Me.Label19)
+        Me.groupBoxLftmFcMass.Controls.Add(Me.tbLifetimeFCMassEnd)
+        Me.groupBoxLftmFcMass.Controls.Add(Me.tbLifetimeFCMassStart)
+        Me.groupBoxLftmFcMass.Controls.Add(Me.Label20)
+        Me.groupBoxLftmFcMass.Controls.Add(Me.Label21)
+        Me.groupBoxLftmFcMass.Location = New System.Drawing.Point(17, 58)
+        Me.groupBoxLftmFcMass.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.groupBoxLftmFcMass.Name = "groupBoxLftmFcMass"
+        Me.groupBoxLftmFcMass.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.groupBoxLftmFcMass.Size = New System.Drawing.Size(304, 112)
+        Me.groupBoxLftmFcMass.TabIndex = 44
+        Me.groupBoxLftmFcMass.TabStop = False
+        Me.groupBoxLftmFcMass.Text = "Lifetime Consumption by Mass"
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(228, 75)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(34, 20)
+        Me.Label18.TabIndex = 5
+        Me.Label18.Text = "[kg]"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(228, 35)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(34, 20)
+        Me.Label19.TabIndex = 4
+        Me.Label19.Text = "[kg]"
+        '
+        'tbLifetimeFCMassEnd
+        '
+        Me.tbLifetimeFCMassEnd.Location = New System.Drawing.Point(105, 71)
+        Me.tbLifetimeFCMassEnd.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.tbLifetimeFCMassEnd.Name = "tbLifetimeFCMassEnd"
+        Me.tbLifetimeFCMassEnd.Size = New System.Drawing.Size(112, 26)
+        Me.tbLifetimeFCMassEnd.TabIndex = 3
+        '
+        'tbLifetimeFCMassStart
+        '
+        Me.tbLifetimeFCMassStart.Location = New System.Drawing.Point(105, 31)
+        Me.tbLifetimeFCMassStart.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.tbLifetimeFCMassStart.Name = "tbLifetimeFCMassStart"
+        Me.tbLifetimeFCMassStart.Size = New System.Drawing.Size(112, 26)
+        Me.tbLifetimeFCMassStart.TabIndex = 2
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(20, 75)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(38, 20)
+        Me.Label20.TabIndex = 1
+        Me.Label20.Text = "End"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(20, 35)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(44, 20)
+        Me.Label21.TabIndex = 0
+        Me.Label21.Text = "Start"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(318, 30)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(38, 20)
+        Me.Label22.TabIndex = 48
+        Me.Label22.Text = "[km]"
+        '
+        'tbOdometerReading
+        '
+        Me.tbOdometerReading.Location = New System.Drawing.Point(195, 26)
+        Me.tbOdometerReading.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.tbOdometerReading.Name = "tbOdometerReading"
+        Me.tbOdometerReading.Size = New System.Drawing.Size(112, 26)
+        Me.tbOdometerReading.TabIndex = 47
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(21, 29)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(168, 20)
+        Me.Label23.TabIndex = 46
+        Me.Label23.Text = "Odometer end reading"
+        '
+        'gbOBFCM
+        '
+        Me.gbOBFCM.Controls.Add(Me.Label22)
+        Me.gbOBFCM.Controls.Add(Me.tbOdometerReading)
+        Me.gbOBFCM.Controls.Add(Me.Label23)
+        Me.gbOBFCM.Controls.Add(Me.GroupBox2)
+        Me.gbOBFCM.Controls.Add(Me.groupBoxLftmFcMass)
+        Me.gbOBFCM.Location = New System.Drawing.Point(14, 1094)
+        Me.gbOBFCM.Name = "gbOBFCM"
+        Me.gbOBFCM.Size = New System.Drawing.Size(593, 182)
+        Me.gbOBFCM.TabIndex = 49
+        Me.gbOBFCM.TabStop = False
+        Me.gbOBFCM.Text = "OBFCM"
+        '
         'VectoVTPJobForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1045,7 +1244,8 @@ Partial Class VectoVTPJobForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoScroll = True
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1438, 1129)
+        Me.ClientSize = New System.Drawing.Size(1438, 1329)
+        Me.Controls.Add(Me.gbOBFCM)
         Me.Controls.Add(Me._wheelTorqueDriftGrpbox)
         Me.Controls.Add(Me._ncvGrpBox)
         Me.Controls.Add(Me.pnManufacturerRecord)
@@ -1071,7 +1271,7 @@ Partial Class VectoVTPJobForm
         Me.Controls.Add(Me.StatusStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.MinimumSize = New System.Drawing.Size(1460, 1185)
+        Me.MinimumSize = New System.Drawing.Size(1460, 1385)
         Me.Name = "VectoVTPJobForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Job Editor"
@@ -1097,59 +1297,65 @@ Partial Class VectoVTPJobForm
         Me._ncvGrpBox.PerformLayout()
         Me._wheelTorqueDriftGrpbox.ResumeLayout(False)
         Me._wheelTorqueDriftGrpbox.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        Me.groupBoxLftmFcMass.ResumeLayout(False)
+        Me.groupBoxLftmFcMass.PerformLayout()
+        Me.gbOBFCM.ResumeLayout(False)
+        Me.gbOBFCM.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout
+        Me.PerformLayout()
 
-End Sub
-	Friend WithEvents StatusStrip1 As StatusStrip
-	Friend WithEvents ButtonVEH As Button
-	Friend WithEvents ToolStripStatusLabelGEN As ToolStripStatusLabel
-	Friend WithEvents ButOK As Button
-	Friend WithEvents TbVEH As TextBox
-	Friend WithEvents ButCancel As Button
-	Friend WithEvents ToolStrip1 As ToolStrip
-	Friend WithEvents ToolStripBtNew As ToolStripButton
-	Friend WithEvents ToolStripBtOpen As ToolStripButton
-	Friend WithEvents ToolStripBtSave As ToolStripButton
-	Friend WithEvents ToolStripBtSaveAs As ToolStripButton
-	Friend WithEvents ToolStripBtSendTo As ToolStripButton
-	Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-	Friend WithEvents GrAux As GroupBox
-	Friend WithEvents LvAux As ListView
-	Friend WithEvents ColumnHeader4 As ColumnHeader
-	Friend WithEvents ColumnHeader5 As ColumnHeader
-	Friend WithEvents ColumnHeader6 As ColumnHeader
-	Friend WithEvents PictureBox1 As PictureBox
-	Friend WithEvents GrCycles As GroupBox
-	Friend WithEvents LvCycles As ListView
-	Friend WithEvents ColumnHeader1 As ColumnHeader
-	Friend WithEvents BtDRIrem As Button
-	Friend WithEvents BtDRIadd As Button
-	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-	Friend WithEvents ToolStripButton1 As ToolStripButton
-	Friend WithEvents Label2 As Label
-	Friend WithEvents CmOpenFile As ContextMenuStrip
-	Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents PicVehicle As PictureBox
-	Friend WithEvents PicBox As PictureBox
-	Friend WithEvents TbEngTxt As TextBox
-	Friend WithEvents TbVehCat As TextBox
-	Friend WithEvents TbAxleConf As TextBox
-	Friend WithEvents TbHVCclass As TextBox
-	Friend WithEvents TbGbxTxt As TextBox
-	Friend WithEvents TbMass As TextBox
-	Friend WithEvents ToolTip1 As ToolTip
-	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
-	Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
-	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-	Friend WithEvents tbC3 As System.Windows.Forms.TextBox
-	Friend WithEvents Label4 As System.Windows.Forms.Label
-	Friend WithEvents tbC2 As System.Windows.Forms.TextBox
-	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents tbC1 As System.Windows.Forms.TextBox
-	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents Label5 As System.Windows.Forms.Label
+    End Sub
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents ButtonVEH As Button
+    Friend WithEvents ToolStripStatusLabelGEN As ToolStripStatusLabel
+    Friend WithEvents ButOK As Button
+    Friend WithEvents TbVEH As TextBox
+    Friend WithEvents ButCancel As Button
+    Friend WithEvents ToolStrip1 As ToolStrip
+    Friend WithEvents ToolStripBtNew As ToolStripButton
+    Friend WithEvents ToolStripBtOpen As ToolStripButton
+    Friend WithEvents ToolStripBtSave As ToolStripButton
+    Friend WithEvents ToolStripBtSaveAs As ToolStripButton
+    Friend WithEvents ToolStripBtSendTo As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents GrAux As GroupBox
+    Friend WithEvents LvAux As ListView
+    Friend WithEvents ColumnHeader4 As ColumnHeader
+    Friend WithEvents ColumnHeader5 As ColumnHeader
+    Friend WithEvents ColumnHeader6 As ColumnHeader
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents GrCycles As GroupBox
+    Friend WithEvents LvCycles As ListView
+    Friend WithEvents ColumnHeader1 As ColumnHeader
+    Friend WithEvents BtDRIrem As Button
+    Friend WithEvents BtDRIadd As Button
+    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents ToolStripButton1 As ToolStripButton
+    Friend WithEvents Label2 As Label
+    Friend WithEvents CmOpenFile As ContextMenuStrip
+    Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PicVehicle As PictureBox
+    Friend WithEvents PicBox As PictureBox
+    Friend WithEvents TbEngTxt As TextBox
+    Friend WithEvents TbVehCat As TextBox
+    Friend WithEvents TbAxleConf As TextBox
+    Friend WithEvents TbHVCclass As TextBox
+    Friend WithEvents TbGbxTxt As TextBox
+    Friend WithEvents TbMass As TextBox
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
+    Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents tbC3 As System.Windows.Forms.TextBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents tbC2 As System.Windows.Forms.TextBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents tbC1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents tbFanDiameter As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
@@ -1191,4 +1397,22 @@ End Sub
     Friend WithEvents primaryVIFBtn As Button
     Friend WithEvents primaryVIFTb As TextBox
     Friend WithEvents primaryVIFLbl As Label
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Label15 As Label
+    Friend WithEvents tbLifetimeFCVolumeEnd As TextBox
+    Friend WithEvents tbLifetimeFCVolumeStart As TextBox
+    Friend WithEvents Label16 As Label
+    Friend WithEvents Label17 As Label
+    Friend WithEvents groupBoxLftmFcMass As GroupBox
+    Friend WithEvents Label18 As Label
+    Friend WithEvents Label19 As Label
+    Friend WithEvents tbLifetimeFCMassEnd As TextBox
+    Friend WithEvents tbLifetimeFCMassStart As TextBox
+    Friend WithEvents Label20 As Label
+    Friend WithEvents Label21 As Label
+    Friend WithEvents Label22 As Label
+    Friend WithEvents tbOdometerReading As TextBox
+    Friend WithEvents Label23 As Label
+    Friend WithEvents gbOBFCM As GroupBox
 End Class

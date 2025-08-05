@@ -1063,6 +1063,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private readonly JObject _body;
 		private readonly Dictionary<string, double> _rawLifetimeFuelConsumption;
+		private readonly Meter _odometerReading;
 
 		public VTPOBFCMDeclarationData(JObject body)
 		{
@@ -1072,9 +1073,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_rawLifetimeFuelConsumption = rawOBFCMJson != null
 				? JsonConvert.DeserializeObject<Dictionary<string, double>>(rawOBFCMJson) : null;
+			
+			_odometerReading = _body["MileageEndOfTest"]?.Value<double>().SI(Unit.SI.Kilo.Meter).Cast<Meter>() ?? null;
 		}
 
-		public Meter OdometerReading => _body["MileageEndOfTest"]?.Value<double>().SI(Unit.SI.Kilo.Meter).Cast<Meter>() ?? null;
+		public VTPOBFCMDeclarationData(Dictionary<string, double> rawLifetimeFuelConsumption, Meter odometerReading)
+		{
+			_odometerReading = odometerReading;
+			_rawLifetimeFuelConsumption = rawLifetimeFuelConsumption ?? throw new ArgumentNullException(nameof(rawLifetimeFuelConsumption));
+		}
+
+		public Meter OdometerReading => _odometerReading;
 
 		public Dictionary<string, Kilogram> LifetimeFuelConsumptionMass => _rawLifetimeFuelConsumption != null 
 			? _rawLifetimeFuelConsumption

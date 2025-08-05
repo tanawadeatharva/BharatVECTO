@@ -12,7 +12,6 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoHashing
@@ -34,6 +33,7 @@ Public Class VectoVTPJob
 
     Public ReadOnly CycleFiles As List(Of SubPath)
     Public FanCoefficients As Double()
+    Private _obfcmDeclarationData As VTPOBFCMDeclarationData
     Private _fanDiameter As Meter
     Private _fuelNCVData As List(Of IFuelNCVData)
 
@@ -363,9 +363,12 @@ Public Class VectoVTPJob
         End Get
     End Property
 
-    Public ReadOnly Property OBFCMDeclarationInputData As VTPOBFCMDeclarationData Implements IVTPDeclarationJobInputData.OBFCMDeclarationInputData
+    Public Property OBFCMDeclarationInputData As VTPOBFCMDeclarationData Implements IVTPDeclarationJobInputData.OBFCMDeclarationInputData
         Get
-            Throw New NotImplementedException()
+            Return _obfcmDeclarationData
         End Get
+        Set(ByVal value As VTPOBFCMDeclarationData)
+            _obfcmDeclarationData = value
+        End Set
     End Property
 End Class

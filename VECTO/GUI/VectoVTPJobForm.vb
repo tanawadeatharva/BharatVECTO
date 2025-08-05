@@ -285,6 +285,21 @@ Public Class VectoVTPJobForm
 
         tbMileage.Text = inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat()
 
+        Dim obfcmData = inputData.JobInputData.OBFCMDeclarationInputData
+        If (obfcmData.OdometerReading IsNot Nothing) Then
+            tbOdometerReading.Text = obfcmData.OdometerReading.ConvertToKiloMeter().Value.ToGUIFormat()
+        End If
+
+        If (obfcmData.LifetimeFuelConsumptionMass IsNot Nothing) Then
+            tbLifetimeFCMassStart.Text = obfcmData.LifetimeFuelConsumptionMass.Item("LifetimeFuelConsumptionMassStart").Value().ToGUIFormat()
+            tbLifetimeFCMassEnd.Text = obfcmData.LifetimeFuelConsumptionMass.Item("LifetimeFuelConsumptionMassEnd").Value().ToGUIFormat()
+        End If
+
+        If (obfcmData.LifetimeFuelConsumptionVolume IsNot Nothing) Then
+            tbLifetimeFCVolumeStart.Text = obfcmData.LifetimeFuelConsumptionVolume.Item("LifetimeFuelConsumptionVolStart").Value().ToGUIFormat()
+            tbLifetimeFCVolumeEnd.Text = obfcmData.LifetimeFuelConsumptionVolume.Item("LifetimeFuelConsumptionVolEnd").Value().ToGUIFormat()
+        End If
+
         If Cfg.DeclMode Then
             tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
             tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
@@ -439,6 +454,17 @@ Public Class VectoVTPJobForm
                                                      tbC4.Text.ToDouble(0)
                                                  }
         vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0) / 1000).SI(Of Meter)
+
+        Dim odometerReadingValue = tbOdometerReading.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast(Of Meter)
+        Dim lifecycleFC = New Dictionary(Of String, Double) From
+        {
+            {"LifetimeFuelConsumptionMassStart", Val(tbLifetimeFCMassStart.Text)},
+            {"LifetimeFuelConsumptionMassEnd", Val(tbLifetimeFCMassEnd.Text)},
+            {"LifetimeFuelConsumptionVolStart", Val(tbLifetimeFCVolumeStart.Text)},
+            {"LifetimeFuelConsumptionVolEnd", Val(tbLifetimeFCVolumeEnd.Text)}
+        }
+
+        vectoJob.OBFCMDeclarationInputData = New VTPOBFCMDeclarationData(lifecycleFC, odometerReadingValue)
 
         ReadFuelNCVFromGUIComponents(_ncvFuel1Lbl, _ncvFuel1Txtbox, vectoJob)
         ReadFuelNCVFromGUIComponents(_ncvFuel2Lbl, _ncvFuel2Txtbox, vectoJob)
@@ -1078,6 +1104,7 @@ Public Class VectoVTPJobForm
             primaryVIFTb.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
+
 End Class
 
 

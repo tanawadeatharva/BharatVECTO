@@ -1633,7 +1633,7 @@ public class JSONFileWriter : IOutputFileWriter
 		}
 
 		body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value);
-
+		body.Add("MileageEndOfTest", job.OBFCMDeclarationInputData.OdometerReading.ConvertToKiloMeter().Value);
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents);
 		body.Add("FanDiameter", job.FanDiameter.Value());
 		body.Add(JsonKeys.Job_FuelNCVs, job.FuelNCVs.Select(x => new FuelNCVOutput()
@@ -1644,8 +1644,24 @@ public class JSONFileWriter : IOutputFileWriter
 
 		body.Add(JsonKeys.Job_TorqueDriftLeftWheel, job.TorqueDriftLeftWheel.Value());
 		body.Add(JsonKeys.Job_TorqueDriftRightWheel, job.TorqueDriftRightWheel.Value());
-		body.Add(
-			"Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
+		body.Add("Cycles", job.Cycles.Select(x => GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray());
+
+		Dictionary<string, double> lifecycleConsumptionVolume = job.OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume.Select(v =>
+			{
+				double fcValue = v.Value.Value();
+				return new { v.Key, fcValue };
+			})
+			.ToDictionary(e => e.Key, e => e.fcValue);
+
+		Dictionary<string, double> lifecycleConsumptionMass = job.OBFCMDeclarationInputData.LifetimeFuelConsumptionMass
+			.Select(m => 
+			{
+				double fcValue = m.Value.Value();
+				return new { m.Key,  fcValue };
+			})
+			.ToDictionary(e => e.Key, e=> e.fcValue);
+
+		body.Add("OBFCM", lifecycleConsumptionMass.Concat(lifecycleConsumptionVolume).ToDictionary(e => e.Key, e => e.Value));
 
 		return body;
 	}
