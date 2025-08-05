@@ -246,8 +246,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             }
 
-
-
             if (specific.ZEV_FuelConsumption_AuxHtr?.IsGreaterOrEqual(0) ?? false)
             {
                 result.ZEV_FuelConsumption_AuxHtr = specific.ZEV_FuelConsumption_AuxHtr;
@@ -256,8 +254,24 @@ namespace TUGraz.VectoCore.OutputData.XML
 				result.ZEV_CO2 = result.ZEV_FuelConsumption_AuxHtr * auxHeaterFuel.CO2PerFuelWeight;
             }
 
+			if (result.VectoRunData.EngineData?.Fuels.Any(x => x.FuelData.FuelType.IsHydrogenFuel()) ?? false)
+			{
+                var h2Fuel = result.VectoRunData.EngineData?.Fuels.Where(x => x.FuelData.FuelType.IsHydrogenFuel()).Select(x => x.FuelData.FuelType).First();
+                var totalFc = result.FuelConsumptionFinal(h2Fuel.Value)?.TotalFuelConsumptionCorrected;
 
+                var completedVehicle = (specific.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.ConsolidateManufacturingStage.Vehicle;
+                
+				var H2Vehicle = (completedVehicle.H2StorageUsableCapacity != null)
+                ? completedVehicle
+                : (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.PrimaryVehicle.Vehicle;
 
+                var range = ((totalFc != null) && (totalFc > 0))
+                    ? result.Distance * (H2Vehicle.H2StorageUsableCapacity / totalFc)
+                    : null;
+
+                result.HydrogenRange = range;
+                result.ZeroCO2EmissionsRange = range;
+            }
 
             if (generic.VectoRunData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
                     VectoSimulationJobType.IEPC_E))
@@ -399,6 +413,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					ActualChargeDepletingRange = ActualChargeDepletingRange,
 					EquivalentAllElectricRange = EquivalentAllElectricRange,
 					ZeroCO2EmissionsRange = ZeroCO2EmissionsRange,
+					HydrogenRange = HydrogenRange,
 					AuxHeaterFuel = AuxHeaterFuel,
 					ZEV_FuelConsumption_AuxHtr = ZEV_FuelConsumption_AuxHtr,
 					ZEV_CO2 = ZEV_CO2,

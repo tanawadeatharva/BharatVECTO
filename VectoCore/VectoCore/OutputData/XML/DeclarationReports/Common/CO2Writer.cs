@@ -146,7 +146,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 			retval.AddRange(GetCO2ResultEntries(entry.CO2Total, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount)
 				.Select(x => new XElement(TNS + XMLNames.Report_Results_CO2, x.GetElement())));
 
-			if (!entry.OVCMode.IsOneOf(OvcHevMode.ChargeDepleting, OvcHevMode.ChargeSustaining) && entry.FuelData.All(f => f.FuelType.IsHydrogenFuel())) {
+			if (!entry.OVCMode.IsOneOf(OvcHevMode.ChargeDepleting, OvcHevMode.ChargeSustaining) 
+				&& entry.FuelData.All(f => f.FuelType.IsHydrogenFuel())
+				&& (entry.VectoRunData.VehicleData.VehicleCategory != VehicleCategory.HeavyBusPrimaryVehicle)
+				) 
+			{
 				var tmp = _factory.GetFuelConsumptionBus(_factory, TNS);
 				retval.Add(new XElement(TNS + XMLNames.Report_ResultEntry_FCZEVAuxHeater,
 						new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, entry.AuxHeaterFuel.FuelType.ToXMLFormat()),

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
             var tankSystem = vehicle.TankSystem.HasValue
                 ? vehicle.TankSystem.Value.ToString()
                 : (vehicle.HydrogenStorageTechnology.HasValue
-                    ? vehicle.HydrogenStorageTechnology.Value.ToString()
+                    ? vehicle.HydrogenStorageTechnology?.ToXMLFormat()
                     : null);
 
             if (tankSystem == null) {

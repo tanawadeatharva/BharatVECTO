@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -300,6 +301,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 					HydrogenRange = range;
 					ZeroCO2EmissionsRange = range;
+
+                    var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
+                    if (fc != null)
+                    {
+                        ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
+                        AuxHeaterFuel = fc.Fuel;
+                        ZEV_CO2 = ZEV_FuelConsumption_AuxHtr * AuxHeaterFuel.CO2PerFuelWeight;
+                    }
                 }
 
 				if (runData.JobType.IsFCHV())
