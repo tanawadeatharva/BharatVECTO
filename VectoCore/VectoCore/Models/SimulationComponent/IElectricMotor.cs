@@ -26,5 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public interface ITestPowertrainElectricMotorControl : IElectricMotorControl
 	{
 		bool EmOff { get; set; }
+
+		NewtonMeter EMTorque { get; set; }
 	}
 }

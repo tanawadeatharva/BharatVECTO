@@ -25,7 +25,7 @@ public class LorryAuxDataAdapterTests
         var auxInput = CreateAuxInput(psTechnology, "Default", "Standard technology", "Crankshaft mounted - Electronically controlled visco clutch", "Electric driven pump");
 
         var auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, MissionType.LongHaul, VehicleClass.Class2,
-            8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle);
+            8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle, false);
 
         var ps = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.PneumaticSystem);
 
@@ -361,7 +361,7 @@ public class LorryAuxDataAdapterTests
         try
         {
             dataAdapter.CreateAuxiliaryData(auxData.Object, null, MissionType.LongHaul, VehicleClass.Class12,
-                4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle);
+                4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle, false);
         }
         catch (Exception ex)
         {
@@ -383,7 +383,7 @@ public class LorryAuxDataAdapterTests
         try
         {
             auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, missionType, vehicleClass,
-                vehicleLength, numSteeredAxles, vectoSimulationJobType);
+                vehicleLength, numSteeredAxles, vectoSimulationJobType, false);
         }
         catch (VectoException ex)
         {

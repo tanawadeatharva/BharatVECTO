@@ -32,6 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public ITestpowertrainGensetChargerAdapter Charger { get; }
         public Dictionary<PowertrainPosition, IElectricMotor> ElectricMotorsUpstreamTransmission { get; } = new Dictionary<PowertrainPosition, IElectricMotor>();
         public Dictionary<PowertrainPosition, ITestpowertrainElectricMotor> ElectricMotors { get; } = new Dictionary<PowertrainPosition, ITestpowertrainElectricMotor>();
+		//public ITestPowertrainElectricMotorControl ElectricMotorControl { get; }
         public ITorqueConverter TorqueConverter { get; }
         public IDCDCConverter DCDCConverter { get; }
         public IWHRCharger WHRCharger;

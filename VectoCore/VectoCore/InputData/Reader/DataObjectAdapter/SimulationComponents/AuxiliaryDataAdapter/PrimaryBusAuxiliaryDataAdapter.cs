@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		private (SSMInputs ssmCooling, SSMInputs ssmHeating) GetPrimarySSMInput(Mission mission,
 			IVehicleDeclarationInputData primaryVehicle, VectoRunData runData)
 		{
-			var hvacParams = GetHVACParams(primaryVehicle.VehicleType, mission.BusParameter);
+			var hvacParams = GetHVACParams(primaryVehicle, mission.BusParameter);
 
 			var applicableHVACConfigCooling = DeclarationData.BusAuxiliaries.GetHVACConfig(hvacParams.HVACConfiguration,
 				HeatPumpType.none, hvacParams.HeatPumpTypePassengerCompartmentCooling);
@@ -433,8 +433,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			return retVal;
 		}
 
-		private HVACParameters GetHVACParams(VectoSimulationJobType vehicleType, BusParameters busParams)
+		private HVACParameters GetHVACParams(IVehicleDeclarationInputData vehicle, BusParameters busParams)
 		{
+			var vehicleType = vehicle.VehicleType;
+			var batteryOnly = vehicle.BatteryOnlyMode;
 			switch (vehicleType)
 			{
 				case VectoSimulationJobType.ConventionalVehicle:
@@ -443,7 +445,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				case VectoSimulationJobType.SerialHybridVehicle:
 				case VectoSimulationJobType.IEPC_S:
 				case VectoSimulationJobType.IHPC:
-					return busParams.HVACHEV;
+					return batteryOnly ? busParams.HVACPEV : busParams.HVACHEV;
 				case VectoSimulationJobType.BatteryElectricVehicle:
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.FCHV:
@@ -621,7 +623,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected override IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
 			MissionType mission, VehicleClass hdvClass, Meter vehicleLength, int? numSteeredAxles,
-			VectoSimulationJobType jobType)
+			VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 		{
 			if (auxInputData != null)
 			{

@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				avgEngineSpeed, ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed), dt, true);
 		}
 
-		public Watt EngineDragPower(PerSecond angularSpeed)
+		public virtual Watt EngineDragPower(PerSecond angularSpeed)
 		{
 			return ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryPower(angularSpeed);
 		}

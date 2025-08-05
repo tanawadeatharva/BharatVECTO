@@ -613,7 +613,8 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.3.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.4.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.5.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.DEV.2.11.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.6.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationJob.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoInput.1.0.xsd" HomeFolder="Yes"/>
@@ -659,6 +660,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.1.0.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputManufacturer.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistep.0.1.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoOutputMultistep.1.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.2.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.xsd" HomeFolder="Yes"/>

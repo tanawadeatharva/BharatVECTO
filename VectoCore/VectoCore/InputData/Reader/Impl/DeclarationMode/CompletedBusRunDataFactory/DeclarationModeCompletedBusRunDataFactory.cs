@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                 simulationRunData.Aux = DataAdapterGeneric.CreateAuxiliaryData(
                     PrimaryVehicle.Components.AuxiliaryInputData, primaryBusAuxiliaries, mission.MissionType,
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
-                    PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+                    PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, false);
 
 				simulationRunData.EngineData.FuelMode = 0;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				simulationRunData.Aux = DataAdapterSpecific.CreateAuxiliaryData(
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, false);
 				simulationRunData.EngineData.FuelMode = 0;
 				simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 
@@ -451,8 +451,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
 
+				if (ovcHevMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
 
-				DataAdapterGeneric.CreateREESSData(
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -485,7 +488,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                 rd.Aux = DataAdapterGeneric.CreateAuxiliaryData(
                     PrimaryVehicle.Components.AuxiliaryInputData, primaryBusAuxiliaries, mission.MissionType,
                     primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
-                    PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+                    PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, rd.BatteryOnlyHybridMode);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				
@@ -512,8 +515,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
 
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
 
-				DataAdapterGeneric.CreateREESSData(
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -554,7 +560,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.Aux = DataAdapterSpecific.CreateAuxiliaryData(
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, rd.BatteryOnlyHybridMode);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 
@@ -698,7 +704,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !PrimaryVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = PrimaryVehicle.InMotionCharging.Technology;
 
-				DataAdapterGeneric.CreateREESSData(
+				if (ovcHevMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
+
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -729,17 +739,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.Aux = DataAdapterGeneric.CreateAuxiliaryData(
 					PrimaryVehicle.Components.AuxiliaryInputData, primaryBusAuxiliaries, mission.MissionType,
 					primarySegment.VehicleClass, mission.BusParameter.VehicleLength,
-					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, rd.BatteryOnlyHybridMode);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
 				
-				rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd);
-				var gbx = rd.GearboxData;
 				rd.GearshiftParameters =
 					DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
 															(rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
-						PrimaryVehicle.EngineIdleSpeed, gbx.Type, gbx.Gears.Count);
-				rd.Retarder =
+						PrimaryVehicle.EngineIdleSpeed, PrimaryVehicle.Components.GearboxInputData.Type, PrimaryVehicle.Components.GearboxInputData.Gears.Count);
+				rd.GearboxData = DataAdapterGeneric.CreateGearboxData(PrimaryVehicle, rd);
+
+                rd.Retarder =
 					DataAdapterGeneric.CreateGenericRetarderData(PrimaryVehicle.Components.RetarderInputData, rd);
 				rd.BusAuxiliaries =
 					DataAdapterGeneric.CreateBusAuxiliariesData(mission, PrimaryVehicle, CompletedVehicle, rd);
@@ -772,7 +782,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.InMotionCharging = !CompletedVehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable);
 				rd.InMotionChargingTechnology = CompletedVehicle.InMotionCharging.Technology;
 
-				DataAdapterGeneric.CreateREESSData(
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					rd.BatteryOnlyHybridMode = PrimaryVehicle.BatteryOnlyMode;
+				}
+
+                DataAdapterGeneric.CreateREESSData(
 					componentsElectricStorage: PrimaryVehicle.Components.ElectricStorage,
 					PrimaryVehicle.VehicleType,
 					true,
@@ -799,10 +813,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				rd.Aux = DataAdapterSpecific.CreateAuxiliaryData(
 					PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
-					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType);
+					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles, PrimaryVehicle.VehicleType, rd.BatteryOnlyHybridMode);
 				rd.EngineData.FuelMode = 0;
 				rd.VehicleData.VehicleClass = _segment.VehicleClass;
-				
+
+				// TODO MC 2025-07-03: no longer needed after refactoring, shift strategy does not require gearshift params
+				rd.GearshiftParameters = DataAdapterGeneric.CreateGearshiftData((rd.AxleGearData?.AxleGear.Ratio ?? 1.0) *
+					(rd.AngledriveData?.Angledrive.Ratio ?? 1.0),
+					rd.EngineData.IdleSpeed, PrimaryVehicle.Components.GearboxInputData.Type,
+					PrimaryVehicle.Components.GearboxInputData.Gears.Count);
 				CreateGearboxAndGearshiftData(rd);
 				rd.HybridStrategyParameters = DataAdapterGeneric.CreateHybridStrategy(
 					rd.BatteryData,
@@ -979,7 +998,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				result.Aux = DataAdapterGeneric.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
-					PrimaryVehicle.VehicleType);
+					PrimaryVehicle.VehicleType, false);
 				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
 
 				//result.EngineData.FuelMode = 0;
@@ -1031,7 +1050,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				result.Aux = DataAdapterSpecific.CreateAuxiliaryData(PrimaryVehicle.Components.AuxiliaryInputData,
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
-					PrimaryVehicle.VehicleType);
+					PrimaryVehicle.VehicleType, false);
 				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
 				   
 				//result.EngineData.FuelMode = 0;

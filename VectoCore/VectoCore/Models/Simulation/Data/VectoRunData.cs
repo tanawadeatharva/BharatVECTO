@@ -190,6 +190,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public OvcHevMode OVCMode { get; internal set; }
 
+		public bool BatteryOnlyHybridMode { get; internal set; }
+
 		public Watt MaxChargingPower { get; internal set; }
 
 		public bool InMotionCharging { get; internal set; }

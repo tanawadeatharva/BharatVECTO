@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
@@ -35,7 +36,7 @@ public class ElectricMotorTests
 	public void ElectricMotorOnlyRequestTest(double speed, double torque, double expectedBatteryPower)
 	{
 
-		var container = GetMockVehicleContainer();
+		var container = GetMockVehicleContainer(PowertrainPosition.BatteryElectricE3);
 
 		var electricMachine = GetElectricMachineDataV1(1);
 		var dao = new EngineeringDataAdapter();
@@ -77,7 +78,7 @@ public class ElectricMotorTests
 	TestCase(800, -300, 21273.378603)]
 	public void ElectricMotorOnlyRequestTestMechLoss(double speed, double torque, double expectedBatteryPower)
 	{
-		var container = GetMockVehicleContainer();
+		var container = GetMockVehicleContainer(PowertrainPosition.BatteryElectricE3);
 
 		var electricMachine = GetElectricMachineDataV1(1, 0.95);
 		var dao = new EngineeringDataAdapter();
@@ -116,7 +117,7 @@ public class ElectricMotorTests
 	TestCase(800, -300, 200, 14907.629627),]
 	public void ElectricMotorAssistingRequestTest(double speed, double torque, double electricTorque, double expectedBatteryPower)
 	{
-		var container = GetMockVehicleContainer();
+		var container = GetMockVehicleContainer(PowertrainPosition.HybridP2);
 
         var electricMachine = GetElectricMachineDataV1(1);
 		var dao = new EngineeringDataAdapter();
@@ -163,7 +164,7 @@ public class ElectricMotorTests
 	TestCase(800, -300, 200, 14165.993213),]
 	public void ElectricMotorAssistingRequestTestMechLoss(double speed, double torque, double electricTorque, double expectedBatteryPower)
 	{
-		var container = GetMockVehicleContainer();
+		var container = GetMockVehicleContainer(PowertrainPosition.HybridP2);
 
 		var electricMachine = GetElectricMachineDataV1(1, 0.95);
 		var dao = new EngineeringDataAdapter();
@@ -205,7 +206,7 @@ public class ElectricMotorTests
 	[TestCase(800, 300)]
 	public void ElectricMotorWithBatteryIdlingRequestTest(double speed, double torque)
 	{
-		var container = GetMockVehicleContainer();
+		var container = GetMockVehicleContainer(PowertrainPosition.HybridP2);
 
 		var electricMachine = GetElectricMachineDataV1(1);
 		var dao = new EngineeringDataAdapter();
@@ -254,7 +255,7 @@ public class ElectricMotorTests
 		var torque = 300.SI<NewtonMeter>();
 		var continuousTorque = 24.SI<NewtonMeter>();
 
-        var container = GetMockVehicleContainer();
+        var container = GetMockVehicleContainer(PowertrainPosition.HybridP2);
 
 		var electricMachine = GetElectricMachineDataV2(1);
 		Mock.Get(electricMachine.Entries.First().ElectricMachine).Setup(e => e.OverloadRecoveryFactor).Returns(0.9);
@@ -340,7 +341,7 @@ public class ElectricMotorTests
 		}
 	}
 
-	private static IVehicleContainer GetMockVehicleContainer()
+	private static IVehicleContainer GetMockVehicleContainer(PowertrainPosition emPos)
 	{
 		var container = new Mock<IVehicleContainer>();
 		var gbx = new Mock<IGearboxInfo>();
@@ -349,6 +350,13 @@ public class ElectricMotorTests
 		container.SetupGet(c => c.BatteryInfo).Returns(bat.Object);
 		var ice = new Mock<IEngineControl>();
 		container.SetupGet(c => c.EngineCtl).Returns(ice.Object);
+
+		var runData = new VectoRunData() {
+			ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>() {
+				Tuple.Create(emPos, new ElectricMotorData())
+			}
+		};
+		container.SetupGet(c => c.RunData).Returns(runData);
 
 		gbx.SetupGet(g => g.Gear).Returns(new GearshiftPosition(0));
 		gbx.Setup(g => g.GearEngaged(It.IsAny<Second>())).Returns(true);

@@ -93,10 +93,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		protected virtual string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
-			GearboxType? overrideGearboxType)
+			GearboxType? overrideGearboxType, bool batteryOnlyHybrid)
 		{
 			var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
-			return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType);
+			return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType, batteryOnlyHybrid);
 		}
 
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data, TankSystem? tankSystem)

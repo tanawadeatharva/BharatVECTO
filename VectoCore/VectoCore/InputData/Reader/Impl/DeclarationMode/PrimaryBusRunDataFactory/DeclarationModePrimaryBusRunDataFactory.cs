@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -21,7 +23,7 @@ using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory
 {
-    public abstract class DeclarationModePrimaryBusRunDataFactory
+	public abstract class DeclarationModePrimaryBusRunDataFactory
 	{
 		public abstract class PrimaryBusBase : AbstractDeclarationVectoRunDataFactory
 		{
@@ -34,7 +36,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			private PrimaryAndCompletedGroups _primaryAndCompletedGroups;
 
-            protected PrimaryBusBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
+			protected PrimaryBusBase(IDeclarationInputDataProvider dataProvider, IDeclarationReport report,
 				// the following parameters are injected
 				IPrimaryBusDeclarationDataAdapter declarationDataAdapter, IDeclarationCycleFactory cycleFactory,
 				IMissionFilter missionFilter, IPowertrainBuilder ptBuilder)
@@ -57,18 +59,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				return DataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
-            #endregion
+			#endregion
 
-            protected Mission[] GetMissions()
-            {
-                if (CompletedVehicle == null)
-                {
-                    return _segment.Missions;
-                }
+			protected Mission[] GetMissions()
+			{
+				if (CompletedVehicle == null)
+				{
+					return _segment.Missions;
+				}
 
-                var completedVehicleSegment = DeclarationData.CompletedBusSegments.Lookup(
-                    Vehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
-                    CompletedVehicle.Height, CompletedVehicle.LowEntry);
+				var completedVehicleSegment = DeclarationData.CompletedBusSegments.Lookup(
+					Vehicle.AxleConfiguration.NumAxles(), CompletedVehicle.VehicleCode, CompletedVehicle.RegisteredClass, CompletedVehicle.NumberPassengerSeatsLowerDeck,
+					CompletedVehicle.Height, CompletedVehicle.LowEntry);
 
 				if (completedVehicleSegment.Missions == null)
 				{
@@ -78,18 +80,18 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						$"low entry: {CompletedVehicle.LowEntry}, number of axles: {Vehicle.AxleConfiguration.NumAxles()}");
 				}
 
-                var missionTypes = completedVehicleSegment.Missions.Select(x => x.MissionType).Distinct();
+				var missionTypes = completedVehicleSegment.Missions.Select(x => x.MissionType).Distinct();
 				
 				var completedGroup = VehicleClassHelper.GetClassNumber(completedVehicleSegment.VehicleClass);
-                var groupData = _primaryAndCompletedGroups.Lookup(completedGroup);
+				var groupData = _primaryAndCompletedGroups.Lookup(completedGroup);
 				
-                return _segment.Missions.Where(x => 
+				return _segment.Missions.Where(x => 
 					missionTypes.Contains(x.MissionType) && 
 					VehicleClassHelper.GetClassNumber(x.BusParameter.BusGroup) == groupData.PrimaryGroup)
 						.ToArray();
-            }
+			}
 
-            protected override VectoRunData GetPowertrainConfigForReportInit()
+			protected override VectoRunData GetPowertrainConfigForReportInit()
 			{
 				return GetNextRun().First(x => x != null);
 			}
@@ -137,7 +139,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
-                CheckSuperCap(Vehicle);
+				CheckSuperCap(Vehicle);
 				
 				var simulationRunData = new VectoRunData {
 					InputData = DataProvider,
@@ -156,15 +158,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					ExecutionMode = ExecutionMode.Declaration,
 					InMotionCharging = !Vehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable),
 					InMotionChargingTechnology = Vehicle.InMotionCharging.Technology,
-                };
+				};
 				simulationRunData.PostMortemStrategy = new PrimaryBusPostMortemStrategy();
-                return simulationRunData;
+				return simulationRunData;
 			}
 
 			protected abstract void CreateGearboxAndGearshiftData(VectoRunData runData);
 
 			protected abstract bool AxleGearRequired();
-        }
+		}
 
 		public class Conventional : PrimaryBusBase
 		{
@@ -223,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 				simulationRunData.DriverData = DriverData;
 				
 
@@ -275,9 +277,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var vehicle = DataProvider.JobInputData.Vehicle;
 				var engine = vehicle.Components.EngineInputData;
 				var engineModes = engine.EngineModes;
-                var missions = GetMissions();
+				var missions = GetMissions();
 
-                for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 					foreach (var mission in missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 
@@ -315,8 +317,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var engineMode = engineModes[modeIdx.Value];
 				var runData = CreateCommonRunData(mission, loading, _segment, engineModes, modeIdx.Value);
 
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
+				}
 
-				runData.DriverData = DriverData;
+                runData.DriverData = DriverData;
 				runData.AirdragData =
 					DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
@@ -348,7 +353,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, 
 					Vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length, Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.SerialHybridVehicle);
+					VectoSimulationJobType.SerialHybridVehicle, runData.BatteryOnlyHybridMode);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
 
@@ -395,7 +400,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				return InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData != null;
 			}
-        }
+		}
 
 
 		public class HEV_S2 : SerialHybrid
@@ -485,7 +490,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				return axleGearRequired;
 			}
 
-            protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
+			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
@@ -578,7 +583,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, runData.BatteryOnlyHybridMode);
 				var emPos = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 				runData.DriverData = DriverData;
 
@@ -857,6 +862,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				var runData = CreateCommonRunData(mission, loading, _segment, engineModes, modeIdx.Value);
 
+				if (ovcMode == OvcHevMode.ChargeDepleting) {
+					runData.BatteryOnlyHybridMode = Vehicle.BatteryOnlyMode;
+				}
+
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
 				runData.AirdragData = DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
@@ -872,21 +881,30 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
 					Vehicle.Components.AxleWheels.NumSteeredAxles,
-					VectoSimulationJobType.ParallelHybridVehicle);//Hardcode to override IHPC
+					VectoSimulationJobType.ParallelHybridVehicle, runData.BatteryOnlyHybridMode);//Hardcode to override IHPC
+
+				if (runData.BatteryOnlyHybridMode && runData.Aux.Any(x => x.ID != Constants.Auxiliaries.IDs.Fan && !x.ConnectToREESS)) {
+					throw new VectoException(
+						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
+				}
 				runData.DriverData = DriverData;
 
 
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
 
+				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
+					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
+
 				CreateGearboxAndGearshiftData(runData);
 				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
 
-				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
-					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateVoltageCenterSoc(), runData.GearboxData.GearList);
+				if (runData.BatteryOnlyHybridMode) {
+					EnsureElectricBusAux(runData.BusAuxiliaries);
+				}
 
 				runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
@@ -922,6 +940,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				return runData;
 			}
 
+			private void EnsureElectricBusAux(IAuxiliaryConfig busAux)
+			{
+				if (busAux.InputData.PneumaticSupply.CompressorDrive != CompressorDrive.electrically) {
+					throw new VectoException("Compressor drive is required to be electrically driven!");
+				}
+
+				if (busAux.InputData.ElectricSupply.ESSupplyFromHEVREESS) {
+					throw new VectoException("Electric system must be supplied from HV REESS!");
+				}
+			}
+
 			protected override void CreateGearboxAndGearshiftData(VectoRunData runData)
 			{	
 				runData.GearshiftParameters =
@@ -939,7 +968,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				return true;
 			}
-        }
+		}
 
 		public class HEV_P1 : ParallelHybrid
 		{
@@ -1012,12 +1041,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 			#region Overrides of PrimaryBusBase
 
-            protected override IEnumerable<VectoRunData> GetNextRun()
+			protected override IEnumerable<VectoRunData> GetNextRun()
 			{
 				var vehicle = InputDataProvider.JobInputData.Vehicle;
-                var missions = GetMissions();
+				var missions = GetMissions();
 
-                foreach (var mission in missions) {
+				foreach (var mission in missions) {
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 						var simulationRunData = CreateVectoRunData(mission, loading);
 						simulationRunData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
@@ -1033,7 +1062,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				int? modeIdx = null, OvcHevMode ovcMode = OvcHevMode.NotApplicable)
 			{
 				var result = CreateCommonRunData(mission, loading, _segment);
-
 
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: Vehicle.Components.ElectricStorage,
@@ -1063,7 +1091,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					Vehicle.Length ?? mission.BusParameter.VehicleLength,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 				var emPos = result.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
 				result.DriverData = DriverData;
 
@@ -1090,7 +1118,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
 				};
 			}
-        }
+		}
 
 
 		public class PEV_E2 : BatteryElectric
@@ -1183,7 +1211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var iepcInput = Vehicle.Components.IEPC;
 				var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
-                var axleGearRatio = axleGearRequired ? runData.AxleGearData.AxleGear.Ratio : 1.0;
+				var axleGearRatio = axleGearRequired ? runData.AxleGearData.AxleGear.Ratio : 1.0;
 				runData.GearshiftParameters =
 					DataAdapter.CreateGearshiftData(
 						axleGearRatio,

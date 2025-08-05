@@ -247,12 +247,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					Vehicle.Components.AuxiliaryInputData,
 					Vehicle.Components.BusAuxiliaries, mission.MissionType,
 					_segment.VehicleClass, Vehicle.Length,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 
 				simulationRunData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				simulationRunData.DriverData = DriverData;
 				simulationRunData.PTO = mission.MissionType == MissionType.MunicipalUtility
-					? DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData)
+					? DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData, simulationRunData.BatteryOnlyHybridMode)
 					: DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
 				simulationRunData.EngineData.FuelMode = modeIdx.Value;
@@ -377,12 +377,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				result.Aux = DataAdapter.CreateAuxiliaryData(Vehicle.Components.AuxiliaryInputData, null,
 					mission.MissionType, _segment.VehicleClass, Vehicle.Length,
-					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType);
+					Vehicle.Components.AxleWheels.NumSteeredAxles, Vehicle.VehicleType, false);
 
 
 				var ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(Vehicle.Components.PTOTransmissionInputData, Vehicle.Components.GearboxInputData);
 
-				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData);
+				var municipalPtoTransmissionData = DataAdapter.CreatePTOCycleData(Vehicle.Components.GearboxInputData, Vehicle.Components.PTOTransmissionInputData, result.BatteryOnlyHybridMode);
 
 				result.PTO = mission.MissionType == MissionType.MunicipalUtility
 					? municipalPtoTransmissionData

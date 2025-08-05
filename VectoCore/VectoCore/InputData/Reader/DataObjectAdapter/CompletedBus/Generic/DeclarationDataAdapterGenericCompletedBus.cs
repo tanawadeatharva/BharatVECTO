@@ -30,10 +30,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 				{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
 
 			protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
-				GearboxType? overrideGearboxType, bool isTestPowertrain = false)
+				GearboxType? overrideGearboxType, bool batteryOnlyHybrid, bool isTestPowertrain = false)
 			{
 				var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
-				return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType);
+				return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType, batteryOnlyHybrid);
 			}
 
             #region ComponentDataAdapter
@@ -85,10 +85,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
+				VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				return AuxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
-					numSteeredAxles, jobType);
+					numSteeredAxles, jobType, batteryOnlyHybridMode);
 			}
 
 			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 
 			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, GearboxType? overrideGearboxType = null)
 			{
-				var name = GetShiftStrategyName(inputData, overrideGearboxType);
+				var name = GetShiftStrategyName(inputData, overrideGearboxType, runData.BatteryOnlyHybridMode);
 				var retVal = GearboxDataAdapter.CreateGearboxData(inputData, runData, ShiftStrategyFactory.CreateShiftPolygonCalculator(name, runData.GearshiftParameters), supportedGearboxTypes: SupportedGearboxTypes);
 				retVal.ShiftStrategy = name;
 				return retVal;

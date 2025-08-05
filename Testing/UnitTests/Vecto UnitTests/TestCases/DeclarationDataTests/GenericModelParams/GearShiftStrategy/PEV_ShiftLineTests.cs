@@ -612,8 +612,8 @@ public class PEV_ShiftLineTests
 			}
 
 			foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
-				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
-				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM, 1e-3, "gear: {0} entry: {1} / {2}", i + 1, tuple.Item1.X, tuple.Item2.AngularSpeed.AsRPM);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1} / {2}", i + 1, tuple.Item1.Y, tuple.Item2.Torque.Value());
 			}
 		}
 

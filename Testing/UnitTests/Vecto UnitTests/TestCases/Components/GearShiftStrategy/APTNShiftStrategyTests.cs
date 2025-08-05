@@ -89,7 +89,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			10000,
 			1,
-			2, TestName = "Emergency UpShift")]
+			2, TestName = "APTNShiftStrategy Emergency UpShift")]
 
 		[TestCase(
 			500,
@@ -97,14 +97,14 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			1000,
 			1800,
 			1,
-			2, TestName = "UpShift")]
+			2, TestName = "APTNShiftStrategy UpShift")]
 		[TestCase(
 			500,
 			80,
 			1000,
 			800,
 			1,
-			1, TestName = "No Upshift")]
+			1, TestName = "APTNShiftStrategy No Upshift")]
 		public void Upshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear)
 		{
@@ -182,7 +182,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			-10,
 			1000,
 			1,
-			2, TestName = "EarlyUpShift")]
+			2, TestName = "APTNShiftStrategy EarlyUpShift")]
 		public void EarlyUpshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear)
 		{
@@ -249,7 +249,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			2000,
 			200,
 			2,
-			1, TestName = "Downshift")]
+			1, TestName = "APTNShiftStrategy Downshift")]
 		public void Downshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear, int speedKmh=1)
 		{
@@ -264,7 +264,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			200,
 			4,
 			2, 
-			40, TestName = "EarlyDownshift")]
+			40, TestName = "APTNShiftStrategy EarlyDownshift")]
 		public void EarlyDownshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear, int speedKmh=1)
 		{
@@ -278,7 +278,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			2000,
 			40,
 			4,
-			2, TestName = "Downshift_SkipGear")]
+			2, TestName = "APTNShiftStrategy Downshift_SkipGear")]
 		public void DownshiftSkipGears(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
 			double outSpeed_rpm, int currentGear, int expectedGear)
 		{
@@ -546,6 +546,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 		{
 			var simplePt = new Mock<ISimpleVehicleContainer>();
 			simplePt.Setup(s => s.IsTestPowertrain).Returns(true);
+			simplePt.SetupGet(s => s.RunData).Returns(container.Object.RunData);
 			
 			
 			var components = new List<VectoSimulationComponent>();

@@ -29,6 +29,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			
 			Bind<IShiftStrategy>().To<APTNShiftStrategy>().Named(APTNShiftStrategy.Name);
 			Bind<IShiftPolygonCalculator>().To<PEVAMTShiftStrategyPolygonCreator>().Named(APTNShiftStrategy.Name);
-        }
+
+			Bind<IShiftStrategy>().To<ParallelHybridBatteryOnlyModeShiftStrategy>()
+				.Named(ParallelHybridBatteryOnlyModeShiftStrategy.Name);
+			Bind<IShiftPolygonCalculator>().To<PEVAMTShiftStrategyPolygonCreator>()
+				.Named(ParallelHybridBatteryOnlyModeShiftStrategy.Name);
+		}
 	}
 }

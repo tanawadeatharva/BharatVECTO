@@ -577,7 +577,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var isBatteryElectric = vehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 				VectoSimulationJobType.SerialHybridVehicle);
 
-            retVal.ShiftStrategy = ShiftStrategyFactory?.GetShiftStrategyName(gearbox.Type, vehicle.VehicleType);
+            retVal.ShiftStrategy = ShiftStrategyFactory?.GetShiftStrategyName(gearbox.Type, vehicle.VehicleType, false);
 			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy, runData.GearshiftParameters);
 
             for (uint i = 0; i < gearsInput.Count; i++)
@@ -1795,7 +1795,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var gears = new Dictionary<uint, GearData>();
 
 			retVal.ShiftStrategy =
-				ShiftStrategyFactory?.GetShiftStrategyName(GearboxType.APTN, vehicle.VehicleType);
+				ShiftStrategyFactory?.GetShiftStrategyName(GearboxType.APTN, vehicle.VehicleType, false);
 			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy, runData.GearshiftParameters);
 
 			for (uint i = 0; i < iepc.Gears.Count; i++) {

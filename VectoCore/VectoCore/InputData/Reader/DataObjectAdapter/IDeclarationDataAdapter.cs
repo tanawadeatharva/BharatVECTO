@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData, IGearboxDeclarationInputData gbx);
-		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto);
+		PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode);
 
         AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode);
 
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 		
 		HybridStrategyParameters CreateHybridStrategy(BatterySystemData runDataBatteryData,
 			SuperCapData runDataSuperCapData, Kilogram vehicleMass, OvcHevMode ovcMode, LoadingType loading, VehicleClass vehicleClass, MissionType missionType);
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode);
 
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 
 		IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData runData);
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass,
-			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType);
+			Meter vehicleLength, int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 
 		AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment,
 			OvcHevMode ovcMode);
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
         IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxInput, MissionType mission, VehicleClass segment, Meter vehicleLength,
-			int? numSteeredAxles, VectoSimulationJobType jobType);
+			int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 		IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, IVehicleDeclarationInputData completedVehicle, VectoRunData simulationRunData);
 
 		VehicleData CreateVehicleData(ISingleBusInputDataProvider vehicle, Segment segment, Mission mission,

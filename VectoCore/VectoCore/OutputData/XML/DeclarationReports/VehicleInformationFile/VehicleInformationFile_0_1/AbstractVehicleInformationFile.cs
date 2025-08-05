@@ -38,7 +38,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
         protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
         protected XNamespace _v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 
-		protected XElement Vehicle { get; set; }
+		public abstract string OutputDataType { get; }
+
+        protected XElement Vehicle { get; set; }
 		protected IResultsWriter Results { get; set; }
 
 		protected  List<IResultEntry> _results = new List<IResultEntry>();

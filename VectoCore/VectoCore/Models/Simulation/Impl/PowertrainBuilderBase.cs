@@ -396,7 +396,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			type == data.Type ? ComponentFactory.CreateRetarder(container, data.LossMap, data.Ratio) : null;
 
 
-		protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
+		protected IElectricMotor GetElectricMachineBatteryOnlyP2(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
+				ElectricMotorData>> electricMachinesData, IVehicleContainer container, IElectricSystem es,
+			IElectricMotorControl ctl)
+		{
+			var motorData = electricMachinesData.FirstOrDefault(x => x.Item1 == pos);
+			if (motorData is null) {
+				return null;
+			}
+
+			//container.ModData?.AddElectricMotor(pos);
+			var motor = ComponentFactory.CreateElectricMotor(false, container, motorData.Item2, ctl,
+				PowertrainPosition.BatteryElectricE2);
+			//var motor = new ElectricMotor(container, motorData.Item2, ctl, PowertrainPosition.BatteryElectricE2);
+			motor.Connect(es);
+			return motor;
+		}
+
+        protected IElectricMotor GetElectricMachine<TElectricMotor>(PowertrainPosition pos,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> electricMachinesData, IVehicleContainer container,
 			IElectricSystem es, IHybridController ctl) where TElectricMotor : ElectricMotor
 		{

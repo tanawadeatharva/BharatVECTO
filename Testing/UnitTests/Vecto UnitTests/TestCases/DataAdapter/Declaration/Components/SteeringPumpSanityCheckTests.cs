@@ -25,7 +25,7 @@ public class SteeringPumpSanityCheckTests
         var doa = new HeavyLorryAuxiliaryDataAdapter();
         var auxInputData = GetLorryAuxInputData(steeringPumpTechnologies);
         var aux = doa.CreateAuxiliaryData(auxInputData, null, mission, hdvClass, null, numStreeredAxles,
-            VectoSimulationJobType.ConventionalVehicle);
+            VectoSimulationJobType.ConventionalVehicle, false);
         Assert.IsNotNull(aux);
     }
 
@@ -43,7 +43,7 @@ public class SteeringPumpSanityCheckTests
         var doa = new PrimaryBusAuxiliaryDataAdapter();
         var busAuxInputData = GetBusAuxInputData(steeringPumpTechnologies);
         var aux = doa.CreateAuxiliaryData(null, busAuxInputData, mission, hdvClass, 12.SI<Meter>(), numStreeredAxles,
-            VectoSimulationJobType.ConventionalVehicle);
+            VectoSimulationJobType.ConventionalVehicle, false);
         Assert.IsNotNull(aux);
     }
 
@@ -63,7 +63,7 @@ public class SteeringPumpSanityCheckTests
         AssertHelper.Exception<VectoException>(() =>
         {
             var aux = doa.CreateAuxiliaryData(auxInputData, null, mission, hdvClass, null, numStreeredAxles,
-                VectoSimulationJobType.ConventionalVehicle);
+                VectoSimulationJobType.ConventionalVehicle, false);
         }, messageContains: $"Number of steering pump technologies does not match number of steered axles ({numStreeredAxles}, {steeringPumpTechnologies.Length})");
     }
 
@@ -83,7 +83,7 @@ public class SteeringPumpSanityCheckTests
         AssertHelper.Exception<VectoException>(() =>
         {
             doa.CreateAuxiliaryData(null, busAuxInputData, mission, hdvClass, 12.SI<Meter>(), numStreeredAxles,
-                VectoSimulationJobType.ConventionalVehicle);
+                VectoSimulationJobType.ConventionalVehicle, false);
 
         }, messageContains: $"Number of steering pump technologies does not match number of steered axles ({numStreeredAxles}, {steeringPumpTechnologies.Length})");
 

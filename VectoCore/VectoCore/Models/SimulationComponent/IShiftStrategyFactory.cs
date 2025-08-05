@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		IShiftStrategy GetShiftStrategy(string name, IVehicleContainer container);
 
-		string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType);
+		string GetShiftStrategyName(GearboxType gearboxType, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 
 		IShiftPolygonCalculator CreateShiftPolygonCalculator(string shiftStrategyName, ShiftStrategyParameters shiftParams);
 

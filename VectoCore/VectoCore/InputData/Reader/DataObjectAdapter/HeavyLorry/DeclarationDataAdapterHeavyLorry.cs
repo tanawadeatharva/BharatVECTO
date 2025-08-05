@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, GearboxType? overrideGearboxType = null)
 			{
-				var name = GetShiftStrategyName(inputData, overrideGearboxType);
+				var name = GetShiftStrategyName(inputData, overrideGearboxType, runData.BatteryOnlyHybridMode);
 				var retVal = GearboxDataAdapter.CreateGearboxData(inputData, runData, ShiftStrategyFactory.CreateShiftPolygonCalculator(name, runData.GearshiftParameters), SupportedGearboxTypes);
 				retVal.ShiftStrategy = name;
 				return retVal;
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				return RetarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
-			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto)
+			public virtual PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode)
 			{
 				return PtoDataAdapter.CreateDefaultPTOData(pto, gbx);
 			}
@@ -198,10 +198,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
+				VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				return AuxDataAdapter.CreateAuxiliaryData(auxData, null, missionType, vehicleClass, vehicleLength, numSteeredAxles,
-					jobType);
+					jobType, batteryOnlyHybridMode);
 			}
 
 			public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
@@ -318,7 +318,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 
 			protected override IPTODataAdapter PtoDataAdapter { get; } = new PTODataAdapterLorry();
 
-		}
+			protected virtual IPTODataAdapter BatteryElectricPtoDataAdapter { get; } = new ElectricPTODataAdapter();
+
+			public override PTOData CreatePTOCycleData(IGearboxDeclarationInputData gbx, IPTOTransmissionInputData pto, bool batteryOnlyHybridMode)
+			{
+				if (batteryOnlyHybridMode) {
+					return BatteryElectricPtoDataAdapter.CreateDefaultPTOData(pto, gbx);
+				}
+				return PtoDataAdapter.CreateDefaultPTOData(pto, gbx);
+			}
+        }
 
 		public abstract class BatteryElectric : LorryBase
 		{
@@ -501,7 +510,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 			public override IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
+				VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				throw new NotImplementedException();
 			}

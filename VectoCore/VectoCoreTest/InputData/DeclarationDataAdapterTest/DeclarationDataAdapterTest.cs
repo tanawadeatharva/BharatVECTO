@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			auxData.AddAuxiliaries(steeringSystem.Object, hvac.Object, pneumatic.Object, elSystem.Object);
 			try {
 				dataAdapter.CreateAuxiliaryData(auxData.Object, null, MissionType.LongHaul, VehicleClass.Class12,
-					4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle);
+					4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle, false);
 			} catch (Exception ex) {
 				if (fail) {
 					Assert.Pass($"Expected Exception {ex.Message}");

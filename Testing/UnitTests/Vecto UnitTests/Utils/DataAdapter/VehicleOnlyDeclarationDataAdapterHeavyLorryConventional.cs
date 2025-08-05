@@ -34,7 +34,7 @@ public class NullAuxiliaryDataAdapter : IAuxiliaryDataAdapter
 
 	public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData,
 		MissionType mission, VehicleClass hvdClass, Meter vehicleLength, int? numSteeredAxles,
-		VectoSimulationJobType jobType)
+		VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 	{
 		return new List<VectoRunData.AuxData>();
 	}

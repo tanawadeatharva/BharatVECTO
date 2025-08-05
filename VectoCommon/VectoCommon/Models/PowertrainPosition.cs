@@ -29,6 +29,30 @@ namespace TUGraz.VectoCommon.InputData {
 		public const string HybridPrefix = "Hybrid";
 		public const string BatteryElectricPrefix = "BatteryElectric";
 
+		public static int GetPositionNumber(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridP0:
+					return 0;
+				case PowertrainPosition.HybridP1:
+					return 1;
+				case PowertrainPosition.BatteryElectricE2:
+				case PowertrainPosition.IEPC:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP2_5:
+				case PowertrainPosition.IHPC:
+					return 2;
+				case PowertrainPosition.BatteryElectricE3:
+				case PowertrainPosition.HybridP3:
+					return 3;
+				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.HybridP4:
+					return 4;
+				default:
+					return -1;
+			}
+		}
+
 		public static PowertrainPosition Parse(string prefix, string pos)
 		{
 			if (pos.Equals(nameof(PowertrainPosition.GEN))) {

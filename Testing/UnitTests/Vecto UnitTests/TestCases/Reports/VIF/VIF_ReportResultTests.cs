@@ -15,7 +15,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Reports.VIF;
 
 public class VIF_ReportResultTests
 {
-	XNamespace VIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
+	XNamespace VIF_NS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v1.1");
 
     private StandardKernel _kernel;
 
@@ -93,7 +93,7 @@ public class VIF_ReportResultTests
 
         Assert.NotNull(results);
 
-        var doc = ReportResultTestUtils.CreateXmlDocument(results, "VectoOutputMultistep.0.1", VIF_NS);
+        var doc = ReportResultTestUtils.CreateXmlDocument(results, "VectoOutputMultistep.1.1", VIF_NS);
         var validator = ReportResultTestUtils.GetValidator(doc);
 
 		ReportResultTestUtils.WriteToConsole(doc);

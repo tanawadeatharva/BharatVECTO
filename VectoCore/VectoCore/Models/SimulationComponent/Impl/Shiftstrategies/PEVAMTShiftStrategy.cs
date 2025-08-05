@@ -23,12 +23,31 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 {
+	public class ParallelHybridBatteryOnlyModeShiftStrategy : PEVAMTShiftStrategy
+	{
+		public static string Name => "AMT - EffShift (P-HEV Battery only)";
+
+		public ParallelHybridBatteryOnlyModeShiftStrategy(IVehicleContainer container) : base(container) { }
+
+		protected ParallelHybridBatteryOnlyModeShiftStrategy(IVehicleContainer dataBus, bool dummy) : base(dataBus, dummy) { }
+
+		protected override PowertrainPosition GetEMPos(IVehicleContainer dataBus)
+		{
+			return dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+					x.Item1.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5,
+						PowertrainPosition.IHPC))
+				?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+		}
+	}
+
     public class PEVAMTShiftStrategy : LoggingObject, IShiftStrategy
 	{
 
 		public const string Name = "AMT - EffShift (BEV)";
 		
 		protected IVehicleContainer DataBus;
+
+	
 
 		protected readonly GearboxData GearboxModelData;
 
@@ -50,16 +69,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected ITestPowertrain TestPowertrain;
 
+		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
+
 		public PEVAMTShiftStrategy(IVehicleContainer container) : this(container, false)
 		{
 			if (container.RunData.VehicleData == null) {
 				return;
 			}
 
+			EMPos = GetEMPos(container);
             SetupVelocityDropPreprocessor(container.SimplePowertrainBuilder);
 		}
-
-		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
 		// this constructor is called by derived classes and the public constructor. performs common initialization
 		protected PEVAMTShiftStrategy(IVehicleContainer dataBus, bool dummy)
@@ -71,19 +91,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			if (runData.VehicleData == null) {
 				return;
 			}
-			var emPos = runData.ElectricMachinesData.FirstOrDefault(x =>
-				x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC)?.Item1; // ?? PowertrainPosition.HybridPositionNotSet;
-			if (!emPos.HasValue) {
+
+			EMPos = GetEMPos(dataBus);
+			if (EMPos == PowertrainPosition.HybridPositionNotSet) {
 				throw new VectoException("PEV Shift Strategy requires electric motor at position E2");
 			}
-			EMPos = emPos.Value;
-            GearboxModelData = runData.GearboxData;
+			GearboxModelData = runData.GearboxData;
 			GearshiftParams = runData.GearshiftParameters;
 			GearList = GearboxModelData.GearList;
 			MaxStartGear = GearList.Reverse().First();
 
-			VoltageLevels = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == EMPos)?.Item2.EfficiencyData;
+			var emData = runData.ElectricMachinesData
+				.First(x => x.Item1.GetPositionNumber() == EMPos.GetPositionNumber()).Item2;
+
+            VoltageLevels = emData.EfficiencyData;
 
 			TransmissionRatio = (runData.AxleGearData?.AxleGear.Ratio ?? 1.0) *  // axlegeardata may be null for certain IEPC configurations
 								(runData.AngledriveData?.Angledrive.Ratio ?? 1.0) /
@@ -93,8 +114,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
 
-			var em = runData.ElectricMachinesData.First(x => x.Item1 == EMPos).Item2;
-			EMRatio = em.RatioADC;
+			
+			EMRatio = emData.RatioADC;
 
             // create testcontainer
 			var powertrainBuilder = dataBus.SimplePowertrainBuilder;
@@ -107,8 +128,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			}
 		}
 
-		protected void SetupVelocityDropPreprocessor(ISimplePowertrainBuilder powertrainBuilder)
+		protected virtual PowertrainPosition GetEMPos(IVehicleContainer dataBus)
 		{
+			return dataBus.RunData.ElectricMachinesData.FirstOrDefault(x =>
+				x.Item1.IsOneOf(PowertrainPosition.BatteryElectricE2, PowertrainPosition.IEPC))?.Item1 ?? PowertrainPosition.HybridPositionNotSet;
+		}
+
+        protected void SetupVelocityDropPreprocessor(ISimplePowertrainBuilder powertrainBuilder)
+		{
+
 			// register pre-processors
 			var maxG = DataBus.RunData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
 			var grad = Convert.ToInt32(maxG / 2) * 2;

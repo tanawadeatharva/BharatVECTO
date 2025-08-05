@@ -221,8 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override PerSecond GetMotorTargetSpeed(VectoRunData runData)
 		{
-			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
+			var em = GetEMPos(runData);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
@@ -234,14 +233,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override PerSecond GetMaxMotorspeed(VectoRunData runData)
 		{
-			var em = runData.ElectricMachinesData
-				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
+			var em = GetEMPos(runData);
 			if (em == null) {
 				throw new VectoException("E2 EM required for PEV E2 GearshiftPreprocessing");
 			}
 
 			var voltageLevel = em.Item2.EfficiencyData.VoltageLevels.First();
             return (voltageLevel.FullLoadCurve?.MaxSpeed ?? (voltageLevel as IEPCVoltageLevelData).FullLoadCurves.Min(x => x.Value.MaxSpeed)) / em.Item2.RatioADC;
+        }
+
+		private Tuple<PowertrainPosition, ElectricMotorData> GetEMPos(VectoRunData runData)
+		{
+			if (runData.JobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC) && runData.BatteryOnlyHybridMode) {
+				return runData.ElectricMachinesData
+					.FirstOrDefault(x => x.Item1.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP2_5, PowertrainPosition.IHPC));
+            }
+			return runData.ElectricMachinesData
+				.FirstOrDefault(x => x.Item1 == PowertrainPosition.BatteryElectricE2 || x.Item1 == PowertrainPosition.IEPC);
         }
 	}
 }

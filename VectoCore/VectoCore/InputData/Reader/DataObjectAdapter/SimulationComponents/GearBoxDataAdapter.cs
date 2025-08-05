@@ -283,11 +283,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var retVal = SetCommonGearboxData(gearbox);
 
+			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.FCHV);
+			if (isBatteryElectric && (runData.ElectricMachinesData == null || runData.ElectricMachinesData.Count == 0)) {
+				throw new VectoException(
+					"Electric motor data has to be set for battery electric vehicles before creating gearbox data!");
+			}
+
+			if (isBatteryElectric && runData.GearshiftParameters == null) {
+				throw new VectoException(
+					"Gearshift parameters have to be set for battery electric vehicles before creating gearbox data!");
+			}
+
             if (inputData.VehicleType.IsOneOf(
 					VectoSimulationJobType.BatteryElectricVehicle, 
 					VectoSimulationJobType.SerialHybridVehicle, 
-					VectoSimulationJobType.FCHV) 
-				&&
+					VectoSimulationJobType.FCHV) &&
 				gearbox.Type.AutomaticTransmission())
 			{
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
@@ -331,8 +342,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var vehicleCategory = runData.VehicleData.VehicleCategory == VehicleCategory.GenericBusVehicle
 				? VehicleCategory.GenericBusVehicle
 				: inputData.VehicleCategory;
-			var isBatteryElectric = inputData.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-				VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.FCHV);
+			
             for (uint i = 0; i < gearsInput.Count; i++)
 			{
 				var gear = gearsInput[(int)i];
@@ -361,7 +371,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 							dynamicTyreRadius);
 				}
 
-				var deratedEmShiftPolygon = isBatteryElectric
+				var deratedEmShiftPolygon = isBatteryElectric || runData.BatteryOnlyHybridMode
 					? CalculateDeratedEmShiftPolygon(runData, shiftPolygonCalculator, gearbox, i, axlegearRatio,
 						dynamicTyreRadius)
 					: null;
