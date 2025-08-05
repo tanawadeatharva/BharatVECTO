@@ -116,7 +116,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         protected override void CheckVehicleBatteryData(IList<IElectricStorageDeclarationInputData> electricStorages)
         {
-            if (_vehicle.ArchitectureID.IsBatteryElectricVehicle() || _vehicle.ArchitectureID.IsFuelCellVehicle() || (_vehicle.HybridElectricHDV && _vehicle.OVC))
+            if (_vehicle.ArchitectureID.IsBatteryElectricVehicle() || 
+				(_vehicle.ArchitectureID.IsFuelCellVehicle() && _vehicle.OVC && _vehicle.BatteryOnlyMode) || 
+				(_vehicle.HybridElectricHDV && _vehicle.OVC && _vehicle.BatteryOnlyMode))
             {
                 var batteries = electricStorages.Where(x => x.REESSPack.StorageType == REESSType.Battery);
 
