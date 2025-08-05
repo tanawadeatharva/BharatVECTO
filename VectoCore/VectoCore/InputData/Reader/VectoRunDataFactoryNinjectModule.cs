@@ -301,7 +301,22 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
-			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.Exempted>().Named(
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F2>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F2));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F3>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F3));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F4>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F4));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_IEPC>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV_IEPC,
+                    ArchitectureID.F_IEPC));
+
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.Exempted>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, true));
 			#endregion
 

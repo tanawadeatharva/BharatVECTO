@@ -139,7 +139,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> runDataElectricMachinesData, ArchitectureID architectureId);
 
 		RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun);
-	}
+
+        FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
+    }
 
 	public interface ISpecificCompletedBusDeclarationDataAdapter
 	{

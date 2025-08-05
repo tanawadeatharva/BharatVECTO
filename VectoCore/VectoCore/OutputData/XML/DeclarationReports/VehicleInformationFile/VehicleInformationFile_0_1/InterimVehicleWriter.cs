@@ -117,7 +117,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				? null
 				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			return new XElement(_vif + XMLNames.Component_Vehicle,
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var IMCPropertyVehicle = (vehicleInput.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicleInput : primaryVehicle;
+
+            var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+                ? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
+                : null;
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
 				new XAttribute(_xsi + XMLNames.XSIType, VehicleTypeXSD),
 				new XAttribute("xmlns", _v27),
@@ -133,7 +140,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
-				_vifReportFactory.GetHEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
+                dynamicChargingTechnology,
+                _vifReportFactory.GetHEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
 				_vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
 			);
 		}
@@ -162,7 +170,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				? null
 				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			return new XElement(_vif + XMLNames.Component_Vehicle,
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var IMCPropertyVehicle = (vehicleInput.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicleInput : primaryVehicle;
+            
+			var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+                ? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
+                : null;
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
 				new XAttribute(_xsi + XMLNames.XSIType, VehicleTypeXSD),
 				new XAttribute("xmlns", _v27),
@@ -177,7 +192,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
-				_vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
+                dynamicChargingTechnology,
+                _vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
 				_vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
 			);
 		}
@@ -211,6 +227,20 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
                 : new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicle.VehicleTypeApprovalNumber);
 
 			var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var h2PropertiesVehicle = (vehicle.H2StorageUsableCapacity != null) ? vehicle : primaryVehicle;
+			var IMCPropertyVehicle = (vehicle.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicle : primaryVehicle;
+
+			var h2StorageUsableCapacity = (h2PropertiesVehicle.H2StorageUsableCapacity != null)
+				? new XElement(_v27 + "H2StorageUsableCapacity", h2PropertiesVehicle.H2StorageUsableCapacity.ToXMLFormat(1))
+                : null;
+
+			var hydrogenStorageTechnology = (h2PropertiesVehicle.HydrogenStorageTechnology != null)
+				? new XElement(_v27 + "HydrogenStorageTechnology", h2PropertiesVehicle.HydrogenStorageTechnology?.ToXMLFormat())
+				: null;
+
+			var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+				? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
+				: null;
 
             return new XElement(_vif + XMLNames.Component_Vehicle,
                 new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
@@ -226,9 +256,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
                 new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
                     inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
                 vehicleTypeApprovalNumber,
-				new XElement(_v27 + "H2StorageUsableCapacity", primaryVehicle.H2StorageUsableCapacity.ToXMLFormat(1)),
-				new XElement(_v27 + "HydrogenStorageTechnology", primaryVehicle.HydrogenStorageTechnology),
-				new XElement(_v27 + "DynamicChargingTechnology", primaryVehicle.DynamicChargingTechnology.ToXMLFormat()),
+                h2StorageUsableCapacity,
+                hydrogenStorageTechnology,
+                dynamicChargingTechnology,
 				_vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
                 _vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
             );

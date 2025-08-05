@@ -13,6 +13,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -181,6 +182,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				fuelCellData.CertificationNumber = GetString("CertificationNumber");
 				fuelCellData.AppVersion = GetString("AppVersion");
 				fuelCellData.FCSRatedPower = GetDouble("FCSRatedPower").SI<Watt>();
+				fuelCellData.FuelCellPowerOutputConsumptionMap = GenericBusFuelCellData.CreateFuelCellPowerOutputMap(fuelCellData.FCSRatedPower);
 
                 var cellModule = new FuelCellModule()
                 {

@@ -344,8 +344,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+    internal class PrimaryBusVehicleDataAdapter_FCHV : PrimaryBusVehicleDataAdapter
+    {
+        protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+            double? passengerCount, bool allowVocational)
+        {
+            var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 
-	internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+            if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+                (data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor) < mission.CurbMass)
+            {
+                retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
+            }
+            else
+            {
+                retVal.CurbMass = mission.CurbMass - mission.GenericMassICE + CalculateElectricComponentMass(data) + CalculateFuelCellMass(data);
+            }
+
+            return retVal;
+        }
+
+		private Kilogram CalculateFuelCellMass(IVehicleDeclarationInputData data)
+		{
+			Watt power = data.Components.FuelCellSystem.FuelCellModules.Sum(m => m.FuelCell.FCSRatedPower * m.Count);
+			
+			return (DeclarationData.FuelCell_MassPerPower.Value() * power.Value()).SI<Kilogram>();
+		}
+    }
+
+
+    internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
 	{
 		#region Overrides of PrimaryBusVehicleDataAdapter
 
@@ -371,6 +399,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	}
 
+	internal class CompletedBusGenericVehicleDataAdapter_FCHV : PrimaryBusVehicleDataAdapter_FCHV
+	{
+	
+	}
 
 	public class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
 	{

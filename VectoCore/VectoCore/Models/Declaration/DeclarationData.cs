@@ -152,12 +152,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly WheelEndStdFrictions WwheelEndStdFrictions = new WheelEndStdFrictions();
 
+		public static readonly KilogramPerWatt FuelCell_MassPerPower = (1 / 0.65).SI(Unit.SI.Kilo.Gramm.Per.Kilo.Watt).Cast<KilogramPerWatt>();
 
-		/// <summary>
-		/// Formula for calculating the payload for a given gross vehicle weight.
-		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
-		/// </summary>
-		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
+        /// <summary>
+        /// Formula for calculating the payload for a given gross vehicle weight.
+        /// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
+        /// </summary>
+        public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
 			if (equationName.ToLowerInvariant().StartsWith("pc10")) {
 				return Payloads.Lookup10Percent(grossVehicleWeight);
@@ -2432,6 +2433,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				distance: distance, chargingEfficiencyBattery: 1, batteryData);
 		}
 
+		public static ElectricRangesPEV CalculateElectricRangesFCHVCompletedBus(
+            WattSecond ElectricEnergyConsumptionSoc, 
+			Meter distance,
+			VectoRunData runData, 
+			double deterioration)
+		{
+            return DoCalculateElectricRangesFCHV(ElectricEnergyConsumptionSoc,
+                    distance, chargingEfficiencyBattery: 1, runData, deterioration);
+        }
+
         private static ElectricRangesPEV DoCalculateElectricRangesFCHV(
 			WattSecond electricEnergyConsumptionSoCCorr, 
 			Meter distance, 
@@ -2439,8 +2450,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			VectoRunData runData,
 			double deterioration)
 		{
-			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
-                runData.InputData.JobInputData.Vehicle.Components.ElectricStorage, 
+			var vehicle = (runData.InputData is IMultistepBusInputDataProvider)
+				? (runData.InputData as IMultistepBusInputDataProvider).JobInputData.PrimaryVehicle.Vehicle
+				: runData.InputData.JobInputData.Vehicle;
+			
+            var batteryData = new ElectricStorageAdapter().CreateBatteryData(
+                vehicle.Components.ElectricStorage, 
 				runData.JobType, 
 				runData.VehicleData.OffVehicleCharging, 
 				deterioration);

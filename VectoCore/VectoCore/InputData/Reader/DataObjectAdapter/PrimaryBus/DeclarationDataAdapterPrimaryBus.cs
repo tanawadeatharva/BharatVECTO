@@ -305,12 +305,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			#endregion
 		}
 
-		public class FuelCellHybrid : SerialHybrid
-		{
-			protected override IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new PrimaryBusPEVAuxiliaryDataAdapter();
+		public class FuelCellHybrid : BatteryElectric
+        {
+            protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter_FCHV();
 
-			protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
-		}
+            protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+        }
 
 		public class HEV_F2 : FuelCellHybrid
 		{

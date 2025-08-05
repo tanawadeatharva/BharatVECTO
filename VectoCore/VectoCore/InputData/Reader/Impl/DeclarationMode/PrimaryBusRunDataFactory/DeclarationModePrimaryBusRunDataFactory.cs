@@ -550,16 +550,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 			{
 				var runData = CreateCommonRunData(mission, loading, _segment);
 
-
 				DataAdapter.CreateREESSData(
 					componentsElectricStorage: Vehicle.Components.ElectricStorage,
 					Vehicle.VehicleType,
-					true,
+					Vehicle.OVC,
 					(bs) => runData.BatteryData = bs,
 					(sc) => runData.SuperCapData = sc);
 
-
-				if (Vehicle.VehicleType == VectoSimulationJobType.IEPC_E)
+				if (Vehicle.VehicleType == VectoSimulationJobType.FCHV_IEPC)
 				{
 					runData.ElectricMachinesData = DataAdapter.CreateIEPCElectricMachines(Vehicle.Components.IEPC,
 						runData.BatteryData.CalculateVoltageCenterSoc());
@@ -572,7 +570,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				runData.VehicleData = DataAdapter.CreateVehicleData(Vehicle, _segment, mission, loading, _allowVocational);
 				runData.WheelEndData = DataAdapter.CreateWheelEndData(_segment.VehicleClass, Vehicle);
-				runData.AirdragData = DataAdapter.CreateAirdragData(Vehicle, mission, new Segment(), ovcMode);
+				runData.AirdragData = DataAdapter.CreateAirdragData(Vehicle, mission, _segment, ovcMode);
 				if (AxleGearRequired() || Vehicle.Components.AxleGearInputData != null)
 				{
 					runData.AxleGearData = DataAdapter.CreateAxleGearData(Vehicle.Components.AxleGearInputData);
@@ -653,11 +651,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 							// Pre-run, iteration 0.
 							new PreRunOptions()
 							{
-#if TRACE_FC
-								WriteModAndSumData = true,
-#else
-								WriteModAndSumData = false
-#endif
+                                WriteModAndSumData = true
+//#if TRACE_FC
+//								WriteModAndSumData = true,
+//#else
+//								WriteModAndSumData = false
+//#endif
 							},
 
 							// Real run, iteration 1.

@@ -467,7 +467,9 @@ namespace TUGraz.VectoHashing
 					return $"//*[local-name()='{component.Value.XMLElementName()}']";
 				case VectoComponents.ElectricEnergyStorage:
 					return $"//*[local-name()='{component.Value.XMLElementName()}' or local-name()='Capacitor']//*[local-name()='Data']";
-				default:
+				case VectoComponents.FuelCell:
+                    return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data'] | //*[local-name()='{component.Value.XMLElementName()}']";
+                default:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data']";
 			}
 		}

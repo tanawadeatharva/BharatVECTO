@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			dataAdapter = new EngineeringDataAdapter()
 			{
-				JobFilePath = dataSource.SourceFile
+				JobFilePath = dataSource?.SourceFile
 			};
 		}
 

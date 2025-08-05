@@ -212,10 +212,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		public class FCHVOVCBus : AbstractMRFResultsWriter
         {
+            public FCHVOVCBus(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
 
-			public override XElement GenerateResults(List<IResultEntry> results)
+            public override XElement GenerateResults(List<IResultEntry> results)
 			{
-				var ordered = GetOrderedResultsOVC(results);
+				var ordered = GetOrderedResultsOVCFCHV(results);
 				var allSuccess = results.All(x => x.Status.IsOneOf(VectoRun.Status.Success, VectoRun.Status.PrimaryBusSimulationIgnore));
 				return new XElement(TNS + XMLNames.Report_Results,
 					new XElement(TNS + XMLNames.Report_Result_Status,
@@ -233,8 +234,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			protected override IResultGroupWriter ResultErrorWriter => _mrfFactory.GetBusErrorResultWriter(_mrfFactory, TNS);
 
 			public override Common.IReportResultsSummaryWriter SummaryWriter => _mrfFactory.GetBusFCHVOVCSummaryWriter(_mrfFactory, TNS);
-
-			public FCHVOVCBus(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }
 		}
 
         public class PEVBus : AbstractMRFResultsWriter

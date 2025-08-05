@@ -77,6 +77,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
+    public class VIF_FCHV_Non_OVC_ResultWriter : VIFResultWriterBase
+    {
+        public VIF_FCHV_Non_OVC_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        public override IResultGroupWriter SimulationParameterWriter => _factory.GetBusSimulationParameterWriter(_factory, TNS);
+        
+		protected override IFuelConsumptionWriter FuelConsumptionWriter => _factory.GetFuelConsumptionBus(_factory, TNS);
+        
+		protected override IElectricEnergyConsumptionWriter ElectricEnergyConsumptionWriter => _factory.GetElectricEnergyConsumptionBus(_factory, TNS);
+    }
+
+    public class VIF_FCHV_OVC_ResultWriter : AbstractResultGroupWriter
+	{
+        public VIF_FCHV_OVC_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        public override XElement GetElement(IResultEntry entry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override XElement GetElement(IOVCResultEntry entry)
+        {
+            return new XElement(TNS + XMLNames.Report_Result_Result,
+                new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
+                _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusHEVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                _factory.GetBusHEVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult)
+            );
+        }
+    }
+
+
 	public class VIFHEVOVCResultWriter : AbstractResultGroupWriter
 	{
 

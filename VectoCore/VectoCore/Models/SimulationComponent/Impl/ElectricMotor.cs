@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											0.SI<NewtonMeter>();
 							if (!busAuxPwr.IsEqual(0)) {
 								Log.Warn("Check BusAux config for PEV!");
-							}
+                            }
 						}
 
 					} else {
