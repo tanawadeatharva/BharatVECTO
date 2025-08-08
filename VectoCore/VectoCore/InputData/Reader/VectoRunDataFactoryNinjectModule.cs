@@ -369,9 +369,23 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F2>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+					ArchitectureID.F2));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F3>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+                    ArchitectureID.F3));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F4>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+                    ArchitectureID.F4));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_IEPC>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV_IEPC,
+                    ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN, true));
+
 			#endregion
 
 			#region VTP

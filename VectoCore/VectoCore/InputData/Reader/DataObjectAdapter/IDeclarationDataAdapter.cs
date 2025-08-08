@@ -186,5 +186,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			GearboxData gearboxData, CombustionEngineData engineData, IList<Tuple<PowertrainPosition, ElectricMotorData>> emData, ArchitectureID architectureId);
 
 		RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun);
-	}
+
+        FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
+    }
 }

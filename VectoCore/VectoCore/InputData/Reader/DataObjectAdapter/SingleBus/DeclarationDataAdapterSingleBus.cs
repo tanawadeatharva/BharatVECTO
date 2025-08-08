@@ -49,7 +49,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 
 			protected virtual ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } = new SpecificCompletedBusAuxiliaryDataAdapter();
 
-			protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
+            protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
+
+            protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
 				GearboxType? overrideGearboxType, bool batteryOnlyHybrid, bool isTestPowertrain = false)
 			{
 				var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
@@ -86,11 +88,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 					missionType: missionType, archID: architectureId, engineData: engineData, emData, gearboxData: gearboxData, boostingLimitations: boostingLimitations);
             }
 
-			#endregion
+            #endregion
 
-			#region Implementation of ISingleBusDeclarationDataAdapter
+            #region Implementation of ISingleBusDeclarationDataAdapter
 
-			public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment, OvcHevMode ovcMode)
+            public FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+            {
+                return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
+            }
+
+            public AirdragData CreateAirdragData(IVehicleDeclarationInputData completedVehicle, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
 				return _airdragDataAdapter.CreateAirdragData(completedVehicle, mission, segment, ovcMode);
 			}
@@ -299,6 +306,70 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SingleBus
 		public class HEV_P3 : ParallelHybrid { }
 
 		public class HEV_P4 : ParallelHybrid { }
+
+		public abstract class FCHV : SingleBusBase
+		{
+            protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+
+            public override GearboxType[] SupportedGearboxTypes => new GearboxType[] { };
+
+            private readonly IElectricStorageAdapter _electricStorageAdapter = new ElectricStorageAdapter();
+
+            protected override IEngineDataAdapter EngineDataAdapter => throw new NotImplementedException();
+
+            protected override IGearboxDataAdapter GearboxDataAdapter => throw new NotImplementedException();
+
+            protected override IElectricMachinesDataAdapter ElectricMachinesDataAdapter { get; } =
+                new ElectricMachinesDataAdapter();
+
+            protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
+
+            protected override ICompletedBusAuxiliaryDataAdapter AuxDataAdapter { get; } =
+                new SpecificCompletedPEVBusAuxiliaryDataAdapter();
+
+            public override void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
+                VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData, Action<SuperCapData> setSuperCapData)
+            {
+                var batteryData = _electricStorageAdapter.CreateBatteryData(componentsElectricStorage, jobType, ovc);
+                var superCapData = _electricStorageAdapter.CreateSuperCapData(componentsElectricStorage);
+
+                if (batteryData != null)
+                {
+                    setBatteryData(batteryData);
+                }
+                if (superCapData != null)
+                {
+                    setSuperCapData(superCapData);
+                }
+
+                if (batteryData != null && superCapData != null)
+                {
+                    throw new VectoException("Either battery or super cap must be provided");
+                }
+            }
+
+        }
+
+        public class FCHV_F2 : FCHV
+		{
+            public override GearboxType[] SupportedGearboxTypes => new[]
+                { GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.APTN, GearboxType.ATSerial };
+
+            protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+        }
+
+		public class FCHV_F3 : FCHV
+		{
+		}
+
+		public class FCHV_F4 : FCHV
+		{
+		}
+
+		public class FCHV_IEPC : FCHV
+		{
+            protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+        }
 
 		public abstract class BatteryElectric : SingleBusBase
 		{
