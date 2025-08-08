@@ -517,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					Vehicle.Components.AxleWheels.NumSteeredAxles,
 					Vehicle.VehicleType, runData.BatteryOnlyHybridMode);
 
-				if (Vehicle.BatteryOnlyMode && runData.Aux.Any(x => x.ID != Constants.Auxiliaries.IDs.Fan && x.ConnectToREESS)) {
+				if (Vehicle.BatteryOnlyMode && runData.Aux.Any(x => x.ID != Constants.Auxiliaries.IDs.Fan && !x.ConnectToREESS)) {
 					throw new VectoException(
 						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
 				}

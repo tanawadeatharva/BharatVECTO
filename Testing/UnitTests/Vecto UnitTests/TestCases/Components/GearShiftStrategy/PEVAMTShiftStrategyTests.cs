@@ -96,7 +96,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			80,
 			1000,
-			1800,
+			2000,
 			1,
 			2, TestName = "PEVAMTShiftStrategy UpShift")]
 		[TestCase(
@@ -116,7 +116,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			80,
 			100,
-			1800,
+			4000,
 			1,
 			3, TestName = "PEVAMTShiftStrategy UpShiftSkipGear")]
 		public void UpshiftSkipGear(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
@@ -194,7 +194,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			80,
 			-10,
-			1000,
+			2000,
 			1,
 			2, TestName = "PEVAMTShiftStrategy EarlyUpShift")]
 		public void EarlyUpshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,

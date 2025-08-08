@@ -233,7 +233,10 @@ public class MRF_ReportResultTests
     public void Test_MRF_ReportResult_WritingResults_Bus(VectoSimulationJobType jobType, int amdm, bool ovc, bool exempted, bool success, params FuelType[] fuels)
     {
         var vehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
-        var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
+        var ovcmode = ovc
+            ? (jobType.IsFCHV() ? OvcHevMode.ChargeSustaining : OvcHevMode.ChargeDepleting)
+            : OvcHevMode.NotApplicable;
+
         var runData = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		runData.InputData = ReportResultTestUtils.GetMockInputData(amdm);
         var modData = ReportResultTestUtils.GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);

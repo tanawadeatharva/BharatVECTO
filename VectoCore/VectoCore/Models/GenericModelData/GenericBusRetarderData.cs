@@ -12,6 +12,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class GenericBusRetarderData
 	{
+		public const int DEFAULT_ENGINE_SPEED = 5000;
+
 		public RetarderData CreateGenericBusRetarderData(IRetarderInputData retarderInput, PerSecond engineSpeed, double gearboxRatio) =>
 			new RetarderData {
 				Type = retarderInput?.Type ?? RetarderType.None,
@@ -57,8 +59,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var LARGE_STEP = 500;
 			var LARGE_STEP_THRESHOLD = 1000;
 
-			var defaultEngineSpeed = 5000;
-			var defaultMaxRetarderSpeed = retarderData.Ratio * defaultEngineSpeed;
+			var defaultMaxRetarderSpeed = retarderData.Ratio * (DEFAULT_ENGINE_SPEED / (
+				(gearboxRatio > 0) && retarderData.Type.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
+                    ? gearboxRatio 
+					: 1)
+					);
+			
 			var maxRetarderSpeed = defaultMaxRetarderSpeed;
 
             if (engineSpeedRPM != 0 && gearboxRatio != 0)
