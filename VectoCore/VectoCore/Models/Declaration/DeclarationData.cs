@@ -1131,9 +1131,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				
 				//EM FullloadCurve
-				var fullLoadCurveOrig = electricMotorData.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-				
-				var emRatio = electricMotorData.RatioADC;
+				var voltageLevelData = electricMotorData.EfficiencyData.VoltageLevels.First();
+                var fullLoadCurveOrig = (voltageLevelData is IEPCVoltageLevelData iepc) && (iepc.FullLoadCurves.Count() > 0)
+                    ? iepc.FullLoadCurves[(uint)gears[gearIdx].Gear]
+                    : voltageLevelData.FullLoadCurve;
+
+                var emRatio = electricMotorData.RatioADC;
 				var lossMap = electricMotorData.TransmissionLossMap;
 				var emMaxSpeed = electricMotorData.EfficiencyData.MaxSpeed;
 				

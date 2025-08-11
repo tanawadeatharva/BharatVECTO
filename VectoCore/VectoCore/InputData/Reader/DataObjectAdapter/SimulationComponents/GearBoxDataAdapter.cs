@@ -613,8 +613,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		{
 			var em = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2;
 			var shiftStrategyParameters = runData.GearshiftParameters;
-			var emFld = em.EfficiencyData.VoltageLevels.First().FullLoadCurve;
-			var contTq = em.Overload.ContinuousTorque;
+            var voltageLevelData = em.EfficiencyData.VoltageLevels.First();
+            var emFld = (voltageLevelData is IEPCVoltageLevelData iepc) && (iepc.FullLoadCurves.Count() > 0)
+                    ? iepc.FullLoadCurves[(uint)gearInput[(int)i].Gear]
+                    : voltageLevelData.FullLoadCurve;
+
+            var contTq = em.Overload.ContinuousTorque;
 			var limitedFld = DeclarationData.Gearbox.LimitElectricMotorFullLoadCurve(emFld, contTq);
 			var limitedEm = new ElectricMotorData() {
 				EfficiencyData = new VoltageLevelData() {
