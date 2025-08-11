@@ -1,8 +1,4 @@
-﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
-#define PROHIBIT_V27_XML
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,16 +22,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public AbstractXMLDeclarationCompletedBusDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile) 
-        {
-            CheckVehicleAllowed();
-        }
-
-        protected virtual void CheckVehicleAllowed()
-        {
-#if PROHIBIT_V27_XML
-            throw new VectoException("This v2.7 vehicle is not supported yet. Buses not supported yet.");
-#endif
-        }
+        {}
 
         public override string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") 
             ? GetString("SimulationToolLicenseNumber")
