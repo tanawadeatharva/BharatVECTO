@@ -1,8 +1,4 @@
-﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
-#define PROHIBIT_V27_XML
-#endif
-
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -21,16 +17,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         
         public AbstractXMLDeclarationExemptedVehicleDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
             base(jobData, xmlNode, sourceFile)
-        {
-            CheckVehicleAllowed();
-        }
-
-        protected virtual void CheckVehicleAllowed()
-        {
-#if PROHIBIT_V27_XML
-            throw new VectoException($"This v2.7 vehicle is not supported yet. Exempted vehicles not supported.");
-#endif
-        }
+        {}
 
         public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");
 

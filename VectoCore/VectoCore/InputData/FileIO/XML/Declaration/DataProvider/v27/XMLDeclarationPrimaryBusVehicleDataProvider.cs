@@ -3,7 +3,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -26,11 +25,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
-
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            base.CheckVehicleAllowed("Buses not supported yet.");
-        }
 
         #region Overrides of XMLDeclarationVehicleDataProviderV10
 
