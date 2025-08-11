@@ -1459,8 +1459,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 			}
 
-			// handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
-			for (var i = 0; i < 3 && (response is ResponseGearShift || response is ResponseSpeedLimitExceeded); i++) {
+			var APTGearShiftCondition = ((DataBus.GearboxInfo.GearboxType is GearboxType.APTN || DataBus.GearboxInfo.GearboxType is GearboxType.ATSerial)
+                    && ((DataBus.GearboxInfo.LastDownshift?.IsEqual(absTime) ?? false) || (DataBus.GearboxInfo.LastShift?.IsEqual(absTime) ?? false)));
+
+            // handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
+            for (var i = 0; i < 3 && (response is ResponseGearShift || response is ResponseSpeedLimitExceeded || (response is ResponseOverload && APTGearShiftCondition)); i++) {
 				switch (response) {
 					case ResponseGearShift _:
 						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
@@ -1470,17 +1473,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						if (response is ResponseOverload && !DataBus.ClutchInfo.ClutchClosed(absTime)) {
 							response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
 						}
-                        // add a condition for APTN/IEPC as ResponseGearShift does not exist for them
-                        if (response is ResponseOverload && DataBus.GearboxInfo.GearboxType is GearboxType.APTN && absTime.IsEqual(DataBus.GearboxInfo.LastDownshift))
-                        {
-                            response = Driver.DrivingActionAccelerate(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
-                        }
-                        if (response is ResponseGearShift) {
+						if (response is ResponseGearShift) {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
 						}
 						break;
+					case ResponseOverload _:
+						// add a condition for APTN/IEPC as ResponseGearShift does not exist for them
+						// add a condition for ATSerial/ICE as ResponseGearShift does not exist for them
+						response = Driver.DrivingActionAccelerate(absTime, ds, DataBus.VehicleInfo.VehicleSpeed, gradient);
+						break;
+
 				}
-			}
+				APTGearShiftCondition = ((DataBus.GearboxInfo.GearboxType is GearboxType.APTN || DataBus.GearboxInfo.GearboxType is GearboxType.ATSerial)
+					&& ((DataBus.GearboxInfo.LastDownshift?.IsEqual(absTime) ?? false) || (DataBus.GearboxInfo.LastShift?.IsEqual(absTime) ?? false)));
+
+            }
 
 			return response;
 		}
