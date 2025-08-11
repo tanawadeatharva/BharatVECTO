@@ -111,7 +111,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 			double? LHOperationalRange = RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null;
 
-			VehicleClass actualVehicleClass = _results.All(e => e.VehicleClass.IsCompletedBus()) ? _results.First().VehicleClass : VehicleClass.Unknown;
+			VehicleClass actualVehicleClass = _results.All(e => e.VehicleClass.IsCompletedBus()) && (_results.Count() > 0)
+				? _results.First().VehicleClass 
+				: VehicleClass.Unknown;
+			
 			if(Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']") != null)
 			{
 				Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =

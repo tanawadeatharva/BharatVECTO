@@ -225,7 +225,10 @@ public class CIF_ReportResultTests
     public void TestReportResult_WritingResults_CompletedBus(VectoSimulationJobType jobType, int amdm, bool ovc, bool exempted, bool success, params FuelType[] fuels)
     {
         var vehicleCategory = VehicleCategory.HeavyBusCompletedVehicle;
-        var ovcmode = ovc ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
+        var ovcmode = ovc 
+            ? (jobType.IsFCHV() ? OvcHevMode.ChargeSustaining : OvcHevMode.ChargeDepleting) 
+            : OvcHevMode.NotApplicable;
+
         var runData = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, ovc, exempted, ovcmode, fuels);
 		runData.InputData = ReportResultTestUtils.GetMockInputData(amdm);
         var modData = ReportResultTestUtils.GetMockModData(success ? VectoRun.Status.Success : VectoRun.Status.Aborted, fuels);
@@ -261,6 +264,8 @@ public class CIF_ReportResultTests
 			resultEntry.AuxHeaterFuel = FuelData.Diesel;
 			resultEntry.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
 			resultEntry.ZEV_CO2 = resultEntry.ZEV_FuelConsumption_AuxHtr * resultEntry.AuxHeaterFuel.CO2PerFuelWeight;
+            resultEntry.HydrogenRange = 1000.SI<Meter>();
+            resultEntry.ZeroCO2EmissionsRange = 1000.SI<Meter>();
 			if (ovc) {
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
@@ -272,7 +277,9 @@ public class CIF_ReportResultTests
 				res2.AuxHeaterFuel = FuelData.Diesel;
 				res2.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
 				res2.ZEV_CO2 = res2.ZEV_FuelConsumption_AuxHtr * res2.AuxHeaterFuel.CO2PerFuelWeight;
-			}
+                res2.HydrogenRange = 1000.SI<Meter>();
+                res2.ZeroCO2EmissionsRange = 1000.SI<Meter>();
+            }
 		}
 
         var resultsWriter = _reportResultsFactory.GetCIFResultsWriter(ReportResultTestUtils.GetMockInputData(amdm),

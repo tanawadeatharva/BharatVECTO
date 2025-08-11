@@ -31,19 +31,22 @@ public class GenericRetarderDataAdapterTests
 		Assert.AreEqual(retarderType, retarderData.Type);
 
 		if (retarderType.IsDedicatedComponent()) {
-			var expectedRetarderSpeeds = new[] {
-				0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
-				7500
-			};
-			var expectedLoss = new[] {
-				3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
-				6.34, 6.81
-			};
-			var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
+            var expectedRetarderSpeeds = new[] {
+                0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
+                7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000, 13500, 14000, 14500, 15000, 15500, 16000
+            };
+            var expectedLoss = new[] {
+                3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
+                6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09, 14.95, 15.83, 16.75, 17.71, 18.69, 19.70
+            };
+            var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
                 ? 1.0
 				: vehicleData.GearboxData.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio);
-			var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
-				.Where(x => x.First < applicableRatio * vehicleData.EngineData.FullLoadCurves[0].MaxSpeed.AsRPM)
+
+            var maxEngineSpeed = Math.Max(GenericBusRetarderData.DEFAULT_ENGINE_SPEED, vehicleData.EngineData.FullLoadCurves[0].MaxSpeed.AsRPM);
+
+            var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
+				.Where(x => x.First < applicableRatio * maxEngineSpeed)
 				.ToArray();
 
             Assert.AreEqual(ratio, retarderData.Ratio);
@@ -73,19 +76,22 @@ public class GenericRetarderDataAdapterTests
 		Assert.AreEqual(retarderType, retarderData.Type);
 
 		if (retarderType.IsDedicatedComponent()) {
-			var expectedRetarderSpeeds = new[] {
-				0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
-				7500
-			};
-			var expectedLoss = new[] {
-				3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
-				6.34, 6.81
-			};
-			var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
+            var expectedRetarderSpeeds = new[] {
+                0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
+                7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000, 13500, 14000, 14500, 15000, 15500, 16000
+            };
+            var expectedLoss = new[] {
+                3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
+                6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09, 14.95, 15.83, 16.75, 17.71, 18.69, 19.70
+            };
+            var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
                 ? 1.0
 				: vehicleData.GearboxData.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio);
-			var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
-				.Where(x => x.First < applicableRatio * vehicleData.EngineData.FullLoadCurves[0].MaxSpeed.AsRPM)
+
+            var maxEngineSpeed = Math.Max(GenericBusRetarderData.DEFAULT_ENGINE_SPEED, vehicleData.EngineData.FullLoadCurves[0].MaxSpeed.AsRPM);
+
+            var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
+				.Where(x => x.First < applicableRatio * maxEngineSpeed)
 				.ToArray();
 
 			Assert.AreEqual(ratio, retarderData.Ratio);
@@ -115,19 +121,24 @@ public class GenericRetarderDataAdapterTests
 		Assert.AreEqual(retarderType, retarderData.Type);
 
 		if (retarderType.IsDedicatedComponent()) {
-			var expectedRetarderSpeeds = new[] {
-				0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
-				7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000
-			};
-			var expectedLoss = new[] {
-				3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
-				6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09
-			};
+            var expectedRetarderSpeeds = new[] {
+                0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
+                7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000, 13500, 14000, 14500, 15000, 15500, 16000
+            };
+            var expectedLoss = new[] {
+                3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
+                6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09, 14.95, 15.83, 16.75, 17.71, 18.69, 19.70
+            };
             var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
 				? 1.0
 				: vehicleData.GearboxData.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio);
-			var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
-				.Where(x => x.First < applicableRatio * vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed.AsRPM)
+
+            var maxEngineSpeed = Math.Max(
+                GenericBusRetarderData.DEFAULT_ENGINE_SPEED,
+                vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed.AsRPM);
+
+            var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
+				.Where(x => x.First < applicableRatio * maxEngineSpeed)
 				.ToArray();
 
 			Assert.AreEqual(ratio, retarderData.Ratio);
@@ -159,17 +170,22 @@ public class GenericRetarderDataAdapterTests
 		if (retarderType.IsDedicatedComponent()) {
 			var expectedRetarderSpeeds = new[] {
 				0, 200, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000,
-				7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000
+				7500, 8000, 8500, 9000, 9500, 10000, 10500, 11000, 11500, 12000, 12500, 13000, 13500, 14000, 14500, 15000, 15500, 16000
 			};
 			var expectedLoss = new[] {
 				3.18, 3.19, 3.19, 3.21, 3.22, 3.25, 3.33, 3.44, 3.59, 3.76, 3.97, 4.22, 4.49, 4.8, 5.13, 5.51, 5.91,
-				6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09
+				6.34, 6.81, 7.31, 7.85, 8.41, 9.01, 9.64, 10.3, 10.99, 11.72, 12.48, 13.27, 14.09, 14.95, 15.83, 16.75, 17.71, 18.69, 19.70
 			};
 			var applicableRatio = ratio / (!retarderType.IsOneOf(RetarderType.TransmissionOutputRetarder, RetarderType.AxlegearInputRetarder)
 				? 1.0
 				: vehicleData.GearboxData.Gears[(uint)vehicleData.GearboxData.Gears.Count].Ratio);
-			var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
-				.Where(x => x.First < applicableRatio * vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed.AsRPM)
+
+			var maxEngineSpeed = Math.Max(
+				GenericBusRetarderData.DEFAULT_ENGINE_SPEED, 
+				vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed.AsRPM);
+
+            var expectedLossMap = expectedRetarderSpeeds.Zip(expectedLoss)
+				.Where(x => x.First < applicableRatio * maxEngineSpeed)
 				.ToArray();
 
 			Assert.AreEqual(ratio, retarderData.Ratio);

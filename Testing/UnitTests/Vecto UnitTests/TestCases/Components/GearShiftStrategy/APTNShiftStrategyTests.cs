@@ -95,7 +95,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			80,
 			1000,
-			1800,
+			2000,
 			1,
 			2, TestName = "APTNShiftStrategy UpShift")]
 		[TestCase(
@@ -180,7 +180,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			500,
 			80,
 			-10,
-			1000,
+			2000,
 			1,
 			2, TestName = "APTNShiftStrategy EarlyUpShift")]
 		public void EarlyUpshift(double init_outTorque_Nm, double init_outSpeed_rpm, double outTorque_Nm,
