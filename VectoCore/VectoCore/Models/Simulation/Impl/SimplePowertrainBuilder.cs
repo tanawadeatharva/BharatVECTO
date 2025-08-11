@@ -627,9 +627,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ComponentFactory.CreateDummyAxleGearInfo(container); // necessary for certain IEPC configurations
 			}
 
-			if (data.BatteryOnlyHybridMode) {
+			if (data.BatteryOnlyHybridMode && data.EngineData != null)
+			{
 				new AlwaysOffCombustionEngine(container, data.EngineData);
 			}
+
 			return container;
 		}
 

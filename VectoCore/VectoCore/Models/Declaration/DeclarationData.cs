@@ -1901,11 +1901,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			if (results.Any(r => r.OVCMode == OvcHevMode.ChargeSustaining))
 			{
-				/// FCHV pre-run should not be taken into account for the final result.
+				/// Non-OVC FCHV pre-runs should not be taken into account for the final result.
 				/// FCHVs Iteration == 0 -> PEV pre-run.
+				/// For OVC FCHV ChargeDepleting (CD) Iteration == 0 entries are required to calculate CD consumptions.
 				return results
 					.Select((r, idx) => (entry: r, index: idx))
-					.Where(r => (jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC) ? r.entry.OVCIteration != 0 : true)
+					.Where(r => jobType.IsFCHV() ? r.entry.OVCIteration != 0 || r.entry.OVCMode == OvcHevMode.ChargeDepleting : true)
 					.MinBy(r => Math.Abs(r.entry.DeltaSoC)).index;
 			}
 

@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
-						var ovcMode = vehicle.OVC ? OvcHevMode.ChargeSustaining : OvcHevMode.NotApplicable;
+						var ovcMode = vehicle.OVC ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 
 						var simulationRunData = CreateVectoRunData(mission, loading, null, ovcMode);
 						yield return simulationRunData;
@@ -559,15 +559,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					iterationRunData.JobType = FuelCellJobType;
 					iterationRunData.ModFileSuffix = string.Empty;
 					iterationRunData.FuelCellSystemData = fuelCellSystemData;
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection()
-					{
-						FCHVElectricEnergyConsumptionSoC = FCHVPostProcessingCorrection.CalculateElectricEnergyConsumption(modData),
-					};
+					iterationRunData.OVCMode = runData.OVCMode == OvcHevMode.NotApplicable 
+						? OvcHevMode.NotApplicable : OvcHevMode.ChargeSustaining;
+					
+					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
 
 					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
 						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
 					iterationRunData.FuelCellSystemData.FuelCellShareMap =
 						fchvDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
+
 
 					/// Comment from [1]: In the real run we don't use a charge sustaining battery
 					runData.BatteryData.ChargeSustainingBatterySystem = false;

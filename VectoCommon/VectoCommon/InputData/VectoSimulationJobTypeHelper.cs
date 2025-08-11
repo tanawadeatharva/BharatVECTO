@@ -22,7 +22,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		public static bool IsFCHV(this VectoSimulationJobType jobType)
 		{
-			return jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC;
+			return jobType == VectoSimulationJobType.FCHV || jobType == VectoSimulationJobType.FCHV_IEPC || jobType == VectoSimulationJobType.Multiple_FCHV;
 		}
 
 		public static bool IsMultiplePowertrains(this VectoSimulationJobType jobType)

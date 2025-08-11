@@ -16,6 +16,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
@@ -173,6 +174,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			{
 				throw new NotImplementedException("Not applicable for completed buses");
 			}
+
 
 			protected virtual IResult GetPrimaryResult(string fuelMode, VectoRunData simulationRunData,
 				OvcHevMode ovcHevMode)
@@ -954,7 +956,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				{
 					foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true))
 					{
-                        var ovcMode = PrimaryVehicle.OVC ? OvcHevMode.ChargeSustaining : OvcHevMode.NotApplicable;
+                        var ovcMode = PrimaryVehicle.OVC ? OvcHevMode.ChargeDepleting : OvcHevMode.NotApplicable;
 
                         foreach (var run in CreateVectoRunData(mission, loading, ovcMode: ovcMode))
                         {
@@ -1009,7 +1011,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
                     PrimaryVehicle.VehicleType, result.BatteryOnlyHybridMode);
 
-				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
                 result.VehicleData.VehicleClass = _segment.VehicleClass;
 
                 CreateGearboxAndGearshiftData(result);
@@ -1125,7 +1126,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 						iterationRunData.PrimaryResult = GetPrimaryResult(null, iterationRunData, iterationRunData.OVCMode);
 					}
 
-                    iterationRunData.FuelCellSystemData.FuelCellPowerMap =
+					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
                         fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
                     iterationRunData.FuelCellSystemData.FuelCellShareMap = fchvDataAdapter.CreateFuelCellShareMap(fuelCellData);
 
