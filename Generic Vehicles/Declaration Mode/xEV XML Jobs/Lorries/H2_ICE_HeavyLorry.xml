@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration 
-	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" 
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7"
+	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"	
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	schemaVersion="2.0" 
-	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v3.0" 
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob V:\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
-	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-	xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
-	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6"
 	>
-	<v2.0:Vehicle xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType" id="Group5_Conv_ES_Standard">
+	<Vehicle xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType" id="Group5_Conv_ES_Standard">
 		<Manufacturer>TU Graz</Manufacturer>
 		<ManufacturerAddress>Inffeldgasse 19</ManufacturerAddress>
 		<Model>HEV Heavy Lorry Px</Model>
 		<VIN>1234</VIN>
 		<Date>2017-01-01T00:00:00Z</Date>
+		<SimulationToolLicenseNumber>x</SimulationToolLicenseNumber>
 		<LegislativeCategory>N3</LegislativeCategory>
 		<ChassisConfiguration>Tractor</ChassisConfiguration>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<CorrectedActualMass>6995</CorrectedActualMass>
 		<TechnicalPermissibleMaximumLadenMass>18000</TechnicalPermissibleMaximumLadenMass>
 		<IdlingSpeed>600</IdlingSpeed>
-		<RetarderType>None</RetarderType>
+		<RetarderType>Transmission Input Retarder</RetarderType>
+		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
-			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
-			<PTOOtherElements>none</PTOOtherElements>
+		<PTO>
+			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
+			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<NgTankSystem>Compressed</NgTankSystem>
 		<SleeperCab>true</SleeperCab>
 		<VehicleTypeApprovalNumber>ASDF</VehicleTypeApprovalNumber>
-		<ADAS xsi:type="ADAS_Conventional_Type">
+		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>
 		</ADAS>
-		<Components xsi:type="Components_Conventional_LorryType">
+		<H2StorageUsableCapacity>80.0</H2StorageUsableCapacity>
+		<HydrogenStorageTechnology>Compressed</HydrogenStorageTechnology>
+		<Components>
 			<Engine>
-				<v2.0:Data xsi:type="v2.6:EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
+				<v2.0:Data xsi:type="EngineDataDeclarationType" id="ENG-gooZah3D" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Engine</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -223,7 +226,7 @@
 				</v2.0:Signature>
 			</Engine>
 			<Gearbox>
-				<v2.0:Data id="gbx-vi2Oak2N" xsi:type="v2.0:GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="gbx-vi2Oak2N" xsi:type="GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -427,7 +430,7 @@
 			</Gearbox>
 			<Retarder>
 				<!-- optional -->
-				<v2.0:Data id="RET-Shai9imi" xsi:type="v2.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="RET-Shai9imi" xsi:type="RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -480,7 +483,7 @@
 				</v2.0:Signature>
 			</Retarder>
 			<Axlegear>
-				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v2.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -514,7 +517,7 @@
 				</v2.0:Signature>
 			</Axlegear>
 			<AxleWheels>
-				<v2.0:Data xsi:type="v2.0:AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Axles>
 						<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
 							<AxleType>VehicleNonDriven</AxleType>
@@ -594,7 +597,7 @@
 			</Auxiliaries>
 			<AirDrag>
 				<!-- optional -->
-				<Data id="CabinX23h" xsi:type="v2.0:AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+				<v2.0:Data id="CabinX23h" xsi:type="AirDragDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -603,7 +606,7 @@
 					<CdxA_0>4.31</CdxA_0>
 					<TransferredCdxA>4.31</TransferredCdxA>
 					<DeclaredCdxA>4.31</DeclaredCdxA>
-				</Data>
+				</v2.0:Data>
 				<v2.0:Signature>
 					<di:Reference URI="#CabinX23h">
 						<di:Transforms>
@@ -616,5 +619,65 @@
 				</v2.0:Signature>
 			</AirDrag>
 		</Components>
-	</v2.0:Vehicle>
+		<MonitoringData>
+			<VectoLicenseNbr>##VECTO_LICENSE_NUMBER##</VectoLicenseNbr>
+			<Vehicle>
+				<Make>##VEHICLE_MAKE##</Make>
+			</Vehicle>
+			<Engine>
+				<Manufacturer>##ENGINE_MANUFACTURER##</Manufacturer>
+				<ManufacturerAddress>##ENGINE_MANUFACTURERADDRESS##</ManufacturerAddress>
+				<Make>##ENGINE_MAKE##</Make>
+				<WHTC>
+					<FuelType>H2 CI</FuelType>
+					<CO2 unit="g/kWh">NaN</CO2>
+					<FuelConsumption unit="g/kWh">NaN</FuelConsumption>
+				</WHTC>
+				<WHSC>
+					<FuelType>H2 CI</FuelType>
+					<CO2 unit="g/kWh">NaN</CO2>
+					<FuelConsumption unit="g/kWh">NaN</FuelConsumption>
+				</WHSC>
+				<TypeApprovalNumber>##TYPE_APPROVAL_NUMBER##</TypeApprovalNumber>
+			</Engine>
+			<Gearbox>
+				<Manufacturer>##GEARBOX_MANUFACTURER##</Manufacturer>
+				<ManufacturerAddress>##GEARBOX_MANUFACTURERADDRESS##</ManufacturerAddress>
+				<Make>##GEARBOX_MAKE##</Make>
+			</Gearbox>
+			<Axlegear>
+				<Manufacturer>##AXLEGEAR_MANUFACTURER##</Manufacturer>
+				<ManufacturerAddress>##AXLEGEAR_MANUFACTURERADDRESS##</ManufacturerAddress>
+				<Make>##AXLEGEAR_MAKE##</Make>
+			</Axlegear>
+			<AxleWheels>
+				<Axle axleNumber="1">
+					<Tyre>
+						<Manufacturer>##TYRE_1_MANUFACTURER##</Manufacturer>
+						<ManufacturerAddress>##TYRE_1_MANUFACTURERADDRESS##</ManufacturerAddress>
+						<Make>##TYRE_1_MAKE##</Make>
+					</Tyre>
+				</Axle>
+				<Axle axleNumber="2">
+					<Tyre>
+						<Manufacturer>##TYRE_2_MANUFACTURER##</Manufacturer>
+						<ManufacturerAddress>##TYRE_2_MANUFACTURERADDRESS##</ManufacturerAddress>
+						<Make>##TYRE_2_MAKE##</Make>
+					</Tyre>
+				</Axle>
+			</AxleWheels>
+			<AdvancedReducingTechnologies>
+				<!--
+<Entry category="advanced aerodynamic measures">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced rolling resistance measures">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced drivetrain technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced engine technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced auxiliary technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="additional ADAS technologies">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="advanced powertrain integration and hybridisation">##TECHNOLOGY_BRAND_NAME##</Entry>
+<Entry category="other">##TECHNOLOGY_BRAND_NAME##</Entry>
+-->
+			</AdvancedReducingTechnologies>
+		</MonitoringData>
+	</Vehicle>
 </tns:VectoInputDeclaration>
