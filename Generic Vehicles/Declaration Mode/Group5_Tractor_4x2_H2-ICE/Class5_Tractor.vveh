@@ -16,6 +16,8 @@
     "rdyn": 492.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
+	"H2StorageUsableCapacity": 30.0,
+	"HydrogenStorageTechnology": "Compressed",
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
