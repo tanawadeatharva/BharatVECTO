@@ -1235,7 +1235,7 @@ Partial Class VectoVTPJobForm
         Me.gbOBFCM.Size = New System.Drawing.Size(611, 182)
         Me.gbOBFCM.TabIndex = 49
         Me.gbOBFCM.TabStop = False
-        Me.gbOBFCM.Text = "OBFCM"
+        Me.gbOBFCM.Text = "OBFCM (optional)"
         '
         'VectoVTPJobForm
         '
