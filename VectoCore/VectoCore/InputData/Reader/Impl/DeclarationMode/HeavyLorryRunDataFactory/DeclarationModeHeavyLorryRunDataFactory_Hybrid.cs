@@ -238,11 +238,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
 				}
 
-				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+			    CreateGearboxAndGearshiftData(runData);
+
+                runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
 					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
-				
-				CreateGearboxAndGearshiftData(runData);
 
                 runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,

@@ -892,11 +892,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
 
-				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+                CreateGearboxAndGearshiftData(runData);
+
+                runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
 					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
 					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
 
-				CreateGearboxAndGearshiftData(runData);
 				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
