@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		ICombustionEngine CreateCombustionEngine(CycleType cycleType, IVehicleContainer container, CombustionEngineData modelData,
 			bool pt1Disabled = false);
 
-		IWHRCharger CreateWHRCharger(IVehicleContainer container, double dcDcConverterEfficiency);
+		IWHRCharger CreateWHRCharger(IVehicleContainer container, double efficiency);
 
 		IDCDCConverter CreateDCDCConverter(IVehicleContainer container, double efficiency);
 
