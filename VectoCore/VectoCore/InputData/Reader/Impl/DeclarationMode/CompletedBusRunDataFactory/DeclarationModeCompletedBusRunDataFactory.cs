@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
@@ -18,6 +19,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
+using TUGraz.VectoCore.Models.Declaration.VehicleOperation;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory
 {
@@ -28,7 +30,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 			protected const string _modSuffixSpecific = "Specific";
 			protected const string _modSuffixGeneric = "Generic";
 
-			public IGenericCompletedBusDeclarationDataAdapter DataAdapterGeneric { get; }
+			protected VehicleOperationLookup VehicleOperation => new VehicleOperationLookup();
+
+            public IGenericCompletedBusDeclarationDataAdapter DataAdapterGeneric { get; }
 			public ISpecificCompletedBusDeclarationDataAdapter DataAdapterSpecific { get; }
 			protected IMultistageVIFInputData DataProvider { get; }
 
@@ -92,7 +96,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
 				CheckSuperCap(PrimaryVehicle);
-				var simulationRunData = new VectoRunData {
+                var vehicleOperation = VehicleOperation.LookupVehicleOperation(mission.BusParameter?.BusGroup ?? _segment.VehicleClass, mission.MissionType);
+                
+                var simulationRunData = new VectoRunData {
 					JobType = PrimaryVehicle.VehicleType,
 					InputData = DataProvider.MultistageJobInputData,
 					Loading = loading.Key,
@@ -107,8 +113,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					InputDataHash = DataProvider.MultistageJobInputData.XMLHash, // right hash?!?
 					SimulationType = SimulationType.DistanceCycle,
 					VehicleDesignSpeed = _segment.DesignSpeed,
-					MaxChargingPower = PrimaryVehicle.MaxChargingPower,
-					OVCMode = ovcMode,
+					MaxChargingPower = PrimaryVehicle.MaxChargingPower ?? vehicleOperation.StationaryChargingMaxPwrInfrastructure,
+                    OVCMode = ovcMode,
 				};
 
 				return simulationRunData;
@@ -360,12 +366,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 
 					foreach (var mission in _segment.Missions) {
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
-							// TODO: charge sustaining / charge depleting
 							if (ovc) {
-								if (PrimaryVehicle.MaxChargingPower == null) {
-									throw new VectoException(
-										$"{nameof(PrimaryVehicle.MaxChargingPower)} must be provided for OVC HEVs");
-								}
 								foreach (var run in CreateVectoRunData(mission, loading, modeIdx, fuelMode,
 											OvcHevMode.ChargeSustaining)) {
 									yield return run;
@@ -1007,8 +1008,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
                     CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
                     PrimaryVehicle.VehicleType, result.BatteryOnlyHybridMode);
-                
-				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
+
                 result.VehicleData.VehicleClass = _segment.VehicleClass;
 
                 CreateGearboxAndGearshiftData(result);
@@ -1068,8 +1068,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
                     CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
                     PrimaryVehicle.VehicleType, result.BatteryOnlyHybridMode);
                 
-				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
-                result.VehicleData.VehicleClass = _segment.VehicleClass;
+				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
                 CreateGearboxAndGearshiftData(result);
 
@@ -1341,8 +1340,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
 					PrimaryVehicle.VehicleType, false);
-				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
-
+				
 				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;
 
@@ -1393,7 +1391,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					PrimaryVehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
 					CompletedVehicle.Length, PrimaryVehicle.Components.AxleWheels.NumSteeredAxles,
 					PrimaryVehicle.VehicleType, false);
-				result.MaxChargingPower = PrimaryVehicle.MaxChargingPower;
 				   
 				//result.EngineData.FuelMode = 0;
 				result.VehicleData.VehicleClass = _segment.VehicleClass;

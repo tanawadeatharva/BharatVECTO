@@ -9,6 +9,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Declaration.VehicleOperation;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -23,7 +24,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 	{
 		public abstract class LorryBase : AbstractDeclarationVectoRunDataFactory
 		{
-			public ILorryDeclarationDataAdapter DataAdapter { get; }
+            protected VehicleOperationLookup VehicleOperation => new VehicleOperationLookup();
+
+            public ILorryDeclarationDataAdapter DataAdapter { get; }
 			public IDeclarationInputDataProvider InputDataProvider { get; }
 			public IDeclarationReport Report { get; }
 
@@ -78,8 +81,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 				
 				CheckSuperCap(vehicle);
-				
-				var simulationRunData = new VectoRunData
+
+                var vehicleOperation = VehicleOperation.LookupVehicleOperation(_segment.VehicleClass, mission.MissionType);
+
+                var simulationRunData = new VectoRunData
 				{
 					Loading = loading.Key,
 					JobName = InputDataProvider.JobInputData.JobName,
@@ -93,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 					ModFileSuffix = (engineModes?.Count > 1 ? $"_EngineMode{modeIdx}_" : "") + loading.Key,
 					VehicleDesignSpeed = segment.DesignSpeed,
 					InputDataHash = InputDataProvider.XMLHash,
-					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower,
+					MaxChargingPower = InputDataProvider.JobInputData.Vehicle.MaxChargingPower ?? vehicleOperation.StationaryChargingMaxPwrInfrastructure,
 					InMotionCharging = !vehicle.InMotionCharging.Technology.IsOneOf(IMCTechnology.None, IMCTechnology.NotApplicable),
 					InMotionChargingTechnology = vehicle.InMotionCharging.Technology,
 
