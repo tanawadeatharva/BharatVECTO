@@ -13,6 +13,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
+using TUGraz.VectoCore.Models.Declaration.VehicleOperation;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -27,9 +28,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 	{
 		public abstract class PrimaryBusBase : AbstractDeclarationVectoRunDataFactory
 		{
-			#region Implementation of IVectoRunDataFactory
+            protected VehicleOperationLookup VehicleOperation => new VehicleOperationLookup();
 
-			protected internal IPrimaryBusDeclarationDataAdapter DataAdapter { get; }
+            #region Implementation of IVectoRunDataFactory
+
+            protected internal IPrimaryBusDeclarationDataAdapter DataAdapter { get; }
 			protected IDeclarationInputDataProvider DataProvider { get; }
 
 			//public IDeclarationReport Report { get; }
@@ -140,8 +143,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
 				CheckSuperCap(Vehicle);
-				
-				var simulationRunData = new VectoRunData {
+
+                var vehicleOperation = VehicleOperation.LookupVehicleOperation(mission.BusParameter?.BusGroup ?? _segment.VehicleClass, mission.MissionType);
+
+                var simulationRunData = new VectoRunData {
 					InputData = DataProvider,
 					Loading = loading.Key,
 					JobType = Vehicle.VehicleType,
@@ -152,7 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 					JobName = InputDataProvider.JobInputData.JobName,
 					ModFileSuffix = $"{(engineModes?.Count > 1 ? $"_EngineMode{modeIdx}_" : "")}" +
 									$"_{mission.BusParameter.BusGroup.GetClassNumber()}_{loading.Key}",
-					MaxChargingPower = Vehicle.MaxChargingPower,
+					MaxChargingPower = Vehicle.MaxChargingPower ?? vehicleOperation.StationaryChargingMaxPwrInfrastructure,
 					VehicleDesignSpeed = segment.DesignSpeed,
 					Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 					ExecutionMode = ExecutionMode.Declaration,
@@ -284,10 +289,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						foreach (var loading in mission.Loadings.Where(l => MissionFilter?.Run(mission.MissionType, l.Key) ?? true)) {
 
 							if (vehicle.OVC) {
-								if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0)) {
-									throw new VectoException(
-										"MaxChargingPower has to be greater than 0 if OVC is selected");
-								}
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							} else {

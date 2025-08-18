@@ -55,11 +55,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						{
 							if (vehicle.OVC)
 							{
-								if (vehicle.MaxChargingPower != null && vehicle.MaxChargingPower.IsEqual(0))
-								{
-									throw new VectoException("MaxChargingPower has to be greater than 0 if OVC is selected");
-								}
-
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeDepleting);
 								yield return CreateVectoRunData(mission, loading, modeIdx, OvcHevMode.ChargeSustaining);
 							} else {
