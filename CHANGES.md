@@ -2,6 +2,57 @@
 
 
 
+**VECTO v5.0.4-DEV (25-08-2025)**
+
+
+- Features
+
+    * CodeEU n.a.: 3rd amendment reports for buses (vecto/vecto!421)
+    * CodeEU n.a.: V1.0 reports for multiple powertrain lorries (vecto/vecto!395)
+    * CodeEU n.a.: Add Diesel B100 CI fuel (vecto/vecto!399)
+    * CodeEU n.a.: MRF and Monitoring report for multiple-powertrain primary buses (vecto/vecto!410)
+    * CodeEU n.a.: battery only mode for P2 (vecto/vecto!425)
+    * CodeEU n.a.: Run simulation for H2-ICE bus (primary + completed) (vecto/vecto!432)
+    * CodeEU n.a.: FCHV bus simulation, primary & completed (vecto/vecto!433)
+    * CodeEU n.a.: Single-bus mode for FCHV (vecto/vecto!435)
+    * CodeEU n.a.: Enable all v2.7 vehicles (vecto/vecto!436)
+    * CodeEU #1061: VTP input and formulas for buses and trucks (vecto/vecto!424)
+
+- Bug Fixes
+
+    * CodeEU #1058: Exception when getting MaxWindowsSize (vecto/vecto!422)
+    * CodeEU #1096: For FCHV, APT-S/P gearboxes simulated as APT-N. (vecto/vecto!423)
+    * CodeEU #1043: Ovc s-hev cs cd (vecto/vecto!420)
+    * CodeEU n.a.: Convert property Type to Architecture in axle powertrains (vecto/vecto!393)
+    * CodeEU n.a.: 3 job types for multiple powertrains (vecto/vecto!394)
+    * CodeEU n.a.: Removed NgTankSystem from Multiple_SHEV primary bus (vecto/vecto!398)
+    * CodeEU n.a.: Remove Retarder component from X4 architectures (vecto/vecto!400)
+    * CodeEU n.a.: Use multiple factory methods for Retarder and Angledrive data providers (vecto/vecto!406)
+    * CodeEU n.a.: Added FCHV missing gearbox bindings (vecto/vecto!427)
+    * CodeEU n.a.: Airdrag element in VIF report. (vecto/vecto!430)
+    * CodeEU n.a.: Do not require SoC limits for HV non-OVC (vecto/vecto!431)
+    * CodeEU n.a.: B100 density to 890 kg/m3 (vecto/vecto!411)
+    * CodeEU n.a.: Run old VIFs with v2.7 Completed vehicles (vecto/vecto!434)
+    * CodeEU #1065: 1065 vehicle co2 group (vecto/vecto!428)
+    * CodeEU #1066: DoCoast - add drive condition for overload (vecto/vecto!426)
+    * CodeEU n.a.: Generic retarder and failing tests (vecto/vecto!437)
+    * CodeEU #1109: IEPC data adaptation (vecto/vecto!438)
+    * CodeEU n.a.: IHPC VECTO run data (vecto/vecto!439)
+    * CodeEU n.a.: FCHV IEPC rundata gearbox creation (vecto/vecto!440)
+    * CodeEU n.a.: Generic vehicles that failed to run (vecto/vecto!441)
+    * CodeEU n.a.: WHRCharger creation (vecto/vecto!442)
+    * CodeEU n.a.: Update wheelEnd sample (vecto/vecto!443)
+    * CodeEU n.a.: FCHV files in engineering mode (vecto/vecto!444)
+    * CodeEU n.a.: Initialize MaxChargingPower from static data if not available in input (vecto/vecto!445)
+    * CodeEU n.a.: FCHV battery and CD and CS runs (vecto/vecto!446)
+
+- Refactor
+
+    * CodeEU n.a.: Merge refactoring branch (vecto/vecto!419)
+    * CodeEU n.a.: Merging refactorings from SW3 project to (vecto/vecto!396)
+
+
+
 **VECTO v5.0.3 Official Release (08-07-2025)**
 
 
