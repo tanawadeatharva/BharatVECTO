@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
-				AverageSpeed = data.Speed();
+				AverageSpeed = data.Speed();  
 
 				MinSpeed = data.MinSpeed();
 				MaxSpeed = data.MaxSpeed();
@@ -369,57 +369,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				WeightingFactor = weightingFactor;
 			}
 
-			public IResultEntry Clone(OvcHevMode ovcMode)
+			public IResultEntry SetFuelCellCDProperties(IResultEntry csResult)
 			{
-				return new ResultEntry()
-				{
-					OVCMode = ovcMode,
-					VectoRunData = VectoRunData,
-					Mission = Mission,
-					LoadingType = LoadingType,
-					FuelMode = FuelMode,
-					FuelData = FuelData,
-					Payload = Payload,
-					TotalVehicleMass = TotalVehicleMass,
-					CargoVolume = CargoVolume,
-					PassengerCount = PassengerCount,
-					VehicleClass = VehicleClass,
-					MaxChargingPower = MaxChargingPower,
-					AverageSpeed = AverageSpeed,
-					AverageDrivingSpeed = AverageDrivingSpeed,
-					EnergyConsumptionTotal = EnergyConsumptionTotal,
-					ElectricEnergyConsumption = ElectricEnergyConsumption,
-					CO2Total = CO2Total,
-					CorrectedFinalFuelConsumption = CorrectedFinalFuelConsumption,
-					Distance = Distance,
-					GearshiftCount = GearshiftCount,
-					FullLoadPercentage = FullLoadPercentage,
-					MaxDeceleration = MaxDeceleration,
-					MaxAcceleration = MaxAcceleration,
-					MaxSpeed = MaxSpeed,
-					MinSpeed = MinSpeed,
-					Error = Error,
-					Status = Status,
-					StackTrace = StackTrace,
-					BatteryData = BatteryData,
-					EngineSpeedDrivingMin = EngineSpeedDrivingMin,
-					EngineSpeedDrivingAvg = EngineSpeedDrivingAvg,
-					EngineSpeedDrivingMax = EngineSpeedDrivingMax,
-					AverageGearboxEfficiency = AverageGearboxEfficiency,
-					AverageAxlegearEfficiency = AverageAxlegearEfficiency,
-					WeightingFactor = WeightingFactor,
-					ActualChargeDepletingRange = ActualChargeDepletingRange,
-					EquivalentAllElectricRange = EquivalentAllElectricRange,
-					ZeroCO2EmissionsRange = ZeroCO2EmissionsRange,
-					HydrogenRange = HydrogenRange,
-					AuxHeaterFuel = AuxHeaterFuel,
-					ZEV_FuelConsumption_AuxHtr = ZEV_FuelConsumption_AuxHtr,
-					ZEV_CO2 = ZEV_CO2,
-					PrimaryResult = PrimaryResult,
-					BatteryEfficiencyDischarge = BatteryEfficiencyDischarge,
-					BeginOfLifeRanges = BeginOfLifeRanges,
-					EndOfLifeRanges = EndOfLifeRanges
-				};
+				OVCMode = OvcHevMode.ChargeDepleting;
+				FuelData = csResult.FuelData;
+				BatteryData = csResult.BatteryData;
+
+				return this;
 			}
 		}
 

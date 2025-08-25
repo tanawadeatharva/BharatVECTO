@@ -756,10 +756,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                     iterationRunData.JobType = FuelCellJobType;
                     iterationRunData.ModFileSuffix = string.Empty;
                     iterationRunData.FuelCellSystemData = fuelCellData;
-                    modData.PostProcessingCorrection = new FCHVPostProcessingCorrection()
-                    {
-                        FCHVElectricEnergyConsumptionSoC = FCHVPostProcessingCorrection.CalculateElectricEnergyConsumption(modData),
-                    };
+					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
 
                     iterationRunData.FuelCellSystemData.FuelCellPowerMap =
                         fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);

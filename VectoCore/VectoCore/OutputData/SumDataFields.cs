@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string INTERNAL_PREFIX = "INTERNAL";
 
 		public const string SORT = INTERNAL_PREFIX + " Sorting";
+		public const string JOB_SPECS = "Job Specs";
 		public const string JOB = "Job [-]";
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
@@ -386,6 +387,14 @@ namespace TUGraz.VectoCore.OutputData
 			return jobNbr * 1000000 + runNbr * 1000 + iteration;
 		}
 
+		public static string GetSumDataJobSpecs(VectoRunData r)
+		{
+			var iteration = r.Iteration > 0 ? "1" : "0";
+
+			/// [0]: RunNumber, [1]: VehicleType, [2]: Powertrain, [3]: Iteration
+			return $"{r.JobNumber}-{r.VehicleData.VehicleCategory.GetVehicleType()}-{r.JobType.GetPowertrainArchitectureType()}-{iteration}";
+		}
+
 		public static string GetSumDataJobID(int jobNbr, int runNbr, int iterationCnt)
 		{
 			var iteration = "";
@@ -404,6 +413,7 @@ namespace TUGraz.VectoCore.OutputData
 			new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 				// common fields
 				{ SORT, SumFunc((r, m) => GetSumDataSortingValue(r.JobNumber, r.RunNumber, r.Iteration))},
+				{ JOB_SPECS, SumFunc((r, m) => GetSumDataJobSpecs(r))},
 				{
 					JOB,
 					SumFunc((r, m) => GetSumDataJobID(r.JobNumber, r.RunNumber, r.Iteration))

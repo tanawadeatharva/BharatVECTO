@@ -20,7 +20,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		#region Implementation of IModalDataPostProcessor
 
 		public Joule FCHVElectricEnergyConsumptionSoC { get; set; } = null;
-
 		public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
 			if (modData.Duration.IsEqual(0))

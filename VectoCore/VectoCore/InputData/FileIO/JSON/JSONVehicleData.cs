@@ -147,6 +147,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		}
 
+		public override ArchitectureID ArchitectureID
+		{
+			get
+			{
+				return VehicleType.GetArchitectureID(GetElectricMachines().Entries.First(e => e.Position != PowertrainPosition.GEN).Position);
+			}
+		}
+
 		#region Overrides of JSONVehicleDataV7
 
 		public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>

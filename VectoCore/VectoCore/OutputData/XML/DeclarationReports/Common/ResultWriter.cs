@@ -439,19 +439,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
     {
         public BusFCHVNonOVC_MRF_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-        public override XElement GetElement(IResultEntry entry)
+		public override XElement GetElement(IResultEntry entry)
         {
             return new XElement(TNS + XMLNames.Report_Result_Result,
                 new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
                 new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
                 _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
-                SimulationParameterWriter.GetElement(entry),
+				SimulationParameterWriter.GetElement(entry),
                 GetPrimaryBusSubGroupElement(entry),
                 _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry)
             );
         }
 
-        public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
+        public override IResultGroupWriter SimulationParameterWriter => _factory.GetBusSimulationParameterWriter(_factory, TNS);
         
 		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryFCHVNonOVCTotalWriter(_factory, TNS);
 
@@ -484,6 +484,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
                 _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
                 _factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                GetPrimaryBusSubGroupElement(entry.ChargeDepletingResult),
                 _factory.GetBusFCHVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
                 _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult)
             );
