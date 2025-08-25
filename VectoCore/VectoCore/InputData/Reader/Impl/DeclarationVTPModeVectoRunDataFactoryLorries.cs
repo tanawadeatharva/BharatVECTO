@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
         }
 
         protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report,
-			ILorryDeclarationDataAdapter declarationDataAdapter) : 
+			ILorryDeclarationDataAdapter declarationDataAdapter) :
             base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
 		{
 			DataAdapter = declarationDataAdapter;
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected override IDeclarationDataAdapter Dao => DataAdapter;
 
 		private ILorryDeclarationDataAdapter DataAdapter { get; } //return _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional()); }
-	
+
 
 		protected override void Initialize()
         {
@@ -206,11 +206,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
             var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
-				keySelector: f => f.Type, 
+				keySelector: f => f.Type,
 				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
-					f.Type, 
+					f.Type,
 					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
-            
+
             vtpRunData.VTPData = new VTPData() {
 				CorrectionFactors = correctionFactors,
 				FuelNCVs = JobInputData.FuelNCVs

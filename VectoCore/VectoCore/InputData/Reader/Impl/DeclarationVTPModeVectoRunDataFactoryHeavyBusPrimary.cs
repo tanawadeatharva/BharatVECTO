@@ -10,9 +10,9 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -31,8 +31,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter) : 
-            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report) 
+        protected DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(IInputDataProvider inputProvider, IVTPReport report, IPrimaryBusDeclarationDataAdapter declarationDataAdapter) :
+            base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
         {
 			DataAdapter = declarationDataAdapter;
             InputDataProvider = inputProvider;
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData = tempVehicle,
 				Cycle = VTPCycle
 			};
-			
+
 			GearboxData = DataAdapter.CreateGearboxData(vehicle, vectoRun, null);
 			RetarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData, vehicle.ArchitectureID, vehicle.Components.IEPC);
 
@@ -90,48 +90,60 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //    DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
             GearshiftData = DataAdapter.CreateGearshiftData(
-				AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), 
-				EngineData.IdleSpeed, 
+				AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0),
+				EngineData.IdleSpeed,
 				vehicle.Components.GearboxInputData.Type,
 				vehicle.Components.GearboxInputData.Gears.Count);
 
             AuxVTP = CreateVTPAuxData(vehicle);
-        }
+		}
 
         protected override void InitializeReport()
         {
             var vehicle = JobInputData.Vehicle;
             var tempVehicle = DataAdapter.CreateVehicleData(
-                vehicle, Segment, Segment.Missions.First(),
-                Segment.Missions.First().Loadings.First(), _allowVocational);
+                vehicle, 
+				Segment, 
+				Segment.Missions.First(),
+                Segment.Missions.First().Loadings.First(), 
+				_allowVocational);
+            
+			tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
             tempVehicle.VehicleClass = Segment.VehicleClass;
-            tempVehicle.VehicleCode = JobInputData.CompletedVIFInputData.BodyworkCode;
-            var powertrainConfig = new VectoRunData()
+
+			var airDragData = vehicle.VehicleCategory.IsBus() ? JobInputData.CompletedVIFInputData.AirDragData : AirdragData;
+			var busAuxiliaries = new AuxiliaryConfig()
+			{
+				InputData = JobInputData.CompletedVIFInputData?.BusAuxiliaries
+			};
+
+			var powertrainConfig = new VectoRunData()
             {
                 VehicleData = tempVehicle,
-                AirdragData = AirdragData,
-                EngineData = EngineData,
+                AirdragData = airDragData,
+				EngineData = EngineData,
                 GearboxData = GearboxData,
                 AxleGearData = AxlegearData,
                 Retarder = RetarderData,
                 Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
-            };
+				BusAuxiliaries = busAuxiliaries,
+				Cycle = VTPCycle
+			};
             //powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
             Report.InputDataHash = JobInputData.VectoJobHash;
             Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
             Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-            var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
-                                        x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
-                                            .ToList())
-                                    .ToList();
-            Report.InitializeReport(powertrainConfig);
+			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
+			Report.PrimaryVIFHash   = JobInputData.VectoPrimaryVIFHash;
+			Report.CompletedVIFHash = JobInputData.VectoCompletedVIFHash;
+			Report.OBFCMDeclarationInputData = JobInputData.OBFCMDeclarationInputData;
+			Report.InitializeReport(powertrainConfig);
         }
 
         protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
         {
-            // used to fill VECTO RunData for VTP mission.
-
-            var retVal = new List<VectoRunData.AuxData>();
+			// used to fill VECTO RunData for VTP mission.
+			var retVal = new List<VectoRunData.AuxData>();
 
             var electricEfficiency =
                 Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency *
@@ -154,23 +166,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                     PowerDemandMech = spPowerDemand
                 });
 
-            retVal.Add(
-                new VectoRunData.AuxData()
-                {
-                    DemandType = AuxiliaryDemandType.Constant,
-                    Technology = new List<string>() { "default" },
-                    ID = Constants.Auxiliaries.IDs.ElectricSystem,
-                    PowerDemandMech = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
-                });
-            retVal.Add(new VectoRunData.AuxData()
-            {
-                DemandType = AuxiliaryDemandType.Constant,
-                Technology = new List<string>() { "default" },
-                ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
-                PowerDemandMech = 350.SI<Watt>()
-            });
+			retVal.Add(
+				new VectoRunData.AuxData()
+				{
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = new List<string>() { "default" },
+					ID = Constants.Auxiliaries.IDs.ElectricSystem,
+					PowerDemandMech = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage * 32.4.SI<Ampere>() / electricEfficiency
+				});
+			retVal.Add(new VectoRunData.AuxData()
+			{
+				DemandType = AuxiliaryDemandType.Constant,
+				Technology = new List<string>() { "default" },
+				ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition,
+				PowerDemandMech = 350.SI<Watt>()
+			});
 
-            var busAux = vehicle.Components.BusAuxiliaries;
+			var busAux = vehicle.Components.BusAuxiliaries;
             var psCompressor = DeclarationData.BusAuxiliaries.GetCompressorMap(busAux.PneumaticSupply);
             retVal.Add(new VectoRunData.AuxData()
             {
@@ -189,7 +201,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             retVal.Add(new VectoRunData.AuxData()
             {
                 DemandType = AuxiliaryDemandType.Direct,
-                Technology = new List<string>() { "default" },
+                Technology = new List<string>() { JobInputData.Vehicle.Components.BusAuxiliaries.FanTechnology },
                 ID = Constants.Auxiliaries.IDs.Fan,
                 PowerDemandMechCycleFunc = cycleEntry => engineFan.PowerDemand(cycleEntry)
             });
@@ -205,11 +217,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
         protected override AuxFanData GetFanData()
         {
-            return new AuxFanData()
-            {
-                FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(JobInputData.FanPowerCoefficents.Skip(3).Take(1)).ToArray(),
-                FanDiameter = JobInputData.FanDiameter,
-            };
+			var coolingCoefficient = JobInputData.ManufacturerReportInputData.CoolingFanTechCoefficient;
+			return new AuxFanData()
+			{
+				FanCoefficients = DeclarationData.VTPMode.FanParameters.Concat(new[] { coolingCoefficient }).ToArray(),
+				FanDiameter = JobInputData.FanDiameter,
+			};
         }
 
         protected override IEnumerable<VectoRunData> GetNextRun()
@@ -242,11 +255,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 			var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
-				keySelector: f => f.Type, 
+				keySelector: f => f.Type,
 				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
-					f.Type, 
+					f.Type,
 					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
-            
+
             vtpRunData.VTPData = new VTPData() {
 				CorrectionFactors = correctionFactors,
 				FuelNCVs = JobInputData.FuelNCVs

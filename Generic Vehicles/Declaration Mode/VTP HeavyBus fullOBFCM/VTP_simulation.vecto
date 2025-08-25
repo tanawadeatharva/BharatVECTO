@@ -13,6 +13,7 @@
     "CompletedVIF": "Bus_34f_FM.VIF_Report_1.xml",
     "PrimaryVIF": "primary_bus_group_P33_34_non_Smart_angledrive.RSLT_VIF.xml",
     "Mileage": 30000.0,
+	"MileageEndOfTest": 30100.2,
     "FanPowerCoefficients": [
       7.32,
       1200.0,
@@ -30,6 +31,13 @@
     "TorqueDriftRightWheel": 0.0,
     "Cycles": [
       "VTP cycle 2Hz.vdri"
-    ]
+    ],
+	"OBFCM":
+    {    
+      "LifetimeFuelConsumptionMassStart":811.00,
+      "LifetimeFuelConsumptionMassEnd":911.00,
+      "LifetimeFuelConsumptionVolStart":1081.33,
+      "LifetimeFuelConsumptionVolEnd":1214.66,
+    }
   }
 }

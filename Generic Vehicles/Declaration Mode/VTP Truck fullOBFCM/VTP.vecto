@@ -11,6 +11,7 @@
     "ManufacturerRecord": "vehicle_sampleSingleModeDualFuel_2p4.RSLT_MANUFACTURER.xml",
     "CustomerInformationFile": "vehicle_sampleSingleModeDualFuel_2p4.RSLT_CUSTOMER.xml",
     "Mileage": 30000.0,
+	"MileageEndOfTest":30023.0,
     "FanPowerCoefficients": [
       0.0,
       1.0,
@@ -31,6 +32,14 @@
     "TorqueDriftRightWheel": 0.0,
     "Cycles": [
       "vtp_cycle_2Hz.vdri"
-    ]
+    ],
+	"OBFCM":
+    {    
+      "LifetimeFuelConsumptionMassStart":811.00,
+      "LifetimeFuelConsumptionMassEnd":911.00,
+      "LifetimeFuelConsumptionVolStart":1081.33,
+      "LifetimeFuelConsumptionVolEnd":1214.66,
+    }
+
   }
 }

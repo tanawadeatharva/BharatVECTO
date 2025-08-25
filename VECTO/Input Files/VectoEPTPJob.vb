@@ -1,8 +1,6 @@
 ﻿
-Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
-Imports System.Linq
 Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -14,9 +12,10 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
+Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoHashing
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 <CustomValidation(GetType(VectoVTPJob), "ValidateJob")>
 Public Class VectoVTPJob
@@ -29,9 +28,12 @@ Public Class VectoVTPJob
     Private ReadOnly _vehicleFile As SubPath
     Private ReadOnly _manufacturerRecord As SubPath
     Private ReadOnly _completedVIF As SubPath
+    Private ReadOnly _primaryVIF As SubPath
+    Private ReadOnly _vehicleCIF As SubPath
 
     Public ReadOnly CycleFiles As List(Of SubPath)
     Public FanCoefficients As Double()
+    Private _obfcmDeclarationData As VTPOBFCMDeclarationData
     Private _fanDiameter As Meter
     Private _fuelNCVData As List(Of IFuelNCVData)
 
@@ -42,6 +44,8 @@ Public Class VectoVTPJob
         _vehicleFile = New SubPath
         _manufacturerRecord = New SubPath()
         _completedVIF = New SubPath()
+        _primaryVIF = New SubPath()
+        _vehicleCIF = New SubPath()
         _fuelNCVData = New List(Of IFuelNCVData)
 
         Dim kernel As IKernel = New StandardKernel(New VectoNinjectModule)
@@ -144,6 +148,13 @@ Public Class VectoVTPJob
     Public ReadOnly Property VectoJobHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoJobHash
 
     Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
+
+    Public ReadOnly Property VectoCustomerFileHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoCustomerFileHash
+
+    Public ReadOnly Property VectoPrimaryVIFHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoPrimaryVIFHash
+
+    Public ReadOnly Property VectoCompletedVIFHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoCompletedVIFHash
+
     Public Property Mileage As Meter Implements IVTPDeclarationJobInputData.Mileage
 
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
@@ -250,6 +261,32 @@ Public Class VectoVTPJob
         End Set
     End Property
 
+    Public Property PrimaryVIF(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _primaryVIF.OriginalPath
+            Else
+                Return _primaryVIF.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _primaryVIF.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public Property VehicleCIF(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _vehicleCIF.OriginalPath
+            Else
+                Return _vehicleCIF.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _vehicleCIF.Init(_myPath, value)
+        End Set
+    End Property
+
     Public ReadOnly Property Source As String Implements IManufacturerReport.Source
         Get
             Return _manufacturerRecord.FullPath
@@ -294,5 +331,44 @@ Public Class VectoVTPJob
         Get
             Throw New NotImplementedException()
         End Get
+    End Property
+
+    Public ReadOnly Property AirDragData As Models.SimulationComponent.Data.AirdragData Implements ICompletedVIF.AirDragData
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property CIFInputData As IReportFile Implements IVTPDeclarationJobInputData.CIFInputData
+        Get
+            Return New ReportFile(_vehicleCIF.FullPath)
+        End Get
+    End Property
+
+    Public ReadOnly Property PrimaryVIFInputData As IReportFile Implements IVTPDeclarationJobInputData.PrimaryVIFInputData
+        Get
+            Return New ReportFile(_primaryVIF.FullPath)
+        End Get
+    End Property
+
+    Public ReadOnly Property CoolingFanTechCoefficient As Double Implements IManufacturerReport.CoolingFanTechCoefficient
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements ICompletedVIF.BusAuxiliaries
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public Property OBFCMDeclarationInputData As VTPOBFCMDeclarationData Implements IVTPDeclarationJobInputData.OBFCMDeclarationInputData
+        Get
+            Return _obfcmDeclarationData
+        End Get
+        Set(ByVal value As VTPOBFCMDeclarationData)
+            _obfcmDeclarationData = value
+        End Set
     End Property
 End Class

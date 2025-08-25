@@ -29,71 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
-using TUGraz.VectoCommon.Hashing;
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoHashing;
-
-namespace TUGraz.VectoCommon.InputData
+namespace TUGraz.VectoCommon.OutputData
 {
-	public interface IVTPDeclarationInputDataProvider : IInputDataProvider
+	public interface IOutputPlugin
 	{
-		IVTPDeclarationJobInputData JobInputData { get; }
+		string Key { get; }
 
+		string Name { get; }
+
+		IOutputFileWriter Instance { get; }
 	}
-
-	public interface IVTPDeclarationJobInputData
-	{
-		IVehicleDeclarationInputData Vehicle { get; }
-
-		IManufacturerReport ManufacturerReportInputData { get; }
-
-		ICompletedVIF CompletedVIFInputData { get; }
-
-		IVectoHash VectoJobHash { get; }
-
-		IVectoHash VectoManufacturerReportHash { get; }
-
-		Meter Mileage { get; }
-
-		IList<ICycleData> Cycles { get; }
-
-		IEnumerable<double> FanPowerCoefficents { get; }
-
-		bool SavedInDeclarationMode { get; }
-
-		Meter FanDiameter { get; }
-
-		IList<IFuelNCVData> FuelNCVs { get; }
-
-		NewtonMeter TorqueDriftLeftWheel { get; }
-
-		NewtonMeter TorqueDriftRightWheel { get; }
-	}
-
-	public interface IManufacturerReport
-	{
-		string Source { get; }
-
-		IResultsInputData Results { get; }
-
-		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
-
-		DigestData JobDigest { get; }
-
-		void ValidateSimulationToolVersion();
-
-		void ValidateHash();
-	}
-
-	public interface ICompletedVIF
-	{
-		string Source { get; }
-
-		Meter VehicleLength {  get; }
-
-		VehicleCode BodyworkCode { get; }
-	}
-
 }

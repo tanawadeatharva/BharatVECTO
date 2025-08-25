@@ -29,49 +29,27 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCommon.OutputData
 {
-	public class EngineFanAuxiliary
+	public interface IOutputFileWriter
 	{
-		protected readonly double[] FanCoefficients;
+		void SaveEngine(IEngineEngineeringInputData eng, string filename, bool declMode);
 
-		protected double ScalingFactor = 1.0;
+		void SaveGearbox(IGearboxEngineeringInputData gbx, IAxleGearInputData axl, ITorqueConverterEngineeringInputData torqueConverter, IGearshiftEngineeringInputData gshift, string filename, bool declMode);
 
-		protected readonly double FanDiameter;
+		void SaveVehicle(IVehicleEngineeringInputData vehicle, IAirdragEngineeringInputData airdrag,
+			IRetarderInputData retarder,
+			IPTOTransmissionInputData pto, IAngledriveInputData angledrive, string filename, bool declMode);
 
-		public EngineFanAuxiliary(double[] fanParameters, Meter fanDiameter)
-		{
-			if (fanParameters.Length < 3) {
-				throw new ArgumentException("Three fan parameters are required!");
-			}
+		void SaveJob(IEngineeringInputDataProvider input, string filename, bool declMode);
 
-			if (fanParameters.Length > 3) {
-				ScalingFactor = fanParameters[3];
-			}
-			FanCoefficients = fanParameters;
-			FanDiameter = fanDiameter.ConvertToMilliMeter();
-		}
+		void SaveJob(IVTPEngineeringInputDataProvider input, string filename, bool declMode);
 
-		private Watt PowerDemand(PerSecond fanSpeed)
-		{
-			return ScalingFactor * (FanCoefficients[0] * Math.Pow(fanSpeed.AsRPM / FanCoefficients[1], 3) * Math.Pow(FanDiameter / FanCoefficients[2], 5) * 1000).SI<Watt>();
-        }
+		void SaveJob(IVTPDeclarationInputDataProvider input, string filename, bool declMode);
 
-        public Watt PowerDemand(DrivingCycleData.DrivingCycleEntry entry)
-        { 
-			return (entry.FanElectricalPower != null)
-				? PowerDemand(entry.FanElectricalPower)
-				: PowerDemand(entry.FanSpeed);
-        }
-
-        private Watt PowerDemand(Watt fanElectricalPower)
-		{
-			return fanElectricalPower / DeclarationData.AlternatorEfficiency;
-		}
-    }
+		void ExportJob(IEngineeringInputDataProvider input, string filename, bool separateFiles);
+	}
 }

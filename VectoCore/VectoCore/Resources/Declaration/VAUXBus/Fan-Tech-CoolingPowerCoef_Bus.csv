@@ -1,0 +1,16 @@
+Technology                                                                 ,    coefficient
+Crankshaft mounted - Electronically controlled visco clutch                ,           1.05
+Crankshaft mounted - Bimetallic controlled visco clutch                    ,           1.05
+Crankshaft mounted - Discrete step clutch                                  ,           1.05
+Crankshaft mounted - Discrete step clutch 2 stages                         ,           1.05
+Crankshaft mounted - Discrete step clutch 3 stages                         ,           1.05
+Crankshaft mounted - On/off clutch                                         ,           1.05
+Belt driven or driven via transm. - Electronically controlled visco clutch ,           1.11
+Belt driven or driven via transm. - Bimetallic controlled visco clutch     ,           1.11
+Belt driven or driven via transm. - Discrete step clutch                   ,           1.11
+Belt driven or driven via transm. - Discrete step clutch 2 stages          ,           1.11
+Belt driven or driven via transm. - Discrete step clutch 3 stages          ,           1.11
+Belt driven or driven via transm. - On/off clutch                          ,           1.11
+Hydraulic driven - Variable displacement pump                              ,           1.75
+Hydraulic driven - Constant displacement pump                              ,           2.25
+Electrically driven - Electronically controlled                            ,           1
