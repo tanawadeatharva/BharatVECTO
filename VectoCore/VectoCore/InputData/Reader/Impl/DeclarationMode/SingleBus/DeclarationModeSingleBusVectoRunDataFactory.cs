@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
@@ -722,14 +723,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
 				result.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
                     mission, SingleBusDataProvider.PrimaryVehicle, SingleBusDataProvider.CompletedVehicle, result);
 
-                result.OVCMode = ovcMode;
+				/// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
+				/// Comment from [1]:
+				///		In case the battery is modified after creating the rundata
+				///		(testing, do not create new battery data).
+				result.BatteryData = new FCHVDeclarationDataAdapter(DataProvider.DataSource).CreateFuelCellPreProcessingBattery(
+					DataAdapter.CreateFuelCells(Vehicle.Components.FuelCellSystem).ConvertToEngineeringData(),
+					result.BatteryData,
+					out var fcBatteries);
+
+				result.OVCMode = ovcMode;
                 result.ModFileSuffix += "_pre";
-                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result);
+                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result, fcBatteries);
 
                 return result;
             }
 
-            private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData)
+            private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData, Tuple<int, BatteryData> fcBatteries)
             {
                 var vehicle = SingleBusDataProvider.PrimaryVehicle;
 
@@ -739,15 +749,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus
                 iterativeRunStrategy.Update = (modData, iterationRunData) =>
                 {
                     var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
-
-                    /// Refer to [1] EngineeringModeVectoRunDataFactory.GetFCHV_RunData():
-                    /// Comment from [1]:
-                    ///		In case the battery is modified after creating the rundata
-                    ///		(testing, do not create new battery data).
-                    iterationRunData.BatteryData = fchvDataAdapter.CreateFuelCellPreProcessingBattery(
-                        fuelCellData,
-                        iterationRunData.BatteryData,
-                        out var fcBatteries);
 
                     runData.BatteryData.Batteries = runData.BatteryData.Batteries
                         .Where(b => b.Item1 != fcBatteries.Item1)
