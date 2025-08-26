@@ -16,14 +16,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (adas == null)
 				return null;
 
-			return new XElement(_v24 + XMLNames.Vehicle_ADAS,
+			return new XElement(_v27 + XMLNames.Vehicle_ADAS,
 				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_Conventional_Type"),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRoll == EcoRollType.WithEngineStop),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adas.EcoRoll == EcoRollType.WithoutEngineStop),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adas.EcoRoll == EcoRollType.WithEngineStop),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
 				adas.ATEcoRollReleaseLockupClutch.HasValue
-					? new XElement(_v24 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
+					? new XElement(_v27 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
 						adas.ATEcoRollReleaseLockupClutch.Value)
 					: null);
 		}
@@ -43,12 +43,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (adas == null)
 				return null;
 
-			return new XElement(_v24 + XMLNames.Vehicle_ADAS,
+			return new XElement(_v27 + XMLNames.Vehicle_ADAS,
 				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_HEV_Type"),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()),
 				adas.ATEcoRollReleaseLockupClutch.HasValue
-					? new XElement(_v24 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
+					? new XElement(_v27 + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch,
 						adas.ATEcoRollReleaseLockupClutch.Value)
 					: null);
 		}
@@ -67,28 +67,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (adas == null)
 				return null;
 
-			return new XElement(_v24 + XMLNames.Vehicle_ADAS,
+			return new XElement(_v27 + XMLNames.Vehicle_ADAS,
 				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_PEV_Type"),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()));
-		}
-
-		#endregion
-	}
-
-	public class VIFCompletedIEPCAdasType : AbstractVIFXmlType, IVIFFAdasType
-	{
-		public VIFCompletedIEPCAdasType(IVIFReportFactory vifFactory) : base(vifFactory) { }
-
-		#region Implementation of IXmlTypeWriter
-
-		public XElement GetXmlType(IAdvancedDriverAssistantSystemDeclarationInputData adas)
-		{
-			if (adas == null)
-				return null;
-
-			return new XElement(_v24 + XMLNames.Vehicle_ADAS,
-				new XAttribute(_xsi + XMLNames.XSIType, "ADAS_IEPC_Type"),
-				new XElement(_v24 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()));
+				new XElement(_v27 + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()));
 		}
 
 		#endregion

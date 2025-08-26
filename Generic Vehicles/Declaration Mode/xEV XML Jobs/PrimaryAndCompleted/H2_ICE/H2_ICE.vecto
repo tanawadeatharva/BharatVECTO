@@ -1,0 +1,10 @@
+{
+  "Header": {
+    "FileVersion": 10
+  },
+  "Body": {
+    "PrimaryVehicle": "H2_ICE_PrimaryBus.xml",
+    "InterimStep": "H2_ICE_CompletedBus.xml",
+    "RunSimulation": true
+  }
+}

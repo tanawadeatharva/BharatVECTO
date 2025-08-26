@@ -95,9 +95,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 
+			VehicleClass actualBusVehicleClass = _results.All(e => e.VehicleClass.IsCompletedBus()) && (_results.Count() > 0)
+				? _results.First().VehicleClass 
+				: VehicleClass.Unknown;
+			
 			// ReSharper disable once PossibleNullReferenceException
 			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
-				DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null).ToXMLFormat();
+				DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null, actualBusVehicleClass).ToXMLFormat();
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);

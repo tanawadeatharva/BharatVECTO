@@ -53,6 +53,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 	}
 
+	public class XMLDeclarationMultistageInputReaderV11 : XMLDeclarationMultistageInputReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistageInputReaderV11(IXMLMultistageInputDataProvider inputData, XmlNode baseNode)
+			: base(inputData, baseNode) 
+		{ }
+    }
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLMultistageJobReaderV01 : AbstractComponentReader, IXMLMultistageJobReader
@@ -179,9 +190,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLMultistageJobReaderV11 : XMLMultistageJobReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLMultistageEntryReaderV01 : AbstractComponentReader, IXMLMultistageReader
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLMultistageJobReaderV11(IXMLDeclarationMultistageJobInputData inputData, XmlNode baseNode)
+			: base(inputData, baseNode)
+		{ }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLMultistageEntryReaderV01 : AbstractComponentReader, IXMLMultistageReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -235,8 +257,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 	}
 
-	// ---------------------------------------------------------------------------------------
+	public class XMLMultistageEntryReaderV11 : XMLMultistageEntryReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLMultistageEntryReaderV11(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node) : base(multistageData, node)
+		{ }
+    }
+
+	// ---------------------------------------------------------------------------------------
 
 	public class XMLMultistagePrimaryVehicleReaderV01 : AbstractComponentReader, IXMLDeclarationPrimaryVehicleBusInputDataReader
 	{
@@ -297,6 +328,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			_applicationInformation ??
 			(_applicationInformation = CreateComponent(XMLNames.Tag_ApplicationInformation, ApplicationCreator));
 	}
+
+	public class XMLMultistagePrimaryVehicleReaderV11 : XMLMultistagePrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLMultistagePrimaryVehicleReaderV11(IXMLPrimaryVehicleBusInputData inputData, XmlNode baseNode) : base(inputData, baseNode)
+		{ }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -638,9 +679,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
         public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
 
-		public Kilogram H2StorageUsableCapacity => _primaryVehicle.Vehicle.H2StorageUsableCapacity;
+		public Kilogram H2StorageUsableCapacity => GetVehiclePropertyValue<Kilogram>(nameof(H2StorageUsableCapacity)); 
 
-		public HydrogenStorageTechnology? HydrogenStorageTechnology => _primaryVehicle.Vehicle.HydrogenStorageTechnology;
+		public HydrogenStorageTechnology? HydrogenStorageTechnology => GetVehiclePropertyValue<HydrogenStorageTechnology?>(nameof(HydrogenStorageTechnology)); 
 
         public bool BatteryOnlyMode => _primaryVehicle.Vehicle.BatteryOnlyMode;
 
@@ -1147,7 +1188,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			get => _manufacturingStages.Select(s => s.Vehicle.Components.BusAuxiliaries.DataSource).FirstOrDefault();
 		}
-		public XmlNode XMLSource => _xmlNode ?? (_xmlNode = GetBusAuxXMLSource());
 
 		public string FanTechnology => null;
 
@@ -1235,23 +1275,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return _invalidEntries.Concat(_consolidateElectricConsumerData?.GetInvalidEntries(jobType) 
 					?? new List<string>() { XMLNames.BusAux_ElectricSystem })
 				.Concat(_consolidatedHVACBusAuxiliariesData?.GetInvalidEntries(jobType) ?? new List<string>()).ToList();
-		}
-
-
-		private XmlNode GetBusAuxXMLSource()
-		{
-			var multistageBusReport = new XMLMultistageBusReport();
-			var auxElement = multistageBusReport.GetBusAuxiliaries(this);
-			
-			if (auxElement == null)
-				return null;
-			
-			using (var xmlReader = auxElement.CreateReader())
-			{
-				var xmlDoc = new XmlDocument();
-				xmlDoc.Load(xmlReader);
-				return xmlDoc.FirstChild;
-			}
 		}
 
 	}
@@ -1384,6 +1407,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 				case VectoSimulationJobType.IHPC:
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
+				case VectoSimulationJobType.Multiple_FCHV:
+				case VectoSimulationJobType.Multiple_PEV:
+				case VectoSimulationJobType.Multiple_SHEV:
 					return WaterElectricHeater != null && AirElectricHeater != null && OtherHeatingTechnology != null;
 				default:
 					return false;

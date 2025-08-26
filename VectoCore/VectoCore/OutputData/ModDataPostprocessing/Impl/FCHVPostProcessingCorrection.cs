@@ -10,7 +10,6 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
@@ -21,7 +20,6 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		#region Implementation of IModalDataPostProcessor
 
 		public Joule FCHVElectricEnergyConsumptionSoC { get; set; } = null;
-
 		public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
 		{
 			if (modData.Duration.IsEqual(0))

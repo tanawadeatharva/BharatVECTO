@@ -21,7 +21,7 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
     internal class MockupEngineeringSimulatorFactory : SimulatorFactoryEngineering
 	{
 		public MockupEngineeringSimulatorFactory(IInputDataProvider dataProvider, IOutputDataWriter writer,
-			bool validate) : base(dataProvider, writer, validate, null, null)
+			bool validate, IVectoRunDataFactoryFactory runDataFactoryFactory) : base(dataProvider, writer, validate, runDataFactoryFactory, null, null)
 		{
 			throw new VectoException("Engineering mode is not supported in Mockup Vecto");
 		}
@@ -86,8 +86,12 @@ namespace TUGraz.VectoMockup.Simulation.SimulatorFactory
 		protected override IVectoRun GetNonExemptedRun(VectoRunData data, int current, ref bool warning1Hz, ref bool firstRun)
 		{
 			var addReportResult = PrepareReport(data);
-			return new MockupRun(VehicleContainer.CreateVehicleContainer(data,
-					new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null), addReportResult), null));
+			var container = PowertrainBuilder.Build(// VehicleContainer.CreateVehicleContainer(
+				data,
+				new MockupModalDataContainer(ModDataFactory.CreateModDataContainer(data, ReportWriter, null, null),
+					addReportResult), null);
+
+            return new MockupRun(container);
 			
 		}
 		protected new static Action<IModalDataContainer> PrepareReport(VectoRunData data)

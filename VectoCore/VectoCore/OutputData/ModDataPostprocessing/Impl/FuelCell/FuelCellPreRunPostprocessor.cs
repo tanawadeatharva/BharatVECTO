@@ -19,7 +19,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -131,7 +130,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		private ElectricSystem GetElectricSystem(IElectricEnergyStorage batSystem, BatterySystemData batData)
 		{
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 			return es;
@@ -535,7 +534,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             batSystem.Initialize(SoC);
             var dummyContainer = new SimpleModDataContainer();
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 

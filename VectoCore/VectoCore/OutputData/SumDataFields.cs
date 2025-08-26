@@ -17,13 +17,14 @@ using static TUGraz.VectoCore.OutputData.SumDataFields;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	[SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "IdentifierTypo")]
 	public static class SumDataFields
 	{
 		public const string INTERNAL_PREFIX = "INTERNAL";
 
 		public const string SORT = INTERNAL_PREFIX + " Sorting";
+		public const string JOB_SPECS = "Job Specs";
 		public const string JOB = "Job [-]";
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
@@ -386,6 +387,14 @@ namespace TUGraz.VectoCore.OutputData
 			return jobNbr * 1000000 + runNbr * 1000 + iteration;
 		}
 
+		public static string GetSumDataJobSpecs(VectoRunData r)
+		{
+			var iteration = r.Iteration > 0 ? "1" : "0";
+
+			/// [0]: RunNumber, [1]: VehicleType, [2]: Powertrain, [3]: Iteration
+			return $"{r.JobNumber}-{r.VehicleData.VehicleCategory.GetVehicleType()}-{r.JobType.GetPowertrainArchitectureType()}-{iteration}";
+		}
+
 		public static string GetSumDataJobID(int jobNbr, int runNbr, int iterationCnt)
 		{
 			var iteration = "";
@@ -404,6 +413,7 @@ namespace TUGraz.VectoCore.OutputData
 			new Dictionary<string, Tuple<ModalResultField[], WriteSumEntry>>() {
 				// common fields
 				{ SORT, SumFunc((r, m) => GetSumDataSortingValue(r.JobNumber, r.RunNumber, r.Iteration))},
+				{ JOB_SPECS, SumFunc((r, m) => GetSumDataJobSpecs(r))},
 				{
 					JOB,
 					SumFunc((r, m) => GetSumDataJobID(r.JobNumber, r.RunNumber, r.Iteration))
@@ -812,7 +822,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_PS_CompressorOn, SumFunc((r, m) => m.EnergyPneumaticCompressorOn().ConvertToKiloWattHour(), ModalResultField.Nl_busAux_PS_generated)},
 			{ E_BusAux_ES_generated, SumFunc((r, m) => m.EnergyBusAuxESGenerated().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_generated)},
 			{ E_BusAux_ES_consumed, SumFunc((r, m) => m.EnergyBusAuxESConsumed().ConvertToKiloWattHour(), ModalResultField.P_busAux_ES_consumer_sum)},
-			{ Delta_E_BusAux_Battery, SumFunc((r, m) => ((r.BusAuxiliaries != null && r.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart)
+			{ Delta_E_BusAux_Battery, SumFunc((r, m) => (r.BusAuxiliaries?.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 					? m.DeltaSOCBusAuxBattery() * r.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
 					: 0.SI<WattSecond>())
 				.ConvertToKiloWattHour()) },
@@ -1225,7 +1235,7 @@ namespace TUGraz.VectoCore.OutputData
 			{ E_IEPC_OFF_Loss_Format, (r, m, em) => m.ElectricMotorOffLosses(em).ConvertToKiloWattHour() },
 			{ E_IEPC_LOSS_FORMAT, (r, m, em) => m.ElectricMotorLosses(em).ConvertToKiloWattHour() },
 			{ E_IEPC_OFF_TIME_SHARE, (r, m, em) => (ConvertedSI)m.ElectricMotorOffTimeShare(em) },
-			{ EM_RATED_POWER, (r, m, em) => r.VehicleData.InputData.Components.IEPC?.TotalRatedPowerCalculated.ConvertToKiloWatt() ?? 0.SI<Watt>().ConvertToKiloWatt() },
+			{ EM_RATED_POWER, (r, m, em) => r.VehicleData.InputData.Components?.IEPC?.TotalRatedPowerCalculated.ConvertToKiloWatt() ?? 0.SI<Watt>().ConvertToKiloWatt() },
 			{ EM_RATED_SPEED_HI, (r, m, em) => r.VehicleData.InputData.Components?.IEPC?.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
 			{ EM_RATED_SPEED_LO, (r, m, em) => r.VehicleData.InputData.Components?.IEPC?.VoltageLevels.MinBy(v  => v.VoltageLevel)?.ContinuousTorqueSpeed.AsRPM ?? 0 },
 			{ EM_RATED_TORQUE_HI, (r, m, em) => (ConvertedSI)(r.VehicleData.InputData.Components.IEPC?.VoltageLevels.MaxBy(v  => v.VoltageLevel)?.ContinuousTorque ?? 0.SI<NewtonMeter>()) },

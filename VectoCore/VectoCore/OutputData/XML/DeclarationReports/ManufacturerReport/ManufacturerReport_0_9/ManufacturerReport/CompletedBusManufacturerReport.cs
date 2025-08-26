@@ -45,22 +45,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Implementation of IXMLManufacturerReportCompletedBus
 
-		private double CalculateFactor<T>(
-			(XMLDeclarationReport.ResultEntry genericResult,
-				XMLDeclarationReport.ResultEntry specificResult) results,
-			Func<XMLDeclarationReport.ResultEntry, T> access)
-		{
-			dynamic spec = access(results.specificResult);
-			dynamic gen = access(results.genericResult);
-			dynamic factor = spec / gen;
-			if (factor is Scalar sc) {
-				return sc.Value();
-			}
-			return (double)factor;
-		}
-
-
-
 
 		public virtual void WriteResult(IResultEntry genericResult,
 			IResultEntry specificResult, IResult primaryResult,Func<IResultEntry, IResultEntry, IResult, IResultEntry> getCompletedResult)
@@ -235,7 +219,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	internal class FCHV_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	{
+        public FCHV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : 
+			base(MRFReportFactory, resultFactory) 
+		{ }
+
+        public override string OutputDataType => "FCHVCompletedBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetFCHV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
 		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 

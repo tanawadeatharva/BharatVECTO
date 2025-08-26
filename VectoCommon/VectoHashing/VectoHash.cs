@@ -56,7 +56,7 @@ namespace TUGraz.VectoHashing
 				reader = new XmlTextReader(filename);
 				doc.Load(reader);
 			} catch (Exception e) {
-				throw new Exception("failed to read XML document", e);
+				throw new Exception($"Failed to read XML document. {e.Message}", e);
 			} finally {
 				if (reader != null) {
 					reader.Close();
@@ -71,7 +71,7 @@ namespace TUGraz.VectoHashing
 			try {
 				doc.Load(new XmlTextReader(stream));
 			} catch (Exception e) {
-				throw new Exception("failed to read XML document", e);
+				throw new Exception($"Failed to read XML document. {e.Message}", e);
 			}
 			return new VectoHash(doc);
 		}
@@ -125,10 +125,47 @@ namespace TUGraz.VectoHashing
                 var nodes = Document.SelectNodes(select);
 				var count = nodes?.Count ?? 0;
 				for (var i = 0; i < count; i++) {
-					retVal.Add(component);
+					if (CanBeEvaluated(component))
+					{ 
+						retVal.Add(component);
+					}
 				}
 			}
 			return retVal;
+		}
+
+		private bool CanBeEvaluated(VectoComponents component)
+		{
+			switch (component)
+			{
+				case VectoComponents.Angledrive:
+					var angleDriveType = Document.SelectSingleNode("//*[local-name() = 'AngledriveType']")?.InnerText;
+					return !string.IsNullOrEmpty(angleDriveType) && angleDriveType != "None";
+				case VectoComponents.TorqueConverter:
+				case VectoComponents.Engine:
+				case VectoComponents.Gearbox:
+				case VectoComponents.Axlegear:
+				case VectoComponents.Retarder:
+				case VectoComponents.Airdrag:
+				case VectoComponents.Tyre:
+				case VectoComponents.Vehicle:
+				case VectoComponents.VectoManufacturerReport:
+				case VectoComponents.VectoCustomerInformation:
+				case VectoComponents.VectoPrimaryVehicleInformation:
+				case VectoComponents.VectoInterimVehicleInformation:
+				case VectoComponents.VectoManufacturingStep:
+				case VectoComponents.BatterySystem:
+				case VectoComponents.CapacitorSystem:
+				case VectoComponents.ElectricMachineSystem:
+				case VectoComponents.IEPC:
+				case VectoComponents.ADC:
+				case VectoComponents.FuelCell:
+				case VectoComponents.CertifiedAeroReduction:
+				case VectoComponents.ElectricEnergyStorage:
+					return true;
+				default:
+					throw new ArgumentException($"Defined component is not supported: {component}");
+			}
 		}
 
 		public XElement ComputeXmlHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
@@ -467,7 +504,9 @@ namespace TUGraz.VectoHashing
 					return $"//*[local-name()='{component.Value.XMLElementName()}']";
 				case VectoComponents.ElectricEnergyStorage:
 					return $"//*[local-name()='{component.Value.XMLElementName()}' or local-name()='Capacitor']//*[local-name()='Data']";
-				default:
+				case VectoComponents.FuelCell:
+                    return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data'] | //*[local-name()='{component.Value.XMLElementName()}']";
+                default:
 					return $"//*[local-name()='{component.Value.XMLElementName()}']/*[local-name()='Data']";
 			}
 		}

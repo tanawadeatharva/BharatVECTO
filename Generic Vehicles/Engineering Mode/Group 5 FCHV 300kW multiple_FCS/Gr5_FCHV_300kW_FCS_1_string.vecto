@@ -7,7 +7,7 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Gr5_FCHV_300kW_FCS.vveh",
+    "VehicleFile": "Gr5_FCHV_300kW_FCS_1_string.vveh",
     "GearboxFile": "APT-N.vgbx",
     "TCU": "APT-N.vgbx",
     "Padd_electric": 2.5,

@@ -7,8 +7,9 @@
   },
   "Body": {
     "SavedInDeclMode": true,
-    "DeclarationVehicle": "vehicle_sampleSingleModeDualFuel.xml",
-    "ManufacturerRecord": "vehicle_sampleSingleModeDualFuel.MANUFACTURER.xml",
+    "DeclarationVehicle": "vehicle_sampleSingleModeDualFuel_2p4.xml",
+    "ManufacturerRecord": "vehicle_sampleSingleModeDualFuel_2p4.RSLT_MANUFACTURER.xml",
+    "CustomerInformationFile": "vehicle_sampleSingleModeDualFuel_2p4.RSLT_CUSTOMER.xml",
     "Mileage": 30000.0,
     "FanPowerCoefficients": [
       0.0,

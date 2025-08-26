@@ -77,71 +77,95 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 					}
 				}));
 
-			// OVC mode is only relevant for HydrogenRangeWriter for vehicles with hydrogen fuel and OVC
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ConventionalVehicle, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.BatteryElectricVehicle, NonOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_E, NonOVC, NoH2Fuel));
-
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterICE>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ConventionalVehicle, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, NonOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, WithH2Fuel));
-            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
-                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, NonOVC, WithH2Fuel));
-            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, WithH2Fuel));
-            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
-                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, WithH2Fuel));
-
+            // OVC mode is only relevant for HydrogenRangeWriter for vehicles with hydrogen fuel and OVC
+            
+            // NonOVC, NoH2Fuel
             Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.BatteryElectricVehicle, WithOVC, NoH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_E, WithOVC, NoH2Fuel));
-
-            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, WithOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, WithOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, WithOVC, WithH2Fuel));
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, WithOVC, WithH2Fuel));
-
-			Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, NoH2Fuel));
-            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
-                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, NoH2Fuel));
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ConventionalVehicle, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.BatteryElectricVehicle, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_E, NonOVC, NoH2Fuel));
             Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
-				.Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, NoH2Fuel));
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, NoH2Fuel));
             Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
                 .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_PEV, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_SHEV, NonOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_FCHV, NonOVC, NoH2Fuel));
+
+            //NonOVC, WithH2Fuel
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterICE>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ConventionalVehicle, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_SHEV, NonOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_FCHV, NonOVC, WithH2Fuel));
+
+            //WithOVC, NoH2Fuel
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.BatteryElectricVehicle, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_E, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_PEV, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<NullHydrogenRangeWriter>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_SHEV, WithOVC, NoH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_FCHV, WithOVC, NoH2Fuel));
+
+            //WithOVC, WithH2Fuel
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.SerialHybridVehicle, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IEPC_S, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.ParallelHybridVehicle, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.IHPC, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.FCHV_IEPC, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterHEV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_SHEV, WithOVC, WithH2Fuel));
+            Bind<IHydrogenRangeWriter>().To<HydrogenRangeWriterFCHV_OVC>()
+                .Named(_hydrogenRangeHelper.GetName(VectoSimulationJobType.Multiple_FCHV, WithOVC, WithH2Fuel));
 
         }
 

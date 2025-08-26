@@ -134,7 +134,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				vehicleData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 					VectoSimulationJobType.IEPC_E,
 					VectoSimulationJobType.SerialHybridVehicle,
-					VectoSimulationJobType.IEPC_S);
+					VectoSimulationJobType.IEPC_S,
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.FCHV_IEPC,
+					VectoSimulationJobType.Multiple_FCHV,
+					VectoSimulationJobType.Multiple_PEV,
+					VectoSimulationJobType.Multiple_SHEV);
 
 			PerSecond maxMotorSpeed = isBatteryElectric
 				? vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed

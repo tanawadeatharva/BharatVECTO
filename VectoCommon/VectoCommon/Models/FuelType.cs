@@ -95,5 +95,10 @@ namespace TUGraz.VectoCommon.Models
 		{
 			return ftype.IsOneOf(FuelType.H2CI, FuelType.H2PI, FuelType.H2FC);
 		}
+
+		public static bool IsNaturalGas(this FuelType fuelType)
+		{
+			return fuelType.IsOneOf(FuelType.NGPI, FuelType.NGCI);
+		}
 	}
 }

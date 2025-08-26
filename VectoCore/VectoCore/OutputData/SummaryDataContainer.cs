@@ -52,9 +52,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	//public delegate void WriteSumData(IModalDataContainer data);
+    //public delegate void WriteSumData(IModalDataContainer data);
 
-	public interface ISumData
+    public interface ISumData
 	{
 		void Write(IModalDataContainer modData, VectoRunData runData);
 		void RegisterComponent(VectoSimulationComponent component, VectoRunData runData);
@@ -131,6 +131,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
+			Tuple.Create(SumDataFields.JOB_SPECS, typeof(string)),
 			Tuple.Create(SumDataFields.JOB, typeof(string)),
 			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
 			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
@@ -464,10 +465,10 @@ namespace TUGraz.VectoCore.OutputData
 					UpdateTableColumns(runData.EngineData);
 					CreateColumns(CO2Columns);
 					break;
-				case BusAuxiliariesAdapter _:
+				case IBusAuxiliariesAdapter _:
 					CreateColumns(BusAuxiliariesSignals);
 					break;
-				case EngineAuxiliary _:
+				case IEngineAuxiliary _:
 					break;
 				case IClutch _:
 					CreateColumns(ClutchColumns);
@@ -485,7 +486,7 @@ namespace TUGraz.VectoCore.OutputData
 					CreateGearTimeShareColumns(runData.GearboxData.GearList);
 					CreateGearRatioColumns(runData);
 					break;
-				case VTPCycle _:
+				case IVTPCycle _:
 					CreateColumns(VTPCycleColumns);
 					break;
 				case ITorqueConverter _:
@@ -896,7 +897,8 @@ namespace TUGraz.VectoCore.OutputData
 					return;
 				}
 
-				var bestCSResult = Table.AsEnumerable().GroupBy(r => Tuple.Create(
+				var bestCSResult = Table.AsEnumerable()
+					.GroupBy(r => Tuple.Create(
 						r.Field<string>(SumDataFields.JOB).Split('-').First(),
 						r.Field<string>(SumDataFields.CYCLE),
 						r.Field<ConvertedSI>(SumDataFields.LOADING),
@@ -915,6 +917,7 @@ namespace TUGraz.VectoCore.OutputData
 
 						return myRows[bestResult];
 					}).ToList();
+				
 				// copy row with best results (for OVC-CS) at the end of sum data
 				foreach (var row in bestCSResult) {
 					if (row == null || row.Field<string>(SumDataFields.OVCHEVMode) != OvcHevMode.ChargeSustaining.ToString()) {
@@ -933,8 +936,27 @@ namespace TUGraz.VectoCore.OutputData
 						SumDataFields.GetSumDataJobID(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
 					newRow[SumDataFields.SORT] =
 						SumDataFields.GetSumDataSortingValue(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
+
+					var isFCHVJob = row.Field<string>(SumDataFields.JOB_SPECS).Split('-')[2] == "FuelCell";
+					if (isFCHVJob)
+					{
+						newRow[SumDataFields.REESS_CAPACITY] = GetBatteryCapacity(row, Table);
+					}
 				}
 			}
+		}
+
+		private string GetBatteryCapacity(DataRow csRow, DataTable fullTable)
+		{
+			string fchvRunIteration = "1";
+			var jobSpecs = csRow.Field<string>(SumDataFields.JOB_SPECS).Split('-').ToList();
+			var fchvJobSpecs = string.Join("-", jobSpecs.Take(jobSpecs.Count() - 1).Append(fchvRunIteration));
+
+			return fullTable
+				.AsEnumerable()
+				.Where(r => r.Field<string>(SumDataFields.JOB_SPECS) == fchvJobSpecs)
+				.Select(r => r.Field<string>(SumDataFields.REESS_CAPACITY))
+				.First();
 		}
 
 		protected internal void UpdateTableColumns(CombustionEngineData engineData)
@@ -959,13 +981,10 @@ namespace TUGraz.VectoCore.OutputData
 			
 		}
 
-
 		protected Dictionary<string, object> GetResultDictionary(IModalDataContainer modData, VectoRunData runData)
 		{
-
 			return new Dictionary<string, object>();
 		}
-
 
 		private void AddResultDictionary(Dictionary<string, object> row)
 		{
@@ -1060,7 +1079,6 @@ namespace TUGraz.VectoCore.OutputData
 					? SumDataFields.E_FORMAT
 					: SumDataFields.E_AUX_FORMAT, auxKey);
 		}
-
 
 		private static string FcCol(string col, string suffix)
 		{

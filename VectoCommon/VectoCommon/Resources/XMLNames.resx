@@ -2277,19 +2277,22 @@
   <data name="Vehicle_H2StorageUsableCapacity" xml:space="preserve">
     <value>H2StorageUsableCapacity</value>
   </data>
-<data name="Report_ResultEntry_Ranges" xml:space="preserve">
-	<value>Ranges</value>
-</data>
-<data name="Report_ResultEntry_Ranges_Lifetime_Attr" xml:space="preserve">
-	<value>lifetime</value>
-</data>
-<data name="Report_ResultEntry_Ranges_Lifetime_BOL_Val" xml:space="preserve">
-	<value>begin of life</value>
-</data>
-<data name="Report_ResultEntry_Ranges_Lifetime_EOL_Val" xml:space="preserve">
-	<value>end of life</value>
-</data>
-<data name="Report_ResultEntry_HydrogenRange" xml:space="preserve">
-	<value>HydrogenRange</value>
-</data>
+  <data name="Report_ResultEntry_Ranges" xml:space="preserve">
+    <value>Ranges</value>
+  </data>
+  <data name="Report_ResultEntry_Ranges_Lifetime_Attr" xml:space="preserve">
+    <value>lifetime</value>
+  </data>
+  <data name="Report_ResultEntry_Ranges_Lifetime_BOL_Val" xml:space="preserve">
+    <value>begin of life</value>
+  </data>
+  <data name="Report_ResultEntry_Ranges_Lifetime_EOL_Val" xml:space="preserve">
+    <value>end of life</value>
+  </data>
+  <data name="Report_ResultEntry_HydrogenRange" xml:space="preserve">
+    <value>HydrogenRange</value>
+  </data>
+  <data name="Vehicle_TechnicalPermissibleMaximumLadenMass" xml:space="preserve">
+    <value>TechnicalPermissibleMaximumLadenMass</value>
+  </data>
 </root>

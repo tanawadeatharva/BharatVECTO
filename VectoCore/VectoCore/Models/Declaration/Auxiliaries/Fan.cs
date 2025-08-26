@@ -172,7 +172,6 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 
 	}
 
-
 	public sealed class FanMediumLorriesVehicleArchitecture : AbstractAuxiliaryVehicleArchitectureLookup
 	{
 		#region Overrides of LookupData
@@ -191,6 +190,32 @@ namespace TUGraz.VectoCore.Models.Declaration.Auxiliaries
 
 
 		#endregion
+	}
+
+	public sealed class FanBusCoolingCoefficient : LookupData<string, double>
+	{
+		protected override string ResourceId => DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.Fan-Tech-CoolingPowerCoef_Bus.csv";
+
+		protected override string ErrorMessage => throw new NotImplementedException();
+
+		protected override void ParseData(DataTable table)
+		{
+			foreach (DataRow row in table.Rows)
+			{
+				var name = row["technology"].ToString();
+				foreach (DataColumn col in table.Columns.Cast<DataColumn>().Skip(1).Take(1))
+				{
+					Data[name] = row.ParseDouble(col.Caption);
+				}
+			}
+		}
+
+		public double GetTechnologyCoefficient(string technology)
+		{
+			Data.TryGetValue(technology, out var coefficient);
+			
+			return coefficient;
+		}
 	}
 
 }

@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 	public class XMLMultistageBusReport: IXMLMultistepIntermediateReport 
 	{
-		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace tns = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 

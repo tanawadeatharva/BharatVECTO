@@ -31,7 +31,6 @@
 
 using System;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -74,6 +73,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return fanElectricalPower / DeclarationData.AlternatorEfficiency;
 		}
-
     }
 }

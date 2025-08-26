@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -167,8 +168,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public LorryHEVOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IResultGroupWriter
+        #region Implementation of IResultGroupWriter
 
+		[ExcludeFromCodeCoverage()] // OVC writing class is never used for writing non-OVC
 		public override XElement GetElement(IResultEntry entry)
 		{
 			throw new NotImplementedException();
@@ -351,8 +353,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
 		public BusHEVOVCMRFResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-		#region Implementation of IResultGroupWriter
+        #region Implementation of IResultGroupWriter
 
+		[ExcludeFromCodeCoverage()] // OVC writing class is never used for writing non-OVC
 		public override XElement GetElement(IResultEntry entry)
 		{
 			throw new NotImplementedException();
@@ -432,36 +435,42 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 		#endregion
 	}
 
-    public class BusFCHVNonOVCResultWriter : ResultWriterBase
+    public class BusFCHVNonOVC_MRF_ResultWriter : ResultWriterBase
     {
+        public BusFCHVNonOVC_MRF_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
-        public BusFCHVNonOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
-
-        public override XElement GetElement(IResultEntry entry)
+		public override XElement GetElement(IResultEntry entry)
         {
             return new XElement(TNS + XMLNames.Report_Result_Result,
                 new XAttribute(XMLNames.Report_Result_Status_Attr, XMLNames.Report_Results_Status_Success_Val),
                 new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
                 _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry),
-                SimulationParameterWriter.GetElement(entry),
+				SimulationParameterWriter.GetElement(entry),
                 GetPrimaryBusSubGroupElement(entry),
                 _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry)
-            //ResultTotalWriter.GetElement(entry)
             );
         }
 
-        public override IResultGroupWriter SimulationParameterWriter => _factory.GetLorrySimulationParameterWriter(_factory, TNS);
-        public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryFCHVNonOVCTotalWriter(_factory, TNS);
+        public override IResultGroupWriter SimulationParameterWriter => _factory.GetBusSimulationParameterWriter(_factory, TNS);
+        
+		public override IResultGroupWriter ResultTotalWriter => _factory.GetLorryFCHVNonOVCTotalWriter(_factory, TNS);
 
         public override string ResultXMLType => "ResultSuccessFCHVType";
+	}
+
+	public class BusFCHVNonOVC_CIF_ResultWriter : BusFCHVNonOVC_MRF_ResultWriter
+	{
+        public BusFCHVNonOVC_CIF_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+        {
+            return null;
+        }
     }
 
-    public class BusFCHVOVCResultWriter : ResultWriterBase
+	public class BusFCHVOVC_MRF_ResultWriter : ResultWriterBase
     {
-
-        public BusFCHVOVCResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
-
-        #region Implementation of IResultGroupWriter
+        public BusFCHVOVC_MRF_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
 
         public override XElement GetElement(IResultEntry entry)
         {
@@ -475,19 +484,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 new XAttribute(xsi + XMLNames.XSIType, ResultXMLType),
                 _factory.GetSuccessMissionWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
                 _factory.GetBusSimulationParameterWriter(_factory, TNS).GetElement(entry.ChargeDepletingResult),
+                GetPrimaryBusSubGroupElement(entry.ChargeDepletingResult),
                 _factory.GetBusFCHVOVCResultWriterChargeDepleting(_factory, TNS).GetElement(entry.ChargeDepletingResult),
                 _factory.GetBusFCHVOVCResultWriterChargeSustaining(_factory, TNS).GetElement(entry.ChargeSustainingResult)
             );
         }
 
-        #endregion
-
         public override IResultGroupWriter SimulationParameterWriter { get; }
-        public override IResultGroupWriter ResultTotalWriter { get; }
+        
+		public override IResultGroupWriter ResultTotalWriter { get; }
 
         public override string ResultXMLType => "ResultSuccessFCHVType";
-    }
+	}
 
+	public class BusFCHVOVC_CIF_ResultWriter : BusFCHVOVC_MRF_ResultWriter
+	{
+        public BusFCHVOVC_CIF_ResultWriter(ICommonResultsWriterFactory factory, XNamespace ns) : base(factory, ns) { }
+
+        protected override XElement GetPrimaryBusSubGroupElement(IResultEntry entry)
+        {
+            return null;
+        }
+    }
 
 	public class BusFCHVOVCChargeDepletingWriter : AbstractResultGroupWriter
 	{

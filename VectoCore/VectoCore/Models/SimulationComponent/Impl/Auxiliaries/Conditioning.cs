@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 
 		public Watt GetPEV_SHEV_PowerDemand(IDataBus dataBus)
 		{
-			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOff);
+			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOffPrev);
 			if (oneEmOn || EPTOOn(dataBus)) {
 				return _electricPowerDemand;
 			} else {
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 		public Watt Get_FCHV_PowerDemand(IDataBus dataBus)
 		{
 			var powerDemand = 0.SI<Watt>();
-			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOff);
+			var oneEmOn = dataBus.GetElectricMotors().Any(elInfo => !elInfo.EmOffPrev);
 			if (oneEmOn || EPTOOn(dataBus))
 			{
 				powerDemand += _EMConditioning;
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries
 			double xFactor = 0;
 
 			var elInfo = dataBus.GetElectricMotors().Single();
-			if (!elInfo.EmOff)
+			if (!elInfo.EmOffPrev)
 			{
 				var iceInfo = dataBus.EngineInfo;
 				var emPower = elInfo.ElectricMotorSpeed * elInfo.ElectricMotorTorque;

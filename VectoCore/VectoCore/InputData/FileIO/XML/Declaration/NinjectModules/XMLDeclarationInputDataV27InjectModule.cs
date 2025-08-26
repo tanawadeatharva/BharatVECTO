@@ -140,15 +140,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_FCHV_CompletedBus_DataProviderV27>()
                 .Named(XMLDeclaration_FCHV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
-            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27>()
-                .Named(XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27.QUALIFIED_XSD_TYPE);
-
             // ComponentDataProvider - Lorry
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Conventional_Lorry_ComponentDataProviderV27>()
                 .Named(XMLDeclaration_Conventional_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
@@ -392,6 +383,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLAuxiliaryReader>().To<XMLLorryComponentReaderV27>().Named(XMLLorryComponentReaderV27.AUXILIARIES_SHEV_QUALIFIED_XSD_TYPE);
             Bind<IXMLAuxiliaryReader>().To<XMLLorryComponentReaderV27>().Named(XMLLorryComponentReaderV27.AUXILIARIES_PEV_QUALIFIED_XSD_TYPE);
             Bind<IXMLAuxiliaryReader>().To<XMLLorryComponentReaderV27>().Named(XMLLorryComponentReaderV27.AUXILIARIES_FCHV_QUALIFIED_XSD_TYPE);
+
+            // Air Drag
+            Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV27>().Named(
+                XMLDeclarationAirdragDataProviderV27.QUALIFIED_XSD_TYPE);
 
             // Fuel Cell
             Bind<IXMLFuelCellDeclarationInputData>().To<XMLFuelCellDeclarationInputDataProviderV27>().Named(XMLFuelCellDeclarationInputDataProviderV27.QUALIFIED_XSD_TYPE);

@@ -1,6 +1,7 @@
 ﻿using System;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;

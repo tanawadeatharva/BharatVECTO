@@ -110,22 +110,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
             return retVal;
         }
 
-
 		protected virtual List<IOVCResultEntry> GetOrderedResultsOVCFCHV(List<IResultEntry> results)
 		{
-			if (!results.All(r => r.OVCMode == OvcHevMode.ChargeSustaining))
+			if (!results.All(r => r.OVCMode == OvcHevMode.ChargeSustaining || r.OVCMode == OvcHevMode.ChargeDepleting))
 			{
-				throw new VectoException("All simulation runs for OVC-FCHV vehicles must be Charge Sustaining!");
+				throw new VectoException("All simulation runs for OVC-FCHV vehicles must be Charge Sustaining or Charge Depleting!");
 			}
 
-			return results.Where(x => x.OVCMode == OvcHevMode.ChargeSustaining)
+			var cdResults = results.Where(x => x.OVCIteration == 0);
+			var csResults = results.Where(x => x.OVCMode == OvcHevMode.ChargeSustaining && x.OVCIteration == 1);
+
+			return csResults.Where(x => x.OVCMode == OvcHevMode.ChargeSustaining)
 				.OrderBy(x => x.VehicleClass)
 				.ThenBy(x => x.FuelMode)
 				.ThenBy(x => x.Mission)
 				.ThenBy(x => x.LoadingType)
 				.Select(cs =>
 				{
-					var cd = cs.Clone(OvcHevMode.ChargeDepleting);
+					var cd = cdResults
+						.FirstOrDefault(r =>
+							r.VehicleClass == cs.VehicleClass &&
+							r.FuelMode == cs.FuelMode &&
+							r.Mission == cs.Mission &&
+							r.LoadingType == cs.LoadingType)
+						?.SetFuelCellCDProperties(cs);
+
 					return new OvcResultEntry()
 					{
 						ChargeDepletingResult = cd,
