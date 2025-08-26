@@ -545,7 +545,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 			private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData, Tuple<int, BatteryData> fcBatteries)
 			{
-				var iterativeRunStrategy = SetUpFCHEVIterativeRunStrategy();
+				var iterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFCHEVIterativeRunStrategy();
 
 				iterativeRunStrategy.Update = (modData, iterationRunData) =>
 				{
@@ -577,30 +577,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				};
 
 				return iterativeRunStrategy;
-			}
-
-			private FCHEVIterativeRunStrategy SetUpFCHEVIterativeRunStrategy()
-			{
-				return new FCHEVIterativeRunStrategy(
-						new[]
-						{
-							// Pre-run, iteration 0.
-							new PreRunOptions()
-							{
-								WriteModAndSumData = true,
-//#if TRACE_FC
-//								WriteModAndSumData = true,
-//#else
-//								WriteModAndSumData = false
-//#endif
-							},
-
-							// Real run, iteration 1.
-							new PreRunOptions()
-							{
-								WriteModAndSumData = true
-							}
-						});
 			}
 
 			protected override bool AxleGearRequired()
