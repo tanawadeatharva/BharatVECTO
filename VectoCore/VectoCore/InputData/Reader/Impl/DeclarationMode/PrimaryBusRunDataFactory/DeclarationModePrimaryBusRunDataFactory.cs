@@ -604,43 +604,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 
 				runData.OVCMode = ovcMode;
 				runData.ModFileSuffix += "_pre";
-				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData, fcBatteries);
+				runData.IterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFuelCellIterativeRunStrategy(
+					runData,
+					DataAdapter,
+					DataProvider,
+					FuelCellJobType,
+					fcBatteries);
 				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 
 				return runData;
 
-			}
-
-			private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData, Tuple<int, BatteryData> fcBatteries)
-			{
-				var iterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFCHEVIterativeRunStrategy();
-
-				iterativeRunStrategy.Update = (modData, iterationRunData) =>
-				{
-					var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
-					var fuelCellData = DataAdapter.CreateFuelCells(Vehicle.Components.FuelCellSystem).ConvertToEngineeringData();
-
-					runData.BatteryData.Batteries = runData.BatteryData.Batteries
-						.Where(b => b.Item1 != fcBatteries.Item1)
-						.ToList();
-
-					iterationRunData.JobType = FuelCellJobType;
-					iterationRunData.ModFileSuffix = string.Empty;
-					iterationRunData.FuelCellSystemData = fuelCellData;
-					iterationRunData.OVCMode = runData.OVCMode == OvcHevMode.NotApplicable ? OvcHevMode.NotApplicable : OvcHevMode.ChargeSustaining;
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
-
-					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
-					iterationRunData.FuelCellSystemData.FuelCellShareMap = fchvDataAdapter.CreateFuelCellShareMap(fuelCellData);
-
-					/// Comment from [1]: In the real run we don't use a charge sustaining battery
-					runData.BatteryData.ChargeSustainingBatterySystem = false;
-					runData.ModFileSuffix += runData.Loading;
-					runData.Iteration++;
-				};
-
-				return iterativeRunStrategy;
 			}
 
 			protected override bool AxleGearRequired()
