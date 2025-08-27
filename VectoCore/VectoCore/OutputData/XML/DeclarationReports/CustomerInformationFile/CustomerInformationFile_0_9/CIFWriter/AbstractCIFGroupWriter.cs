@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		}
 	}
 
-	public abstract class AbstractCifXmlType
+    public abstract class AbstractCifXmlType
 	{
 		protected XNamespace _cif => AbstractCustomerReport.Namespace;
 		protected readonly ICustomerInformationFileFactory _cifFactory;

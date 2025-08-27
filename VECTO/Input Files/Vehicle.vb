@@ -22,6 +22,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
@@ -35,319 +36,319 @@ Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.Dat
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
-				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
-				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering, IVehicleInMotionChargingDeclaration
+    Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
+                IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
+                IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IVehicleInMotionChargingEngineering, IVehicleInMotionChargingDeclaration
 
-	Private _filePath As String
-	Private _path As String
+    Private _filePath As String
+    Private _path As String
 
-	Public Mass As Double
-	Public Loading As Double
+    Public Mass As Double
+    Public Loading As Double
 
-	Public CdA0 As Double
+    Public CdA0 As Double
 
-	Public CrossWindCorrectionMode As CrossWindCorrectionMode
-	Public ReadOnly CrossWindCorrectionFile As SubPath
+    Public CrossWindCorrectionMode As CrossWindCorrectionMode
+    Public ReadOnly CrossWindCorrectionFile As SubPath
 
-	<ValidateObject> Public RetarderType As RetarderType
-	Public RetarderRatio As Double = 0
-	Public ReadOnly RetarderLossMapFile As SubPath
-	Public ReadOnly EmTorqueLimitsFile As SubPath
-	Public ReadOnly PropulsionTorqueFile As SubPath
+    <ValidateObject> Public RetarderType As RetarderType
+    Public RetarderRatio As Double = 0
+    Public ReadOnly RetarderLossMapFile As SubPath
+    Public ReadOnly EmTorqueLimitsFile As SubPath
+    Public ReadOnly PropulsionTorqueFile As SubPath
 
-	Public DynamicTyreRadius As Double
-	Public ReadOnly Axles As List(Of AxleInputData)
-
-
-	Public VehicleCategory As VehicleCategory
-	Public MassExtra As Double
-	Public MassMax As Double
-	Public AxleConfiguration As AxleConfiguration
-	Public SavedInDeclMode As Boolean
-
-	Public AngledriveType As AngledriveType
-	Public AngledriveRatio As Double
-	Public ReadOnly AngledriveLossMapFile As SubPath
-
-	Public PtoType As String
-	Public ReadOnly PtoLossMap As SubPath
-	Public ReadOnly PtoCycleStandstill As SubPath
-	Public ReadOnly EPtoCycleStandstill As SubPath
-
-	Public ReadOnly PtoCycleDriving As SubPath
-	Public torqueLimitsList As List(Of ITorqueLimitInputData)
-	Public VehicleidlingSpeed As PerSecond
-	Public legClass As LegislativeClass
-	Public VehicleHeight As Double
-
-	Public EcoRolltype As EcoRollType
-	Public PCC As PredictiveCruiseControlType
-	Public EngineStop As Boolean
-
-	Public VehicleTankSystem As TankSystem?
-
-	Public ReadOnly ElectricMotorFile As SubPath
-	Public ReadOnly GenSetEMFile As SubPath
-
-	Public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
+    Public DynamicTyreRadius As Double
+    Public ReadOnly Axles As List(Of AxleInputData)
 
 
-	Public ReadOnly FuelCellComponents As List(Of Tuple(Of String, Integer))
+    Public VehicleCategory As VehicleCategory
+    Public MassExtra As Double
+    Public MassMax As Double
+    Public AxleConfiguration As AxleConfiguration
+    Public SavedInDeclMode As Boolean
 
-	Public ElectricMotorPosition As PowertrainPosition
-	Public ElectricMotorCount As Integer
-	Public ElectricMotorRatio As Double
-	'Public ElectricMotorMechEff As Double
-	Public ElectricMotorMechLossMap As SubPath
-	Public GenSetMechLossMap As SubPath
+    Public AngledriveType As AngledriveType
+    Public AngledriveRatio As Double
+    Public ReadOnly AngledriveLossMapFile As SubPath
 
-	Public GenSetPosition As PowertrainPosition
-	Public GenSetCount As Integer
-	Public GenSetRatio As Double
-	'Public ElectricMotorMechEff As Double
-	Public GenSetLossMap As SubPath
+    Public PtoType As String
+    Public ReadOnly PtoLossMap As SubPath
+    Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly EPtoCycleStandstill As SubPath
 
-	Public GearDuringPTODrive As UInteger?
-	Public EngineSpeedDuringPTODrive As PerSecond
-	Public ElectricMotorPerGearRatios As Double()
-	Public IEPCFile As SubPath
+    Public ReadOnly PtoCycleDriving As SubPath
+    Public torqueLimitsList As List(Of ITorqueLimitInputData)
+    Public VehicleidlingSpeed As PerSecond
+    Public legClass As LegislativeClass
+    Public VehicleHeight As Double
 
+    Public EcoRolltype As EcoRollType
+    Public PCC As PredictiveCruiseControlType
+    Public EngineStop As Boolean
 
-	Public Sub New()
-		_path = ""
-		_filePath = ""
-		CrossWindCorrectionFile = New SubPath
+    Public VehicleTankSystem As TankSystem?
 
-		RetarderLossMapFile = New SubPath
-		AngledriveLossMapFile = New SubPath()
-		EmTorqueLimitsFile = New SubPath()
-		PropulsionTorqueFile = New SubPath()
-		IEPCFile = New SubPath()
+    Public ReadOnly ElectricMotorFile As SubPath
+    Public ReadOnly GenSetEMFile As SubPath
 
-		Axles = New List(Of AxleInputData)
-		torqueLimitsList = New List(Of ITorqueLimitInputData)
-		ReessPacks = New List(Of Tuple(Of String, Integer, Integer))
-		FuelCellComponents = New List(Of Tuple(Of String, Integer))
-		PtoLossMap = New SubPath()
-		PtoCycleStandstill = New SubPath()
-		EPtoCycleStandstill = New SubPath()
-		PtoCycleDriving = New SubPath()
-		ElectricMotorFile = New SubPath()
-		ElectricMotorMechLossMap = New SubPath()
-		GenSetEMFile = New SubPath()
-		GenSetMechLossMap = New SubPath()
-
-		SetDefault()
-	End Sub
+    Public ReadOnly ReessPacks As List(Of Tuple(Of String, Integer, Integer))
 
 
-	' ReSharper disable once UnusedMember.Global  -- used for Validation
-	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
+    Public ReadOnly FuelCellComponents As List(Of Tuple(Of String, Integer))
 
-		Dim vehicleData As VehicleData
-		Dim airdragData As AirdragData
-		Dim retarderData As RetarderData
-		Dim ptoData As PTOData
-		Dim angledriveData As AngledriveData
+    Public ElectricMotorPosition As PowertrainPosition
+    Public ElectricMotorCount As Integer
+    Public ElectricMotorRatio As Double
+    'Public ElectricMotorMechEff As Double
+    Public ElectricMotorMechLossMap As SubPath
+    Public GenSetMechLossMap As SubPath
 
-		Dim modeService As VectoValidationModeServiceContainer =
-				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
-						VectoValidationModeServiceContainer)
-		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
-		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
-		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
-		Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
-		Dim emPos = If(modeService Is Nothing, modeService.EMPowertrainPosition, PowertrainPosition.HybridPositionNotSet)
+    Public GenSetPosition As PowertrainPosition
+    Public GenSetCount As Integer
+    Public GenSetRatio As Double
+    'Public ElectricMotorMechEff As Double
+    Public GenSetLossMap As SubPath
 
-		Try
-			If mode = ExecutionMode.Declaration Then
-
-				'Dim doa As ILorryDeclarationDataAdapter = CType(_kernel.Value.Get(Of IDeclarationDataAdapterFactory).CreateDataAdapter(New VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(vehicle)), ILorryDeclarationDataAdapter)
-				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
-				vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
-													segment.Missions.First().Loadings.First(), True)
-				airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment,OvcHevMode.NotApplicable)
-				retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
-				angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
-				ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
-			Else
-				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				vehicleData = doa.CreateVehicleData(vehicle)
-				airdragData = doa.CreateAirdragData(vehicle, vehicle)
-				retarderData = doa.CreateRetarderData(vehicle, emPos)
-				angledriveData = doa.CreateAngledriveData(vehicle)
-				ptoData = doa.CreatePTOTransmissionData(vehicle)
-			End If
-
-			Dim result As IList(Of ValidationResult) =
-					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
-			If result.Any() Then
-				Return _
-					New ValidationResult("Vehicle Configuration is invalid. ",
-										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-			End If
-
-			result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
-			If result.Any() Then
-				Return _
-					New ValidationResult("Airdrag Configuration is invalid. ",
-										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-			End If
-
-			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
-			If result.Any() Then
-				Return _
-					New ValidationResult("Retarder Configuration is invalid. ",
-										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-			End If
-
-			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
-				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
-				If result.Any() Then
-					Return _
-						New ValidationResult("AngleDrive Configuration is invalid. ",
-											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-				End If
-			End If
-
-			If Not vehicle.PTOTransmissionType = "None" Then
-				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
-				If result.Any() Then
-					Return _
-						New ValidationResult("PTO Configuration is invalid. ",
-											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
-				End If
-			End If
-
-			Return ValidationResult.Success
-
-		Catch ex As Exception
-			Return New ValidationResult(ex.Message)
-		End Try
-	End Function
-
-	Private Sub SetDefault()
-		Mass = 0
-		MassExtra = 0
-		Loading = 0
-		CdA0 = 0
-		CrossWindCorrectionFile.Clear()
-		CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection
-
-		DynamicTyreRadius = 0
-
-		RetarderType = RetarderType.None
-		RetarderRatio = 1
-		RetarderLossMapFile.Clear()
-		AngledriveLossMapFile.Clear()
-		EmTorqueLimitsFile.Clear()
-		PropulsionTorqueFile.Clear()
-
-		AngledriveType = AngledriveType.None
-		AngledriveLossMapFile.Clear()
-		AngledriveRatio = 1
-
-		PtoType = PTOTransmission.NoPTO
-		PtoLossMap.Clear()
-		PtoCycleStandstill.Clear()
-		EPtoCycleStandstill.Clear()
-		PtoCycleDriving.Clear()
-
-		Axles.Clear()
-		VehicleCategory = VehicleCategory.RigidTruck
-		MassMax = 0
-		AxleConfiguration = AxleConfiguration.AxleConfig_4x2
-
-		ElectricMotorFile.Clear()
-		ElectricMotorMechLossMap.Clear()
-
-		GenSetEMFile.Clear()
-		GenSetMechLossMap.Clear()
-		'IMC
-		IMCEnabled = False
-		IMCDeltaCdxA = 0.SI(of SquareMeter)
-		ShareIMCAvailabilityTotalMission = 0
-
-		SavedInDeclMode = False
-	End Sub
+    Public GearDuringPTODrive As UInteger?
+    Public EngineSpeedDuringPTODrive As PerSecond
+    Public ElectricMotorPerGearRatios As Double()
+    Public IEPCFile As SubPath
 
 
-	Public Function SaveFile() As Boolean
-		SavedInDeclMode = Cfg.DeclMode
+    Public Sub New()
+        _path = ""
+        _filePath = ""
+        CrossWindCorrectionFile = New SubPath
 
-		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VehicleType, ElectricMotorPosition, Nothing, False)
+        RetarderLossMapFile = New SubPath
+        AngledriveLossMapFile = New SubPath()
+        EmTorqueLimitsFile = New SubPath()
+        PropulsionTorqueFile = New SubPath()
+        IEPCFile = New SubPath()
 
-		If validationResults.Count > 0 Then
-			Dim messages As IEnumerable(Of String) =
-					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
-					"Failed to save vehicle")
-			Return False
-		End If
+        Axles = New List(Of AxleInputData)
+        torqueLimitsList = New List(Of ITorqueLimitInputData)
+        ReessPacks = New List(Of Tuple(Of String, Integer, Integer))
+        FuelCellComponents = New List(Of Tuple(Of String, Integer))
+        PtoLossMap = New SubPath()
+        PtoCycleStandstill = New SubPath()
+        EPtoCycleStandstill = New SubPath()
+        PtoCycleDriving = New SubPath()
+        ElectricMotorFile = New SubPath()
+        ElectricMotorMechLossMap = New SubPath()
+        GenSetEMFile = New SubPath()
+        GenSetMechLossMap = New SubPath()
 
-		Try
-			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath, Cfg.DeclMode)
-		Catch ex As Exception
-			MsgBox("Failed to save Vehicle file: " + ex.Message)
-			Return False
-		End Try
-		Return True
-	End Function
+        SetDefault()
+    End Sub
+
+
+    ' ReSharper disable once UnusedMember.Global  -- used for Validation
+    Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
+
+        Dim vehicleData As VehicleData
+        Dim airdragData As AirdragData
+        Dim retarderData As RetarderData
+        Dim ptoData As PTOData
+        Dim angledriveData As AngledriveData
+
+        Dim modeService As VectoValidationModeServiceContainer =
+                TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
+                        VectoValidationModeServiceContainer)
+        Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+        Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+        Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
+        Dim jobType As VectoSimulationJobType = If(modeService Is Nothing, VectoSimulationJobType.ConventionalVehicle, modeService.JobType)
+        Dim emPos = If(modeService Is Nothing, modeService.EMPowertrainPosition, PowertrainPosition.HybridPositionNotSet)
+
+        Try
+            If mode = ExecutionMode.Declaration Then
+
+                'Dim doa As ILorryDeclarationDataAdapter = CType(_kernel.Value.Get(Of IDeclarationDataAdapterFactory).CreateDataAdapter(New VehicleTypeAndArchitectureStringHelperRundata.VehicleClassification(vehicle)), ILorryDeclarationDataAdapter)
+                Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+                                                                        vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, False)
+                vehicleData = New LorryVehicleDataAdapter().CreateVehicleData(vehicle, segment, segment.Missions.First(),
+                                                    segment.Missions.First().Loadings.First(), True)
+                airdragData = New AirdragDataAdapter().CreateAirdragData(vehicle, segment.Missions.First(), segment, OvcHevMode.NotApplicable)
+                retarderData = New RetarderDataAdapter().CreateRetarderData(vehicle, vehicle.ArchitectureID, vehicle.Components?.IEPC)
+                angledriveData = New AngledriveDataAdapter().CreateAngledriveData(vehicle)
+                ptoData = New PTODataAdapterLorry().CreatePTOTransmissionData(vehicle, vehicle.Components.GearboxInputData)
+            Else
+                Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
+                vehicleData = doa.CreateVehicleData(vehicle)
+                airdragData = doa.CreateAirdragData(vehicle, vehicle)
+                retarderData = doa.CreateRetarderData(vehicle, emPos)
+                angledriveData = doa.CreateAngledriveData(vehicle)
+                ptoData = doa.CreatePTOTransmissionData(vehicle)
+            End If
+
+            Dim result As IList(Of ValidationResult) =
+                    vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
+            If result.Any() Then
+                Return _
+                    New ValidationResult("Vehicle Configuration is invalid. ",
+                                        result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+            End If
+
+            result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
+            If result.Any() Then
+                Return _
+                    New ValidationResult("Airdrag Configuration is invalid. ",
+                                        result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+            End If
+
+            result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
+            If result.Any() Then
+                Return _
+                    New ValidationResult("Retarder Configuration is invalid. ",
+                                        result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+            End If
+
+            If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
+                result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
+                If result.Any() Then
+                    Return _
+                        New ValidationResult("AngleDrive Configuration is invalid. ",
+                                            result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+                End If
+            End If
+
+            If Not vehicle.PTOTransmissionType = "None" Then
+                result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), jobType, emPos, gbxType, emsCycle)
+                If result.Any() Then
+                    Return _
+                        New ValidationResult("PTO Configuration is invalid. ",
+                                            result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+                End If
+            End If
+
+            Return ValidationResult.Success
+
+        Catch ex As Exception
+            Return New ValidationResult(ex.Message)
+        End Try
+    End Function
+
+    Private Sub SetDefault()
+        Mass = 0
+        MassExtra = 0
+        Loading = 0
+        CdA0 = 0
+        CrossWindCorrectionFile.Clear()
+        CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection
+
+        DynamicTyreRadius = 0
+
+        RetarderType = RetarderType.None
+        RetarderRatio = 1
+        RetarderLossMapFile.Clear()
+        AngledriveLossMapFile.Clear()
+        EmTorqueLimitsFile.Clear()
+        PropulsionTorqueFile.Clear()
+
+        AngledriveType = AngledriveType.None
+        AngledriveLossMapFile.Clear()
+        AngledriveRatio = 1
+
+        PtoType = PTOTransmission.NoPTO
+        PtoLossMap.Clear()
+        PtoCycleStandstill.Clear()
+        EPtoCycleStandstill.Clear()
+        PtoCycleDriving.Clear()
+
+        Axles.Clear()
+        VehicleCategory = VehicleCategory.RigidTruck
+        MassMax = 0
+        AxleConfiguration = AxleConfiguration.AxleConfig_4x2
+
+        ElectricMotorFile.Clear()
+        ElectricMotorMechLossMap.Clear()
+
+        GenSetEMFile.Clear()
+        GenSetMechLossMap.Clear()
+        'IMC
+        IMCEnabled = False
+        IMCDeltaCdxA = 0.SI(Of SquareMeter)
+        ShareIMCAvailabilityTotalMission = 0
+
+        SavedInDeclMode = False
+    End Sub
+
+
+    Public Function SaveFile() As Boolean
+        SavedInDeclMode = Cfg.DeclMode
+
+        Dim validationResults As IList(Of ValidationResult) =
+                Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), VehicleType, ElectricMotorPosition, Nothing, False)
+
+        If validationResults.Count > 0 Then
+            Dim messages As IEnumerable(Of String) =
+                    validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+            MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
+                    "Failed to save vehicle")
+            Return False
+        End If
+
+        Try
+            Dim writer As JSONFileWriter = JSONFileWriter.Instance
+            writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath, Cfg.DeclMode)
+        Catch ex As Exception
+            MsgBox("Failed to save Vehicle file: " + ex.Message)
+            Return False
+        End Try
+        Return True
+    End Function
 
 
 #Region "Properties"
 
 
-	Public Property FilePath() As String
-		Get
-			Return _filePath
-		End Get
-		Set(value As String)
-			_filePath = value
-			If _filePath = "" Then
-				_path = ""
-			Else
-				_path = Path.GetDirectoryName(_filePath) & "\"
-			End If
-		End Set
-	End Property
+    Public Property FilePath() As String
+        Get
+            Return _filePath
+        End Get
+        Set(value As String)
+            _filePath = value
+            If _filePath = "" Then
+                _path = ""
+            Else
+                _path = Path.GetDirectoryName(_filePath) & "\"
+            End If
+        End Set
+    End Property
 
 #End Region
 
 #Region "IInputData"
 
-	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
-		Get
-			Dim retVal As DataSource = New DataSource()
-			retVal.SourceType = DataSourceType.JSONFile
-			retVal.SourceFile = FilePath
-			Return retVal
-		End Get
-	End Property
+    Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
+        Get
+            Dim retVal As DataSource = New DataSource()
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
 
-	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
-		Get
-			Return Cfg.DeclMode
-		End Get
-	End Property
+    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+        Get
+            Return Cfg.DeclMode
+        End Get
+    End Property
 
-	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
-		Get
-			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
-		End Get
-	End Property
+    Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
+        Get
+            ' Just for the interface. Value is not available in GUI yet.
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
+        End Get
+    End Property
 
-	Public ReadOnly Property Model As String Implements IComponentInputData.Model
-		Get
-			' Just for the interface. Value is not available in GUI yet.
-			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
-		End Get
-	End Property
+    Public ReadOnly Property Model As String Implements IComponentInputData.Model
+        Get
+            ' Just for the interface. Value is not available in GUI yet.
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_AVAILABLE
+        End Get
+    End Property
 
     Public ReadOnly Property SimulationToolLicenseNumber As String Implements IVehicleDeclarationInputData.SimulationToolLicenseNumber
         Get
@@ -491,6 +492,10 @@ Public Class Vehicle
 
     Public ReadOnly Property TransferredAirDragArea As SquareMeter Implements IAirdragDeclarationInputData.TransferredAirDragArea
     Public ReadOnly Property AirDragArea_0 As SquareMeter Implements IAirdragDeclarationInputData.AirDragArea_0
+    Public ReadOnly Property DeltaCdxA_CFD As SquareMeter Implements IAirdragDeclarationInputData.DeltaCdxA_CFD
+    Public ReadOnly Property DeltaCdxA_declared As SquareMeter Implements IAirdragDeclarationInputData.DeltaCdxA_declared
+    Public ReadOnly Property DeltaTransferredCdxA As SquareMeter Implements IAirdragDeclarationInputData.DeltaTransferredCdxA
+    Public ReadOnly Property LicenseNumberCFDMethod As String Implements IAirdragDeclarationInputData.LicenseNumberCFDMethod
     Public ReadOnly Property IAirdragDeclarationInputData_XMLSource As XmlNode Implements IAirdragDeclarationInputData.XMLSource
 
     Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
@@ -532,7 +537,7 @@ Public Class Vehicle
     '		Return VectoCSVFile.Read(EmTorqueLimitsFile.FullPath)
     '	End Get
     '    End Property
-    Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of PowertrainPosition, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of EMPlacement, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
 
     Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
         Get
@@ -630,6 +635,12 @@ Public Class Vehicle
 
 #End Region
 
+    Public ReadOnly Property AxleNumber As Int32 Implements IPTOTransmissionInputData.AxleNumber
+        Get
+            Return TUGraz.VectoCore.Configuration.Constants.NOT_IN_AXLE_POWERTRAIN
+        End Get
+    End Property
+
     Public ReadOnly Property PTOTransmissionType As String Implements IPTOTransmissionInputData.PTOTransmissionType
         Get
             Return PtoType
@@ -713,6 +724,21 @@ Public Class Vehicle
             Return Nothing
         End Get
     End Property
+
+    Public ReadOnly Property Generator As ElectricMachineEntry(Of IElectricMotorDeclarationInputData) _
+        Implements IVehicleComponentsDeclaration.Generator
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property AxlePowertrainInputData As IList(Of IAxlePowertrainDeclarationInputData) _
+        Implements IVehicleComponentsDeclaration.AxlePowertrainInputData
+        Get
+            Return Nothing
+        End Get
+    End Property
+
 
     Public ReadOnly Property IDeclarationInputDataProvider_TorqueConverterInputData As ITorqueConverterDeclarationInputData _
         Implements IVehicleComponentsDeclaration.TorqueConverterInputData
@@ -1008,6 +1034,7 @@ Public Class Vehicle
     Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
     Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
+    Public ReadOnly Property ArchitectureIDPwt2 As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureIDPwt2
     Public Property OVC As Boolean Implements IVehicleDeclarationInputData.OVC
     Public Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
 	Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType

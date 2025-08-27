@@ -845,7 +845,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
 		private string _vehicleTypeApprovalNumber;
@@ -857,7 +857,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -1282,9 +1284,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		// todo amogoda: tbd (?)
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
-		#endregion
+		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => throw new NotImplementedException();
 
-		private bool _airdragModifiedMultistepMandatory;
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => throw new NotImplementedException();
+
+        #endregion
+
+        private bool _airdragModifiedMultistepMandatory;
 		private int? _numberPassengersStandingLowerDeck;
 		private int? _numberPassengersStandingUpperDeck;
 

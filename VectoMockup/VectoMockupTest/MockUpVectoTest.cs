@@ -406,6 +406,18 @@ namespace VectoMockupTest
         [TestCase(v27LorryPath + "SHEV_S4_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_HeavyLorry_requiredOnly")]
         [TestCase(v27LorryPath + "SHEV_S4_MediumLorry.xml", TestName = "v27_SHEV_S4_MediumLorry")]
         [TestCase(v27LorryPath + "SHEV_S4_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_MediumLorry_requiredOnly")]
+		[TestCase(v27LorryPath + "Multiple_FCHV_F2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F3_F4_HeavyLorry.xml", TestName = "v27_Multiple_FCHV_F3_F4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F3_F4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F3_F4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_PEV_E2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_PEV_E2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E3_E4_HeavyLorry.xml", TestName = "v27_Multiple_PEV_E3_E4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E3_E4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_PEV_E3_E4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S3_S4_HeavyLorry.xml", TestName = "v27_Multiple_SHEV_S3_S4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S3_S4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S3_S4_HeavyLorry_requiredOnly")]
         public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
@@ -413,7 +425,7 @@ namespace VectoMockupTest
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumWriter);
-			ArchitectureID df;
+			
 			var _simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 			Clearfiles(fileWriter);
@@ -484,6 +496,18 @@ namespace VectoMockupTest
         [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F4_PrimaryBus_requiredOnly")]
         [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", TestName = "v27_FCHV_IEPC_PrimaryBus")]
         [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus")]
+		[TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly")]
         public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);

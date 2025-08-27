@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
         List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(
 			IIEPCDeclarationInputData iepc, Volt averageVoltage);
 
-		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
+		IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gears = null);
 
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,

@@ -8,4 +8,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		XElement GetElement(IDeclarationInputDataProvider inputData);
 
 	}
+
+	public interface IXmlAxlePowertrainTypeWriter
+	{
+		XElement GetElement(IAxlePowertrainDeclarationInputData axlePt);
+	}
+
 }

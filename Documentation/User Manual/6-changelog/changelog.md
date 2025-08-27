@@ -2,6 +2,16 @@
 
 
 
+**VECTO v5.0.3 Official Release (08-07-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU n.a.: Avoid em conditioning calculation for non-FCHV (vecto/vecto!416)
+    * CodeEU n.a.: Safe conditioning data lookup (vecto/vecto!417)
+
+
+
 **VECTO v5.0.1 Official Release (03-07-2025)**
 
 

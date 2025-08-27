@@ -50,6 +50,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_FCHV_IEPC_HeavyLorry_DataProviderV27>()
                 .Named(XMLDeclaration_FCHV_IEPC_HeavyLorry_DataProviderV27.QUALIFIED_XSD_TYPE);
 
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_FCHV_HeavyLorry_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_FCHV_HeavyLorry_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_PEV_HeavyLorry_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_PEV_HeavyLorry_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_SHEV_HeavyLorry_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_SHEV_HeavyLorry_DataProviderV27.QUALIFIED_XSD_TYPE);
+
             // Vehicle - Medium Lorry
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Exempted_MediumLorry_DataProviderV27>()
                 .Named(XMLDeclaration_Exempted_MediumLorry_DataProviderV27.QUALIFIED_XSD_TYPE);
@@ -105,6 +114,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_FCHV_IEPC_PrimaryBus_DataProviderV27>()
                 .Named(XMLDeclaration_FCHV_IEPC_PrimaryBus_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_FCHV_PrimaryBus_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_FCHV_PrimaryBus_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_PEV_PrimaryBus_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_PEV_PrimaryBus_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Multiple_SHEV_PrimaryBus_DataProviderV27>()
+                .Named(XMLDeclaration_Multiple_SHEV_PrimaryBus_DataProviderV27.QUALIFIED_XSD_TYPE);
 
             // Vehicle - Completed Bus
             Bind<IXMLDeclarationVehicleData>().To<XMLDeclaration_Conventional_CompletedBus_DataProviderV27>()
@@ -171,8 +189,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_FCHV_Lorry_ComponentDataProviderV27>()
                 .Named(XMLDeclaration_FCHV_Lorry_ComponentDataProviderV27.QUALIFIED_F4_XSD_TYPE);
 
-            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataV27>()
-                .Named(XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_FCHV_Lorry_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_FCHV_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_PEV_Lorry_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_PEV_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_SHEV_Lorry_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_SHEV_Lorry_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
 
             // ComponentDataProvider - Primary Bus
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Conventional_PrimaryBus_ComponentDataProviderV27>()
@@ -217,6 +244,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_SHEV_IEPC_PrimaryBus_ComponentDataProviderV27>()
                 .Named(XMLDeclaration_SHEV_IEPC_PrimaryBus_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
 
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_FCHV_PrimaryBus_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_FCHV_PrimaryBus_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_PEV_PrimaryBus_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_PEV_PrimaryBus_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_Multiple_SHEV_PrimaryBus_ComponentDataProviderV27>()
+                .Named(XMLDeclaration_Multiple_SHEV_PrimaryBus_ComponentDataProviderV27.QUALIFIED_XSD_TYPE);
+
             // ComponentDataProvider - Completed Bus
             Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclaration_CompletedBus_ComponentDataProviderV27>()
                 .Named(XMLDeclaration_CompletedBus_ComponentDataProviderV27.QUALIFIED_XSD_TYPE_CONVENTIONAL);
@@ -239,6 +275,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLComponentReader>().To<XML_FCHV_F3_Lorry_ComponentReaderV27>().Named(XML_FCHV_F3_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
             Bind<IXMLComponentReader>().To<XML_FCHV_F4_Lorry_ComponentReaderV27>().Named(XML_FCHV_F4_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
             Bind<IXMLComponentReader>().To<XML_FCHV_IEPC_Lorry_ComponentReaderV27>().Named(XML_FCHV_IEPC_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_FCHV_Lorry_ComponentReaderV27>().Named(XML_Multiple_FCHV_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_PEV_Lorry_ComponentReaderV27>().Named(XML_Multiple_PEV_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_SHEV_Lorry_ComponentReaderV27>().Named(XML_Multiple_SHEV_Lorry_ComponentReaderV27.QUALIFIED_XSD_TYPE);
 
             // ComponentReader - Primary Bus
             Bind<IXMLComponentReader>().To<XML_Conventional_PrimaryBus_ComponentReaderV27>().Named(XML_Conventional_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
@@ -255,6 +294,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLComponentReader>().To<XML_SHEV_S3_PrimaryBus_ComponentReaderV27>().Named(XML_SHEV_S3_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
             Bind<IXMLComponentReader>().To<XML_SHEV_S4_PrimaryBus_ComponentReaderV27>().Named(XML_SHEV_S4_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
             Bind<IXMLComponentReader>().To<XML_SHEV_IEPC_PrimaryBus_ComponentReaderV27>().Named(XML_SHEV_IEPC_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_FCHV_PrimaryBus_ComponentReaderV27>().Named(XML_Multiple_FCHV_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_PEV_PrimaryBus_ComponentReaderV27>().Named(XML_Multiple_PEV_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLComponentReader>().To<XML_Multiple_SHEV_PrimaryBus_ComponentReaderV27>().Named(XML_Multiple_SHEV_PrimaryBus_ComponentReaderV27.QUALIFIED_XSD_TYPE);
 
             // ComponentReader - Completed Bus
             Bind<IXMLComponentReader>().To<XML_CompletedBus_ComponentReaderV27>().Named(XML_CompletedBus_ComponentReaderV27.QUALIFIED_XSD_TYPE_CONVENTIONAL);
@@ -298,7 +340,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
             // PTO
             Bind<IXMLPTOReader>().To<XMLPTOReaderV27>().Named(XMLPTOReaderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLPTOReader>().To<XMLMultiplePTOReaderV27>().Named(XMLMultiplePTOReaderV27.QUALIFIED_XSD_TYPE);
             Bind<IXMLPTOTransmissionInputData>().To<XMLDeclarationPTODataProviderV27>().Named(XMLDeclarationPTODataProviderV27.QUALIFIED_XSD_TYPE);
+            Bind<IXMLPTOTransmissionInputData>().To<XMLDeclarationMultiplePTODataProviderV27>().Named(XMLDeclarationMultiplePTODataProviderV27.QUALIFIED_XSD_TYPE);
 
             // Auxiliaries
             Bind<IXMLAuxiliariesDeclarationInputData>().To<XMLDeclarationAuxiliaries_Lorry_DataProviderV27>().Named(
@@ -354,6 +398,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			
             Bind<IXMLFuelCellSystemDeclarationInputData>().To<XMLFuelCellSystemDeclarationInputDataProviderV27>()
                 .Named(XMLFuelCellSystemDeclarationInputDataProviderV27.QUALIFIED_XSD_TYPE);
+
+            // Axle Powertrains
+            Bind<IXMLAxlePowertrainDeclarationInputData>().To<XMLDeclaration_AxlePowertrain_EM2_DataProviderV27>()
+                .Named(XMLDeclaration_AxlePowertrain_EM2_DataProviderV27.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLAxlePowertrainDeclarationInputData>().To<XMLDeclaration_AxlePowertrain_EM3_DataProviderV27>()
+                .Named(XMLDeclaration_AxlePowertrain_EM3_DataProviderV27.QUALIFIED_XSD_TYPE);
+            
+            Bind<IXMLAxlePowertrainDeclarationInputData>().To<XMLDeclaration_AxlePowertrain_EM4_DataProviderV27>()
+                .Named(XMLDeclaration_AxlePowertrain_EM4_DataProviderV27.QUALIFIED_XSD_TYPE);
+            
+            Bind<IXMLAxlePowertrainDeclarationInputData>().To<XMLDeclaration_AxlePowertrain_IEPC_DataProviderV27>()
+                .Named(XMLDeclaration_AxlePowertrain_IEPC_DataProviderV27.QUALIFIED_XSD_TYPE);
 
             // Monitoring Data
             Bind<IXMLMonitoringReader>().To<XMLMonitoringReaderV27>().Named(XMLMonitoringReaderV27.QUALIFIED_XSD_TYPE_EXEMPTED);

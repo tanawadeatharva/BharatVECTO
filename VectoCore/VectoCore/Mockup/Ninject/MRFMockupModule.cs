@@ -132,7 +132,22 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusVehicleType();
 		}
 
-		public IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType()
+        public IXmlTypeWriter GetMultiple_PEV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_FCHV_PrimaryBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_PrimaryBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_PrimaryBusVehicleType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusVehicleType();
 		}
@@ -227,7 +242,22 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_LorryComponentsType();
         }
 
-		public IXmlTypeWriter GetFCHV_F2_LorryComponentsType()
+        public IXmlTypeWriter GetMultiple_FCHV_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_PEV_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_LorryComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_LorryComponentsType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_LorryComponentsType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_LorryComponentsType();
 		}
@@ -297,24 +327,39 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetHEV_IEPC_S_PrimaryBusComponentsType();
         }
 
-		public IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType()
+        public IXmlTypeWriter GetMultiple_FCHV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_PEV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_PrimaryBusComponentsType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_PrimaryBusComponentsType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_PrimaryBusComponentsType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_F3_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_F3_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_F4_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_F4_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetFCHV_IEPC_PrimaryBusComponentsType()
 		{
-			return _manufacturerReportFactoryImplementation.GetFCHV_F2_PrimaryBusComponentsType();
+			return _manufacturerReportFactoryImplementation.GetFCHV_IEPC_PrimaryBusComponentsType();
 		}
 
 		public IXmlTypeWriter GetPEV_E2_PrimaryBusComponentsType()
@@ -422,9 +467,19 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetRetarderType();
         }
 
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainRetarderType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainRetarderType();
+        }
+
         public IXmlTypeWriter GetTorqueConverterType()
         {
             return _manufacturerReportFactoryImplementation.GetTorqueConverterType();
+        }
+
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainTorqueConverterType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainTorqueConverterType();
         }
 
         public IXmlTypeWriter GetAngleDriveType()
@@ -432,9 +487,19 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetAngleDriveType();
         }
 
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainAngleDriveType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainAngleDriveType();
+        }
+
         public IXmlTypeWriter GetTransmissionType()
         {
             return _manufacturerReportFactoryImplementation.GetTransmissionType();
+        }
+
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainTransmissionType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainTransmissionType();
         }
 
         public IXmlTypeWriter GetElectricMachineType()
@@ -442,14 +507,29 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetElectricMachineType();
         }
 
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainElectricMachineType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainElectricMachineType();
+        }
+
         public IXmlTypeWriter GetElectricMachineGenType()
         {
             return _manufacturerReportFactoryImplementation.GetElectricMachineGenType();
         }
 
+        public IXmlTypeWriter GetGeneratorType()
+        {
+            return _manufacturerReportFactoryImplementation.GetGeneratorType();
+        }
+
         public IXmlTypeWriter GetAxleGearType()
         {
             return _manufacturerReportFactoryImplementation.GetAxleGearType();
+        }
+
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainAxleGearType()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainAxleGearType();
         }
 
         public IXmlTypeWriter GetAxleWheelsType()
@@ -475,6 +555,11 @@ namespace TUGraz.VectoMockup.Ninject
         public IXmlTypeWriter GetIEPCSpecifications()
         {
             return _manufacturerReportFactoryImplementation.GetIEPCSpecifications();
+        }
+
+        public IXmlAxlePowertrainTypeWriter GetAxlePowertrainIEPCSpecifications()
+        {
+            return _manufacturerReportFactoryImplementation.GetAxlePowertrainIEPCSpecifications();
         }
 
         public IXmlTypeWriter GetREESSSpecificationsType()
@@ -652,7 +737,22 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetBoostingLimitationsType();
         }
 
-		public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
+        public IXmlTypeWriter GetMultiple_FCHV_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_FCHV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_PEV_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_PEV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_LorryVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetMultiple_SHEV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
 		{
 			return _manufacturerReportFactoryImplementation.GetFCHV_F2_LorryVehicleType();
 		}
@@ -672,7 +772,7 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetFCHV_IEPC_LorryVehicleType();
 		}
 
-		public IReportOutputGroup GetFCHV_VehicleSequenceGroup()
+        public IReportOutputGroup GetFCHV_VehicleSequenceGroup()
 		{
             return _manufacturerReportFactoryImplementation.GetFCHV_VehicleSequenceGroup();
 		}

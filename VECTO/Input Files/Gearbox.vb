@@ -908,7 +908,7 @@ Public Class MockEngineeringVehicle
     Public Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public Property Height As Meter Implements IVehicleEngineeringInputData.Height
-    Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of PowertrainPosition, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
+    Public ReadOnly Property ElectricMotorTorqueLimits As IDictionary(Of EMPlacement, IList(Of Tuple(Of Volt, TableData))) Implements IVehicleDeclarationInputData.ElectricMotorTorqueLimits
     Public ReadOnly Property BoostingLimitations As TableData Implements IVehicleDeclarationInputData.BoostingLimitations
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
@@ -921,6 +921,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
     Public ReadOnly Property VehicleTypeApprovalNumber As String Implements IVehicleDeclarationInputData.VehicleTypeApprovalNumber
     Public ReadOnly Property ArchitectureID As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureID
+    Public ReadOnly Property ArchitectureIDPwt2 As ArchitectureID Implements IVehicleDeclarationInputData.ArchitectureIDPwt2
     Public ReadOnly Property OVC As Boolean Implements IVehicleDeclarationInputData.OVC
     Public ReadOnly Property MaxChargingPower As Watt Implements IVehicleDeclarationInputData.MaxChargingPower
     Public ReadOnly Property IVehicleDeclarationInputData_VehicleType As VectoSimulationJobType Implements IVehicleDeclarationInputData.VehicleType

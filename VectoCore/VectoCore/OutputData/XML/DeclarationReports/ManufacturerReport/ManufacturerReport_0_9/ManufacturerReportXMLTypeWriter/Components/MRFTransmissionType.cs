@@ -11,35 +11,41 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
 {
-    public class TransmissionTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
+    public class TransmissionTypeWriter : AbstractMrfXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
 	{
 		public TransmissionTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Overrides of AbstractMrfXmlType
+		public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+		{
+            return GetElement(axlePt.GearboxInputData, axlePt.PTOTransmissionInputData);
+        }
 
 		public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			var vehicleComponents = inputData.JobInputData.Vehicle.Components;
-			var result = new XElement(_mrf + XMLNames.Component_Transmission,
-				new XElement(_mrf + XMLNames.Component_Model, vehicleComponents.GearboxInputData.Model),
-				new XElement(_mrf + XMLNames.Component_CertificationNumber,
-					vehicleComponents.GearboxInputData.CertificationNumber),
-				new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
-					vehicleComponents.GearboxInputData.DigestValue?.DigestValue ?? ""),
-				new XElement(_mrf + XMLNames.Component_CertificationMethod, vehicleComponents.GearboxInputData.CertificationMethod.ToXMLFormat()),
-				new XElement(_mrf + "Type",
-					vehicleComponents.GearboxInputData.Type.ToXMLFormat()),
-				new XElement(_mrf + "NrOfGears", vehicleComponents.GearboxInputData.Gears.Count),
-				new XElement(_mrf + "FinalGearRatio",
-					vehicleComponents.GearboxInputData.Gears.Last().Ratio.ToXMLFormat(3)),
-				//new XElement(_mrf + XMLNames.Vehicle_RetarderType,
-				//	vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
-				(vehicleComponents.PTOTransmissionInputData != null ? new XElement(_mrf + "PowerTakeOff",
-					vehicleComponents.PTOTransmissionInputData.PTOTransmissionType != "None") : null));
-			return result;
+            return GetElement(vehicleComponents.GearboxInputData, vehicleComponents.PTOTransmissionInputData);
 		}
+		
+		private XElement GetElement(IGearboxDeclarationInputData gearboxInputData, IPTOTransmissionInputData ptoTransmissionInputData)
+		{
+            var result = new XElement(_mrf + XMLNames.Component_Transmission,
+                new XElement(_mrf + XMLNames.Component_Model, gearboxInputData.Model),
+                new XElement(_mrf + XMLNames.Component_CertificationNumber,
+                    gearboxInputData.CertificationNumber),
+                new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue,
+                    gearboxInputData.DigestValue?.DigestValue ?? ""),
+                new XElement(_mrf + XMLNames.Component_CertificationMethod, gearboxInputData.CertificationMethod.ToXMLFormat()),
+                new XElement(_mrf + "Type",
+                    gearboxInputData.Type.ToXMLFormat()),
+                new XElement(_mrf + "NrOfGears", gearboxInputData.Gears.Count),
+                new XElement(_mrf + "FinalGearRatio",
+                    gearboxInputData.Gears.Last().Ratio.ToXMLFormat(3)),
+                //new XElement(_mrf + XMLNames.Vehicle_RetarderType,
+                //	vehicleComponents.RetarderInputData.Type.ToXMLFormat()),
+                (ptoTransmissionInputData != null ? new XElement(_mrf + "PowerTakeOff",
+                    ptoTransmissionInputData.PTOTransmissionType != "None") : null));
+            return result;
+        }
 
-
-		#endregion
 	}
 }

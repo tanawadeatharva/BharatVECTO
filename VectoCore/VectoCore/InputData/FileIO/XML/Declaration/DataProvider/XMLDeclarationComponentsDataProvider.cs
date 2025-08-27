@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual IRetarderInputData RetarderInputData => _retarderInputData ?? (_retarderInputData = ComponentReader.RetarderInputData);
 
-		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _vehicle.PTOTransmissionInputData;
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData => _vehicle.GetPTOTransmissionInputData();
 
 		public virtual IAxlesDeclarationInputData AxleWheels => _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData);
 
@@ -102,12 +103,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IIEPCDeclarationInputData IEPC => _iepcInputData ?? (_iepcInputData = ComponentReader.IEPCInputData);
 
 		public virtual IFuelCellSystemDeclarationInputData FuelCellSystem => null;
-		
-		#endregion
 
-		#region Implementation of IXMLVehicleComponentsDeclaration
+		public virtual IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => null;
 
-		public virtual IXMLComponentReader ComponentReader { protected get; set; }
+        public virtual ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => null;
+
+        #endregion
+
+        #region Implementation of IXMLVehicleComponentsDeclaration
+
+        public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
 		#endregion
 
@@ -249,8 +254,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type => _vehicle.RetarderType;
-		public double Ratio => _vehicle.RetarderRatio;
+		public RetarderType Type => _vehicle.GetRetarderType();
+		
+		public double Ratio => _vehicle.GetRetarderRatio();
+		
 		public TableData LossMap { get; }
 
 		#endregion
@@ -286,8 +293,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type => _vehicle.RetarderType;
-		public double Ratio => _vehicle.RetarderRatio;
+		public RetarderType Type => _vehicle.GetRetarderType();
+		
+		public double Ratio => _vehicle.GetRetarderRatio();
+		
 		public TableData LossMap { get; }
 
 		#endregion
@@ -323,8 +332,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type => _vehicle.RetarderType;
-		public double Ratio => _vehicle.RetarderRatio;
+		public RetarderType Type => _vehicle.GetRetarderType();
+		
+		public double Ratio => _vehicle.GetRetarderRatio();
+		
 		public TableData LossMap { get; }
 
 		#endregion
@@ -400,8 +411,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type => _vehicle.RetarderType;
-		public double Ratio => _vehicle.RetarderRatio;
+		public RetarderType Type => _vehicle.GetRetarderType();
+		
+		public double Ratio => _vehicle.GetRetarderRatio();
+		
 		public TableData LossMap { get; }
 
 		#endregion
@@ -437,8 +450,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region IRetarderInputData Interface Implementation
 
-		public RetarderType Type => _vehicle.RetarderType;
-		public double Ratio => _vehicle.RetarderRatio;
+		public RetarderType Type => _vehicle.GetRetarderType();
+		
+		public double Ratio => _vehicle.GetRetarderRatio();
+		
 		public TableData LossMap { get; }
 
 		#endregion
@@ -1069,7 +1084,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override IFuelCellSystemDeclarationInputData FuelCellSystem => _fuelCellSystem ?? (_fuelCellSystem = ComponentReader.FuelCellSystem);
 	}
 
-	public class XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataV27 : XMLDeclarationComponentsDataProviderV10
+	public class XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 		public new const string XSD_TYPE = "Components_FCHV_IEPC_LorryType";
@@ -1077,7 +1092,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         private IFuelCellSystemDeclarationInputData _fuelCellSystem;
 
-        public XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : 
+        public XMLDeclaration_FCHV_IEPC_Lorry_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : 
 			base(vehicle, componentNode, sourceFile) { }
 
 		public override IFuelCellSystemDeclarationInputData FuelCellSystem => _fuelCellSystem ?? (_fuelCellSystem= ComponentReader.FuelCellSystem);
@@ -1085,7 +1100,62 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         public override IAxleGearInputData AxleGearInputData => ElementExists(XMLNames.Component_Axlegear) ? base.AxleGearInputData : null;
     }
 
-	public class XMLDeclaration_FCHV_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV24
+	public class XMLDeclaration_Multiple_FCHV_Lorry_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public new const string XSD_TYPE = "Components_Multiple_FCHV_LorryDeclarationType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        private IFuelCellSystemDeclarationInputData _fuelCellSystem;
+		private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+
+        public XMLDeclaration_Multiple_FCHV_Lorry_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override IFuelCellSystemDeclarationInputData FuelCellSystem => _fuelCellSystem ?? (_fuelCellSystem = ComponentReader.FuelCellSystem);
+
+        public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => 
+			_axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+    }
+
+    public class XMLDeclaration_Multiple_PEV_Lorry_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public new const string XSD_TYPE = "Components_Multiple_PEV_LorryDeclarationType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+
+        public XMLDeclaration_Multiple_PEV_Lorry_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData =>
+            _axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+    }
+
+    public class XMLDeclaration_Multiple_SHEV_Lorry_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public new const string XSD_TYPE = "Components_Multiple_SHEV_LorryType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+		private ElectricMachineEntry<IElectricMotorDeclarationInputData> _generator;
+
+        public XMLDeclaration_Multiple_SHEV_Lorry_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData =>
+            _axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+
+        public override ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => 
+			_generator ?? (_generator = ComponentReader.Generator);
+    }
+
+    public class XMLDeclaration_FCHV_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationPrimaryBusHEVS2ComponentDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
@@ -1108,9 +1178,80 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			ElementExists(XMLNames.Component_Gearbox) ? base.GearboxInputData : null;
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclaration_Multiple_FCHV_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+		public new const string XSD_TYPE = "Components_Multiple_FCHV_PrimaryBusDeclarationType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-	public class XMLDeclaration_FCHV_IEPC_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+		private IFuelCellSystemDeclarationInputData _fuelCellSystem;
+		private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+        protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+        public XMLDeclaration_Multiple_FCHV_PrimaryBus_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+			base(vehicle, componentNode, sourceFile)
+		{ }
+
+		public override IFuelCellSystemDeclarationInputData FuelCellSystem => _fuelCellSystem ?? (_fuelCellSystem = ComponentReader.FuelCellSystem);
+
+		public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData =>
+			_axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+
+        public override IBusAuxiliariesDeclarationData BusAuxiliaries => 
+			_busAuxiliariesDeclarationInputData ?? (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+
+        public override IEngineDeclarationInputData EngineInputData => null;
+    }
+
+    public class XMLDeclaration_Multiple_PEV_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public new const string XSD_TYPE = "Components_Multiple_PEV_PrimaryBusDeclarationType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+        protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+
+        public XMLDeclaration_Multiple_PEV_PrimaryBus_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData =>
+            _axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+
+        public override IBusAuxiliariesDeclarationData BusAuxiliaries =>
+            _busAuxiliariesDeclarationInputData ?? (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+
+		public override IEngineDeclarationInputData EngineInputData => null;
+    }
+
+    public class XMLDeclaration_Multiple_SHEV_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public new const string XSD_TYPE = "Components_Multiple_SHEV_PrimaryBusDeclarationType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        private IList<IAxlePowertrainDeclarationInputData> _axlePowertrainInputData;
+        protected IBusAuxiliariesDeclarationData _busAuxiliariesDeclarationInputData;
+		private ElectricMachineEntry<IElectricMotorDeclarationInputData> _generator;
+
+        public XMLDeclaration_Multiple_SHEV_PrimaryBus_ComponentDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(vehicle, componentNode, sourceFile)
+        { }
+
+        public override IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData =>
+            _axlePowertrainInputData ?? (_axlePowertrainInputData = ComponentReader.AxlePowertrains);
+
+        public override IBusAuxiliariesDeclarationData BusAuxiliaries =>
+            _busAuxiliariesDeclarationInputData ?? (_busAuxiliariesDeclarationInputData = ComponentReader.BusAuxiliariesInputData);
+
+		public override ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator =>
+			_generator ?? (_generator = ComponentReader.Generator);
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclaration_FCHV_IEPC_PrimaryBus_ComponentDataProviderV27 : XMLDeclarationComponentsDataProviderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 		public new const string XSD_TYPE = "Components_FCHV_IEPC_PrimaryBusType";

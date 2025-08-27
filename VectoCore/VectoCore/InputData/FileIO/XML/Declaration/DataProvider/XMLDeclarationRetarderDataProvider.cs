@@ -35,6 +35,7 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -48,23 +49,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		protected IXMLDeclarationVehicleData Vehicle;
+		public static readonly string AXLE_NUMBER_VERSION = $"{XSD_TYPE}:AxleNumberVersion";
 
-		public XMLDeclarationRetarderDataProviderV10(
+		protected IXMLDeclarationVehicleData Vehicle;
+        private int? _axleNumber;
+
+        public XMLDeclarationRetarderDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 			Vehicle = vehicle;
-		}
+        }
 
-		#region Implementation of IRetarderInputData
+        public XMLDeclarationRetarderDataProviderV10(
+            int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(componentNode, sourceFile)
+        {
+			_axleNumber = axleNumber;
+            SourceType = DataSourceType.XMLFile;
+            Vehicle = vehicle;
+        }
 
-		public virtual RetarderType Type => Vehicle.RetarderType;
+        #region Implementation of IRetarderInputData
 
-		public virtual double Ratio => Vehicle.RetarderRatio;
+        public virtual RetarderType Type => Vehicle.GetRetarderType(AxleNumber.Value);
 
-		public virtual TableData LossMap =>
+		public virtual double Ratio => Vehicle.GetRetarderRatio(AxleNumber.Value);
+
+        private int? AxleNumber =>
+            _axleNumber ?? (_axleNumber = int.Parse(GetAttribute(BaseNode?.ParentNode, "axleNumber") ?? $"{Constants.NOT_IN_AXLE_POWERTRAIN}"));
+
+        public virtual TableData LossMap =>
 			ReadTableData(
 				XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
 				AttributeMappings.RetarderLossmapMapping);

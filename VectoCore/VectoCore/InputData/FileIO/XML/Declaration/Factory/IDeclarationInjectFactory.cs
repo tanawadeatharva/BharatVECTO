@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
@@ -112,11 +113,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAngledriveInputData CreateAngledriveData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
-		IXMLEngineDeclarationInputData CreateEngineData(
+        IXMLAngledriveInputData CreateAngledriveData(
+            string version, int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+        IXMLEngineDeclarationInputData CreateEngineData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLRetarderInputData CreateRetarderData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLRetarderInputData CreateRetarderData(
+            string version, int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 		IXMLAuxiliariesDeclarationInputData CreateAuxiliariesData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
@@ -201,6 +208,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLFuelCellDeclarationInputData CreateFuelCellInputData(string version, XmlNode componentNode, string sourceFile);
 
 		IXMLFuelCellSystemDeclarationInputData CreateFuelCellSystemInputData(string version, XmlNode componentNode, string sourceFile);
+
+        IXMLAxlePowertrainDeclarationInputData CreateAxlePowertrainInputData(
+			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
         IXMLMonitoringReader CreateMonitoringReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode monitoringNode);
     }

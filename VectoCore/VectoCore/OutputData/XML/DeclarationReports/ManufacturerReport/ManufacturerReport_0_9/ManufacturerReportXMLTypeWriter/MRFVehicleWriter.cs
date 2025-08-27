@@ -137,7 +137,46 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class FCHV_F2_LorryVehicleTypeWriter : VehicleTypeWriter
+	public class Multiple_FCHV_LorryVehicleTypeWriter : VehicleTypeWriter
+	{
+        public Multiple_FCHV_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetFCHV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_FCHV_LorryComponentsType().GetElement(inputData));
+        }
+    }
+
+    public class Multiple_PEV_LorryVehicleTypeWriter : VehicleTypeWriter
+    {
+        public Multiple_PEV_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetPEV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_PEV_LorryComponentsType().GetElement(inputData));
+        }
+    }
+
+    public class Multiple_SHEV_LorryVehicleTypeWriter : VehicleTypeWriter
+    {
+        public Multiple_SHEV_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetHEV_lorryVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_SHEV_LorryComponentsType().GetElement(inputData));
+        }
+    }
+
+    public class FCHV_F2_LorryVehicleTypeWriter : VehicleTypeWriter
 	{
 		public FCHV_F2_LorryVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
@@ -397,7 +436,46 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class FCHV_F2_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	public class Multiple_SHEV_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+        public Multiple_SHEV_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetHEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_SHEV_PrimaryBusComponentsType().GetElement(inputData));
+        }
+    }
+
+	public class Multiple_PEV_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+        public Multiple_PEV_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetPEV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_PEV_PrimaryBusComponentsType().GetElement(inputData));
+        }
+    }
+
+	public class Multiple_FCHV_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
+	{
+        public Multiple_FCHV_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetFCHV_PrimaryBusVehicleOutputGroup().GetElements(inputData),
+                new XElement(_mrf + "SimulationToolLicenseNumber", inputData.JobInputData.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetMultiple_FCHV_PrimaryBusComponentsType().GetElement(inputData));
+        }
+    }
+
+    public class FCHV_F2_PrimaryBusVehicleTypeWriter : VehicleTypeWriter
 	{
 		public FCHV_F2_PrimaryBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 

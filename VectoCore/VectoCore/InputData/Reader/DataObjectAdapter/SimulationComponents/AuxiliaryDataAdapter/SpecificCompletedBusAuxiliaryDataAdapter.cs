@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Castle.Core.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -348,6 +349,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			var coolingPower = CalculateMaxCoolingPower(completedVehicle, primaryVehicle, mission, hvacConfiguration);
 			var heatingPower = CalculateMaxHeatingPower(completedVehicle, primaryVehicle, mission, hvacConfiguration);
+
+			// Diesel is hardcoded to calculate SSM parameters, but is unused and does not influence output.
 			var ssmInputs = GetDefaulSSMInputs(FuelData.Diesel);
 
 			ssmInputs.BusFloorType = completedVehicle.VehicleCode.GetFloorType();
@@ -408,7 +411,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 			return ssmInputs;
 		}
-
 
 		private TechnologyBenefits CreateTechnologyBenefits(IVehicleDeclarationInputData completedVehicle,
 			IBusAuxiliariesDeclarationData primaryBusAux)

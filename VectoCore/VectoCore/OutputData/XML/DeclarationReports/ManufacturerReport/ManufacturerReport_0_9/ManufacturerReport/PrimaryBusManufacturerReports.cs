@@ -123,6 +123,46 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	internal class Multiple_SHEV_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+        public Multiple_SHEV_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) :
+            base(MRFReportFactory, resultFactory)
+        { }
+
+        public override string OutputDataType => "HEV-Sx_PrimaryBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetMultiple_SHEV_PrimaryBusVehicleType().GetElement(inputData);
+        }
+    }
+
+	internal class Multiple_PEV_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+        public Multiple_PEV_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) :
+            base(MRFReportFactory, resultFactory)
+        { }
+
+        public override string OutputDataType => "PEV-Ex-IEPC_PrimaryBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetMultiple_PEV_PrimaryBusVehicleType().GetElement(inputData);
+        }
+    }
+
+	internal class Multiple_FCHV_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
+	{
+        public Multiple_FCHV_PrimaryBus_ManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : 
+			base(MRFReportFactory, resultFactory) { }
+
+        public override string OutputDataType => "FCHV-Fx_PrimaryBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetMultiple_FCHV_PrimaryBusVehicleType().GetElement(inputData);
+        }
+    }
 
 	internal class FCHV_F2_PrimaryBus_ManufacturerReport : PrimaryBus_ManufacturerReportBase
 	{

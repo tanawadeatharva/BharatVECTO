@@ -35,6 +35,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLFuelCellDeclarationInputData>().To<XMLFuelCellDeclarationInputDataProviderV26>()
 				.Named(XMLFuelCellDeclarationInputDataProviderV26.QUALIFIED_XSD_TYPE);
+
+            Bind<IXMLAirdragDeclarationInputData>().To<XMLDeclarationAirdragDataProviderV26>()
+                .Named(XMLDeclarationAirdragDataProviderV26.QUALIFIED_XSD_TYPE);
 		}
 	}
 }

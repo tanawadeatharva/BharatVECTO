@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
 		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
@@ -634,7 +634,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public ArchitectureID ArchitectureID => _primaryVehicle.Vehicle.ArchitectureID;
 
-		public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
+		public ArchitectureID ArchitectureIDPwt2 => _primaryVehicle.Vehicle.ArchitectureIDPwt2;
+
+        public Watt MaxChargingPower => _primaryVehicle.Vehicle.MaxChargingPower;
 
 		public Kilogram H2StorageUsableCapacity => _primaryVehicle.Vehicle.H2StorageUsableCapacity;
 
@@ -995,7 +997,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => null;
 
-		private T GetComponentPropertyValue<T>(string propertyName)
+		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => null;
+
+		public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => null;
+
+        private T GetComponentPropertyValue<T>(string propertyName)
 		{
 
 			foreach (var manufacturingStage in _manufacturingStages) {
@@ -1078,8 +1084,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public SquareMeter TransferredAirDragArea => AirdragEntry?.TransferredAirDragArea;
 
 		public SquareMeter AirDragArea_0 => AirdragEntry.AirDragArea_0;
-		
-		public XmlNode XMLSource => AirdragEntry.XMLSource;
+
+		public SquareMeter DeltaCdxA_CFD => AirdragEntry?.DeltaCdxA_CFD;
+
+		public SquareMeter DeltaCdxA_declared => AirdragEntry?.DeltaCdxA_declared;
+
+		public SquareMeter DeltaTransferredCdxA => AirdragEntry?.DeltaTransferredCdxA;
+
+		public string LicenseNumberCFDMethod => AirdragEntry?.LicenseNumberCFDMethod;
+
+        public XmlNode XMLSource => AirdragEntry.XMLSource;
 
 		public DataSource DataSource => AirdragEntry?.DataSource;
 		public bool SavedInDeclarationMode { get; }

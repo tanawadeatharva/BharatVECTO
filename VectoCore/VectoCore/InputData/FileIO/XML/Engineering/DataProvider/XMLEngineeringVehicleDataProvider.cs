@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -160,14 +161,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public ConsumerTechnology? DoorDriveTechnology => ConsumerTechnology.Unknown;
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
 
 		public TableData BoostingLimitations => null;
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components => null;
 		public string VehicleTypeApprovalNumber => null;
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+        public ArchitectureID ArchitectureIDPwt2 { get; }
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData IVehicleDeclarationInputData.ADAS => null;
@@ -248,9 +250,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual IXMLEngineeringJobInputData Job { get; }
 
-		#region Implementation of IPTOTransmissionInputData
+        #region Implementation of IPTOTransmissionInputData
 
-		public virtual string PTOTransmissionType => GetString(XMLNames.Vehicle_PTOType);
+        public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
+
+        public virtual string PTOTransmissionType => GetString(XMLNames.Vehicle_PTOType);
 
 		public virtual TableData PTOLossMap =>
 			XMLHelper.ReadEntriesOrResource(

@@ -211,7 +211,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IBusAuxiliariesDeclarationData BusAuxiliaries => null;
 
-		public IElectricStorageSystemEngineeringInputData ElectricStorage =>
+		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => null;
+
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => null;
+
+        public IElectricStorageSystemEngineeringInputData ElectricStorage =>
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {
 				new JSONElectricStorageEngineeringInputData {
 					REESSPack = Battery,
@@ -262,7 +266,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public XmlNode XMLSource => null;
 		public string VehicleTypeApprovalNumber { get; }
 		public ArchitectureID ArchitectureID { get; }
-		public bool OVC { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 
 		public Meter Length => VehicleData.Length;
@@ -275,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => Vehicle.ElectricMotorTorqueLimits;
 		public TableData BoostingLimitations => Vehicle.BoostingLimitations;
 		
 

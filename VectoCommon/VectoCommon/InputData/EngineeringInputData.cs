@@ -240,7 +240,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		TableData PTOCycleWhileDriving { get; }
 
-	}
+        int AxleNumber { get; }
+    }
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
