@@ -167,9 +167,26 @@ public class SummaryDataContainerTests
 
 	private static VectoRunData GetDummyRundata()
 	{
-		return new VectoRunData() {
+		return new VectoRunData()
+		{
 			JobName = "AuxWriteModFileSumFile",
-			EngineData = new CombustionEngineData() {
+			VehicleData = new VehicleData()
+			{
+				VehicleCategory = VectoCommon.Models.VehicleCategory.RigidTruck,
+				Loading = 1000.SI<Kilogram>(),
+				DynamicTyreRadius = 0.4.SI<Meter>(),
+				AxleData = new List<Axle>() { new Axle()
+				{
+					AxleType = VectoCommon.Models.AxleType.VehicleNonDriven,
+					AxleWeightShare = 1,
+					TwinTyres = false,
+					TyreTestLoad = 5000.SI<Newton>(),
+					RollResistanceCoefficient = 0.2,
+					Inertia = 2.SI<KilogramSquareMeter>(),
+				} },
+			},
+			EngineData = new CombustionEngineData()
+			{
 				Fuels = new[] {new CombustionEngineFuelData {
 					FuelData = FuelData.Diesel,
 					ConsumptionMap = FuelConsumptionMapReader.Create(InputDataHelper.InputDataAsTableData("",
@@ -188,11 +205,13 @@ public class SummaryDataContainerTests
 				Displacement = 7.SI(Unit.SI.Liter).Cast<CubicMeter>()
 			},
 			ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>(),
-			Cycle = new DrivingCycleData() {
+			Cycle = new DrivingCycleData()
+			{
 				Name = "MockCycle",
 				CycleType = CycleType.DistanceBased
 			},
-			DriverData = new DriverData() {
+			DriverData = new DriverData()
+			{
 				EngineStopStart = new DriverData.EngineStopStartData()
 			},
 			Aux = new List<VectoRunData.AuxData>() {

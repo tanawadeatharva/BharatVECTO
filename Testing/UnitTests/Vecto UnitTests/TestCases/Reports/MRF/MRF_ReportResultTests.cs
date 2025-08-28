@@ -151,9 +151,9 @@ public class MRF_ReportResultTests
 			resultEntry.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
 			resultEntry.ZEV_CO2 = resultEntry.ZEV_FuelConsumption_AuxHtr * resultEntry.AuxHeaterFuel.CO2PerFuelWeight;
 			if (ovc) {
-                resultEntries.Clear();
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
                 var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);
@@ -274,9 +274,9 @@ public class MRF_ReportResultTests
 			resultEntry.ZEV_FuelConsumption_AuxHtr = 1.SI<Kilogram>();
 			resultEntry.ZEV_CO2 = resultEntry.ZEV_FuelConsumption_AuxHtr * resultEntry.AuxHeaterFuel.CO2PerFuelWeight;
 			if (ovc) {
-                //resultEntries.Clear();
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
                 var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);
