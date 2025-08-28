@@ -148,9 +148,9 @@ public class CIF_ReportResultTests
 			resultEntry.FuelData.Add(fcfuel);
 			resultEntry.CorrectedFinalFuelConsumption[FuelType.H2FC] = new FuelCellFuelConsumptionCorrection(fcfuel, 0.SI<KilogramPerWattSecond>(), 1.SI<Kilogram>(), 0.SI<Kilogram>(), modData.Duration, modData.Distance);
 			if (ovc) {
-                resultEntries.Clear();
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
                 var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);
@@ -269,6 +269,7 @@ public class CIF_ReportResultTests
 			if (ovc) {
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
 				var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);
