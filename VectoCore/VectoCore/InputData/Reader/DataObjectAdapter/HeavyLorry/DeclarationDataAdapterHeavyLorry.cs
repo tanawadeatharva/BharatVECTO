@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry
 				throw new NotImplementedException("Not applicable to Heavy Lorries");
 			}
 
-			FuelCellSystemDeclarationData ILorryDeclarationDataAdapter.CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+			FuelCellSystemDeclarationData IDeclarationDataAdapter.CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
 			{
 				return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
 			}

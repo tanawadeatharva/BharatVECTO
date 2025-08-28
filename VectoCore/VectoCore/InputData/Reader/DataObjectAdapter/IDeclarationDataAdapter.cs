@@ -38,7 +38,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
 			VectoSimulationJobType jobType, bool ovc, Action<BatterySystemData> setBatteryData,
 			Action<SuperCapData> setSuperCapData);
-    }
+
+		FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
+	}
 
     public interface ILorryDeclarationDataAdapter : IDeclarationDataAdapter
 	{
@@ -73,8 +75,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			CombustionEngineData engineData,
 			IList<Tuple<PowertrainPosition, ElectricMotorData>> emData,
             ArchitectureID archId);
-
-		FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
 	}
 
 	public interface IPrimaryBusDeclarationDataAdapter : IDeclarationDataAdapter
@@ -109,8 +109,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ArchitectureID architectureId);
 		
 		RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun);
-		
-		FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem);
 	}
 
 	public interface IGenericCompletedBusDeclarationDataAdapter : IDeclarationDataAdapter

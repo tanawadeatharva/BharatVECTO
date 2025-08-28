@@ -1029,9 +1029,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					out var fcBatteries);
 
 				result.ModFileSuffix += "_pre";
-                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result, fcBatteries);
+                result.IterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFuelCellIterativeRunStrategy(
+					result,
+					DataProvider,
+					DataAdapterGeneric,
+					GetPrimaryResult,
+					FuelCellJobType,
+					fcBatteries);
 
-                return result;
+				return result;
             }
 
             protected override VectoRunData CreateVectoRunDataSpecific(Mission mission,
@@ -1097,70 +1103,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					out var fcBatteries);
 
 				result.ModFileSuffix += "_pre";
-                result.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(result, fcBatteries);
+                result.IterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFuelCellIterativeRunStrategy(
+					result,
+					DataProvider,
+					DataAdapterGeneric,
+					GetPrimaryResult,
+					FuelCellJobType,
+					fcBatteries);
 
                 return result;
-            }
-
-            private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData, Tuple<int, BatteryData> fcBatteries)
-            {
-                var iterativeRunStrategy = SetUpFCHEVIterativeRunStrategy();
-                var fuelCellData = DataAdapterGeneric.CreateFuelCells(PrimaryVehicle.Components.FuelCellSystem).ConvertToEngineeringData();
-
-                iterativeRunStrategy.Update = (modData, iterationRunData) =>
-                {
-                    var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
-
-                    runData.BatteryData.Batteries = runData.BatteryData.Batteries
-                        .Where(b => b.Item1 != fcBatteries.Item1)
-                        .ToList();
-
-                    iterationRunData.JobType = FuelCellJobType;
-                    iterationRunData.ModFileSuffix = string.Empty;
-                    iterationRunData.FuelCellSystemData = fuelCellData;
-					iterationRunData.OVCMode = runData.OVCMode == OvcHevMode.NotApplicable ? OvcHevMode.NotApplicable : OvcHevMode.ChargeSustaining;
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
-
-					if(iterationRunData.PrimaryResult != null)
-					{
-						iterationRunData.PrimaryResult = GetPrimaryResult(null, iterationRunData, iterationRunData.OVCMode);
-					}
-
-					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-                        fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
-                    iterationRunData.FuelCellSystemData.FuelCellShareMap = fchvDataAdapter.CreateFuelCellShareMap(fuelCellData);
-
-                    /// Comment from [1]: In the real run we don't use a charge sustaining battery
-                    runData.BatteryData.ChargeSustainingBatterySystem = false;
-                    runData.ModFileSuffix += runData.Loading;
-                    runData.Iteration++;
-                };
-
-                return iterativeRunStrategy;
-            }
-
-            private FCHEVIterativeRunStrategy SetUpFCHEVIterativeRunStrategy()
-            {
-                return new FCHEVIterativeRunStrategy(
-                        new[]
-                        {
-							// Pre-run, iteration 0.
-							new PreRunOptions()
-                            {
-                                WriteModAndSumData = true
-//#if TRACE_FC
-//								WriteModAndSumData = true,
-//#else
-//								WriteModAndSumData = false
-//#endif
-							},
-
-							// Real run, iteration 1.
-							new PreRunOptions()
-                            {
-                                WriteModAndSumData = true
-                            }
-                        });
             }
 
             protected virtual bool AxleGearRequired()
