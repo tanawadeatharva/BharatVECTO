@@ -18,16 +18,17 @@ namespace XMLConverterLibrary
 		{
 			try {
 				Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-			}
+                
+				document.Save(filePath);
+
+                var validateResult = XMLUtils.ValidateXML(filePath, documentType);
+                if (validateResult.IsError)
+                {
+                    return validateResult.Errors;
+                }
+            }
 			catch (Exception ex) {
 				return Error.Failure(description: ex.Message);
-			}
-
-			document.Save(filePath);
-
-			var validateResult = XMLUtils.ValidateXML(filePath, documentType);
-			if (validateResult.IsError) {
-				return validateResult.Errors;
 			}
 
 			return filePath;

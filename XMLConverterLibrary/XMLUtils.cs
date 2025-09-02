@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace XMLConverterLibrary
 		public const string V2_3 = "v2.3";
 		public const string V2_4 = "v2.4";
 		public const string V2_5 = "v2.5";
+		public const string V2_7 = "v2.7";
 
 		static XMLUtils()
 		{
@@ -62,11 +64,30 @@ namespace XMLConverterLibrary
 				return null;
 			}
 
-			var nameVersion = vehicleNode.Name.NamespaceName.Split(':').Last();
+			var versions = new List<string>();
+
+            var typeAttr = XMLDeclarationNamespaces.Xsi + XMLNames.XSIType;
+            
+			if (vehicleNode.Attribute(typeAttr) != null)
+			{
+                var typeValue = vehicleNode.Attribute(typeAttr).Value;
+                var possibleTypePrefix = typeValue.Split(':').First();
+				var ns = doc.Root.GetNamespaceOfPrefix(possibleTypePrefix) ?? vehicleNode.GetNamespaceOfPrefix(possibleTypePrefix);
+
+				if (ns != null)
+				{
+					var typeVersion = ns.NamespaceName.Split(':').Last();
+					versions.Add(typeVersion);
+				}
+            }
+
+            var nameVersion = vehicleNode.Name.NamespaceName.Split(':').Last();
+			versions.Add(nameVersion);
 
 			var defaultNamespaceVersion =  vehicleNode.GetDefaultNamespace().NamespaceName.Split(':').Last();
+            versions.Add(defaultNamespaceVersion);
 
-			return (new List<string>() { nameVersion, defaultNamespaceVersion }).OrderByDescending(x => x).First();
+            return versions.OrderByDescending(x => x).First();
 		}
 
 		public static ErrorOr<bool> ValidateXML(string xmlFile, XmlDocumentType documentType)
@@ -118,7 +139,25 @@ namespace XMLConverterLibrary
 			return doc.XPathSelectElements(QueryLocalName(elementPath.Split('/')));
 		}
 
-		public static void SetElementsDescendantsNamespace(XDocument doc, string elementPath, string version)
+        public static void SetElementsChildrenNamespace(XDocument doc, string elementPath, string version)
+        {
+            XNamespace xs = $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}";
+
+            var nodes = doc.XPathSelectElements(QueryLocalName(elementPath.Split('/')));
+
+			foreach (var node in nodes)
+			{
+				foreach (var item in node?.Elements())
+				{
+					if (item.Name.NamespaceName.StartsWith(XMLDeclarationNamespaces.DeclarationDefinition))
+					{
+						item.Name = xs + item.Name.LocalName;
+					}
+				}
+			}
+        }
+
+        public static void SetElementsDescendantsNamespace(XDocument doc, string elementPath, string version)
 		{
 			var nodes = doc.XPathSelectElements(QueryLocalName(elementPath.Split('/')));
 
@@ -136,11 +175,17 @@ namespace XMLConverterLibrary
 			}
 		}
 
+		public static XNamespace GetDefaultNamespace(XElement element)
+		{
+			var defaultNS = XElement.Parse(element.ToString()).GetDefaultNamespace();
+			return (defaultNS != XNamespace.None) ? defaultNS : element.Name.Namespace;
+        }
+
 		public static void SetElementDescendantsNamespace(XElement node, string version)
 		{
 			XNamespace xs = $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}";
 
-			foreach (var item in node.Descendants())
+			foreach (var item in node?.Descendants())
 			{
 				if (item.Name.NamespaceName.StartsWith(XMLDeclarationNamespaces.DeclarationDefinition))
 				{
@@ -149,7 +194,18 @@ namespace XMLConverterLibrary
 			}
 		}
 
-		public static void DeleteElement(XDocument doc, string elementPath)
+        public static void SetElementDescendantsNS(XElement node, XNamespace ns)
+        {
+            foreach (var item in node?.Descendants())
+            {
+                if (item.Name.NamespaceName.StartsWith(XMLDeclarationNamespaces.DeclarationDefinition))
+                {
+                    item.Name = ns + item.Name.LocalName;
+                }
+            }
+        }
+
+        public static void DeleteElement(XDocument doc, string elementPath)
 		{
 			var node = doc.XPathSelectElement(QueryLocalName(elementPath.Split('/')));
 
@@ -213,11 +269,35 @@ namespace XMLConverterLibrary
 
 			foreach (var node in nodes)
 			{
-				XNamespace xnsPrefix = doc.Root.GetNamespaceOfPrefix(prefix);
+				XNamespace xnsPrefix = doc.Root.GetNamespaceOfPrefix(prefix) ?? $"{XMLDeclarationNamespaces.DeclarationDefinition}:{prefix}";
 
 				node.Name = xnsPrefix + node.Name.LocalName;
 			}
 		}
+
+        public static void SetElementNamespace(XElement node, string prefix)
+        {
+            XNamespace xnsPrefix = node.GetNamespaceOfPrefix(prefix) ?? $"{XMLDeclarationNamespaces.DeclarationDefinition}:{prefix}";
+
+            node.Name = xnsPrefix + node.Name.LocalName;
+        }
+
+        public static void SetNodeNamespace(XElement node, XNamespace ns)
+        {
+            node.Name = ns + node.Name.LocalName;
+        }
+
+        public static void SetElementNamespace(XDocument doc, string elementPath, XNamespace ns)
+		{
+            var node = doc.XPathSelectElement(QueryLocalName(elementPath.Split('/')));
+
+			if (node == null)
+			{
+				return;
+			}
+
+			node.Name = ns + node.Name.LocalName;
+        }
 
 		public static void SetElementsAttribute(XDocument doc, string elementPath, XName attr, string value)
 		{
@@ -229,10 +309,29 @@ namespace XMLConverterLibrary
 			}
 		}
 
-		public static void SetElementsType(XDocument doc, string elementPath, string type)
+        public static void SetElementsValue(XDocument doc, string elementPath, string value)
+        {
+            var nodes = doc.XPathSelectElements(QueryLocalName(elementPath.Split('/')));
+
+            foreach (var node in nodes)
+            {
+                node.Value = value;
+            }
+        }
+
+        public static void SetElementsType(XDocument doc, string elementPath, string type)
 		{
 			SetElementsAttribute(doc, elementPath, XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, type);
 		}
 
-	}
+        public static void ConvertDashToHyphen(XDocument doc, string xpath)
+        {
+            var nodes = doc.XPathSelectElements(XMLUtils.QueryLocalName(xpath.Split('/')));
+
+            foreach (var node in nodes)
+            {
+                node.Value = node.Value.Replace('–', '-');
+            }
+        }
+    }
 }
