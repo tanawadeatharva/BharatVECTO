@@ -39,9 +39,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override HydrogenStorageTechnology? HydrogenStorageTechnology => ElementExists(XMLNames.Vehicle_H2StorageTechnology)
             ? EnumHelper.ParseEnum<HydrogenStorageTechnology>(GetString(XMLNames.Vehicle_H2StorageTechnology))
             : (HydrogenStorageTechnology?)null;
-    }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
 
-    public class XMLDeclaration_Conventional_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
+	public class XMLDeclaration_Conventional_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
     {
         public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);

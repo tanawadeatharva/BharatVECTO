@@ -124,10 +124,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public bool IsPresent => true;
 
-		public DataSource DataSource => new DataSource() {
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
-			Type = XMLType
-		};
+		public abstract DataSource DataSource { get; }
 
 		public abstract string XMLType { get; }
 
@@ -1311,6 +1308,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override string XMLType => XMLTypes.Vehicle_Conventional_CompletedBusDeclarationType;
 
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			Type = XMLType
+		};
+
 		#endregion
 	}
 	
@@ -1333,6 +1336,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         public override CompletedBusArchitecture Architecture =>
 			CompletedBusArchitecture.Exempted;
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			Type = XMLType
+		};
 
 		#endregion
 	}
@@ -1362,9 +1371,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
-
         public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			Type = XMLType
+		};
+	}
 
 	public class InterimStagePevBusVehicleViewModel : InterimStageBusVehicleViewModel
 	{
@@ -1403,10 +1417,57 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
-
 		public override string XMLType => XMLTypes.Vehicle_Pev_CompletedBusDeclarationType;
-        #endregion
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			Type = XMLType
+		};
+		#endregion
+	}
+
+	public class InterimStageFCHVBusVehicleViewModel : InterimStageBusVehicleViewModel
+	{
+		public InterimStageFCHVBusVehicleViewModel(
+			IVehicleDeclarationInputData consolidatedVehicleData,
+			IVehicleDeclarationInputData vehicleInput,
+			IMultiStageViewModelFactory multistepViewModelFactory) 
+			: base(consolidatedVehicleData, vehicleInput, multistepViewModelFactory) 
+		{ 
+		}
+
+		public InterimStageFCHVBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) 
+			: base(multiStageViewModelFactory)
+		{ 
+		}
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override CompletedBusArchitecture Architecture => CompletedBusArchitecture.FCHV;
+
+		public override bool TankSystemEnabled => false;
+
+		public override bool EcoRollEnabled => false;
+
+		public override EcoRollType? EcoRollTypeNullable { get; set; } = EcoRollType.None;
+
+		public override bool EngineStopStartEnabled => false;
+
+		public override bool? EngineStopStartNullable { get; set; } = false;
+
+		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+
+		public override string XMLType => XMLTypes.Vehicle_FCHV_CompletedBusDeclarationType;
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+
+		#endregion
+	}
 
 	public class InterimStageIEPCBusVehicleViewModel : InterimStageBusVehicleViewModel
 	{
@@ -1443,7 +1504,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
         public override string XMLType => XMLTypes.Vehicle_Iepc_CompletedBusDeclarationType;
-        #endregion
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			Type = XMLType
+		};
+		#endregion
+	}
 
 }

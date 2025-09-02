@@ -210,6 +210,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		HEV,
 		PEV,
 		IEPC,
+		FCHV,
 		Exempted
 	}
 

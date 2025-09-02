@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
@@ -369,9 +370,8 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
             }
 
 		}
+		#endregion
 	}
-
-	#endregion
 
 	public class XMLCompletedBusVehicleWriterIEPC : XMLCompletedBusVehicleWriter
 	{
@@ -442,6 +442,83 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 					_inputData.Components).GetComponents());
 			}
 		}
+	}
+
+
+	public class XMLCompletedBusVehicleWriterFCHV : XMLCompletedBusVehicleWriter
+	{
+		public static (XNamespace version, string type) VERSION = (
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			XMLDeclaration_FCHV_CompletedBus_DataProviderV27.XSD_TYPE);
+
+		#region Overrides of XMLCompletedBusVehicleWriter
+
+		public override string VehicleType => XMLDeclaration_FCHV_CompletedBus_DataProviderV27.XSD_TYPE;
+
+		#endregion
+
+		public XMLCompletedBusVehicleWriterFCHV(IVehicleDeclarationInputData inputData,
+			IXMLWriterFactory xmlWriterFactory, IGroupWriterFactory groupWriterFactory,
+			IComponentWriterFactory componentWriterFactory) : base(inputData, xmlWriterFactory, groupWriterFactory,
+			componentWriterFactory)
+		{ }
+
+		#region Overrides of XMLVehicleWriter
+
+		protected override void CreateElements()
+		{
+			_Xelement.Add(
+				_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+						GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup, _defaultNamespace)
+					.GetGroupElements(_inputData),
+				_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+						GroupNames.Vehicle_CompletedBusParametersSequenceGroup, _defaultNamespace)
+					.GetGroupElements(_inputData)
+			);
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_NgTankSystem,
+				_inputData.TankSystem));
+
+			// ReSharper disable once CoVariantArrayConversion
+			_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, _defaultNamespace)
+				.GetGroupElements(_inputData));
+
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Vehicle_BodyworkCode,
+				_inputData.VehicleCode.ToXMLFormat()));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.Bus_LowEntry, _inputData.LowEntry));
+
+
+			_Xelement.Add(_groupWriterFactory.GetVehicleDeclarationGroupWriter(
+					GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, _defaultNamespace)
+				.GetGroupElements(_inputData));
+
+			_Xelement.AddIfContentNotNull(new XElement(
+				_defaultNamespace + XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology,
+				_inputData.DoorDriveTechnology != null
+					? _inputData.DoorDriveTechnology.ToXMLFormat()
+					: null));
+
+			_Xelement.Add(new XElement(_defaultNamespace + XMLNames.Bus_VehicleDeclarationType,
+				_inputData.VehicleDeclarationType));
+			_Xelement.AddIfContentNotNull(new XElement(_defaultNamespace + XMLNames.VehicleTypeApprovalNumber,
+				_inputData.VehicleTypeApprovalNumber));
+
+			if (_inputData.ADAS != null)
+			{
+				_Xelement.Add(_componentWriterFactory
+					.getDeclarationAdasWriter(GroupNames.ADAS_PEV_Type, _defaultNamespace)
+					.GetComponent(_inputData.ADAS));
+			}
+
+			if (_inputData.Components != null)
+			{
+				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType,
+					_inputData.Components).GetComponents());
+			}
+
+		}
+		#endregion
 	}
 }
 

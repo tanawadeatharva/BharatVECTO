@@ -42,6 +42,7 @@ namespace VECTO3GUI2020.Ninject.Factories
 			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.HEV);
 			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.PEV);
 			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.IEPC);
+			AddBinding<IMultistageAuxiliariesViewModel, MultistageAuxiliariesViewModel_xEV>(CompletedBusArchitecture.FCHV);
 		}
 
 		[DebuggerStepThrough]
