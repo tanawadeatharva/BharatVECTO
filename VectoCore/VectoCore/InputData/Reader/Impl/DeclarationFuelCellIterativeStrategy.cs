@@ -124,11 +124,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							// Pre-run, iteration 0.
 							new PreRunOptions()
 							{
-#if TRACE_FC
+//#if TRACE_FC
+//								WriteModAndSumData = true,
+//#else
+//								WriteModAndSumData = false
+//#endif
 								WriteModAndSumData = true,
-#else
-								WriteModAndSumData = false
-#endif
 							},
 
 							// Real run, iteration 1.
