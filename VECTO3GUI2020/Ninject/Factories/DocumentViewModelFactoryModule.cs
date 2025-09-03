@@ -71,6 +71,9 @@ namespace VECTO3GUI2020.Ninject.Factories
                 new { AbstractXMLDeclarationCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE},
                 new { XMLDeclarationExemptedCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE},
                 new { AbstractXMLDeclarationCompletedBusDataProviderV24.NAMESPACE_URI, XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE},
+                new { XMLDeclaration_Conventional_CompletedBus_DataProviderV27.NAMESPACE_URI, XMLDeclaration_Conventional_CompletedBus_DataProviderV27.XSD_TYPE},
+                new { XMLDeclaration_HEV_CompletedBus_DataProviderV27.NAMESPACE_URI, XMLDeclaration_HEV_CompletedBus_DataProviderV27.XSD_TYPE},
+                new { XMLDeclaration_PEV_CompletedBus_DataProviderV27.NAMESPACE_URI, XMLDeclaration_PEV_CompletedBus_DataProviderV27.XSD_TYPE},
                 new { XMLDeclaration_FCHV_CompletedBus_DataProviderV27.NAMESPACE_URI, XMLDeclaration_FCHV_CompletedBus_DataProviderV27.XSD_TYPE},
                 };
             foreach (var version in StageInputXMLVersions)

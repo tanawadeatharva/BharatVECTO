@@ -61,13 +61,13 @@ namespace VECTO3GUI2020.Helper
 		}
 
 		public static XDocument CreateWrapperDocument(this XElement xElement, XNamespace defaultNamespace,
-			XmlDocumentType docType = XmlDocumentType.DeclarationJobData, string schemaVersion = "2.0")
+			XmlDocumentType docType = XmlDocumentType.DeclarationJobData, string schemaVersion = "3.0")
 		{
 			var prefixMap = new Dictionary<string, XNamespace>();
 
 			var xDocument = new XDocument();
-			var rootElement = new XElement(XMLNamespaces.Tns_v20 + XMLNames.VectoInputDeclaration, new XAttribute(XNamespace.Xmlns + "tns",
-				XMLNamespaces.Tns_v20));
+			var rootElement = new XElement(XMLNamespaces.Tns_v30 + XMLNames.VectoInputDeclaration, new XAttribute(XNamespace.Xmlns + "tns",
+				XMLNamespaces.Tns_v30));
 			Debug.WriteLine(rootElement.ToString());
 
 			rootElement.Add(new XAttribute("xmlns", defaultNamespace));

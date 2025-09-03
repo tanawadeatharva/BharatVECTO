@@ -71,14 +71,14 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 
 		protected override void Initialize()
 		{
-			_defaultNamespace = XMLNamespaces.V24;
+			_defaultNamespace = XMLNamespaces.V27;
 
 			var type = new XmlTypeAttribute();
-			type.Namespace = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+			type.Namespace = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 			type.TypeName = VehicleType;
 
-			XNamespace v20 = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
-			_Xelement = new XElement(v20 + XMLNames.Component_Vehicle,
+			XNamespace v27 = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+			_Xelement = new XElement(v27 + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr,
 					_inputData.Identifier ?? "VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20)),
 				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, VehicleType),
@@ -89,7 +89,7 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 	public class XMLCompletedBusVehicleWriterExempted : XMLCompletedBusVehicleWriter
 	{
 		public static readonly (XNamespace version, string type)[] SUPPORTEDVERSIONS = {
-			(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 				XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE)
 		};
 
@@ -144,15 +144,15 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 	public class XMLCompletedBusVehicleWriterConventional : XMLCompletedBusVehicleWriter
 	{
 		public static readonly (XNamespace version, string type)[] SUPPORTEDVERSIONS = {
-			(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
-				XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE)
+			(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+				XMLDeclaration_Conventional_CompletedBus_DataProviderV27.XSD_TYPE)
 		};
 
 		private readonly IGroupWriterFactory _groupWriterFactory;
 		private readonly bool _conventional;
 		private readonly IComponentWriterFactory _componentWriterFactory;
 
-		public override string VehicleType => XMLDeclarationConventionalCompletedBusDataProviderV24.XSD_TYPE;
+		public override string VehicleType => XMLDeclaration_Conventional_CompletedBus_DataProviderV27.XSD_TYPE;
 
 		public XMLCompletedBusVehicleWriterConventional(IVehicleDeclarationInputData inputData,
 			IXMLWriterFactory xmlWriterFactory,
@@ -217,7 +217,7 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 
 			if (_inputData.Components != null) {
 				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
-					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 					XMLTypes.Components_Conventional_CompletedBusType,
 					_inputData.Components).GetComponents());
             }
@@ -229,12 +229,12 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 	public class XMLCompletedBusVehicleWriterHEV : XMLCompletedBusVehicleWriter
 	{
 		public static (XNamespace version, string type) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
-			XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			XMLDeclaration_HEV_CompletedBus_DataProviderV27.XSD_TYPE);
 
 		#region Overrides of XMLCompletedBusVehicleWriter
 
-		public override string VehicleType => XMLDeclarationHevCompletedBusDataProviderV24.XSD_TYPE;
+		public override string VehicleType => XMLDeclaration_HEV_CompletedBus_DataProviderV27.XSD_TYPE;
 
 		#endregion
 
@@ -292,7 +292,8 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 
 			if (_inputData.Components != null) {
 				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
-					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType,
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+					XMLTypes.Components_xEV_CompletedBusType,
 					_inputData.Components).GetComponents());
             }
 		}
@@ -303,12 +304,12 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 	public class XMLCompletedBusVehicleWriterPEV : XMLCompletedBusVehicleWriter
 	{
 		public static (XNamespace version, string type) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
-			XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			XMLDeclaration_PEV_CompletedBus_DataProviderV27.XSD_TYPE);
 
 		#region Overrides of XMLCompletedBusVehicleWriter
 
-		public override string VehicleType => XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE;
+		public override string VehicleType => XMLDeclaration_PEV_CompletedBus_DataProviderV27.XSD_TYPE;
 
 		#endregion
 
@@ -365,7 +366,8 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 
 			if (_inputData.Components != null) {
 				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
-					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType,
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, 
+					XMLTypes.Components_xEV_CompletedBusType,
 					_inputData.Components).GetComponents());
             }
 
@@ -373,6 +375,7 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 		#endregion
 	}
 
+	// todo amogoda: delete
 	public class XMLCompletedBusVehicleWriterIEPC : XMLCompletedBusVehicleWriter
 	{
 		public static (XNamespace version, string type) VERSION = (
@@ -438,7 +441,8 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 
 			if (_inputData.Components != null) {
 				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
-					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType,
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+					XMLTypes.Components_xEV_CompletedBusType,
 					_inputData.Components).GetComponents());
 			}
 		}
@@ -463,7 +467,21 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 			componentWriterFactory)
 		{ }
 
-		#region Overrides of XMLVehicleWriter
+		protected override void Initialize()
+		{
+			_defaultNamespace = XMLNamespaces.V27;
+
+			var type = new XmlTypeAttribute();
+			type.Namespace = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+			type.TypeName = VehicleType;
+
+			XNamespace v27 = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+			_Xelement = new XElement(v27 + XMLNames.Component_Vehicle,
+				new XAttribute(XMLNames.Component_ID_Attr,
+					_inputData.Identifier ?? "VEH-" + Guid.NewGuid().ToString("n").Substring(0, 20)),
+				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, VehicleType),
+				new XAttribute("xmlns", _defaultNamespace));
+		}
 
 		protected override void CreateElements()
 		{
@@ -513,12 +531,12 @@ namespace VECTO3GUI2020.Util.XML.Vehicle
 			if (_inputData.Components != null)
 			{
 				_Xelement.Add(_xmlWriterFactory.CreateComponentsWriterWithVersion(
-					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType,
+					XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+					XMLTypes.Components_xEV_CompletedBusType,
 					_inputData.Components).GetComponents());
 			}
 
 		}
-		#endregion
 	}
 }
 

@@ -46,11 +46,13 @@ namespace VECTO3GUI2020.Util.XML.Components
 	{
 
 		public static (XNamespace ns, string xsdType) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			XMLTypes.Components_xEV_CompletedBusType);
 
 
 
-		public XMLCompletedBusComponentsWriter_xEV(IXMLWriterFactory writerFactory) : base(writerFactory) { }
+		public XMLCompletedBusComponentsWriter_xEV(IXMLWriterFactory writerFactory) 
+			: base(writerFactory) { }
 
 		#region Overrides of XMLCompletedBusComponentsWriter
 
@@ -88,7 +90,7 @@ namespace VECTO3GUI2020.Util.XML.Components
 	public class XMLCompletedBusComponentWriter_Conventional : XMLCompletedBusComponentsWriter
 	{
 		public static (XNamespace ns, string xsdType) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_Conventional_CompletedBusType);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, XMLTypes.Components_Conventional_CompletedBusType);
 
 		public XMLCompletedBusComponentWriter_Conventional(IXMLWriterFactory writerFactory) : base(writerFactory) { }
 

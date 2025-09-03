@@ -64,7 +64,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationConventionalCompletedBusDataProviderV24);
 		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedCompletedBusDataProviderV24);
-		public static string VERSION = INPUTPROVIDERTYPE.ToString();
+		public static string VERSION { get; set; } = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
 		public abstract CompletedBusArchitecture Architecture { get; }
@@ -1310,7 +1310,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override DataSource DataSource => new DataSource()
 		{
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 			Type = XMLType
 		};
 
@@ -1339,7 +1339,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override DataSource DataSource => new DataSource()
 		{
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 			Type = XMLType
 		};
 
@@ -1375,7 +1375,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override DataSource DataSource => new DataSource()
 		{
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 			Type = XMLType
 		};
 	}
@@ -1421,7 +1421,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override DataSource DataSource => new DataSource()
 		{
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 			Type = XMLType
 		};
 		#endregion
@@ -1507,7 +1507,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override DataSource DataSource => new DataSource()
 		{
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
 			Type = XMLType
 		};
 		#endregion

@@ -15,16 +15,16 @@ namespace VECTO3GUI2020.Resources.XML
 			XMLDeclarationPEVCompletedBusDataProviderV24.XSD_TYPE;
 		public const string Vehicle_Iepc_CompletedBusDeclarationType =
 			XMLDeclarationIepcCompletedBusDataProviderV24.XSD_TYPE;
-		public const string Vehicle_FCHV_CompletedBusDeclarationType =
-			XMLDeclaration_FCHV_CompletedBus_DataProviderV27.XSD_TYPE;
 		public const string Vehicle_Exempted_CompletedBusDeclarationType =
 			XMLDeclarationExemptedCompletedBusDataProviderV24.XSD_TYPE;
 
+		public const string Vehicle_FCHV_CompletedBusDeclarationType =
+			XMLDeclaration_FCHV_CompletedBus_DataProviderV27.XSD_TYPE;
 
-        #endregion
+		#endregion
 
-        #region Components
-        public const string Components_xEV_CompletedBusType = "Components_xEV_CompletedBusType";
+		#region Components
+		public const string Components_xEV_CompletedBusType = "Components_xEV_CompletedBusType";
 		public const string Components_Conventional_CompletedBusType = "Components_Conventional_CompletedBusType";
 		#endregion 
 

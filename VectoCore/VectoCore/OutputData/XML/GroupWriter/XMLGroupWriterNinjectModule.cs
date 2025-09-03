@@ -19,30 +19,27 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter
 		{
 			Bind<IGroupWriterFactory>().ToFactory(() => new UseFirstTwoArgumentsAsInstanceProvider(1, false)).InSingletonScope();
 
-			///Vehicle V2_4	
-			var v24 = XMLDeclarationNamespaces.V24;
-			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusGeneralParametersWriterV2_4>().InSingletonScope().
-				Named(GetName(GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup, v24));
-			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusParametersWriterV2_4>().InSingletonScope().
-				Named(GetName(GroupNames.Vehicle_CompletedBusParametersSequenceGroup, v24));
-			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusDimensionsWriter_V2_4>().InSingletonScope().
-				Named(GetName(GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, v24));
-			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusPassengerCountWriter_V2_4>().InSingletonScope().
-				Named(GetName(GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, v24));
+			///Vehicle V2_7
+			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusGeneralParametersWriter>().InSingletonScope().
+				Named(GetName(GroupNames.Vehicle_CompletedBus_GeneralParametersSequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusParametersWriter>().InSingletonScope().
+				Named(GetName(GroupNames.Vehicle_CompletedBusParametersSequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusDimensionsWriter>().InSingletonScope().
+				Named(GetName(GroupNames.Vehicle_CompletedBus_DimensionsSequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IVehicleDeclarationGroupWriter>().To<CompletedBusPassengerCountWriter>().InSingletonScope().
+				Named(GetName(GroupNames.Vehicle_CompletedBus_PassengerCountSequenceGroup, XMLDeclarationNamespaces.V27));
 
-			///BusAuxiliaries_V2_4
-			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxElectricSystemLightsGroupWriter_v2_4>().InSingletonScope().
-				Named(GetName(GroupNames.BusAuxElectricSystemLightsGroup, v24));
-			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxElectricSystemSupplyGroupWriter_v2_4>().InSingletonScope()
-				.Named(GetName(GroupNames.BusAuxElectricSystemSupplySequenceGroup, v24));
-			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACConventionalGroupWriter_v2_4>().InSingletonScope()
-				.Named(GetName(GroupNames.BusAuxHVACConventionalSequenceGroup, v24));
-			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACxEVGroupWriter_v2_4>().InSingletonScope()
-				.Named(GetName(GroupNames.BusAuxHVACxEVSequenceGroup, v24));
-			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACHeatPumpWriter_v2_4>().InSingletonScope()
-				.Named(GetName(GroupNames.BusAuxHVACHeatPumpSequenceGroup, v24));
-
-
+			///BusAuxiliaries_V2_7
+			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxElectricSystemLightsGroupWriter>().InSingletonScope().
+				Named(GetName(GroupNames.BusAuxElectricSystemLightsGroup, XMLDeclarationNamespaces.V27));
+			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxElectricSystemSupplyGroupWriter>().InSingletonScope()
+				.Named(GetName(GroupNames.BusAuxElectricSystemSupplySequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACConventionalGroupWriter>().InSingletonScope()
+				.Named(GetName(GroupNames.BusAuxHVACConventionalSequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACxEVGroupWriter>().InSingletonScope()
+				.Named(GetName(GroupNames.BusAuxHVACxEVSequenceGroup, XMLDeclarationNamespaces.V27));
+			Bind<IBusAuxiliariesDeclarationGroupWriter>().To<BusAuxHVACHeatPumpWriter>().InSingletonScope()
+				.Named(GetName(GroupNames.BusAuxHVACHeatPumpSequenceGroup, XMLDeclarationNamespaces.V27));
 		}
 
 		#endregion
