@@ -786,7 +786,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 						GearboxType.APTN,
 						Vehicle.Components.IEPC.Gears.Count);
 
-				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData);
+				runData.GearboxData = DataAdapter.CreateGearboxData(Vehicle, runData, GearboxType.APTN);
 			}
 		}
 
