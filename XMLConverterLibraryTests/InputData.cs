@@ -137,5 +137,22 @@ namespace XMLConverterLibraryTests
         public const string GEN_PRIMARYCOACH_S2_BASE_AMT_V2_4 = $"{V2_4_GEN}/PrimaryCoach_S2_Base_AMT.xml";
         public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_31B_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_31b.xml";
         public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_34F_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_34f.xml";
+        public const string GEN_INPUT_AIRDRAG_ONLY_31B2_V2_4 = $"{V2_4_GEN}/input_airdragonly_31b2.xml";
+        public const string GEN_INPUT_AUX_31B2_V2_4 = $"{V2_4_GEN}/input_aux_31b2.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_31B2_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_31b2.xml";
+        public const string GEN_INPUT_AIRGRAG_ONLY_31B2_NGPI_V2_4 = $"{V2_4_GEN}/input_airdragonly_31b2_ngpi.xml";
+        public const string GEN_INPUT_AUX_31B2_NGPI_V2_4 = $"{V2_4_GEN}/input_aux_31b2_ngpi.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P31_32_NGPI_V2_4 = $"{V2_4_GEN}/primary_heavyBus group_P31_32_Smart_ES_NG-PI.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_31B2_NGPI_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_31b2_ngpi.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_34F_COMP34F_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_34f_Comp34f.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_39A_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_39a.xml";
+        public const string GEN_VECTO_VEHICLE_MEDIUM_LORRY_4X2_V2_4 = $"{V2_4_GEN}/vecto_vehicle-medium_lorry_4x2.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P35_36_NONSMART_V2_4 = $"{V2_4_GEN}/primary_heavyBus group_P35_36_nonSmart.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P37_38_SMART_V2_4 = $"{V2_4_GEN}/primary_heavyBus group_P37_38_SmartES_PS.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P39_40_NONSMART_V2_4 = $"{V2_4_GEN}/primary_heavyBus group P39_40_nonSmart_ESS.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P31_32_SMART_V2_4 = $"{V2_4_GEN}/primary_heavyBus group_P31_32_Smart_ES_FM.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_31B_FM_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_31b_FM.xml";
+        public const string GEN_PRIMARY_HEAVYBUS_GROUP_P33_34_SMART_FM_V2_4 = $"{V2_4_GEN}/primary_heavyBus group_P33_34_SmartPS_FM.xml";
+        public const string GEN_VECTO_VEHICLE_COMPLETED_HEAVYBUS_34F_FM_V2_4 = $"{V2_4_GEN}/vecto_vehicle-completed_heavyBus_34f_FM.xml";
     }
 }

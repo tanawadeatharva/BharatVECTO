@@ -9,7 +9,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCommon.InputData;
-using System.ComponentModel;
 
 namespace XMLConverterLibrary
 {
@@ -55,8 +54,6 @@ namespace XMLConverterLibrary
 
         public XNamespace TargetNamespace => $"{XMLDeclarationNamespaces.DeclarationDefinition}:{TargetVersion}";
 
-        public static XName TypeAttribute => XMLDeclarationNamespaces.Xsi + XMLNames.XSIType;
-
         protected XDocument ConvertWithoutVersionValidation(XDocument doc)
 		{
 			ConvertRootElement(doc);
@@ -82,13 +79,6 @@ namespace XMLConverterLibrary
 
             return versions.OrderByDescending(x => x).First();
 		}
-
-        protected string SelectLowestVersion(XElement node)
-        {
-            List<string> versions = GetVersions(node);
-
-            return versions.OrderBy(x => x).First();
-        }
 
         private List<string> GetVersions(XElement node, string defaultVersion = null)
         {
@@ -136,9 +126,7 @@ namespace XMLConverterLibrary
 
 		protected bool IsVehicleExempted(XDocument doc)
 		{
-			var componentsNode = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle", "Components"));
-
-			return componentsNode == null;
+			return doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle", "Components")) == null;
 		}
 
 		protected virtual void ConvertRootElement(XDocument doc)
@@ -169,143 +157,37 @@ namespace XMLConverterLibrary
 			doc.Root.SetAttributeValue(XNamespace.Xmlns + "tns", TNS_Namespace);
 		}
 
-		protected static string CalculateAxleConfiguration(XDocument doc)
-		{
-			var axles = XMLUtils.GetElements(doc, "AxleWheels/Data/Axles/Axle");
+        protected abstract void ConvertEngine(XDocument doc);
 
-			var drivenAxlesCount = axles.Count(x => x.XPathSelectElement(XMLUtils.QueryLocalName("AxleType")).Value == "VehicleDriven");
+        protected abstract void ConvertGearbox(XDocument doc);
 
-			return (axles.Count() > 0) ? $"{axles.Count() * 2}x{drivenAxlesCount * 2}" : "4x2";
-		}
+        protected abstract void ConvertRetarder(XDocument doc);
 
-        protected virtual void ConvertEngine(XDocument doc)
-        {
-            var dataNode = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle/Components/Engine/Data".Split('/')));
+        protected abstract void ConvertAxleWheels(XDocument doc);
 
-            if (dataNode == null)
-            {
-                return;
-            }
+        protected abstract void ConvertAxlegear(XDocument doc);
 
-            string version = SelectHighestVersion(dataNode);
+        protected abstract void ConvertAuxiliaries(XDocument doc);
 
-            XMLUtils.SetElementsType(doc, "Vehicle/Components/Engine/Data", "EngineDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "Vehicle/Components/Engine/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/Components/Engine/Data", version);
-            XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Engine/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}");
-            XMLUtils.SetElementsNamespace(doc, "Vehicle/Components/Engine/Signature", XMLUtils.V2_0);
-        }
+        protected abstract void ConvertAirDrag(XDocument doc);
 
-        protected virtual void ConvertGearbox(XDocument doc)
-        {
-            var dataNode = doc.XPathSelectElement(XMLUtils.QueryLocalName("Gearbox/Data".Split('/')));
+        protected abstract void ConvertTorqueLimits(XDocument doc);
 
-            if (dataNode == null)
-            {
-                return;
-            }
+        protected abstract void ConvertTorqueConverter(XDocument doc);
 
-            string version = SelectHighestVersion(dataNode);
+        protected abstract void ConvertAngleDrive(XDocument doc);
 
-            XMLUtils.SetElementsType(doc, "Gearbox/Data", "GearboxDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "Gearbox/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsChildrenNamespace(doc, "Gearbox/Data", version);
-            XMLUtils.SetElementsAttribute(doc, "Gearbox/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}");
-            XMLUtils.SetElementsType(doc, "Gearbox/Data/Gears", "GearsDeclarationType");
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Gearbox/Data/Gears", XMLUtils.V2_0);
-            XMLUtils.SetElementsNamespace(doc, "Gearbox/Signature", XMLUtils.V2_0);
-        }
+        protected abstract void ConvertPTO(XDocument doc);
 
-        protected virtual void ConvertRetarder(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "Retarder/Data", "RetarderDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "Retarder/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Retarder/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "Retarder/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsNamespace(doc, "Retarder/Signature", XMLUtils.V2_0);
-        }
+        protected abstract void ConvertADAS(XDocument doc);
 
-        protected virtual void ConvertAxlegear(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "Axlegear/Data", "AxlegearDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "Axlegear/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Axlegear/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "Axlegear/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsNamespace(doc, "Axlegear/Signature", XMLUtils.V2_0);
-        }
+        protected abstract void ConvertComponentsTopElement(XDocument doc);
 
-        protected virtual void ConvertAxleWheels(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "AxleWheels/Data", "AxleWheelsDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "AxleWheels/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "AxleWheels/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "AxleWheels/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsType(doc, "AxleWheels/Data/Axles/Axle", "AxleDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "AxleWheels/Signature", XMLUtils.V2_0);
+        protected abstract void ConvertHEVProperties(XDocument doc);
 
-            ConvertTyres(doc);
-        }
+        protected abstract void ConvertElectricMotorTorqueLimits(XDocument doc);
 
-        protected virtual void ConvertTyres(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "Tyre/Data", "TyreDataDeclarationType");
-
-            var nodes = doc.XPathSelectElements(XMLUtils.QueryLocalName("Tyre/Data".Split('/')));
-
-            foreach (var node in nodes)
-            {
-                var tyreVersion = SelectHighestVersion(node);
-
-                node.SetAttributeValue("xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{tyreVersion}");
-
-                XMLUtils.SetElementDescendantsNamespace(node, tyreVersion);
-            }
-        }
-
-        protected virtual void ConvertAuxiliaries(XDocument doc)
-        {
-            XMLUtils.SetElementsAttribute(doc, "Auxiliaries", "xmlns", null);
-            XMLUtils.SetElementsType(doc, "Auxiliaries", null);
-            XMLUtils.SetElementsType(doc, "Auxiliaries/Data", "AUX_Conventional_LorryDataType");
-            XMLUtils.SetElementsAttribute(doc, "Auxiliaries/Data/SteeringPump/Technology", "axleNumber", "1");
-            XMLUtils.FixElementsValue(doc, "Auxiliaries/Data/SteeringPump/Technology");
-        }
-
-        protected virtual void ConvertAirDrag(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "AirDrag/Data", "AirDragDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "AirDrag/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "AirDrag/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "AirDrag/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsNamespace(doc, "AirDrag/Signature", XMLUtils.V2_0);
-        }
-
-        protected virtual void ConvertTorqueLimits(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "Vehicle/TorqueLimits", "TorqueLimitsType");
-            XMLUtils.SetElementsNamespace(doc, "Vehicle/TorqueLimits", XMLUtils.V2_4);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/TorqueLimits", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-        }
-
-        protected virtual void ConvertTorqueConverter(XDocument doc)
-        {
-            XMLUtils.SetElementsNamespace(doc, "TorqueConverter", TargetVersion);
-            XMLUtils.SetElementsType(doc, "TorqueConverter/Data", "TorqueConverterDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "TorqueConverter/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "TorqueConverter/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "TorqueConverter/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsNamespace(doc, "TorqueConverter/Signature", XMLUtils.V2_0);
-        }
-
-        protected virtual void ConvertAngleDrive(XDocument doc)
-        {
-            XMLUtils.SetElementsType(doc, "Angledrive/Data", "AngledriveDataDeclarationType");
-            XMLUtils.SetElementsNamespace(doc, "Angledrive/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Angledrive/Data", XMLUtils.V2_0);
-            XMLUtils.SetElementsAttribute(doc, "Angledrive/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
-            XMLUtils.SetElementsNamespace(doc, "Angledrive/Signature", XMLUtils.V2_0);
-        }
+        protected abstract void ConvertBoostingLimitations(XDocument doc);
     }
 
 	public abstract class AbstractTargetV2_4 : AbstractXMLJobConverterSingle
@@ -343,6 +225,15 @@ namespace XMLConverterLibrary
             XMLUtils.SetElementName(doc, "Vehicle/CurbMassChassis", "CorrectedActualMass", TargetNamespace);
             XMLUtils.SetElementName(doc, "Vehicle/GrossVehicleMass", "TechnicalPermissibleMaximumLadenMass", TargetNamespace);
             XMLUtils.AddElementAfter(doc, "Vehicle/ChassisConfiguration", "AxleConfiguration", CalculateAxleConfiguration(doc));
+        }
+
+        protected static string CalculateAxleConfiguration(XDocument doc)
+        {
+            var axles = XMLUtils.GetElements(doc, "AxleWheels/Data/Axles/Axle");
+
+            var drivenAxlesCount = axles.Count(x => x.XPathSelectElement(XMLUtils.QueryLocalName("AxleType")).Value == "VehicleDriven");
+
+            return (axles.Count() > 0) ? $"{axles.Count() * 2}x{drivenAxlesCount * 2}" : "4x2";
         }
 
         protected override XDocument ConvertExemptedVehicle(XDocument doc)
@@ -416,31 +307,187 @@ namespace XMLConverterLibrary
             return power1 + power2;
         }
 
-        protected override XDocument ConvertNonExemptedVehicle(XDocument doc)
+        protected override void ConvertEngine(XDocument doc)
+        {
+            var dataNode = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle/Components/Engine/Data".Split('/')));
+
+            if (dataNode == null)
+            {
+                return;
+            }
+
+            string version = SelectHighestVersion(dataNode);
+
+            XMLUtils.SetElementsType(doc, "Vehicle/Components/Engine/Data", "EngineDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "Vehicle/Components/Engine/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/Components/Engine/Data", version);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Engine/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}");
+            XMLUtils.SetElementsNamespace(doc, "Vehicle/Components/Engine/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertGearbox(XDocument doc)
+        {
+            var dataNode = doc.XPathSelectElement(XMLUtils.QueryLocalName("Gearbox/Data".Split('/')));
+
+            if (dataNode == null)
+            {
+                return;
+            }
+
+            string version = SelectHighestVersion(dataNode);
+            
+            XMLUtils.SetElementsType(doc, "Gearbox/Data", "GearboxDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "Gearbox/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsChildrenNamespace(doc, "Gearbox/Data", version);
+            XMLUtils.SetElementsAttribute(doc, "Gearbox/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{version}");
+            XMLUtils.SetElementsType(doc, "Gearbox/Data/Gears", "GearsDeclarationType");
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Gearbox/Data/Gears", XMLUtils.V2_0);
+            XMLUtils.SetElementsNamespace(doc, "Gearbox/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertRetarder(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "Retarder/Data", "RetarderDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "Retarder/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Retarder/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "Retarder/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsNamespace(doc, "Retarder/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertAxleWheels(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "AxleWheels/Data", "AxleWheelsDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "AxleWheels/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "AxleWheels/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "AxleWheels/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsType(doc, "AxleWheels/Data/Axles/Axle", "AxleDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "AxleWheels/Signature", XMLUtils.V2_0);
+
+            ConvertTyres(doc);
+        }
+
+        protected virtual void ConvertTyres(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "Tyre/Data", "TyreDataDeclarationType");
+
+            var nodes = doc.XPathSelectElements(XMLUtils.QueryLocalName("Tyre/Data".Split('/')));
+
+            foreach (var node in nodes)
+            {
+                var tyreVersion = SelectHighestVersion(node);
+
+                node.SetAttributeValue("xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{tyreVersion}");
+
+                XMLUtils.SetElementDescendantsNamespace(node, tyreVersion);
+            }
+        }
+
+        protected override void ConvertAxlegear(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "Axlegear/Data", "AxlegearDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "Axlegear/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Axlegear/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "Axlegear/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsNamespace(doc, "Axlegear/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertAuxiliaries(XDocument doc)
+        {
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/Components/Auxiliaries", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Auxiliaries", "xmlns", null);
+            XMLUtils.SetElementsType(doc, "Vehicle/Components/Auxiliaries", null);
+            XMLUtils.SetElementsType(doc, "Vehicle/Components/Auxiliaries/Data", "AUX_Conventional_LorryDataType");
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Auxiliaries/Data/SteeringPump/Technology", "axleNumber", "1");
+            XMLUtils.FixElementsValue(doc, "Vehicle/Components/Auxiliaries/Data/SteeringPump/Technology");
+        }
+
+        protected override void ConvertAirDrag(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "AirDrag/Data", "AirDragDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "AirDrag/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "AirDrag/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "AirDrag/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsNamespace(doc, "AirDrag/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertTorqueConverter(XDocument doc)
+        {
+            XMLUtils.SetElementsNamespace(doc, "TorqueConverter", TargetVersion);
+            XMLUtils.SetElementsType(doc, "TorqueConverter/Data", "TorqueConverterDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "TorqueConverter/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "TorqueConverter/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "TorqueConverter/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsNamespace(doc, "TorqueConverter/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertAngleDrive(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "Angledrive/Data", "AngledriveDataDeclarationType");
+            XMLUtils.SetElementsNamespace(doc, "Angledrive/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Angledrive/Data", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "Angledrive/Data", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+            XMLUtils.SetElementsNamespace(doc, "Angledrive/Signature", XMLUtils.V2_0);
+        }
+
+        protected override void ConvertPTO(XDocument doc)
         {
             XMLUtils.SetElementsType(doc, "Vehicle/PTO", "PTOType");
             XMLUtils.SetElementsAttribute(doc, "Vehicle/PTO", "xmlns", null);
             XMLUtils.SetElementNamespace(doc, "Vehicle/PTO", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{TargetVersion}");
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/PTO", TargetVersion);
+        }
 
+        protected override void ConvertADAS(XDocument doc)
+        {
             XMLUtils.SetElementsType(doc, "Vehicle/ADAS", "ADAS_Conventional_Type");
             XMLUtils.SetElementNamespace(doc, "Vehicle/ADAS", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{TargetVersion}");
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/ADAS", TargetVersion);
+        }
 
+        protected override void ConvertComponentsTopElement(XDocument doc)
+        {
             XMLUtils.SetElementsType(doc, "Vehicle/Components", "Components_Conventional_LorryType");
             XMLUtils.SetElementsChildrenNamespace(doc, "Vehicle/Components", TargetVersion);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/Components/Auxiliaries", TargetVersion);
+        }
 
+        protected override void ConvertTorqueLimits(XDocument doc)
+        {
+            XMLUtils.SetElementsType(doc, "Vehicle/TorqueLimits", "TorqueLimitsType");
+            XMLUtils.SetElementsNamespace(doc, "Vehicle/TorqueLimits", TargetVersion);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/TorqueLimits", XMLUtils.V2_0);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", "xmlns", $"{XMLDeclarationNamespaces.DeclarationDefinition}:{XMLUtils.V2_0}");
+        }
+
+        protected override void ConvertHEVProperties(XDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ConvertElectricMotorTorqueLimits(XDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ConvertBoostingLimitations(XDocument doc)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override XDocument ConvertNonExemptedVehicle(XDocument doc)
+        {
+            ConvertPTO(doc);
+            ConvertADAS(doc);
+            ConvertTorqueLimits(doc);
+            ConvertComponentsTopElement(doc);
             ConvertEngine(doc);
             ConvertGearbox(doc);
+            ConvertTorqueConverter(doc);
+            ConvertAngleDrive(doc);
             ConvertRetarder(doc);
             ConvertAxlegear(doc);
             ConvertAxleWheels(doc);
             ConvertAuxiliaries(doc);
             ConvertAirDrag(doc);
-            ConvertTorqueLimits(doc);
-            ConvertTorqueConverter(doc);
-            ConvertAngleDrive(doc);
 
             return doc;
         }
@@ -580,7 +627,7 @@ namespace XMLConverterLibrary
             return ((oldType != null) && _componentsTypes.ContainsKey(oldType)) ? _componentsTypes[oldType] : null;
         }
 
-        protected override XDocument ConvertNonExemptedVehicle(XDocument doc)
+        protected override void ConvertPTO(XDocument doc)
         {
             var vehicleType = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle")).Attribute(XMLDeclarationNamespaces.Xsi + XMLNames.XSIType).Value;
 
@@ -592,32 +639,45 @@ namespace XMLConverterLibrary
             {
                 XMLUtils.SetElementsAttribute(doc, "Vehicle/PTO", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
                 XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/PTO", TargetVersion);
+                XMLUtils.SetElementsAttribute(doc, "Vehicle/PTO", "xmlns", null);
             }
+        }
 
+        protected override void ConvertADAS(XDocument doc)
+        {
             XMLUtils.SetElementsAttribute(doc, "Vehicle/ADAS", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/ADAS", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/ADAS", "xmlns", null);
 
             var isVehicleOVCHV = XMLUtils.GetElements(doc, "Vehicle/OvcHev").All(x => Boolean.Parse(x.Value));
             if (isVehicleOVCHV)
             {
                 XMLUtils.SetElementsValue(doc, "Vehicle/ADAS/EngineStopStart", "true");
             }
+        }
 
-            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
-            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/TorqueLimits", TargetVersion);
-            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", "xmlns", null);
-
+        protected override void ConvertComponentsTopElement(XDocument doc)
+        {
             XMLUtils.SetElementsAttribute(doc, "Vehicle/Components", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, GetComponentsType(doc));
             XMLUtils.SetElementsChildrenNamespace(doc, "Vehicle/Components", TargetVersion);
+        }
+
+        protected override void ConvertAuxiliaries(XDocument doc)
+        {
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/Components/Auxiliaries", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Auxiliaries", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
             XMLUtils.SetElementsAttribute(doc, "Vehicle/Components/Auxiliaries/Data", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
             XMLUtils.ConvertDashToHyphen(doc, "BatteryTechnology");
+        }
 
+        protected override void ConvertHEVProperties(XDocument doc)
+        {
             XMLUtils.SetElementName(doc, "Vehicle/OvcHev", "OVC", TargetNamespace);
             XMLUtils.DeleteElement(doc, "Vehicle/MaxChargingPower");
 
+            var vehicleType = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle")).Attribute(XMLDeclarationNamespaces.Xsi + XMLNames.XSIType).Value;
             var isVehiclePEV = _PEVTypes.Contains(vehicleType);
-
+            
             if (isVehiclePEV)
             {
                 XMLUtils.AddElementAfter(doc, "Vehicle/ArchitectureID", "OVC", "true");
@@ -625,13 +685,42 @@ namespace XMLConverterLibrary
 
             XMLUtils.AddElementAfter(doc, "Vehicle/OVC", "BatteryOnlyMode", isVehiclePEV.ToString().ToLower());
             XMLUtils.AddElementAfter(doc, "Vehicle/BatteryOnlyMode", "DynamicChargingTechnology", "None");
+        }
 
+        protected override void ConvertTorqueLimits(XDocument doc)
+        {
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
+            XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/TorqueLimits", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/TorqueLimits", "xmlns", null);
+        }
+
+        protected override void ConvertElectricMotorTorqueLimits(XDocument doc)
+        {
             XMLUtils.SetElementsAttribute(doc, "Vehicle/ElectricMotorTorqueLimits", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/ElectricMotorTorqueLimits", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/ElectricMotorTorqueLimits", "xmlns", null);
+        }
 
+        protected override void ConvertBoostingLimitations(XDocument doc)
+        {
             XMLUtils.SetElementsAttribute(doc, "Vehicle/BoostingLimitations", XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, null);
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/BoostingLimitations", TargetVersion);
+            XMLUtils.SetElementsAttribute(doc, "Vehicle/BoostingLimitations", "xmlns", null);
+        }
 
+        protected override XDocument ConvertNonExemptedVehicle(XDocument doc)
+        {
+            var vehicleType = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle")).Attribute(XMLDeclarationNamespaces.Xsi + XMLNames.XSIType).Value;
+            var isVehiclePEV = _PEVTypes.Contains(vehicleType);
+            var isVehicleOVCHV = XMLUtils.GetElements(doc, "Vehicle/OvcHev").All(x => Boolean.Parse(x.Value));
+
+            ConvertPTO(doc);
+            ConvertADAS(doc);
+            ConvertHEVProperties(doc);
+            ConvertTorqueLimits(doc);
+            ConvertElectricMotorTorqueLimits(doc);
+            ConvertBoostingLimitations(doc);
+            ConvertComponentsTopElement(doc);
             ConvertEngine(doc);
             ConvertElectricMachine(doc);
             ConvertElectricMachineGen(doc);
@@ -639,12 +728,13 @@ namespace XMLConverterLibrary
             ConvertBatteries(doc, isVehiclePEV, isVehicleOVCHV);
             ConvertCapacitor(doc);
             ConvertGearbox(doc);
+            ConvertTorqueConverter(doc);
+            ConvertAngleDrive(doc);
             ConvertRetarder(doc);
             ConvertAxlegear(doc);
             ConvertAxleWheels(doc);
             ConvertAirDrag(doc);
-            ConvertTorqueConverter(doc);
-            ConvertAngleDrive(doc);
+            ConvertAuxiliaries(doc);
 
             return doc;
         }
@@ -660,13 +750,13 @@ namespace XMLConverterLibrary
             var dataNode = node.XPathSelectElement(XMLUtils.QueryLocalName("Data"));
 
             var dataNamespace = XMLUtils.GetDefaultNamespace(dataNode);
-            var typeNamespace = GetTypeNamespaceOfElement(doc, dataNode);
+            var typeNamespace = XMLUtils.GetTypeNamespaceOfElement(doc, dataNode);
 
-            ResetTypeNamespace(dataNode, typeNamespace);
+            XMLUtils.ResetTypeNamespace(dataNode, typeNamespace);
             dataNode.SetAttributeValue("xmlns", dataNamespace);
 
             XMLUtils.SetElementsAttribute(doc, $"Vehicle/Components/{component}", "xmlns", null);
-            XMLUtils.SetElementsAttribute(doc, $"Vehicle/Components/{component}", TypeAttribute, null);
+            XMLUtils.SetElementsAttribute(doc, $"Vehicle/Components/{component}", XMLUtils.TypeAttribute, null);
         }
 
         protected override void ConvertEngine(XDocument doc)
@@ -723,27 +813,6 @@ namespace XMLConverterLibrary
             ConvertComponent(doc, "TorqueConverter");
         }
 
-        protected static XNamespace GetTypeNamespaceOfElement(XDocument doc, XElement element)
-        {
-            var typeValue = element.Attribute(TypeAttribute).Value;
-            var typePrefix = typeValue.Split(':').First();
-
-            return typeValue.Contains(":")
-                ? element.GetNamespaceOfPrefix(typePrefix) ?? doc.Root.GetNamespaceOfPrefix(typePrefix)
-                : element.Attribute("xmlns")?.Value ?? element.Parent.Attribute("xmlns")?.Value ?? XMLUtils.GetDefaultNamespace(element);
-        }
-
-        protected static void ResetTypeNamespace(XElement element, XNamespace typeNamespace)
-        {
-            var typeValue = element.Attribute(TypeAttribute).Value;
-            var typeMain = typeValue.Split(':').Last();
-            
-            var newTypePrefix = typeNamespace.NamespaceName.Split(':').Last();
-            element.SetAttributeValue(XNamespace.Xmlns + newTypePrefix, typeNamespace.NamespaceName);
-
-            element.Attribute(TypeAttribute).Value = $"{newTypePrefix}:{typeMain}";
-        }
-
         public void ConvertBatteries(XDocument doc, bool isVehiclePEV, bool isVehicleOVCHV)
         {
             XMLUtils.SetElementsChildrenNamespace(doc, "Components/ElectricEnergyStorage", TargetVersion);
@@ -753,9 +822,9 @@ namespace XMLConverterLibrary
 
             foreach (var dataNode in dataNodes)
             {
-                var typeNamespace = GetTypeNamespaceOfElement(doc, dataNode);
+                var typeNamespace = XMLUtils.GetTypeNamespaceOfElement(doc, dataNode);
                 
-                ResetTypeNamespace(dataNode, typeNamespace);
+                XMLUtils.ResetTypeNamespace(dataNode, typeNamespace);
 
                 dataNode.SetAttributeValue("xmlns", null);
 
@@ -819,9 +888,9 @@ namespace XMLConverterLibrary
 
             foreach (var dataNode in dataNodes)
             {
-                var typeNamespace = GetTypeNamespaceOfElement(doc, dataNode);
+                var typeNamespace = XMLUtils.GetTypeNamespaceOfElement(doc, dataNode);
 
-                ResetTypeNamespace(dataNode, typeNamespace);
+                XMLUtils.ResetTypeNamespace(dataNode, typeNamespace);
 
                 dataNode.SetAttributeValue("xmlns", null);
 
@@ -884,7 +953,7 @@ namespace XMLConverterLibrary
         protected override void SetVehicleType(XDocument doc, bool isExempted)
         {
             var vehicle = doc.XPathSelectElement(XMLUtils.QueryLocalName("Vehicle"));
-            var type = vehicle.Attribute(TypeAttribute).Value;
+            var type = vehicle.Attribute(XMLUtils.TypeAttribute).Value;
             
             if (type.Contains("Vehicle_IEPC_CompletedBusDeclarationType"))
             {

@@ -40,11 +40,37 @@ namespace XMLConverterLibrary
                 },
 				{
                     "Auxiliaries/Data/SteeringPump/Technology", new Dictionary<string, string>() { { "Electric", "Electric driven pump" } }
+                },
+				{
+                    "Vehicle/Components/Auxiliaries/Data/SteeringPump/Technology", new Dictionary<string, string>() { { "Electric", "Electric driven pump" } }
                 }
 			};
 		}
 
-		public static string QueryLocalName(params string[] nodePath)
+        public static XName TypeAttribute => XMLDeclarationNamespaces.Xsi + XMLNames.XSIType;
+
+        public static XNamespace GetTypeNamespaceOfElement(XDocument doc, XElement element)
+        {
+            var typeValue = element.Attribute(TypeAttribute)?.Value;
+            var typePrefix = typeValue?.Split(':').First();
+
+            return (typeValue != null) && typeValue.Contains(":")
+                ? element.GetNamespaceOfPrefix(typePrefix) ?? doc.Root.GetNamespaceOfPrefix(typePrefix)
+                : element.Attribute("xmlns")?.Value ?? element.Parent.Attribute("xmlns")?.Value ?? XMLUtils.GetDefaultNamespace(element);
+        }
+
+        public static void ResetTypeNamespace(XElement element, XNamespace typeNamespace)
+        {
+            var typeValue = element.Attribute(TypeAttribute).Value;
+            var typeMain = typeValue.Split(':').Last();
+
+            var newTypePrefix = typeNamespace.NamespaceName.Split(':').Last();
+            element.SetAttributeValue(XNamespace.Xmlns + newTypePrefix, typeNamespace.NamespaceName);
+
+            element.Attribute(TypeAttribute).Value = $"{newTypePrefix}:{typeMain}";
+        }
+
+        public static string QueryLocalName(params string[] nodePath)
 		{
 			return "./" + string.Join("",
 				nodePath.Where(x => x != null).Select(x => $"/*[local-name()='{x}']").ToArray());
@@ -66,11 +92,9 @@ namespace XMLConverterLibrary
 
 			var versions = new List<string>();
 
-            var typeAttr = XMLDeclarationNamespaces.Xsi + XMLNames.XSIType;
-            
-			if (vehicleNode.Attribute(typeAttr) != null)
+            if (vehicleNode.Attribute(TypeAttribute) != null)
 			{
-                var typeValue = vehicleNode.Attribute(typeAttr).Value;
+                var typeValue = vehicleNode.Attribute(TypeAttribute).Value;
                 var possibleTypePrefix = typeValue.Split(':').First();
 				var ns = doc.Root.GetNamespaceOfPrefix(possibleTypePrefix) ?? vehicleNode.GetNamespaceOfPrefix(possibleTypePrefix);
 
@@ -321,7 +345,7 @@ namespace XMLConverterLibrary
 
         public static void SetElementsType(XDocument doc, string elementPath, string type)
 		{
-			SetElementsAttribute(doc, elementPath, XMLDeclarationNamespaces.Xsi + XMLNames.XSIType, type);
+			SetElementsAttribute(doc, elementPath, TypeAttribute, type);
 		}
 
         public static void ConvertDashToHyphen(XDocument doc, string xpath)
