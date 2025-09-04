@@ -116,8 +116,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public HydrogenStorageTechnology? HydrogenStorageTechnology {  get; }
 
-		public string SimulationToolLicenseNumber { get; }
-
 		protected bool _exemptedVehicle;
 
 		public string Name => "Vehicle";
@@ -268,6 +266,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(Manufacturer),
 				nameof(ManufacturerAddress),
 				nameof(VIN),
+				nameof(SimulationToolLicenseNumber),
 				nameof(Model),
 				nameof(LegislativeClass),
 				nameof(CurbMassChassis),
@@ -398,6 +397,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(ManufacturerAddress)].EditingEnabled = true;
 			_parameterViewModels[nameof(VIN)].Mandatory = true;
 			_parameterViewModels[nameof(VIN)].EditingEnabled = true;
+			_parameterViewModels[nameof(SimulationToolLicenseNumber)].Mandatory = true;
+			_parameterViewModels[nameof(SimulationToolLicenseNumber)].EditingEnabled = true;
 		}
 
         #region Overrides of ViewModelBase
@@ -438,6 +439,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
 			VIN = vehicleInputData.VIN;
+			SimulationToolLicenseNumber = vehicleInputData.SimulationToolLicenseNumber;
 			Model = vehicleInputData.Model;
 			LegislativeClass = vehicleInputData.LegislativeClass;
 			CurbMassChassis = vehicleInputData.CurbMassChassis;
@@ -484,6 +486,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
 			VIN = vehicleInputData.VIN;
+			SimulationToolLicenseNumber = vehicleInputData.SimulationToolLicenseNumber;
 			Model = vehicleInputData.Model;
 			LegislativeClass = vehicleInputData.LegislativeClass;
 			CurbMassChassis = vehicleInputData.CurbMassChassis;
@@ -502,6 +505,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _manufacturer;
 		private string _model;
 		private string _vin;
+		private string _toolLicenseNumber;
 		private string _manufacturerAddress;
 
 		private bool _measurementsGroupEditingEnabled = false;
@@ -546,6 +550,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get { return _vin; }
 			set { SetProperty(ref _vin, value); }
+		}
+
+		public string SimulationToolLicenseNumber 
+		{
+			get { return _toolLicenseNumber; }
+			set { SetProperty(ref _toolLicenseNumber, value); }
 		}
 
 		public string ManufacturerAddress
@@ -1223,6 +1233,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							result = "VIN must not be empty";
 						}
 						break;
+					case nameof(SimulationToolLicenseNumber):
+						if (string.IsNullOrEmpty(SimulationToolLicenseNumber))
+						{
+							result = "Verification Tool License Number must not be empty";
+						}
+						break;
 					case nameof(AirdragModifiedEnum):
 						if (AirdragModifiedMultistepEditingEnabled && (AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN)) {
 							result = "Air drag modified has to be set";
@@ -1275,7 +1291,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			!string.IsNullOrEmpty(Error) || 
 			(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
 
-		// todo amogoda: tbd (?)
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
 		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => throw new NotImplementedException();

@@ -20,7 +20,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 	/// All Properties of IVehicleDeclarationInputData throw an NotImplementedException and should be implemented in the derived classes.
 	///  
 	/// </summary>
-    public abstract class VehicleViewModel : ViewModelBase, IVehicleViewModel
+	public abstract class VehicleViewModel : ViewModelBase, IVehicleViewModel
     {
         private static readonly string _name = "Vehicle";
         protected IXMLDeclarationVehicleData _vehicleInputData;
@@ -89,6 +89,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		#region Implementation of IVehicleViewModel, IVehicleDeclarationInputData
 		protected string _identifier;
 		protected string _vin;
+		protected string _toolLicenseNumber;
 		protected LegislativeClass _legislativeClass;
 		protected VehicleCategory _vehicleCategory;
 		protected AxleConfiguration _axleConfiguration;
@@ -182,6 +183,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 		}
 
 		public virtual string VIN
+		{
+			get => throw new NotImplementedException();
+			set => throw new NotImplementedException();
+		}
+
+		public virtual string VerificationToolLicenseNumber
 		{
 			get => throw new NotImplementedException();
 			set => throw new NotImplementedException();
@@ -393,22 +400,14 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
     public class VehicleViewModel_v1_0 : VehicleViewModel
     {
         public static readonly string VERSION = typeof(XMLDeclarationVehicleDataProviderV10).FullName;
-
-
-
-
-
-
-
-        public VehicleViewModel_v1_0(
+		
+		public VehicleViewModel_v1_0(
             IXMLDeclarationVehicleData inputData,
 			IComponentViewModelFactory componentViewModelFactory): 
             base(
                 inputData,
 				componentViewModelFactory)
 		{
-			
-
 		}
 
         protected override void CreateVehicleProperties()
@@ -513,6 +512,12 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 			set => SetProperty(ref _vin, value);
 		}
 
+		public override string VerificationToolLicenseNumber
+		{
+			get => _toolLicenseNumber;
+			set => SetProperty(ref _toolLicenseNumber, value);
+		}
+
 		public override LegislativeClass LegislativeClass
 		{
 			get => _legislativeClass;
@@ -550,6 +555,7 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle
 
 			_manufacturerAddress = _vehicleInputData.ManufacturerAddress;
 			_vin = _vehicleInputData.VIN;
+			_toolLicenseNumber = _vehicleInputData.SimulationToolLicenseNumber;
 			_legislativeClass = (LegislativeClass) _vehicleInputData.LegislativeClass;
 			_vehicleCategory = _vehicleInputData.VehicleCategory;
 			_axleConfiguration = _vehicleInputData.AxleConfiguration;

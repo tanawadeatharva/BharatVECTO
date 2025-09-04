@@ -137,7 +137,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 		}
 		
-		// todo amogoda: 13. should PEV be treated as non-OVC? check correct content for PEV non-OVC
 		public class PEVNonOVCLorry : AbstractMRFResultsWriter
 		{
 			public PEVNonOVCLorry(IMRFResultsWriterFactory mrfFactory) : base(mrfFactory) { }

@@ -951,7 +951,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 
-			// todo amogoda: does this apply to all VTP reports? lorries et all?
 			_coolingFanTech = xmlDoc.SelectSingleNode("//*[local-name() = 'Auxiliaries']//*[local-name()='CoolingFanTechnology']")?.InnerText 
 				?? throw new ArgumentException("Auxiliary fan technology is missing. Please provide a Primary Manufacturer Report file.");
 

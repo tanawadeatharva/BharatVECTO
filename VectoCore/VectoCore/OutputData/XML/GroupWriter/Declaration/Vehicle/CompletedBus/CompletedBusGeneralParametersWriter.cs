@@ -26,7 +26,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 				new XElement(writerNamespace + XMLNames.Component_ManufacturerAddress,
 					inputData.ManufacturerAddress),
 				new XElement(writerNamespace + XMLNames.Vehicle_VIN, inputData.VIN),
-				new XElement(writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat())
+				new XElement(writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat()),
+				new XElement(writerNamespace + XMLNames.Vehicle_SimulationToolLicenseNumber,
+					inputData.SimulationToolLicenseNumber)
 			};
 		}
 

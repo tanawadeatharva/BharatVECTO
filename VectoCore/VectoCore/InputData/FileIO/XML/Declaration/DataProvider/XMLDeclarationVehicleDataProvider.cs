@@ -127,6 +127,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
 
+		public string VerificationToolLicenseNumber => null;
+
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
 
@@ -558,6 +560,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         #region IXMLDeclarationVehicleData interface
 
         public string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => ElementExists(XMLNames.Vehicle_SimulationToolLicenseNumber) 
+			? GetString(XMLNames.Vehicle_SimulationToolLicenseNumber) : null;
 
 		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
 

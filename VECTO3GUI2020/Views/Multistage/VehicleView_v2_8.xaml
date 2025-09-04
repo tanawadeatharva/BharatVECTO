@@ -28,6 +28,7 @@
                 <ContentControl Content="{Binding ParameterViewModels[Manufacturer]}"/>
                 <ContentControl Content="{Binding ParameterViewModels[ManufacturerAddress]}"/>
                 <ContentControl Content="{Binding ParameterViewModels[VIN]}"/>
+                <ContentControl Content="{Binding ParameterViewModels[SimulationToolLicenseNumber]}"/>
 
 
                 <ContentControl Content="{Binding ParameterViewModels[Model]}"/>
