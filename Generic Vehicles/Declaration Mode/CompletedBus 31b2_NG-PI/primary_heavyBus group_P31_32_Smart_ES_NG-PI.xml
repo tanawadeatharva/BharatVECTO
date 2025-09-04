@@ -19,7 +19,7 @@
     <AngledriveType>None</AngledriveType>
     <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
     <ADAS>
-      <EngineStopStart>true</EngineStopStart>
+      <EngineStopStart>false</EngineStopStart>
       <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
       <EcoRollWithEngineStop>false</EcoRollWithEngineStop>
       <PredictiveCruiseControl>none</PredictiveCruiseControl>
