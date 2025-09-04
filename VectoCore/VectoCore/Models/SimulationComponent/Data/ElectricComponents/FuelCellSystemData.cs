@@ -117,7 +117,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		public Watt MaxElectricPower { get; set; }
 		public Watt MinElectricPower { get; set; }
 
-		public Watt MinEffPower => MassFlowMap.MinEffPower;
+        public Watt FCSRatedPower { get; set; }
+
+        public Watt MinEffPower => MassFlowMap.MinEffPower;
 
 		///// <summary>
 		///// id -> each different fuelcell string, subId -> if the same fuelcell component is used multiple times
@@ -164,7 +166,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 				MassFlowMap = fcMassFlowMap,
 				MaxElectricPower = _moduleMaxPower,
 				MinElectricPower = _moduleMinPower,
-			};
+				FCSRatedPower = fuelCellModuleData.FuelCell.FCSRatedPower
+            };
 		}
 
         public int FcCount => _count;
@@ -178,9 +181,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents
 		}
 
 
-		public virtual Watt MaxPower => _moduleMaxPower ?? FcData.MaxElectricPower * _count;
+		public virtual Watt MaxPower => _moduleMaxPower ?? ((FcData.MaxElectricPower != null) ? FcData.MaxElectricPower * _count : MassFlowMap.MaxPower);
 
-		public virtual Watt MinPower => _moduleMinPower ?? FcData.MinElectricPower;
+		public virtual Watt MinPower => _moduleMinPower ?? FcData.MinElectricPower ?? 0.SI<Watt>();
 	}
 
 

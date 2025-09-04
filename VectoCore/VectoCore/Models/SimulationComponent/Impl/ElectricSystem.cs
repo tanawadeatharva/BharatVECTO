@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 CurrentState.SetState(powerDemand, auxDemand, chargePower + fcPower, connectorLoss, batResponse.PowerDemand, fcPower);
             }
 
-			response.MaxNominalFCRatedPower = (FuelCell != null) ? (FuelCell as FuelCellSystem).FuelCellStrings.Sum(x => x.FuelCells.Sum(y => y.MaxPower)) : null;
+			response.MaxNominalFCRatedPower = (FuelCell != null) ? (FuelCell as FuelCellSystem).FuelCellStrings.Sum(x => x.FuelCells.Sum(y => y.FCSRatedPower)) : null;
 			response.AbsTime = absTime;
             response.SimulationInterval = dt;
             response.RESSResponse = batResponse;

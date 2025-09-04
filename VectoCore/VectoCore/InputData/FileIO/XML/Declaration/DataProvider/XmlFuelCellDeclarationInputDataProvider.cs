@@ -33,9 +33,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual int Count => Convert.ToInt32(GetDouble(XMLNames.FuelCell_Count));
 
-		public virtual Watt MinPower => GetDouble(XMLNames.FuelCell_MinPower).SI(Unit.SI.Watt).Cast<Watt>();
+		public virtual Watt MinPower => ElementExists(XMLNames.FuelCell_MinPower) ? GetDouble(XMLNames.FuelCell_MinPower).SI(Unit.SI.Watt).Cast<Watt>() : null;
 
-		public virtual Watt MaxPower => GetDouble(XMLNames.FuelCell_MaxPower).SI(Unit.SI.Watt).Cast<Watt>();
+		public virtual Watt MaxPower => ElementExists(XMLNames.FuelCell_MaxPower) ? GetDouble(XMLNames.FuelCell_MaxPower).SI(Unit.SI.Watt).Cast<Watt>() : null;
 
 		public virtual List<IFuelCellModuleDeclarationInputData> FuelCellModules => CreateFuelCellModule();
 
