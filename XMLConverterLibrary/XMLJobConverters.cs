@@ -649,7 +649,8 @@ namespace XMLConverterLibrary
             XMLUtils.SetElementsDescendantsNamespace(doc, "Vehicle/ADAS", TargetVersion);
             XMLUtils.SetElementsAttribute(doc, "Vehicle/ADAS", "xmlns", null);
 
-            var isVehicleOVCHV = XMLUtils.GetElements(doc, "Vehicle/OvcHev").All(x => Boolean.Parse(x.Value));
+            var ovcHev = XMLUtils.GetElements(doc, "Vehicle/OvcHev").FirstOrDefault();
+            var isVehicleOVCHV = (ovcHev != null) && Boolean.Parse(ovcHev?.Value);
             if (isVehicleOVCHV)
             {
                 XMLUtils.SetElementsValue(doc, "Vehicle/ADAS/EngineStopStart", "true");

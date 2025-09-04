@@ -28,7 +28,7 @@
     <VehicleDeclarationType>final</VehicleDeclarationType>
     <VehicleTypeApprovalNumber>1234</VehicleTypeApprovalNumber>
     <ADAS>
-      <EngineStopStart>true</EngineStopStart>
+      <EngineStopStart>false</EngineStopStart>
       <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
       <EcoRollWithEngineStop>false</EcoRollWithEngineStop>
       <PredictiveCruiseControl>none</PredictiveCruiseControl>
