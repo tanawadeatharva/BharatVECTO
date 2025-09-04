@@ -32,7 +32,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get => ModelData.MinElectricPower;
 		}
 
-		public FuelCellData.FuelCellId Id { get; private set; }
+		public Watt FCSRatedPower => ModelData.FCSRatedPower;
+
+        public FuelCellData.FuelCellId Id { get; private set; }
 
 
 		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus, FuelCellData.FuelCellId id) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
