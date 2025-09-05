@@ -1,7 +1,14 @@
-﻿using System.Collections.Generic;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_OLD_XML
+#endif
+
+//#define PROHIBIT_OLD_XML
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -17,16 +24,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public AbstractXMLDeclarationExemptedVehicleDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : 
-			base(jobData, xmlNode, sourceFile, 0)
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated = false) : 
+			base(jobData, xmlNode, sourceFile, true)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 
-		}
+#if PROHIBIT_OLD_XML
+            if (!allowDeprecated)
+            {
+                throw new VectoException("XML Jobs in version 2.4 are no longer supported!");
+            }
+#endif
+        }
 
-		#region Overrides of AbstractXMLResource
+        #region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
