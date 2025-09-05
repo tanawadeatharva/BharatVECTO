@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
         public AbstractXMLDeclarationCompletedBusDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) 
+            : base(jobData, xmlNode, sourceFile, true) 
         {}
 
         public override string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") 

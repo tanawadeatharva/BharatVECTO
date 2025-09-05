@@ -29,10 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
-#define PROHIBIT_V27_XML
-#endif
-
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -120,13 +116,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
             if (!conventionalLorries.Contains(version))
             {
                 return;
-            }
-
-            if (!vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())))
-            {
-#if PROHIBIT_V27_XML
-                throw new VectoException("This v2.7 vehicle is not supported yet. It is not fuelled by hydrogen.");
-#endif
             }
         }
 
