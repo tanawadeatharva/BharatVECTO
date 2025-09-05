@@ -390,10 +390,11 @@ namespace TUGraz.VectoCore.OutputData
 		public static string GetSumDataJobSpecs(VectoRunData r)
 		{
 			var iteration = r.Iteration > 0 ? "1" : "0";
+            var vehicleCategory = r.VehicleData?.VehicleCategory ?? VehicleCategory.Unknown;
 
-			/// [0]: RunNumber, [1]: VehicleType, [2]: Powertrain, [3]: Iteration
-			return $"{r.JobNumber}-{r.VehicleData.VehicleCategory.GetVehicleType()}-{r.JobType.GetPowertrainArchitectureType()}-{iteration}";
-		}
+            /// [0]: RunNumber, [1]: VehicleType, [2]: Powertrain, [3]: Iteration
+            return $"{r.JobNumber}-{vehicleCategory.GetVehicleType()}-{r.JobType.GetPowertrainArchitectureType()}-{iteration}";
+        }
 
 		public static string GetSumDataJobID(int jobNbr, int runNbr, int iterationCnt)
 		{
