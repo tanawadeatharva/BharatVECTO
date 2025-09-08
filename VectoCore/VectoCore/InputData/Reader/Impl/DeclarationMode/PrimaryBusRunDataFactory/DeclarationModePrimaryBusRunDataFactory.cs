@@ -841,13 +841,24 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDa
 				runData.EngineData.FuelMode = modeIdx.Value;
 				runData.VehicleData.VehicleClass = _segment.VehicleClass;
 
-                CreateGearboxAndGearshiftData(runData);
-
+                var gearboxType = InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType();
+                if (gearboxType == GearboxType.IHPC)
+                {
+                    CreateGearboxAndGearshiftData(runData);
+                }
+                
                 runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
-					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
+					Vehicle.Components.ElectricMachines, 
+					Vehicle.ElectricMotorTorqueLimits,
+					runData.BatteryData.CalculateVoltageCenterSoc(), 
+					gearboxType == GearboxType.IHPC ? runData.GearboxData.GearList : null);
 
-				runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
+                if (gearboxType != GearboxType.IHPC)
+                {
+                    CreateGearboxAndGearshiftData(runData);
+                }
+
+                runData.Retarder = DataAdapter.CreateRetarderData(Vehicle.Components.RetarderInputData, Vehicle.ArchitectureID, Vehicle.Components.IEPC);
 				runData.BusAuxiliaries = DataAdapter.CreateBusAuxiliariesData(
 					mission, InputDataProvider.JobInputData.Vehicle, runData);
 
