@@ -180,31 +180,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
                 };
 			}
 			return new[] {
-				// TODO: MQ 20250509: replace NaN with actual computed values
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_BOL_Val),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
+						result.BeginOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
 					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
-				),
+                        result.BeginOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+                        result.BeginOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
+                ),
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_EOL_Val),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
-				),
+                        result.EndOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+                        result.EndOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+                        result.EndOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
+                ),
             };
         }
 
-		public XElement[] GetElements(IWeightedResult weightedResult)
+		public XElement[] GetElements(IWeightedResult result)
 		{
-			if (weightedResult.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
+			if (result.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
 				return new[] {
 					new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 						new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_BOL_Val),
@@ -227,25 +226,24 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 				};
             }
 			return new[] {
-				// TODO: MQ 20250509: replace NaN with actual computed values
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_BOL_Val),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
-				),
+                        result.BeginOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+                        result.BeginOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+                        result.BeginOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
+                ),
 				new XElement(TNS + XMLNames.Report_ResultEntry_Ranges,
 					new XAttribute(XMLNames.Report_ResultEntry_Ranges_Lifetime_Attr, XMLNames.Report_ResultEntry_Ranges_Lifetime_EOL_Val),
 					new XElement(TNS + XMLNames.Report_ResultEntry_ActualChargeDepletingRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit()),
-					new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
-						new ConvertedSI(double.NaN, XMLNames.Unit_km).ValueAsUnit())
-				),
+                        result.EndOfLifeRanges.ActualChargeDepletingRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_EquivalentAllElectricRange,
+                        result.EndOfLifeRanges.EquivalentAllElectricRange.ConvertToKiloMeter().ValueAsUnit()),
+                    new XElement(TNS + XMLNames.Report_ResultEntry_ZeroCO2EmissionsRange,
+                        result.EndOfLifeRanges.ZeroCO2EmissionsRange.ConvertToKiloMeter().ValueAsUnit())
+                ),
 			};
         }
 
