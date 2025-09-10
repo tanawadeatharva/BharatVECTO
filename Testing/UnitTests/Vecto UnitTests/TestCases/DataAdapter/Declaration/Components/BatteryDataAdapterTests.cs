@@ -16,19 +16,19 @@ public class BatteryDataAdapterTests
     [TestCase(null, null, 0.0725, 0.9275, 0.8550, VectoSimulationJobType.BatteryElectricVehicle, false)]
 
     //HEV Ovc
-    [TestCase(0.23, 0.77, 0.2435, 0.7565, 0.5130, VectoSimulationJobType.SerialHybridVehicle, true)]
+    [TestCase(0.23, 0.77, 0.2435, 0.7565, 0.513, VectoSimulationJobType.SerialHybridVehicle, true)]
     [TestCase(null, null, 0.1675, 0.8325, 0.6650, VectoSimulationJobType.SerialHybridVehicle, true)]
-    [TestCase(0.05, 0.97, 0.1675, 0.8325, 0.6650, VectoSimulationJobType.SerialHybridVehicle, true)]
+    [TestCase(0.05, 0.97, 0.073, 0.947, 0.874, VectoSimulationJobType.SerialHybridVehicle, true)]
 
     //HEV Non Ovc
     [TestCase(0.40, 0.60, 0.4050, 0.5950, 0.1900, VectoSimulationJobType.SerialHybridVehicle, false)]
     [TestCase(null, null, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
-    [TestCase(0.15, 0.85, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
+    [TestCase(0.15, 0.85, 0.1675, 0.8325, 0.6650, VectoSimulationJobType.SerialHybridVehicle, false)]
 
 
     public void GenericSOCTest(
-        double inputMinSoc,
-        double inputMaxSoc,
+        double? inputMinSoc,
+        double? inputMaxSoc,
         double expectedMinSoc,
         double expectedMaxSoc,
         double usableSocRange, VectoSimulationJobType vectoSimulationJobType, bool ovc)
