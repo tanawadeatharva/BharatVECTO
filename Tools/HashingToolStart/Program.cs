@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System;
+using VECTOStart;
 
 namespace TUGraz.VECTO
 {
@@ -8,8 +9,8 @@ namespace TUGraz.VECTO
 		static void Main(string[] args)
 		{
 			try {
-				// mk20220707: hashing tool currently only works under net45, therefore we hardcoded the version
-				StarterHelper.StartVECTO(args);
+				var startHelper = new StarterHelper(isConsoleApp: false, StarterHelper.NET48, StarterHelper.NET80);
+				startHelper.Start(args);
 			} catch (Exception e) {
 				MessageBox.Show(e.Message);
 			}

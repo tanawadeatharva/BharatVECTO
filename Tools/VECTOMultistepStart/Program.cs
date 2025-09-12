@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System;
+using VECTOStart;
 
 namespace TUGraz.VECTO
 {
@@ -8,7 +9,8 @@ namespace TUGraz.VECTO
 		static void Main(string[] args)
 		{
 			try {
-				StarterHelper.StartVECTO(args, "net48", "net60");
+				var startHelper = new StarterHelper(isConsoleApp: false, StarterHelper.NET48, StarterHelper.NET80);
+				startHelper.Start(args);
 			} catch (Exception e) {
 				MessageBox.Show(e.Message);
 			}
