@@ -781,6 +781,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisengagementClutch.
+        /// </summary>
+        internal static string IEPC_DisengagementClutch {
+            get {
+                return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DragCurves.
         /// </summary>
         internal static string IEPC_DragCurves {
@@ -795,6 +804,15 @@ namespace TUGraz.VectoCore {
         internal static string IEPC_FullLoadCurve {
             get {
                 return ResourceManager.GetString("IEPC_FullLoadCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullLoadCurves.
+        /// </summary>
+        internal static string IEPC_FullLoadCurves {
+            get {
+                return ResourceManager.GetString("IEPC_FullLoadCurves", resourceCulture);
             }
         }
         
@@ -1447,11 +1465,38 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CompletedCIF.
+        /// </summary>
+        internal static string VTP_CompletedCIF {
+            get {
+                return ResourceManager.GetString("VTP_CompletedCIF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CompletedVIF.
         /// </summary>
         internal static string VTP_CompletedVIF {
             get {
                 return ResourceManager.GetString("VTP_CompletedVIF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CustomerInformationFile.
+        /// </summary>
+        internal static string VTP_CustomerInformationFile {
+            get {
+                return ResourceManager.GetString("VTP_CustomerInformationFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryVIF.
+        /// </summary>
+        internal static string VTP_PrimaryVIF {
+            get {
+                return ResourceManager.GetString("VTP_PrimaryVIF", resourceCulture);
             }
         }
     }

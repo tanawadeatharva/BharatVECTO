@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils;
@@ -23,8 +24,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var result = new List<XElement>()
 			{
 				new XElement(_mrf + "PEVArchitecture", vehicleData.ArchitectureID.GetLabel()),
-				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OvcHev),
-				//vehicleData.MaxChargingPower != null ? new XElement(_mrf + "OffVehicleChargingMaxPower", vehicleData.MaxChargingPower.ValueAsUnit("kW", 1)) : null,
+				new XElement(_mrf + "OffVehicleChargingCapability", vehicleData.OVC),
+				new XElement(_mrf + "DynamicChargingTechnology", vehicleData.DynamicChargingTechnology.ToXMLFormat())
 			};
 			result.Add(_mrfFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			result.Add(_mrfFactory.GetBoostingLimitationsType().GetElement(inputData.JobInputData.Vehicle));

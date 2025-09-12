@@ -46,7 +46,7 @@ namespace TUGraz.VectoMockup
 				
 
 				//VIF //TODO: seperate namespaces
-				"urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1",
+				XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION,
 			};
 
 			private static HashSet<string> hev = new HashSet<string>() {
@@ -114,7 +114,7 @@ namespace TUGraz.VectoMockup
 					ovc = false; //TODO implement
 					jobType = mst.JobInputData.JobType; //runData.InputData.JobInputData.JobType;
 				} else {
-					ovc = runData.InputData.JobInputData.Vehicle.OvcHev;
+					ovc = runData.InputData.JobInputData.Vehicle.OVC;
 					jobType = runData.InputData.JobInputData.JobType;
 				}
 
@@ -123,11 +123,13 @@ namespace TUGraz.VectoMockup
 					return "Conv";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.IEPC_S)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IHPC, VectoSimulationJobType.SerialHybridVehicle, 
+					VectoSimulationJobType.IEPC_S, VectoSimulationJobType.Multiple_SHEV)) {
 					return ovc ? "OVC-HEV" : "non-OVC-HEV";
 				}
 
-				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)) {
+				if (jobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E, VectoSimulationJobType.FCHV, 
+					VectoSimulationJobType.FCHV_IEPC, VectoSimulationJobType.Multiple_FCHV, VectoSimulationJobType.Multiple_PEV)) {
 					return "PEV";
 				}
 

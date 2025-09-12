@@ -30,11 +30,12 @@
 */
 
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 {
 	public interface IXMLPTOReader
 	{
-		IPTOTransmissionInputData PTOInputData { get; }
+		IPTOTransmissionInputData GetPTOInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
 	}
 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
@@ -24,10 +27,23 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
         public XElement GetElement(IResultEntry entry, IFuelConsumptionCorrection fc)
         {
 			if (entry.Status == VectoRun.Status.PrimaryBusSimulationIgnore) {
-				return GetElementIgnore(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload,
-					entry.CargoVolume, entry.PassengerCount);
+				return GetElementIgnore(
+					fc.TotalFuelConsumptionCorrected,
+					fc.Fuel,
+					entry.Distance,
+					entry.Payload,
+					entry.CargoVolume,
+					entry.PassengerCount);
 			}
-			return GetElement(fc.TotalFuelConsumptionCorrected, fc.Fuel, entry.Distance, entry.Payload, entry.CargoVolume, entry.PassengerCount);
+
+			bool isZeroConsumptionEntry = (fc == null || fc.Fuel.FuelType == FuelType.H2FC) && entry.OVCMode == OvcHevMode.ChargeDepleting;
+			return GetElement(
+				isZeroConsumptionEntry ? 0.SI<Kilogram>() : fc.TotalFuelConsumptionCorrected,
+				entry.VectoRunData.JobType.IsFCHV() ? FuelData.H2 : fc.Fuel,
+				entry.Distance,
+				entry.Payload,
+				entry.CargoVolume,
+				entry.PassengerCount);
         }
 
 		public XElement[] GetElements(IWeightedResult entry)

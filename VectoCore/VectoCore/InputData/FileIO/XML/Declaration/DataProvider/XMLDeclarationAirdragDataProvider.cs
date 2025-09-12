@@ -73,11 +73,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override CertificationMethod CertificationMethod => CertificationMethod.Measured;
 
-		#endregion
+		public virtual string LicenseNumberCFDMethod => null;
 
-		#region Overrides of AbstractXMLResource
+		public virtual SquareMeter DeltaCdxA_CFD => null;
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		public virtual SquareMeter DeltaCdxA_declared => null;
+
+        public virtual SquareMeter DeltaTransferredCdxA => null;
+
+        #endregion
+
+        #region Overrides of AbstractXMLResource
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -120,4 +128,43 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
+    public class XMLDeclarationAirdragDataProviderV27 : XMLDeclarationAirdragDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+        public new const string XSD_TYPE = "AirDragModifiedUseStandardValueType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationAirdragDataProviderV27(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+            string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+    }
+
+    public class XMLDeclarationAirdragDataProviderV26 : XMLDeclarationAirdragDataProviderV10
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationAirdragDataProviderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) { }
+
+        public override string LicenseNumberCFDMethod => ElementExists("LicenseNumberCFDMethod") ? GetString("LicenseNumberCFDMethod") : null;
+
+        public override SquareMeter DeltaCdxA_CFD => ElementExists("DeltaCdxA_CFD") ? GetDouble("DeltaCdxA_CFD").SI<SquareMeter>() : null;
+
+		public override SquareMeter DeltaCdxA_declared => GetDouble("DeltaCdxA_declared").SI<SquareMeter>();
+
+		public override SquareMeter DeltaTransferredCdxA => string.IsNullOrEmpty(GetString("DeltaTransferredCdxA"))
+			? 0.SI<SquareMeter>()
+			: GetDouble("DeltaTransferredCdxA").SI<SquareMeter>();
+       
+        public override SquareMeter AirDragArea => 
+			AirDragArea_0 
+			+ (DeltaCdxA_CFD ?? 0.SI<SquareMeter>()) 
+			+ DeltaCdxA_declared 
+			+ (DeltaTransferredCdxA.IsEqual(AirDragArea_0) ? 0.SI<SquareMeter>() : DeltaTransferredCdxA);
+    }
 }

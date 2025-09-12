@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
@@ -30,7 +31,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override CubicMeter CargoVolume => null;
 		public override XmlElement PTONode => null;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
 		public override LegislativeClass? LegislativeClass => VectoCommon.Models.LegislativeClass.M3;
 
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
@@ -206,7 +207,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 	}
 

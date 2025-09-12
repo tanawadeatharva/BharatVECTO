@@ -523,7 +523,7 @@ public class PrimaryBusSimulation
 			jobContainer.AddRun(run);
 			TestContext.Progress.WriteLine($"{run.CycleName} - {run.RunSuffix}");
 			var expectedResults = 1;
-			if (dataProvider.JobInputData.Vehicle.OvcHev && !dataProvider.JobInputData.Vehicle.VehicleType.IsOneOf(
+			if (dataProvider.JobInputData.Vehicle.OVC && !dataProvider.JobInputData.Vehicle.VehicleType.IsOneOf(
 					VectoSimulationJobType.BatteryElectricVehicle, 
 					VectoSimulationJobType.IEPC_E)) {
 				var run2 = runsFactory.SimulationRuns().Skip(runIdx + 1).First();

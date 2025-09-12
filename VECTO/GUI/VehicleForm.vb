@@ -76,8 +76,9 @@ Public Class VehicleForm
 	Private _torqueLimitDlog As VehicleTorqueLimitDialog
 	Private _emRatioPerGearDlog As EMGearRatioDialog
 	Private _reessPackDlg As REESSPackDialog
-	Private _fcComponentDlg As FuelCellComponentDialog
-	Friend VehicleType As VectoSimulationJobType
+    Private _fcComponentDlg As FuelCellComponentDialog
+    Private fuelCellSystemEngineeringInput As IFuelCellSystemEngineeringInputData
+    Friend VehicleType As VectoSimulationJobType
 
 	Public Sub New()
 
@@ -527,9 +528,9 @@ Public Class VehicleForm
 					pnMaxChargingPwr.Enabled = False
 					tbMaxChargingPwr.Text = String.Empty
 				Else
-					cbOvc.Checked = vehicle.OvcHev
-					pnMaxChargingPwr.Enabled = vehicle.OvcHev
-					If vehicle.OvcHev Then
+					cbOvc.Checked = vehicle.OVC
+					pnMaxChargingPwr.Enabled = vehicle.OVC
+					If vehicle.OVC Then
 						tbMaxChargingPwr.Text = vehicle.MaxChargingPower.ConvertToKiloWatt().Value.ToGUIFormat()
 					End If
 				End If
@@ -574,13 +575,13 @@ Public Class VehicleForm
 			End If
 		End If
 
-		If (vehicle.VehicleType = VectoSimulationJobType.FCHV OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
-			Dim fcs = vehicle.Components.FuelCellSystemInputData
-			lvFuelCellComponents.Items.Clear()
-			For Each entry In fcs.FuelCellStrings
-				lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
-			Next
-		End If
+        If (vehicle.VehicleType = VectoSimulationJobType.FCHV OrElse vehicle.VehicleType = VectoSimulationJobType.FCHV_IEPC) Then
+            fuelCellSystemEngineeringInput = vehicle.Components.FuelCellSystemInputData
+            lvFuelCellComponents.Items.Clear()
+            For Each entry In fuelCellSystemEngineeringInput.FuelCellStrings
+                lvFuelCellComponents.Items.Add(CreateFuelCellSystemListViewItem(entry.FuelCellComponent.DataSource.SourceFile, entry.Count))
+            Next
+        End If
 
 		If (vehicle.VehicleType = VectoSimulationJobType.SerialHybridVehicle OrElse vehicle.VehicleType = VectoSimulationJobType.IEPC_S) Then
 			Dim gen As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) = vehicle.Components.ElectricMachines.Entries.First(Function(x) x.Position = PowertrainPosition.GEN)
@@ -605,7 +606,6 @@ Public Class VehicleForm
 			    If (vehicle.InMotionCharging.Enabled) Then
 				    cbInMotionChargingEnabled.Checked = vehicle.InMotionCharging.Enabled
 				    tbIMCDeltaCdxA.Text = vehicle.InMotionCharging.DeltaCdxA.Value().ToString()
-				    cbIMCMotorway.Checked = vehicle.InMotionCharging.IMCOnMotorwayOnly
 				    tbInMotionChargingShareOnTotalDistance.Text = (vehicle.InMotionCharging.ShareIMCAvailabilityTotalMission * 100).ToString()
 			    End If
 		    Else
@@ -1022,7 +1022,8 @@ Public Class VehicleForm
 
 		veh.MassMax = TbMassMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
-		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+        veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+        veh.EngineeringMaxWindowsSize = fuelCellSystemEngineeringInput.MaxWindowSize
 
 		Dim relCheck As Double = 0
 		Dim hasDrivenAxle As Boolean = False
@@ -1104,7 +1105,7 @@ Public Class VehicleForm
 				veh.ReessPacks.Add(Tuple.Create(reess.SubItems(REESPackTbl.ReessFile).Text, reess.SubItems(REESPackTbl.Count).Text.ToInt(), reess.SubItems(REESPackTbl.StringId).Text.ToInt()))
 			Next
 			veh.InitialSOC = tbInitialSoC.Text.ToDouble(80) / 100.0
-			veh.OvcHev = cbOvc.Checked
+			veh.OVC = cbOvc.Checked
 			veh.MaxChargingPower = tbMaxChargingPwr.Text.ToDouble(0).SI(Unit.SI.Kilo.Watt).Cast(Of Watt)
 
 			If (VehicleType = VectoSimulationJobType.ParallelHybridVehicle OrElse
@@ -1219,7 +1220,6 @@ Public Class VehicleForm
 		            End If
 
 		            veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-		            veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 		            veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 		            veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 		        End If
@@ -1236,7 +1236,6 @@ Public Class VehicleForm
 				End If
 
 				veh.IMCDeltaCdxA = If(String.IsNullOrWhiteSpace(tbIMCDeltaCdxA.Text), 0.SI(of SquareMeter), (tbIMCDeltaCdxA.Text.ToDouble(0).SI(of SquareMeter)))
-				veh.IMCOnMotorwayOnly = cbIMCMotorway.Checked
 				veh.ShareIMCAvailabilityTotalMission = If(String.IsNullOrWhiteSpace(tbInMotionChargingShareOnTotalDistance.Text), 0, tbInMotionChargingShareOnTotalDistance.Text.ToDouble(0) / 100.0)
 				veh.IMCEnabled = cbInMotionChargingEnabled.Checked
 				End If

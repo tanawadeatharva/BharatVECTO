@@ -20,7 +20,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public DateTime Date { get; set; }
 
-		public string AppVersion { get; }
+		public string SimulationToolLicenseNumber { get; set; }
+
+        public string VehicleMonitoringData { get; set; }
+
+        public Kilogram H2StorageUsableCapacity { get; set; }
+
+        public HydrogenStorageTechnology? HydrogenStorageTechnology { get; set; }
+
+        public bool BatteryOnlyMode { get; set; }
+       
+		public DynamicChargingTechnology DynamicChargingTechnology { get; set; }
+
+        public string AppVersion { get; }
 
 		public CertificationMethod CertificationMethod { get; set; }
 
@@ -102,9 +114,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public VehicleDeclarationType VehicleDeclarationType { get; }
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 
-		public TableData BoostingLimitations => throw new NotImplementedException();
+		public TableData BoostingLimitations { get; }
 
 		public IVehicleComponentsDeclaration Components { get; set; }
 
@@ -114,7 +126,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public ArchitectureID ArchitectureID { get; }
 
-		public bool OvcHev { get; }
+        public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }

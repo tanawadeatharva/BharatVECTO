@@ -14,11 +14,16 @@ namespace XMLConverterLibrary
 		static XMLJobConverterFactory()
 		{
 			_converters = new List<AbstractXMLJobConverter> {
-					new XMLJobConverter_v1_0_To_v_2_4(),
+					new XMLJobConverter_v1_0_To_v2_4(),
 					new XMLJobConverter_v2_0_To_v2_4(),
 					new XMLJobConverter_v2_1_To_v2_4(),
-					new XMLJobConverter_v2_2_1_To_v2_4()
-			};
+					new XMLJobConverter_v2_2_1_To_v2_4(),
+					new XMLJobConverter_v2_4_To_v2_7(),
+                    new XMLJobCompositeConverter<XMLJobConverter_v1_0_To_v2_4, XMLJobConverter_v2_4_To_v2_7>(),
+                    new XMLJobCompositeConverter<XMLJobConverter_v2_0_To_v2_4, XMLJobConverter_v2_4_To_v2_7>(),
+                    new XMLJobCompositeConverter<XMLJobConverter_v2_1_To_v2_4, XMLJobConverter_v2_4_To_v2_7>(),
+                    new XMLJobCompositeConverter<XMLJobConverter_v2_2_1_To_v2_4, XMLJobConverter_v2_4_To_v2_7>()
+            };
 		}
 
 		public IEnumerable<Tuple<string, string>> SupportedConversions => 

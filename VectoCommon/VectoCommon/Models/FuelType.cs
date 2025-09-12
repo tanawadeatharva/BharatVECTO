@@ -30,6 +30,7 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -37,6 +38,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		// ReSharper disable InconsistentNaming
 		DieselCI,
+		DieselB100CI,
 		EthanolCI,
 		PetrolPI,
 		EthanolPI,
@@ -59,6 +61,8 @@ namespace TUGraz.VectoCommon.Models
 			switch (ftype) {
 				case FuelType.DieselCI:
 					return "Diesel CI";
+				case FuelType.DieselB100CI:
+					return "Diesel B100 CI";
 				case FuelType.EthanolCI:
 					return "Ethanol CI";
 				case FuelType.PetrolPI:
@@ -85,6 +89,16 @@ namespace TUGraz.VectoCommon.Models
 		public static string ToXMLFormat(this FuelType ftype)
 		{
 			return ftype.GetLabel();
+		}
+
+		public static bool IsHydrogenFuel(this FuelType ftype)
+		{
+			return ftype.IsOneOf(FuelType.H2CI, FuelType.H2PI, FuelType.H2FC);
+		}
+
+		public static bool IsNaturalGas(this FuelType fuelType)
+		{
+			return fuelType.IsOneOf(FuelType.NGPI, FuelType.NGCI);
 		}
 	}
 }

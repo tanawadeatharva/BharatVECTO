@@ -45,7 +45,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public SquareMeter AirDragArea { get; protected set; }
 
-		protected List<CrossWindCorrectionCurveReader.AirDragBetaEntry> AirDragEntries;
+		public SquareMeter DeltaAirDragAreaIMC { get; } = 0.SI<SquareMeter>();
+
+        protected List<CrossWindCorrectionCurveReader.AirDragBetaEntry> AirDragEntries;
 		
 		public CrosswindCorrectionVAirBeta(SquareMeter airDragArea,
 			List<CrossWindCorrectionCurveReader.AirDragBetaEntry> entries)

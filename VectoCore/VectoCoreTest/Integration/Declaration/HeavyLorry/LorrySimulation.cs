@@ -844,6 +844,7 @@ public class LorrySimulation
 
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 413.75, -1396.825, -61756.61)]
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 827.50, 161.085, 13679.79)]
+	[Category(Definitions.TESTCASE_MIGRATED)]
     public void TestIEPC_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
@@ -887,6 +888,7 @@ public class LorrySimulation
 
 	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 25, -1050, -2804.993)]
 	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 255, 1050, 27477.94)]
+	[Category(Definitions.TESTCASE_MIGRATED)]
 	public void TestEM_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
@@ -1298,7 +1300,7 @@ public class LorrySimulation
 			VectoSimulationJobType.IEPC_E);
 		var ng = vehicle.Components?.EngineInputData?.EngineModes.Any(e =>
 			e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
-		var ovcHev = vehicle.OvcHev;
+		var ovcHev = vehicle.OVC;
 		Segment segment;
 		try {
 			segment = DeclarationData.TruckSegments.Lookup(
@@ -1368,7 +1370,7 @@ public class LorrySimulation
 
 		TestContext.WriteLine(string.Join("\n", runs.Select(r => r.CycleName + "_" + r.RunSuffix)));
 
-		if (dataProvider.JobInputData.Vehicle.OvcHev) {
+		if (dataProvider.JobInputData.Vehicle.OVC) {
 			Assert.AreEqual(runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeDepleting),
 				runs.Count(r => r.GetContainer().RunData.OVCMode == OvcHevMode.ChargeSustaining));
 		}
@@ -1427,6 +1429,7 @@ public class LorrySimulation
 		if (EMOn(prevRow, position) || (hasGen && EMOn(prevRow, PowertrainPosition.GEN))) {
 			var cond = DeclarationData.Conditioning.LookupPowerDemand(
 				run.GetContainer().RunData.VehicleData.VehicleClass,
+				run.GetContainer().RunData.JobType,
 				run.GetContainer().RunData.Mission.MissionType);
 			var condMod = modDataRow.Field<Watt>("P_aux_COND_el [kW]");
 			Assert.IsTrue(cond.IsEqual(condMod), $"expected {cond} got {condMod} at {time}");

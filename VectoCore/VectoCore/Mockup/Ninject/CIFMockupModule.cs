@@ -71,6 +71,41 @@ namespace TUGraz.VectoMockup.Ninject
         public IXmlTypeWriter GetHEV_IEPC_LorryVehicleType()
         {
             return _cifFactory.GetHEV_IEPC_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetMultiple_FCHV_LorryVehicleType()
+		{
+			return _cifFactory.GetMultiple_FCHV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetFCHV_F2_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F2_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_F3_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F3_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_F4_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_F4_LorryVehicleType();
+		}
+
+		public IXmlTypeWriter GetFCHV_IEPC_LorryVehicleType()
+		{
+			return _cifFactory.GetFCHV_IEPC_LorryVehicleType();
+		}
+
+        public IXmlTypeWriter GetMultiple_PEV_LorryVehicleType()
+        {
+            return _cifFactory.GetMultiple_PEV_LorryVehicleType();
+        }
+
+        public IXmlTypeWriter GetMultiple_SHEV_LorryVehicleType()
+        {
+            return _cifFactory.GetMultiple_SHEV_LorryVehicleType();
         }
 
         public IXmlTypeWriter GetPEV_E2_LorryVehicleType()
@@ -153,7 +188,42 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetPEV_IEPC_CompletedBusVehicleType();
 		}
 
-		public IXmlTypeWriter GetConventional_SingleBusVehicleType()
+        public IXmlTypeWriter Get_Multiple_FCHV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_FCHV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_Multiple_PEV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_PEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_Multiple_SHEV_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_Multiple_SHEV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F2_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F2_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F3_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F3_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_F4_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_F4_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter Get_FCHV_IEPC_CompletedBusVehicleType()
+        {
+            return _cifFactory.Get_FCHV_IEPC_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetConventional_SingleBusVehicleType()
 		{
 			return _cifFactory.GetConventional_SingleBusVehicleType();
 		}
@@ -178,11 +248,6 @@ namespace TUGraz.VectoMockup.Ninject
         {
             return _cifFactory.GetConventionalLorryVehicleSequenceGroupWriter();
         }
-
-		public IReportOutputGroup GetConventionalCompletedBusVehicleSequenceGroupWriter()
-		{
-			return _cifFactory.GetConventionalCompletedBusVehicleSequenceGroupWriter();
-		}
 
 		public IReportOutputGroup GetEngineGroup()
         {
@@ -249,9 +314,29 @@ namespace TUGraz.VectoMockup.Ninject
             return _cifFactory.GetElectricMachineGroup();
         }
 
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainElectricMachineGroup()
+		{
+			return _cifFactory.GetAxlePowertrainElectricMachineGroup();
+        }
+
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainTransmissionGroup()
+		{
+			return _cifFactory.GetAxlePowertrainTransmissionGroup();
+        }
+
+        public IAxlePowertrainReportOutputGroup GetAxlePowertrainIEPCTransmissionGroup()
+		{
+			return _cifFactory.GetAxlePowertrainIEPCTransmissionGroup();
+		}
+
         public IReportOutputGroup GetREESSGroup()
         {
             return _cifFactory.GetREESSGroup();
+        }
+
+		public IReportOutputGroup GetFuelCellGroup()
+		{
+            return _cifFactory.GetFuelCellGroup();
         }
 
         public IReportOutputGroup GetPEV_LorryVehicleTypeGroup()
@@ -269,7 +354,12 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetPEV_CompletedBusVehicleSequenceGroupWriter();
 		}
 
-		public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
+        public IReportOutputGroup GetFCHV_CompletedBusVehicleSequenceGroupWriter()
+        {
+            return _cifFactory.GetFCHV_CompletedBusVehicleSequenceGroupWriter();
+        }
+
+        public IReportOutputGroup GetCompletedBusVehicleTypeGroup()
         {
             return _cifFactory.GetCompletedBusVehicleTypeGroup();
         }
@@ -319,6 +409,21 @@ namespace TUGraz.VectoMockup.Ninject
 			return _cifFactory.GetIEPCTransmissionGroup();
 		}
 
+        public IReportOutputGroup GetFuelCell_LorryVehicleSequenceGroupWriter()
+		{
+            return _cifFactory.GetFuelCell_LorryVehicleSequenceGroupWriter();
+		}
+
+		public IReportOutputGroup GetFCHV_LorryVehicleTypeGroup()
+		{
+            return _cifFactory.GetFCHV_LorryVehicleTypeGroup();
+		}
+
+		public IReportOutputGroup GetFCHVLorryVehicleSequenceGroupWriter()
+		{
+            return _cifFactory.GetFCHVLorryVehicleSequenceGroupWriter();
+		}
+
 		#endregion
-    }
+	}
 }

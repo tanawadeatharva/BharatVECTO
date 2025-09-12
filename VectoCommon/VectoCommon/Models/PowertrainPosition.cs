@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
@@ -18,6 +19,7 @@ namespace TUGraz.VectoCommon.InputData {
 		BatteryElectricE4,
 		BatteryElectricE3,
 		BatteryElectricE2,
+
 		IEPC,
 		IHPC
 	}
@@ -26,6 +28,30 @@ namespace TUGraz.VectoCommon.InputData {
 	{
 		public const string HybridPrefix = "Hybrid";
 		public const string BatteryElectricPrefix = "BatteryElectric";
+
+		public static int GetPositionNumber(this PowertrainPosition pos)
+		{
+			switch (pos) {
+				case PowertrainPosition.HybridP0:
+					return 0;
+				case PowertrainPosition.HybridP1:
+					return 1;
+				case PowertrainPosition.BatteryElectricE2:
+				case PowertrainPosition.IEPC:
+				case PowertrainPosition.HybridP2:
+				case PowertrainPosition.HybridP2_5:
+				case PowertrainPosition.IHPC:
+					return 2;
+				case PowertrainPosition.BatteryElectricE3:
+				case PowertrainPosition.HybridP3:
+					return 3;
+				case PowertrainPosition.BatteryElectricE4:
+				case PowertrainPosition.HybridP4:
+					return 4;
+				default:
+					return -1;
+			}
+		}
 
 		public static PowertrainPosition Parse(string prefix, string pos)
 		{
@@ -40,8 +66,10 @@ namespace TUGraz.VectoCommon.InputData {
 				return (HybridPrefix + prefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
 
-			if (prefix.Equals("B", StringComparison.InvariantCultureIgnoreCase) || prefix.Equals("E", StringComparison.InvariantCultureIgnoreCase)) {
-				return (BatteryElectricPrefix + (prefix + pos).Replace("B", "E")).ParseEnum<PowertrainPosition>();
+			// todo amogoda: m3.x F prefix added, treated as B or E.
+			var supportedPrefixes = new[] { "B", "E", "F", "S" };
+			if (supportedPrefixes.Contains(prefix, StringComparer.InvariantCultureIgnoreCase)) {
+				return $"{BatteryElectricPrefix}E{pos}".ParseEnum<PowertrainPosition>();
 			}
 			
 			throw new VectoException("invalid powertrain position {0}", pos);
@@ -49,7 +77,7 @@ namespace TUGraz.VectoCommon.InputData {
 
 		public static PowertrainPosition Parse(string pos)
 		{
-			if (pos.Length > 1 && pos[0].IsOneOf('B', 'P', 'E')) {
+			if (pos.Length > 1 && pos[0].IsOneOf('B', 'P', 'E', 'F')) {
 				return Parse(pos.Substring(0, 1), pos.Substring(1));
 			}
 
@@ -140,4 +168,17 @@ namespace TUGraz.VectoCommon.InputData {
 			return IsBatteryElectric(pos);
 		}
 	}
+
+    public class EMPlacement
+    {
+        public EMPlacement(PowertrainPosition position, int axleNumber)
+        {
+            Position = position;
+            AxleNumber = axleNumber;
+        }
+
+        public PowertrainPosition Position { get; private set; }
+
+        public int AxleNumber { get; private set; }
+    }
 }

@@ -32,7 +32,6 @@
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -238,7 +237,9 @@ namespace TUGraz.VectoCommon.Models
 	{
 		IRESSResponse RESSResponse { get; set; }
 
-		Watt AuxPower { get; set; }
+        Watt MaxNominalFCRatedPower { get; set; }
+
+        Watt AuxPower { get; set; }
 
 		Watt ConsumerPower { get; set; }
 

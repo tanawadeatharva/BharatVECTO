@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 1);
 
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap; //ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 				JSONInputDataFactory.ReadElectricMotorData(@"TestData/Hybrids/ElectricMotor/GenericEMotor.vem", false);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1); 
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 1); 
 			
 			var pwr = inputProvider.VoltageLevels.First().PowerMap.First().PowerMap;//ToDo FK: maybe wrong selection
 			// var pwr = inputProvider.VoltageLevels.First().EfficiencyMap;
@@ -154,6 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData {
 
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ComponentData/ElectricMachineSystem_Std_Overload.xml", 600063.423)]
 		[TestCase(@"TestData/XML/XMLReaderDeclaration/SchemaVersion2.4/Distributed/ComponentData/ElectricMachineSystem_Std_Overload2.xml", 600063.423)]
+		[Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestElectricMotorOverloadBufferTest(string testFile, double expectedOvlBfr)
 		{
 			var kernel = new StandardKernel(new VectoNinjectModule());

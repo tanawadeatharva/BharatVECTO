@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -79,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					$"{JsonKeys.Vehicle_AxlePowertrain_AxleNumber} not defined in {JsonKeys.Vehicle_AxlePowertrains}");
 			}
 
-			if (Type == VectoSimulationJobType.MultiplePowertrains)
+			if (!Type.IsMultiplePowertrains())
 			{
 				throw new VectoException(
 					$"{JsonKeys.Vehicle_AxlePowertrain_Type} bad or missing in {JsonKeys.Vehicle_AxlePowertrains}");
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			: _axlePt.GetEx<int>(JsonKeys.Vehicle_AxlePowertrain_AxleNumber);
 
 		public virtual VectoSimulationJobType Type => (_axlePt[JsonKeys.Vehicle_AxlePowertrain_Type] == null)
-			? VectoSimulationJobType.MultiplePowertrains
+			? VectoSimulationJobType.EngineOnlySimulation
 			: JSONFile.ParsePowertrainType(_axlePt, JsonKeys.Vehicle_AxlePowertrain_Type);
 
 		public virtual IGearboxEngineeringInputData GearboxInputData => _gearbox ?? (_gearbox = ReadGearbox());
@@ -382,7 +383,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual string PTOTransmissionType => (_token == null) || (_token[JsonKeys.Vehicle_PTO_Type] == null)
+        public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
+
+        public virtual string PTOTransmissionType => (_token == null) || (_token[JsonKeys.Vehicle_PTO_Type] == null)
 			? PTO_TYPE_NONE
 			: _token[JsonKeys.Vehicle_PTO_Type].Value<string>();
 
@@ -482,7 +485,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public SquareMeter AirDragArea_0 => AirDragArea;
 
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
+		public SquareMeter DeltaCdxA_CFD => (Body["DeltaCdxA_CFD"] == null) ? null : Body.GetEx<double>("DeltaCdxA_CFD").SI<SquareMeter>();
+
+		public SquareMeter DeltaCdxA_declared => (Body["DeltaCdxA_declared"] == null) ? null : Body.GetEx<double>("DeltaCdxA_declared").SI<SquareMeter>();
+
+		public SquareMeter DeltaTransferredCdxA => (Body["DeltaTransferredCdxA"] == null) ? null : Body.GetEx<double>("DeltaTransferredCdxA").SI<SquareMeter>();
+
+		public string LicenseNumberCFDMethod => (Body["LicenseNumberCFDMethod"] == null) ? null : Body.GetEx<string>("LicenseNumberCFDMethod");
+
+        public virtual CrossWindCorrectionMode CrossWindCorrectionMode => CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode"));
 
 		public virtual TableData CrosswindCorrectionMap
 		{
@@ -515,6 +526,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#region IPTOTransmissionInputData
+
+		public virtual int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
 
 		public virtual string PTOTransmissionType
 		{
@@ -966,7 +979,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IMCTechnology Technology => Body["InMotionCharging"]?["Technology"] != null
 			? Body["InMotionCharging"].GetEx<string>("Technology").ParseEnum<IMCTechnology>()
-			: IMCTechnology.NotApplicable;
+			: IMCTechnology.None;
 
 		#endregion
 	}
@@ -975,7 +988,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
     {
 		#region Implementation of IVehicleInMotionChargingDeclaration
 
-		public IMCTechnology Technology => IMCTechnology.NotApplicable;
+		public IMCTechnology Technology => IMCTechnology.None;
 
 		#endregion
 

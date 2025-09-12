@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 
@@ -50,7 +51,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IElectricMachinesDeclarationInputData ElectricMachines { get; }
 		IElectricStorageSystemDeclarationInputData ElectricStorageSystem { get; }
 		IIEPCDeclarationInputData IEPCInputData { get; }
-	}
+		IFuelCellSystemDeclarationInputData FuelCellSystem { get; }
+		IList<IAxlePowertrainDeclarationInputData> AxlePowertrains { get; }
+        ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+    }
 
 	public interface IXMLAxlesReader
 	{
@@ -84,5 +88,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IREESSPackInputData CreateREESSInputData(XmlNode storageNode, REESSType reessType);
 	}
 
+	public interface IXMLFuelCellSystemReader
+	{
+		IFuelCellSystemDeclarationInputData CreateFuelCellSystemInputData(XmlNode xmlNode);
+	}
+
+	public interface IXMLFuelCellDeclarationInputData : IFuelCellDeclarationInputData
+	{
+	}
 
 }

@@ -29,12 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections;
+using Castle.Core.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -43,7 +41,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData
@@ -83,8 +80,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		VectoRun.Status Status { get; }
 
-		OvcHevMode OVCMode { get; }
-		MissionType Mission { get; }
+        MissionType Mission { get; }
 
 		LoadingType LoadingType { get; }
 
@@ -132,11 +128,21 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter ZeroCO2EmissionsRange { get; }
 
-		IFuelProperties AuxHeaterFuel { get; }
+		Meter HydrogenRange { get; }
+
+        DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; }
+
+        DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; }
+
+        IFuelProperties AuxHeaterFuel { get; }
 		Kilogram ZEV_FuelConsumption_AuxHtr { get; }
 		Kilogram ZEV_CO2 { get; }
 
-		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
+		OvcHevMode OVCMode { get; }
+		int OVCIteration { get; }
+		double DeltaSoC { get; }
+
+        void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
 
 		string Error { get; }
 
@@ -147,13 +153,19 @@ namespace TUGraz.VectoCore.OutputData
 		double BatteryEfficiencyDischarge { get; set; }
 		
 		void SetResultWeightingFactor(double weightingFactor);
+
+		IResultEntry SetFuelCellCDProperties(IResultEntry csResult);
 	}
 
 	public interface IWeightedResult
 	{
 		VectoRun.Status Status { get; }
 
-        MeterPerSecond AverageSpeed { get; }
+		VectoSimulationJobType JobType { get; }
+
+		bool OffVehicleCharging { get; }
+
+		MeterPerSecond AverageSpeed { get; }
 
 		MeterPerSecond AverageDrivingSpeed { get; }
 
@@ -179,7 +191,13 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter ZeroCO2EmissionsRange { get; }
 
-		double UtilityFactor { get; }
+		Meter HydrogenRange { get; }
+
+        DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; }
+
+        DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; }
+
+        double UtilityFactor { get; }
 
 		IFuelProperties AuxHeaterFuel { get; set; }
 		KilogramPerMeter ZEV_FuelConsumption_AuxHtr { get; set; }
@@ -203,32 +221,11 @@ namespace TUGraz.VectoCore.OutputData
 	/// </summary>
 	public abstract class DeclarationReport<T> : IDeclarationReport where T : class, IResultEntry, new()
 	{
-		public class ResultContainer<TEntry>
-		{
-			public MissionType Mission;
+		
+		private readonly List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)> ResultsInternal =
+			new List<(MissionType missionType, LoadingType loading, VectoSimulationJobType simulationType, T entry)>();
 
-			public Dictionary<LoadingType, TEntry> ResultEntry;
-		}
-
-
-		/// <summary>
-		/// Dictionary of MissionTypes and their corresponding results.
-		/// </summary>
-		//protected readonly Dictionary<MissionType, ResultContainer<T>> Missions =
-		//	new Dictionary<MissionType, ResultContainer<T>>();
-		//protected readonly Dictionary<int, Dictionary<MissionType, ResultContainer<T>>> Missions =
-		//new Dictionary<int, Dictionary<MissionType, ResultContainer<T>>>();
-		protected readonly List<T> Results = new List<T>();
-
-		/// <summary>
-		/// The full load curve.
-		/// </summary>
-		//internal Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
-
-		///// <summary>
-		///// The declaration segment from the segment table
-		///// </summary>
-		//internal Segment? Segment { get; set; }
+		
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.
 		/// </summary>
@@ -258,43 +255,58 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		List<Tuple<T, VectoRunData, IModalDataContainer>> StoredResults = new List<Tuple<T, VectoRunData, IModalDataContainer>>();
-
-		public void AddResult(VectoRunData runData,
-			IModalDataContainer modData)
+		public void AddResult(VectoRunData runData, IModalDataContainer modData)
 		{
 			//return;
 			if (runData.Mission.MissionType != MissionType.ExemptedMission) {
 				var entry = new T();
 				entry.Initialize(runData, modData);
-				lock (Results) {
-					var existingResults = Results.SingleOrDefault(e =>
-						e.Mission == entry.Mission && e.LoadingType == entry.LoadingType && e.OVCMode == entry.OVCMode && e.VehicleClass == entry.VehicleClass);
-					if (existingResults != null)
-					{
-						//We already have a result for this run stored, this can happen with iterative runs, in this case we have to remove the old result
-						Results.Remove(existingResults);
-					}
-
-					Results.Add(entry);
+				lock (ResultsInternal)
+				{
+					ResultsInternal.Add((entry.Mission, entry.LoadingType, runData.JobType, entry));
 				}
 
 				DoStoreResult(entry, runData, modData);
-				StoredResults.Add(Tuple.Create(entry, runData, modData));
 			}
 
 			WriteResults();
+		}
+
+		protected virtual IEnumerable<T> Results
+		{
+			get
+			{
+				lock (ResultsInternal)
+				{
+					var bestResults = ResultsInternal.GroupBy(
+							r => (r.missionType, r.loading, vehicleClass: r.entry.VehicleClass, ovcMode: r.entry.OVCMode, r.simulationType),
+							r => r.entry,
+							(group, results) => {
+								var simResults = results.ToList();
+								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.simulationType);
+								if (bestResult < 0 || bestResult >= simResults.Count)
+								{
+									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {simResults.Count}");
+								}
+
+								return simResults[bestResult];
+							});
+					
+					return bestResults;
+				}
+			}
 		}
 
 		protected virtual IEnumerable<T> OrderedResults
 		{
 			get
 			{
-				lock (Results) {
-					return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
-						.ThenBy(x => x.LoadingType);
-				}
-			}
+				return Results
+					.OrderBy(x => x.VehicleClass)
+					.ThenBy(x => x.FuelMode)
+					.ThenBy(x => x.Mission)
+					.ThenBy(x => x.LoadingType);
+            }
 		}
 
 		/// <summary>
@@ -309,18 +321,18 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected internal virtual void DoWriteReport()
 		{
-			/// Check if LH does not meet LH requierements, i.e. ReferenceLoad and OperationalRange > 350km.
-			var RDGroupEntry = StoredResults.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e.Item1));
+			/// Check if LH does not meet LH requirements, i.e. ReferenceLoad and OperationalRange > 350km.
+			var RDGroupEntry = Results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 
 			foreach (var resultEntry in OrderedResults)
 			{
-				var rdResultEntry = RDGroupEntry != null ? RDGroupEntry.Item1 : resultEntry;
-				var vectoRun = RDGroupEntry != null ? RDGroupEntry.Item2 : resultEntry.VectoRunData;
+				var rdResultEntry = RDGroupEntry != null ? RDGroupEntry : resultEntry;
+				var vectoRun = resultEntry.VectoRunData;
 
-				/// Set new weighting factors according to new RD group.
-				SetWeightingFactors(vectoRun, OrderedResults, rdResultEntry != null ? rdResultEntry.ActualChargeDepletingRange?.Value() : null);
+				// Set new weighting factors according to new RD group.
+				SetWeightingFactors(vectoRun, OrderedResults, rdResultEntry?.ActualChargeDepletingRange?.Value());
 
-				/// Update results with newest weighting factors (WFs), i.e. RD WFs if updated otherwise if else.
+				// Update results with newest weighting factors (WFs), i.e. RD WFs if updated otherwise if else.
 				WriteResult(resultEntry);
 			}
 

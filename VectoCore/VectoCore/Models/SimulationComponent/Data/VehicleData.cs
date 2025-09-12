@@ -239,7 +239,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public bool OffVehicleCharging { get; internal set; }
 
-		public class ADASData
+        public Kilogram H2StorageUsableCapacity { get; internal set; }
+
+        public class ADASData
 		{
 			public bool EngineStopStart { get; internal set; }
 			public EcoRollType EcoRoll { get; internal set; }

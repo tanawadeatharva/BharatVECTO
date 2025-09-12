@@ -19,12 +19,21 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.IEPC_E.ToString());
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.MultiplePowertrains.ToString());
-
-			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
+				.Named(VectoSimulationJobType.Multiple_FCHV.ToString());
+            Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
+                .Named(VectoSimulationJobType.Multiple_PEV.ToString());
+            Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
+                .Named(VectoSimulationJobType.Multiple_SHEV.ToString());
+            
+            Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.SerialHybridVehicle.ToString());
 			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.IEPC_S.ToString());
+
+			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
+				.Named(VectoSimulationJobType.FCHV.ToString());
+			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
+				.Named(VectoSimulationJobType.FCHV_IEPC.ToString());
 
 			Bind<IModalDataPostProcessor>().To<ParallelHybridModalDataPostprocessingCorrection>()
 				.Named(VectoSimulationJobType.ParallelHybridVehicle.ToString());

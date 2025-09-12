@@ -123,6 +123,7 @@ namespace VECTO3GUI2020.Ninject.Factories
 				case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.IEPC_S:
 					return CompletedBusArchitecture.IEPC;
+				// todo amogoda: m add bus architecture for tbd types.
 				case VectoSimulationJobType.FCHV:
 				case VectoSimulationJobType.FCHV_IEPC:
 				default:

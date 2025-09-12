@@ -18,7 +18,7 @@ using DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataO
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class GenericBusEngineData
+    public class GenericBusEngineData
 	{
 		#region Constants
 
@@ -28,7 +28,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static string GenericEngineCM_Normed_PI =
 			$"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_normalized.vmap";
 
-		private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
+		private static string GenericEngineCM_Normed_H2_PI =
+            $"{DeclarationData.DeclarationDataResourcePrefix}.GenericBusData.EngineConsumptionMap_PI_H2_normalized.vmap";
+
+        private static readonly double[] DieselCIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
 		private static readonly double[] PIFactors = { 1.05, 1.02, 1.0, 1.005, 1.0 };
 
 		private static GenericBusEngineData _instance;
@@ -77,6 +80,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					VehicleDataAdapter.VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
 				fullLoadCurves[(uint)gear.Gear] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 			}
+			// TODO MQ 2024-10-22: IMO IPEC component is not relevant here!
+			// a vehicle with an IEPC will never have a combustion engine in the powertrain!
 			if (primaryVehicle.Components.IEPC?.Gears != null)
 				foreach (var gear in primaryVehicle.Components.IEPC.Gears)
 				{
@@ -106,6 +111,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			switch (fuelType) {
 				case FuelType.DieselCI:
+				case FuelType.DieselB100CI:
 				case FuelType.EthanolCI:
 				case FuelType.NGCI:
 					return true;
@@ -114,16 +120,37 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		private bool UseH2PI(IList<IEngineFuelDeclarationInputData> fuels)
+		{
+            var fuelType = fuels.First().FuelType;
+            var isDualFuel = fuels.Count > 1;
+
+            return !isDualFuel && fuels.Any(x => x.FuelType == FuelType.H2PI);
+        }
+
+		private bool UseH2CI(IList<IEngineFuelDeclarationInputData> fuels)
+		{
+            var isDualFuel = fuels.Count > 1;
+
+            return !isDualFuel && fuels.Any(x => x.FuelType == FuelType.H2CI);
+        }
+
 		private string GetEngineRessourceId(IList<IEngineFuelDeclarationInputData> fuels)
 		{
-			return UseDieselFuel(fuels) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
+			return UseH2PI(fuels) 
+				? GenericEngineCM_Normed_H2_PI
+                : (UseDieselFuel(fuels) || UseH2CI(fuels)) ? GenericEngineCM_Normed_CI : GenericEngineCM_Normed_PI;
 		}
 
 		private IFuelProperties GetFuelData(IList<IEngineFuelDeclarationInputData> fuels)
 		{
 			return UseDieselFuel(fuels)
 				? FuelData.Diesel
-				: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed);
+				: UseH2CI(fuels) 
+					? FuelData.H2_CI 
+					: (UseH2PI(fuels) 
+						? FuelData.H2_PI
+						: FuelData.Instance().Lookup(FuelType.NGPI, TankSystem.Compressed));
 		}
 
 		private double[] GetEngineCorrectionFactors(IList<IEngineFuelDeclarationInputData> fuels)

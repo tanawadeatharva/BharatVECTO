@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Castle.Core.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -26,58 +26,54 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected RetarderData RetarderData;
 		protected PTOData PTOTransmissionData;
 		protected List<VectoRunData.AuxData> AuxVTP;
+
 		protected Segment Segment;
 		protected bool _allowVocational;
 		private DrivingCycleProxy _VTPCycle;
 		
-		protected Exception InitException;
-
 		public IVTPReport Report;
 		protected ShiftStrategyParameters GearshiftData;
-
-		
+				
 		protected abstract IDeclarationDataAdapter Dao { get; }
 
-		
 		protected AbstractVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job, IVTPReport report)
 		{
 			JobInputData = job;
 			Report = report;
 			_allowVocational = true;
-			try {
-				Initialize();
-				if (Report != null) {
-					InitializeReport();
-				}
-			} catch (Exception e) {
-				InitException = e;
-			}
 		}
 
 		protected abstract void Initialize();
 
 		protected virtual void InitializeReport()
 		{
-			var powertrainConfig = new VectoRunData() {
-				VehicleData =
-					Dao.CreateVehicleData(
-						JobInputData.Vehicle, Segment, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First(), _allowVocational),
+			var airDragData = JobInputData.Vehicle.VehicleCategory.IsBus() ?
+				JobInputData.CompletedVIFInputData.AirDragData :
+				AirdragData;
+
+			var powertrainConfig = new VectoRunData()
+			{
+				VehicleData = Dao.CreateVehicleData(
+					JobInputData.Vehicle,
+					Segment,
+					Segment.Missions.First(),
+					Segment.Missions.First().Loadings.First(),
+					_allowVocational),
 				AirdragData = AirdragData,
 				EngineData = EngineData,
 				GearboxData = GearboxData,
 				AxleGearData = AxlegearData,
 				Retarder = RetarderData,
 				Aux = GetAuxiliaryData(Segment.Missions.First().MissionType),
+				Cycle = VTPCycle,
 			};
+
 			powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
 			Report.InputDataHash = JobInputData.VectoJobHash;
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
-										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
-											.ToList())
-									.ToList();
+			Report.CustomerFileHash = JobInputData.VectoCustomerFileHash;
+			Report.OBFCMDeclarationInputData = JobInputData.OBFCMDeclarationInputData;
 			Report.InitializeReport(powertrainConfig);
 		}
 
@@ -104,14 +100,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 
 		#region Implementation of IVectoRunDataFactory
 
-		public abstract IEnumerable<VectoRunData> NextRun();
+		public virtual IEnumerable<VectoRunData> NextRun()
+		{
+			Initialize();
+			if (Report != null) {
+				InitializeReport();
+			}
 
-		public abstract IInputDataProvider DataProvider { get; }
-		
-		#endregion
+			return GetNextRun();
+        }
 
-		
-		protected virtual AuxFanData GetFanData()
+		protected abstract IEnumerable<VectoRunData> GetNextRun();
+
+        public abstract IInputDataProvider DataProvider { get; }
+
+        public IVehicleDeclarationInputData CompletedVehicle { get; set; }
+
+
+        #endregion
+
+
+        protected virtual AuxFanData GetFanData()
 		{
 			return new AuxFanData() {
 				FanCoefficients = DeclarationData.VTPMode.FanParameters,
@@ -151,8 +160,266 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				WheelEndData = Dao.CreateWheelEndData(segment.VehicleClass, JobInputData.Vehicle)
 			};
 		}
+	}
 
-		
+	internal class VTPOBFCMData
+	{
+		private IDrivingCycleData _cycleData;
+		private readonly FuelType[] AvailableFuels;
 
+		private Dictionary<FuelType, Liter> _measuredConsumptionVolume = null;
+		private Dictionary<FuelType, Kilogram> _measuredConsumptionMass = null;
+		private Dictionary<FuelType, Liter> _cumulativeFuelConsumptionVolume = null;
+		private Dictionary<FuelType, Kilogram> _cumulativeFuelConsumptionMass = null;
+
+		private bool isOBFCMMassAvailable = false;
+		private bool isOBFCMMileageAvailable = false;
+		private bool isOBFCMFuelConsumptionMassFlowAvailable = false;
+		private bool isOBFCMFuelConsumptionVolumeFlowAvailable = false;
+
+		public VTPOBFCMData(VectoRunData runData)
+		{
+			_cycleData = runData?.Cycle ?? throw new ArgumentNullException(nameof(runData));
+			AvailableFuels = _cycleData.Entries.First().Fuelconsumption.Keys.ToArray();
+
+			var firstEntry = _cycleData.Entries.First();
+			isOBFCMMassAvailable = firstEntry.OBFCMMass != null;
+			isOBFCMMileageAvailable = firstEntry.OBFCMMileage != null;
+			isOBFCMFuelConsumptionMassFlowAvailable = firstEntry.OBFCMFuelConsumptionMassFlow.First().Value != null;
+			isOBFCMFuelConsumptionVolumeFlowAvailable = firstEntry.OBFCMFuelConsumptionVolumeFlow.First().Value != null;
+		}
+
+		public bool IsOBFCM => isOBFCMMassAvailable
+			|| isOBFCMMileageAvailable
+			|| isOBFCMFuelConsumptionMassFlowAvailable
+			|| isOBFCMFuelConsumptionVolumeFlowAvailable;
+
+		public Meter StartMileage => _cycleData.Entries.First()?.OBFCMMileage ?? null;
+
+		public Meter EndMileage => _cycleData.Entries.Last()?.OBFCMMileage ?? null;
+
+		public Kilogram AverageMass
+		{
+			get
+			{
+				if (!isOBFCMMassAvailable)
+				{
+					return null;
+				}
+
+				return _cycleData.Entries.Sum(e => e.OBFCMMass) / (_cycleData.Entries.Count);
+			}
+		}
+
+		public Dictionary<FuelType, Liter> CumulativeFuelConsumptionVolume
+		{
+			get
+			{
+				if (_cumulativeFuelConsumptionVolume != null)
+				{
+					return _cumulativeFuelConsumptionVolume;
+				}
+
+				if (!isOBFCMFuelConsumptionVolumeFlowAvailable)
+				{
+					return null;
+				}
+
+				return _cumulativeFuelConsumptionVolume = GetFuelConsumptionByVolume();
+			}
+		}
+
+		public Dictionary<FuelType, Kilogram> CumulativeFuelConsumptionMass
+		{
+			get
+			{
+				if(_cumulativeFuelConsumptionMass != null)
+				{
+					return _cumulativeFuelConsumptionMass;
+				}
+
+				if (!isOBFCMFuelConsumptionMassFlowAvailable)
+				{
+					return null;
+				}
+
+				return _cumulativeFuelConsumptionMass = GetFuelConsumptionByMass();
+			}
+		}
+
+		public Kilogram TotalCumulativeFuelConsumptionMass
+		{
+			get
+			{
+				if (!isOBFCMFuelConsumptionMassFlowAvailable)
+				{
+					return null;
+				}
+
+				return CumulativeFuelConsumptionMass.Select(fc => fc.Value).Sum();
+			}
+		}
+
+		public Liter TotalCumulativeFuelConsumptionVolume
+		{
+			get
+			{
+				if (!isOBFCMFuelConsumptionVolumeFlowAvailable)
+				{
+					return null;
+				}
+
+				return CumulativeFuelConsumptionVolume.Select(fc => fc.Value).Sum();
+			}
+		}
+
+		public Dictionary<FuelType, Liter> MeasuredConsumptionVolume
+		{
+			get
+			{
+				if (_measuredConsumptionVolume == null)
+				{
+					_measuredConsumptionVolume = CalculateMeasuredConsumptionLiter();
+				}
+
+				return _measuredConsumptionVolume;
+			}
+		}
+
+		public Dictionary<FuelType, Kilogram> MeasuredConsumptionMass
+		{
+			get
+			{
+				if (_measuredConsumptionMass == null)
+				{
+					_measuredConsumptionMass = CalculateMeasuredConsumptionKilogram();
+				}
+
+				return _measuredConsumptionMass;
+			}
+		}
+
+		public Liter TotalMeasuredConsumptionVolume
+		{
+			get
+			{
+				if (_measuredConsumptionVolume == null)
+				{
+					_measuredConsumptionVolume = CalculateMeasuredConsumptionLiter();
+				}
+
+				if(_measuredConsumptionVolume.Count != AvailableFuels.Count())
+				{
+					return null;
+				}
+
+				return _measuredConsumptionVolume.Select(fc => fc.Value).Sum();
+			}
+		}
+
+		public Kilogram TotalMeasuredConsumptionMass
+		{
+			get
+			{
+				if (_measuredConsumptionMass == null)
+				{
+					_measuredConsumptionMass = CalculateMeasuredConsumptionKilogram();
+				}
+
+				return _measuredConsumptionMass.Select(fC => fC.Value).Sum();
+			}
+		}
+
+		private Dictionary<FuelType, Kilogram> CalculateMeasuredConsumptionKilogram()
+		{
+			var entries = _cycleData.Entries;
+			var resultFC = new Dictionary<FuelType, Kilogram>();
+			for (int i = 0; i < entries.Count; i++)
+			{
+				var dt = i == 0 ? entries[i].Time : entries[i].Time - entries[i - 1].Time;
+				foreach (var fuelType in entries[i].Fuelconsumption.Keys)
+				{
+					if (!resultFC.ContainsKey(fuelType))
+					{
+						resultFC.Add(fuelType, 0.SI<Kilogram>());
+					}
+
+					resultFC[fuelType] += entries[i].Fuelconsumption[fuelType] * dt;
+				}
+			}
+
+			return resultFC;
+		}
+
+		private Dictionary<FuelType, Liter> CalculateMeasuredConsumptionLiter()
+		{
+			if(_measuredConsumptionMass == null)
+			{
+				_measuredConsumptionMass = CalculateMeasuredConsumptionKilogram();
+			}
+
+			var resultFC = new Dictionary<FuelType, Liter>();
+			foreach(var fuelType in _measuredConsumptionMass.Keys)
+			{
+				if(fuelType.Density() != null)
+				{
+					resultFC.Add(fuelType, (_measuredConsumptionMass[fuelType] / fuelType.Density()).Cast<Liter>());
+				}
+			}
+
+			return resultFC;
+		}
+
+		private Dictionary<FuelType, Liter> GetFuelConsumptionByVolume()
+		{
+			var entries = _cycleData.Entries;
+			Dictionary<FuelType, Liter> consumptionByFuel = new Dictionary<FuelType, Liter>();
+			for (int i = 0; i < entries.Count; i++)
+			{
+				var dt = i == 0 ? entries[i].Time : entries[i].Time - entries[i - 1].Time;
+				foreach (var fuelType in entries[i].OBFCMFuelConsumptionVolumeFlow.Keys)
+				{
+					if (!consumptionByFuel.ContainsKey(fuelType))
+					{
+						consumptionByFuel.Add(fuelType, 0.SI<Liter>());
+					}
+
+					consumptionByFuel[fuelType] += entries[i].OBFCMFuelConsumptionVolumeFlow[fuelType] * dt;
+				}
+			}
+
+			return consumptionByFuel;
+		}
+
+		private Dictionary<FuelType, Kilogram> GetFuelConsumptionByMass()
+		{
+			var entries = _cycleData.Entries;
+			Dictionary<FuelType, Kilogram> consumptionByFuel = new Dictionary<FuelType, Kilogram>();
+			for (int i = 0; i < entries.Count; i++)
+			{
+				var dt = i == 0 ? entries[i].Time : entries[i].Time - entries[i - 1].Time;
+				foreach (var fuelType in entries[i].OBFCMFuelConsumptionMassFlow.Keys)
+				{
+					if (!consumptionByFuel.ContainsKey(fuelType))
+					{
+						consumptionByFuel.Add(fuelType, 0.SI<Kilogram>());
+					}
+
+					consumptionByFuel[fuelType] += entries[i].OBFCMFuelConsumptionMassFlow[fuelType] * dt;
+				}
+			}
+
+			return consumptionByFuel;
+		}
+	}
+
+	public static class FuelDataExtensions
+	{
+		public static KilogramPerCubicMeter Density(this FuelType fuelType)
+		{
+			return fuelType.IsNaturalGas()
+				? FuelData.Instance().Lookup(fuelType, TankSystem.Compressed).FuelDensity
+				: FuelData.Instance().Lookup(fuelType).FuelDensity;
+		}
 	}
 }

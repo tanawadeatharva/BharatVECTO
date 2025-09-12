@@ -7,32 +7,36 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoMockup.Reports
 {
 	class MockupReportResultsFactory : IResultsWriterFactory
 	{
-		protected XNamespace CIF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9");
-		protected XNamespace MRF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
-		protected XNamespace VIF = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
+		protected XNamespace CIF = AbstractCustomerReport.Namespace;
+		protected XNamespace MRF = AbstractManufacturerReport.Namespace;
+
+        protected XNamespace VIF = XNamespace.Get(XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION);
 
 		#region Implementation of IResultsWriterFactory
 
-		public IResultsWriter GetCIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetCIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(CIF, MockupResultReader.ResultType.CIF);
 			return new MockupDummyResultsWriter(CIF, MockupResultReader.ResultType.CIF);
 		}
 
-		public IResultsWriter GetMRFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetMRFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(MRF, MockupResultReader.ResultType.CIF);
 			return new MockupDummyResultsWriter(MRF, MockupResultReader.ResultType.MRF);
 		}
 
-		public IResultsWriter GetVIFResultsWriter(string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
+		public IResultsWriter GetVIFResultsWriter(IDeclarationInputDataProvider inputData, string vehicleCategory, VectoSimulationJobType jobType, bool ovc, bool exempted)
 		{
 			if (exempted)
 				return new MockupExemptedResultsWriter(VIF, MockupResultReader.ResultType.CIF);

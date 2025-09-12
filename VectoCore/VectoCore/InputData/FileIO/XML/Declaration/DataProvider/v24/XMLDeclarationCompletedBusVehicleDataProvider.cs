@@ -19,8 +19,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		
 		public AbstractXMLDeclarationCompletedBusDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated = false)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override string Model {
 			get {
@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 	}
 
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		public override bool HybridElectricHDV => false;
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;

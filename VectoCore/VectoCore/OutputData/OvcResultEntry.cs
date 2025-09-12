@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public class OvcResultEntry : IOVCResultEntry
+    public class OvcResultEntry : IOVCResultEntry
 	{
 		#region Implementation of IOVCResultEntry
 
@@ -28,7 +30,11 @@ namespace TUGraz.VectoCore.OutputData
 		public CubicMeter CargoVolume { get; internal set; }
 		
 		public double? PassengerCount { get; internal set; }
-		
+
+		public VectoSimulationJobType JobType { get; internal set; }
+
+		public bool OffVehicleCharging { get; internal set; }
+
 		public MeterPerSecond AverageSpeed { get; internal set; }
 		
 		public MeterPerSecond AverageDrivingSpeed { get; internal set; }
@@ -46,8 +52,14 @@ namespace TUGraz.VectoCore.OutputData
 		public Meter EquivalentAllElectricRange { get; internal set; }
 		
 		public Meter ZeroCO2EmissionsRange { get; internal set; }
-		
-		public double UtilityFactor { get; internal set; }
+
+		public Meter HydrogenRange { get; internal set; }
+
+        public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; internal set; }
+
+        public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; internal set; }
+
+        public double UtilityFactor { get; internal set; }
 		
 		public IFuelProperties AuxHeaterFuel { get; set; }
 		

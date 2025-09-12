@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
@@ -27,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override bool VocationalVehicle => false;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
 		public override XmlElement PTONode => null;
 
@@ -109,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 		public override XmlElement PTONode => null;
 
 		#endregion
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 		public override XmlElement PTONode => null;
 
 		#endregion
@@ -170,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 		public override XmlElement PTONode => null;
 
 		#endregion
@@ -181,7 +182,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 		#endregion
 	}
@@ -202,7 +203,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 		public override XmlElement PTONode => null;
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
@@ -213,7 +214,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override Kilogram GrossVehicleMassRating => GetDouble(XMLNames.TPMLM).SI<Kilogram>();
 
-		public override bool OvcHev => true;
+		public override bool OVC => true;
 
 
 		#endregion
@@ -244,7 +245,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
 		public override XmlElement PTONode => null;
 
@@ -255,8 +256,4 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public override bool HybridElectricHDV => true;
 
 	}
-
-	// ---------------------------------------------------------------------------------------
-
-
 }

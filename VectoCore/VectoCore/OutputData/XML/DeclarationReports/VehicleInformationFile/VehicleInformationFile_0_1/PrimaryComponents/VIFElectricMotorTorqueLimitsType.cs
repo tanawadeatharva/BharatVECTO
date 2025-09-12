@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
@@ -20,23 +21,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			if (elTorqueLimits == null || elTorqueLimits.Count == 0)
 				return null;
 
+			var vehicle = inputData.JobInputData.Vehicle;
+			if (vehicle.Components.AxlePowertrainInputData?.Count > 0)
+			{
+				return GetMultiplePowertrainsEMTorqueLimits(vehicle);
+            }
+
 			var electricMachine = new List<XElement>();
 			foreach (var entry in elTorqueLimits) {
-				electricMachine.Add(new XElement(_v24 + XMLNames.Component_ElectricMachine,
-					new XElement(_v24 + XMLNames.ElectricMachine_Position, entry.Key.ToXmlFormat()),
+				electricMachine.Add(new XElement(_v27 + XMLNames.Component_ElectricMachine,
+					new XElement(_v27 + XMLNames.ElectricMachine_Position, entry.Key.Position.ToXmlFormat()),
 					GetVoltageLevels(entry.Value)));
 			}
 
 			var xmlType = inputData.JobInputData.Vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle
-				? "ElectricMachineTorqueLimitsSerialHybridType"
-				: "ElectricMachineTorqueLimitsType";
+				? "MultipleElectricMachineTorqueLimitsType"
+                : "ElectricMachineTorqueLimitsType";
+
 			return new XElement(_vif + XMLNames.ElectricMotorTorqueLimits,
 				new XAttribute(_xsi + XMLNames.XSIType, xmlType),
-				new XAttribute("xmlns", _v24),
+				new XAttribute("xmlns", _v27),
 				electricMachine);
 		}
 
-		private IList<XElement> GetVoltageLevels(IList<Tuple<Volt, TableData>> voltageLevels)
+		private XElement GetMultiplePowertrainsEMTorqueLimits(IVehicleDeclarationInputData vehicle)
+		{
+            var result = new List<XElement>();
+
+            foreach (var entry in vehicle.ElectricMotorTorqueLimits)
+            {
+                result.Add(new XElement(_v27 + XMLNames.Component_ElectricMachine,
+					(entry.Key.AxleNumber != Constants.NOT_IN_AXLE_POWERTRAIN) ? new XAttribute("axleNumber", entry.Key.AxleNumber) : null,
+					new XElement(_v27 + XMLNames.ElectricMachine_Position, entry.Key.Position.ToXmlFormat()),
+					GetVoltageLevels(entry.Value)));
+            }
+
+            return new XElement(_vif + "ElectricMotorTorqueLimits", result);
+        }
+
+        private IList<XElement> GetVoltageLevels(IList<Tuple<Volt, TableData>> voltageLevels)
 		{
 			var voltageEntries = new List<XElement>();
 			foreach (var voltageLevel in voltageLevels) 
@@ -50,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					var maxTorque = row[XMLNames.MaxTorqueCurve_MaxTorque];
 					var minTorque = row[XMLNames.MaxTorqueCurve_MinTorque];
 
-					var element = new XElement(_v23 + XMLNames.MaxTorqueCurve_Entry,
+					var element = new XElement(_v27 + XMLNames.MaxTorqueCurve_Entry,
 						new XAttribute(XMLNames.MaxTorqueCurve_OutShaftSpeed, outShaftSpeed),
 						new XAttribute(XMLNames.MaxTorqueCurve_MaxTorque, maxTorque),
 						new XAttribute(XMLNames.MaxTorqueCurve_MinTorque, minTorque)
@@ -59,9 +82,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					maxTorqueCurveEntries.Add(element);
 				}
 				
-				voltageEntries.Add( new XElement(_v24 + XMLNames.ElectricMachine_VoltageLevel, 
-					new XElement(_v24 + XMLNames.VoltageLevel_Voltage, voltage.ToXMLFormat(0)),
-					new XElement(_v24 + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries)));
+				voltageEntries.Add( new XElement(_v27 + XMLNames.ElectricMachine_VoltageLevel, 
+					new XElement(_v27 + XMLNames.VoltageLevel_Voltage, voltage.ToXMLFormat(0)),
+					new XElement(_v27 + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries)));
 
 			}
 

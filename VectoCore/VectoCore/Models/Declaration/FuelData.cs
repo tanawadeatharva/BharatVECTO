@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class FuelData : LookupData
+    public sealed class FuelData : LookupData
 	{
 		private static FuelData _instance;
 
@@ -82,8 +82,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static IFuelProperties H2 => Instance().Lookup(FuelType.H2FC);
 
+		public static IFuelProperties H2_CI => Instance().Lookup(FuelType.H2CI);
 
-		protected override void ParseData(DataTable table)
+        public static IFuelProperties H2_PI => Instance().Lookup(FuelType.H2PI);
+
+        protected override void ParseData(DataTable table)
 		{
 			foreach (DataRow row in table.Rows) {
 				var density = row.Field<string>("fueldensity");

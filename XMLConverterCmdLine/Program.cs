@@ -17,6 +17,7 @@ namespace XMLConverterCmdLine
 		private static List<IXMLConverter> _xmlConverters;
 		private static string _targetVersion;
 		private static bool _verbose;
+		private static bool _stopOnError;
 
 		private const int SUCCESS_CODE = 0;
 		private const int FAILURE_CODE = 1;
@@ -26,11 +27,12 @@ namespace XMLConverterCmdLine
 		private const string LIST_OPTION = "-l";
 		private const string TARGET_OPTION = "--version";
 		private const string VERBOSE_OPTION = "-v";
+		private const string STOP_ON_ERROR_OPTION = "-s";
 
 		private static readonly string Usage = $@"
 Usage:
-	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT.xml
-	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT_FOLDER
+	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{STOP_ON_ERROR_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT.xml
+	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{STOP_ON_ERROR_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT_FOLDER
 
 ";
 
@@ -38,8 +40,8 @@ Usage:
 Command-line Interface for the XML Converter tool.
 
 Synopsis:
-	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT.xml
-	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT_FOLDER
+	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{STOP_ON_ERROR_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT.xml
+	{EXECUTABLE} [{HELP_OPTION}] [{LIST_OPTION}] [{VERBOSE_OPTION}] [{STOP_ON_ERROR_OPTION}] [{TARGET_OPTION}='vX.Y'] INPUT_FOLDER
 
 Description:
 	This tool converts XML VECTO files from one version to another.
@@ -55,10 +57,11 @@ Description:
 	{LIST_OPTION}: List available conversions
 	{HELP_OPTION}: Displays this help text
 	{VERBOSE_OPTION}: Verbose mode, displays a message for each XML file successfully converted
+	{STOP_ON_ERROR_OPTION}: Stops the execution when an error occurs
 	
 Examples:
 	{EXECUTABLE} {TARGET_OPTION}='v2.4' my_job.xml
-	{EXECUTABLE} {VERBOSE_OPTION} {TARGET_OPTION}='v2.4' my_folder_containing_xml_jobs
+	{EXECUTABLE} {VERBOSE_OPTION} {STOP_ON_ERROR_OPTION} {TARGET_OPTION}='v2.4' my_folder_containing_xml_jobs
 	{EXECUTABLE} {LIST_OPTION}
 	{EXECUTABLE} {HELP_OPTION}
 ";
@@ -75,6 +78,7 @@ Examples:
 			
 			_targetVersion = "";
 			_verbose = false;
+			_stopOnError = false;
 		}
 
 		static int Main(string[] args)
@@ -105,7 +109,12 @@ Examples:
 					_verbose = true;
 				}
 
-				if (args.AsEnumerable().Count(x => x.StartsWith($"{TARGET_OPTION}=")) == 0)
+                if (args.AsEnumerable().Contains(STOP_ON_ERROR_OPTION))
+                {
+                    _stopOnError = true;
+                }
+
+                if (args.AsEnumerable().Count(x => x.StartsWith($"{TARGET_OPTION}=")) == 0)
 				{
 					WriteErrorLine($"No target version specified! Use {TARGET_OPTION}='vX.Y' to specify target version.", ConsoleColor.Red);
 					return FAILURE_CODE;
@@ -150,7 +159,7 @@ Examples:
 					.ToList()
 					.Where(x => !x.Contains(XMLFileWriter.OUTPUT_FOLDER)); 
 
-			ProgressBar progressBar = new ProgressBar(xmlFiles.Count(), "files processed", new ProgressBarOptions { ProgressBarOnBottom = true });
+			ProgressBar progressBar = new ProgressBar(xmlFiles.Count(), $"of {xmlFiles.Count()} files processed", new ProgressBarOptions { ProgressBarOnBottom = true });
 
 			foreach (var item in xmlFiles)
 			{
@@ -161,6 +170,11 @@ Examples:
 				if (conversionResult.IsError)
 				{
 					resultMsgs.Add($"{item}: ERROR: " + string.Join(Environment.NewLine, conversionResult.Errors.Select(x => x.Description)));
+
+					if (_stopOnError)
+					{
+						break;
+					}
 				}
 				else
 				{
@@ -190,7 +204,7 @@ Examples:
 
 		private static ErrorOr<string> ParseInputFile(string[] args)
 		{
-			var fileList = args.Where(x => !x.StartsWith(TARGET_OPTION) && (x != VERBOSE_OPTION)).ToList();
+			var fileList = args.Where(x => !x.StartsWith(TARGET_OPTION) && (x != VERBOSE_OPTION) && (x != STOP_ON_ERROR_OPTION)).ToList();
 
 			if (fileList.Count == 0)
 			{
@@ -239,7 +253,7 @@ Examples:
 			{
 				var line1 = $"VECTO Job XML [root element: 'VectoInputDeclaration', child element: 'Vehicle']";
 				var line2 = $"The 'Vehicle' element may also contain sub-elements whose type is defined in ";
-				var line3 = $"{XMLDefinitions.DECLARATION_NAMESPACE} v2.2, v2.3, and v2.5.";
+				var line3 = $"{XMLDefinitions.DECLARATION_NAMESPACE} v2.2, v2.3, v2.5, and v2.6 (for v2.4 Vehicles).";
 				var line4 = $"\nThe following conversions are supported for 'Vehicle' defined in {XMLDefinitions.DECLARATION_NAMESPACE}:";
 
 				return $"{line1}\n{line2}\n{line3}\n{line4}";

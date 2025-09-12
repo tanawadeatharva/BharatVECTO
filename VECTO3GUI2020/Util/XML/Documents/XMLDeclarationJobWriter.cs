@@ -63,16 +63,19 @@ namespace VECTO3GUI2020.Util.XML.Documents
     }
 
     public class XMLDeclarationJobWriter_v2_0 : XMLDeclarationJobWriter
-    {
+	{
+		//public static readonly string[] SUPPORTED_VERSIONS = {
+		//	typeof(DeclarationJobEditViewModel_v2_0).ToString(),
+		//	typeof(XMLDeclarationJobInputDataProviderV27).ToString()
+		//};
 
-        public static readonly string[] SUPPORTED_VERSIONS = {
-            typeof(DeclarationJobEditViewModel_v2_0).ToString(),
-            typeof(XMLDeclarationJobInputDataProviderV20).ToString()
-        };
+		public static readonly string[] SUPPORTED_VERSIONS = {
+			typeof(DeclarationJobEditViewModel_v2_0).ToString(),
+			typeof(XMLDeclarationJobInputDataProviderV20).ToString()
+		};
 
         public XMLDeclarationJobWriter_v2_0(IDeclarationJobInputData inputData, IXMLWriterFactory xmlWriterFactory) : base(inputData, xmlWriterFactory)
         {
-
         }
 
         protected override void Initialize()

@@ -43,7 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		SquareMeter AirDragArea { get; }
 
 		AirDragLossResult AverageAirDragPowerLoss(DrivingCycleData.DrivingCycleEntry positionInCycle, MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
-	}
+
+		SquareMeter DeltaAirDragAreaIMC { get; }
+    }
 
 	[DebuggerDisplay("{PowerLoss}, {AirdragForce}, {AverageSpeed}, {EffectiveAirDragArea}")]
 	public readonly struct AirDragLossResult

@@ -31,14 +31,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
@@ -56,9 +59,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				base(json, filename, job, tolerateMissing)
 		{}
 
-		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.MultiplePowertrains;
+		public override VectoSimulationJobType VehicleType => Body.GetEx<string>("PowertrainConfiguration").ParseEnum<VectoSimulationJobType>();
 
-		public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => 
+		public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData =>
 			_axlePowertrains ?? (_axlePowertrains = GetAxlePowertrains());
 
 		private IList<IAxlePowertrainEngineeringInputData> GetAxlePowertrains()
@@ -85,7 +88,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
 
-		public JSONVehicleDataV13_FCHV_IEPC(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : 
+		public JSONVehicleDataV13_FCHV_IEPC(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) :
 			base(json, filename, job, tolerateMissing)
 		{}
 
@@ -95,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
 	}
 
-	internal class JSONVehicleData_FCHV 
+	internal class JSONVehicleData_FCHV
 	{
 		public static JSONFuelCellSystemEngineeringInputData ReadFuelCellSystem(JObject body, String basePath)
 		{
@@ -138,14 +141,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVehicleDataV12_FCHV : JSONVehicleDataV10_HEV_BEV
 	{
 		private IFuelCellSystemEngineeringInputData _fuelCellSystem;
+		private IFuelCellSystemDeclarationInputData _fuelCellSystemDeclaration;
+
 		public JSONVehicleDataV12_FCHV(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : base(json, filename, job, tolerateMissing) {
-			
+
+		}
+
+		public override ArchitectureID ArchitectureID
+		{
+			get
+			{
+				return VehicleType.GetArchitectureID(GetElectricMachines().Entries.First(e => e.Position != PowertrainPosition.GEN).Position);
+			}
 		}
 
 		#region Overrides of JSONVehicleDataV7
 
 		public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>
 			_fuelCellSystem ?? (_fuelCellSystem = JSONVehicleData_FCHV.ReadFuelCellSystem(Body, BasePath));
+
+		public override IFuelCellSystemDeclarationInputData FuelCellSystem =>
+			_fuelCellSystemDeclaration ?? (_fuelCellSystemDeclaration = GetFuelCellSystemDeclaration());
 
 		#endregion
 
@@ -154,6 +170,77 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
 
 		#endregion
+
+		private IFuelCellSystemDeclarationInputData GetFuelCellSystemDeclaration()
+		{
+			FuelCellSystemDeclarationInputData fcDeclarationInput = new FuelCellSystemDeclarationInputData();
+			List<IFuelCellModuleDeclarationInputData> fuelCellModules = new List<IFuelCellModuleDeclarationInputData>();
+			_fuelCellSystem = JSONVehicleData_FCHV.ReadFuelCellSystem(Body, BasePath);
+
+			foreach(var fc in _fuelCellSystem.FuelCellStrings)
+			{
+				fuelCellModules.Add(new FuelCellModule()
+				{
+					Count = fc.Count,
+					MaxPower = fc.FuelCellComponent.MaxElectricPower,
+					MinPower = fc.FuelCellComponent.MinElectricPower,
+					FuelCell = new FueCellDeclarationInputData(fc.FuelCellComponent),
+				});
+			}
+
+			fcDeclarationInput.FuelCellModules = fuelCellModules;
+			return fcDeclarationInput;
+		}
+
+		class FueCellDeclarationInputData : IFuelCellDeclarationInputData
+		{
+			IFuelCellComponentEngineeringInputData _fuelCellSystem;
+			public FueCellDeclarationInputData(IFuelCellComponentEngineeringInputData fuelCellSystemComponent)
+			{
+				_fuelCellSystem = fuelCellSystemComponent ?? throw new ArgumentNullException();
+			}
+
+			public Watt FCSRatedPower => null;
+
+			public TableData FuelCellPowerOutputConsumptionMap => ConvertToDeclarationDataTable();
+
+			public DataSource DataSource => _fuelCellSystem.DataSource;
+
+			public bool SavedInDeclarationMode => _fuelCellSystem.SavedInDeclarationMode;
+
+			public string Manufacturer => _fuelCellSystem.Manufacturer;
+
+			public string Model => _fuelCellSystem.Model;
+
+			public DateTime Date => _fuelCellSystem.Date;
+
+			public string AppVersion => _fuelCellSystem.AppVersion;
+
+			public CertificationMethod CertificationMethod => _fuelCellSystem.CertificationMethod;
+
+			public string CertificationNumber => _fuelCellSystem.CertificationNumber;
+
+			public DigestData DigestValue => _fuelCellSystem.DigestValue;
+
+			private TableData ConvertToDeclarationDataTable()
+			{
+				double Kilo = 1000;
+				TableData dataTable = new TableData();
+				dataTable.Clear();
+				dataTable.Columns.Add("powerOutput");
+				dataTable.Columns.Add("fuelConsumption");
+
+				foreach(var r in _fuelCellSystem.MassFlowMap.AsEnumerable())
+				{
+					DataRow dr = dataTable.NewRow();
+					dr["powerOutput"] = Convert.ToDouble(r.Field<string>("P_el_out")) * Kilo;
+					dr["fuelConsumption"] = Convert.ToDouble(r.Field<string>("m_H2"));
+					dataTable.Rows.Add(dr);
+				}
+
+				return dataTable;
+			}
+		}
 	}
 
 
@@ -175,19 +262,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override ArchitectureID ArchitectureID { get => VehicleType.GetArchitectureID(PowertrainPosition.IEPC); }
 
-		#region Overrides of JSONVehicleDataV7
+        #region Overrides of JSONVehicleDataV7
 
-		//public override bool OvcHev => true;
+        //public override bool OvcHev => true;
 
-		//public override Watt MaxChargingPower => 0.SI<Watt>();
+        //public override Watt MaxChargingPower => 0.SI<Watt>();
 
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+    }
 
 	public class JSONVehicleDataV10_HEV_BEV :  JSONVehicleDataV9, IVehicleEngineeringInputData
-    {
+	{
 		private JSONElectricStorageSystemEngineeringInputData _batteries;
 		private JSONElectricMotors _electricMotors;
 
@@ -199,11 +286,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override double InitialSOC => Body.GetEx<double>("InitialSoC") / 100.0;
 
-		public override bool OvcHev =>
+		public override bool OVC =>
 			VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E) ||
 			Body.ContainsKey("OvcHev") && Body.GetEx<bool>("OvcHev");
 
-		public override Watt MaxChargingPower => OvcHev && Body.ContainsKey("MaxChargingPower") ? Body.GetEx<double>("MaxChargingPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
+		public override Watt MaxChargingPower => OVC && Body.ContainsKey("MaxChargingPower") ? Body.GetEx<double>("MaxChargingPower").SI(Unit.SI.Kilo.Watt).Cast<Watt>() : 0.SI<Watt>();
 
 		protected override IRetarderInputData GetRetarder => _retarderInputData ?? (_retarderInputData = new JSONRetarderInputData(this));
 
@@ -256,7 +343,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					retVal.Add(tmp);
 				}
 			}
-			
+
 
 			return new JSONElectricMotors(retVal);
 		}
@@ -310,7 +397,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
 		//	throw new NotImplementedException();
-		public override IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
+		public override IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits
 		{
 			get
 			{
@@ -324,14 +411,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							Path.Combine(BasePath, (x as JProperty)?.Value.Value<string>() ?? ""),
 							"ElectricMotorTorqueLimits")
 					)).ToList();
-					return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>()
-						{{ GetElectricMachines().Entries.First().Position, entries }};
+					return new Dictionary<EMPlacement, IList<Tuple<Volt, TableData>>>()
+						{{ new EMPlacement(GetElectricMachines().Entries.First().Position, Constants.NOT_IN_AXLE_POWERTRAIN), entries }};
 				}
 
-				return new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
+				return new Dictionary<EMPlacement, IList<Tuple<Volt, TableData>>>() {
 					{
-						GetElectricMachines().Entries.First().Position,
-						new List<Tuple<Volt, TableData>>() {
+                        new EMPlacement(GetElectricMachines().Entries.First().Position, Constants.NOT_IN_AXLE_POWERTRAIN),
+                        new List<Tuple<Volt, TableData>>() {
 							Tuple.Create((Volt)null, ReadTableData(
 								Path.Combine(BasePath, Body.GetEx<string>("EMTorqueLimits")),
 								"ElectricMotorTorqueLimits"))
@@ -345,7 +432,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			//	? null
 			//	: Body["EMTorqueLimits"].HasValues ?
    //         Body["EMTorqueLimits"].Select(x => Tuple.Create(x.GetEx<double>("Voltage").SI<Volt>(), ReadTableData(Path.Combine(BasePath, x.GetEx<string>("EMTorqueLimits")),
-			//	"ElectricMotorTorqueLimits")))) 
+			//	"ElectricMotorTorqueLimits"))))
 			//	: new Dictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>>() {
 			//		{
 			//			GetElectricMachines().Entries.First().Position,
@@ -393,11 +480,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries => _busAuxiliariesData ?? (_busAuxiliariesData = new JSONBusAuxiliariesData(this));
 
-		#region Overrides of JSONVehicleDataV7
+        #region Overrides of JSONVehicleDataV7
 
-		public override bool Articulated => Body.GetEx<bool>("Articulated");
+        public override bool Articulated => Body.ContainsKey("Articulated") ? Body.GetEx<bool>("Articulated") : base.Articulated;
 
-		protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
+        protected override IAdvancedDriverAssistantSystemsEngineering GetADAS()
 		{
 			return _adasInputData ?? (_adasInputData = new JSONADASInputDataV9(this));
 		}
@@ -430,8 +517,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	// ###################################################################
 
 
-	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData,
-		IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData
+	public class JSONVehicleDataV7 : JSONFile,
+		IVehicleEngineeringInputData,
+		IVehicleComponentsDeclaration,
+		IVehicleComponentsEngineering,
+		IAxlesEngineeringInputData,
+		IAxlesDeclarationInputData
 	//IAdvancedDriverAssistantSystemsEngineering, IAdvancedDriverAssistantSystemDeclarationInputData
 
 	{
@@ -493,12 +584,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool Articulated => false;
 
-		public virtual Meter Height => Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
-		
-		public virtual IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
-		
+		public virtual Meter Height => SavedInDeclarationMode ? null : Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>();
+
+		public virtual IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => null;
+
 		public virtual TableData BoostingLimitations => null;
-		
+
 		public virtual Meter Length => null;
 
 		public virtual Meter Width => null;
@@ -508,12 +599,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual VehicleDeclarationType VehicleDeclarationType { get; }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components => this;
+        
+		public ArchitectureID ArchitectureIDPwt2 { get; }
 
-		public int? NumSteeredAxles => null;
+        public int? NumSteeredAxles => null;
 		XmlNode IVehicleDeclarationInputData.XMLSource => null;
 		public virtual string VehicleTypeApprovalNumber { get; }
 		public virtual ArchitectureID ArchitectureID { get; }
-		public virtual bool OvcHev { get; }
+		public virtual bool OVC { get; }
 		public virtual Watt MaxChargingPower { get; }
 
 		public GearshiftPosition PTO_DriveGear => Body["GearDuringPTODrive"] != null ? new GearshiftPosition(Body["GearDuringPTODrive"].Value<uint>()) : null;
@@ -642,8 +735,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IPTOTransmissionInputData IVehicleComponentsDeclaration.PTOTransmissionInputData => _ptoInputData ?? (_ptoInputData = new JSONPTOTransmissioninputData(this));
 
+        public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; }
 
-		IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+
+        IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
 
 		IElectricStorageSystemEngineeringInputData IVehicleComponentsEngineering.ElectricStorage => GetElectricStorage();
 
@@ -656,6 +752,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => null;
 
 		public virtual IFuelCellSystemEngineeringInputData FuelCellSystemInputData => null;
+
+		public virtual IFuelCellSystemDeclarationInputData FuelCellSystem => null;
 
 		public virtual IIEPCDeclarationInputData IEPC => null;
 
@@ -770,7 +868,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual DigestData DigestValue => null;
 
 		public virtual XmlNode XMLSource => null;
-	}
+
+		public virtual string SimulationToolLicenseNumber => Constants.NOT_AVAILABLE;
+
+        public string VehicleMonitoringData { get; }
+
+		public virtual Kilogram H2StorageUsableCapacity => (Body[XMLNames.Vehicle_H2StorageUsableCapacity] != null)
+			? Body.GetEx<double>(XMLNames.Vehicle_H2StorageUsableCapacity).SI<Kilogram>()
+			: null;
+
+		public virtual HydrogenStorageTechnology? HydrogenStorageTechnology => (Body[XMLNames.Vehicle_H2StorageTechnology] != null)
+			? HydrogenStorageTechnologyHelper.Parse(Body.GetEx<string>(XMLNames.Vehicle_H2StorageTechnology))
+			: (HydrogenStorageTechnology?)null;
+
+		public virtual bool BatteryOnlyMode => (Body["BatteryOnlyMode"] != null) ? Body.GetEx<bool>("BatteryOnlyMode") : false;
+
+		public virtual DynamicChargingTechnology DynamicChargingTechnology => (Body["DynamicChargingTechnology"] != null)
+			? DynamicChargingTechnologyHelper.Parse(Body.GetEx<string>("DynamicChargingTechnology"))
+			: DynamicChargingTechnology.None;
+    }
 
 
 

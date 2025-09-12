@@ -103,11 +103,11 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 			TestCase(GROUP_9_DF, "LongHaul", 1003.3424),
 			TestCase(GROUP_9_DF, "RegionalDelivery", 725.8333),
 
-			TestCase(GROUP_9_DF_WHR, "LongHaul", 1001.4114),
-			TestCase(GROUP_9_DF_WHR, "RegionalDelivery", 723.4348),
+			TestCase(GROUP_9_DF_WHR, "LongHaul", 1001.412),
+			TestCase(GROUP_9_DF_WHR, "RegionalDelivery", 723.4352),
 
 			TestCase(GROUP_9_WHR, "LongHaul", 938.0763),
-			TestCase(GROUP_9_WHR, "RegionalDelivery", 677.2767),
+			TestCase(GROUP_9_WHR, "RegionalDelivery", 677.2773),
 
 			//TestCase(GROUP_9_AT, "LongHaul", 1136.1705),
 			//TestCase(GROUP_9_AT, "RegionalDelivery", 845.8791),
@@ -127,9 +127,9 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(E2_JOB , "LongHaul", 155.3338),
-			TestCase(E2_JOB , "RegionalDelivery", 106.2072),
-			TestCase(E2_JOB, "UrbanDelivery", 85.2745),
+			TestCase(E2_JOB , "LongHaul", 155.2822),
+			TestCase(E2_JOB , "RegionalDelivery", 106.2029),
+			TestCase(E2_JOB, "UrbanDelivery", 85.2476),
 
 			//TestCase(E2_CONST30_JOB , "LongHaul", 754.9479),
 			//TestCase(E2_CONST30_JOB , "RegionalDelivery", 754.9479),
@@ -188,13 +188,13 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492),
-			TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
-			TestCase(SINGLEBUS_31B_FM, "Interurban", 1039.4657),
+            //TestCase(SINGLEBUS_31B_FM, "Coach", 863.6492), // primary vehicle cycle pruning -> cycle is not configured for the current vehicle.
+            TestCase(SINGLEBUS_31B_FM, "HeavyUrban", 1829.2873),
+			TestCase(SINGLEBUS_31B_FM, "Interurban", 1040.0068),
 
-			TestCase(SINGLEBUS_34F_FM, "Coach", 686.0818),
-			TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187),
-			TestCase(SINGLEBUS_34F_FM, "Interurban", 950.3305),
+			TestCase(SINGLEBUS_34F_FM, "Coach", 781.6859),
+            //TestCase(SINGLEBUS_34F_FM, "HeavyUrban", 1860.2187), // primary vehicle cycle pruning -> cycle cycle is not configured for the current vehicle.
+            TestCase(SINGLEBUS_34F_FM, "Interurban", 1110.4781),
 		]
 		public void ICE_DistanceRun_FactorMethod(string jobFile, string cycleName, double expectedECFinal)
 		{

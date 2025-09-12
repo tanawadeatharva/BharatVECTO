@@ -138,15 +138,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationAxlesDataProviderV26 : XMLDeclarationAxlesDataProviderV20
+	public class XMLDeclarationAxlesDataProviderV27 : XMLDeclarationAxlesDataProviderV20
 	{
-		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V26;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		
-		public XMLDeclarationAxlesDataProviderV26(
+		public XMLDeclarationAxlesDataProviderV27(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
@@ -170,4 +170,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+    public class XMLDeclarationAxlesDataProviderV11 : XMLDeclarationAxlesDataProviderV01
+	{
+        public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationAxlesDataProviderV11(
+            IXMLDeclarationVehicleData vehicle, 
+			XmlNode componentNode, 
+			string sourceFile) 
+			: base(vehicle, componentNode, sourceFile)
+        { }
+    }
 }

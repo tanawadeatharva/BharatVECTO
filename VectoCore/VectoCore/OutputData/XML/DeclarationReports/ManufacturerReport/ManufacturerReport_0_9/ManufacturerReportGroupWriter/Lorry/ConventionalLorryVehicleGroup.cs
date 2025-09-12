@@ -21,12 +21,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var vehicle = inputData.JobInputData.Vehicle;
 			var result = new List<XElement>();
 			var dualFuel = vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
-			result.AddRange(_mrfFactory.GetGeneralLorryVehicleOutputGroup().GetElements(inputData));
-			result.AddRange(new List<XElement>(){new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
+
+			var tankSystem = vehicle.TankSystem.HasValue
+				? vehicle.TankSystem.Value.ToString()
+				: (vehicle.HydrogenStorageTechnology.HasValue
+                    ? vehicle.HydrogenStorageTechnology.Value.ToString()
+                    : null);
+
+            result.AddRange(_mrfFactory.GetGeneralLorryVehicleOutputGroup().GetElements(inputData));
+			result.AddRange(new List<XElement>(){
+				new XElement(_mrf + XMLNames.Vehicle_DualFuelVehicle, dualFuel),
 				new XElement(_mrf + XMLNames.Vehicle_SleeperCab, inputData.JobInputData.Vehicle.SleeperCab),
-				(inputData.JobInputData.Vehicle.TankSystem.HasValue ? new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, inputData.JobInputData.Vehicle.TankSystem.Value.ToString()) : null),
-				//If content is null, nothing is added. When passing a collection, items in the collection can be null. A null item in the collection has no effect on the tree.
-				_mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS)});
+                _mrfFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS),
+                (tankSystem != null) ? new XElement(_mrf + "TankSystem", tankSystem) : null,
+			});
+
 			return result;
 		}
 

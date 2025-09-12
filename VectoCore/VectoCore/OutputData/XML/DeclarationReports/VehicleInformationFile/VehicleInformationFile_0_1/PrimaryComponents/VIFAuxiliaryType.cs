@@ -162,7 +162,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "AUX_HEV-S_PrimaryBusType"),
 					new XElement(_vif + XMLNames.BusAux_Fan,
-						new XElement(_vif + XMLNames.Auxiliaries_Auxiliary_Technology, aux.FanTechnology)),
+						new XElement(
+							_vif + XMLNames.Auxiliaries_Auxiliary_Technology,
+							aux.FanTechnology)),
 					GetSteeringPumpElement(aux.SteeringPumpTechnology),
 					GetElectricSystem(aux.ElectricSupply),
 					GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
@@ -368,5 +370,45 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 
 	}
+
+	public class VIFAuxiliaryFCHVType : VIFAuxiliaryType
+	{
+		public VIFAuxiliaryFCHVType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+
+		#region Overrides of VIFAuxiliaryType
+
+		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+		{
+			var aux = inputData.JobInputData.Vehicle.Components.BusAuxiliaries;
+			if (aux == null)
+				return null;
+
+			return new XElement(_vif + XMLNames.Component_Auxiliaries,
+				new XElement(_vif + XMLNames.ComponentDataWrapper,
+					GetSteeringPumpElement(aux.SteeringPumpTechnology),
+                    GetPneumaticSystem(aux.PneumaticSupply, aux.PneumaticConsumers),
+                    GetHvac(aux.HVACAux)
+                ));
+		}
+
+		protected override XElement GetPneumaticSystem(IPneumaticSupplyDeclarationData pSupply, IPneumaticConsumersDeclarationData pConsumer)
+		{
+			return new XElement(_vif + XMLNames.BusAux_PneumaticSystem,
+                new XElement(_vif + XMLNames.CompressorDrive, pSupply.CompressorDrive.GetLabel()),
+                new XElement(_vif + XMLNames.Bus_SmartRegenerationSystem, pSupply.SmartRegeneration),
+                new XElement(_vif + XMLNames.Bus_AirsuspensionControl, GetXMLAirsuspensionControl(pConsumer.AirsuspensionControl)),
+                new XElement(_vif + XMLNames.BusAux_PneumaticSystem_SCRReagentDosing, pConsumer.AdBlueDosing == ConsumerTechnology.Pneumatically)
+			);
+		}
+
+        protected override XElement GetHvac(IHVACBusAuxiliariesDeclarationData hvac)
+        {
+            return new XElement(new XElement(_vif + XMLNames.BusAux_HVAC,
+                new XElement(_vif + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat)));
+        }
+
+        #endregion
+    }
 
 }

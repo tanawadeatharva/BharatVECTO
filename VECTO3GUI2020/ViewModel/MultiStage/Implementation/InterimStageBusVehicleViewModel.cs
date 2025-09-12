@@ -109,6 +109,18 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#endregion
 
+		public bool BatteryOnlyMode { get; }
+
+        public string VehicleMonitoringData { get; }
+
+        public DynamicChargingTechnology DynamicChargingTechnology { get; }
+
+		public Kilogram H2StorageUsableCapacity { get; }
+
+		public HydrogenStorageTechnology? HydrogenStorageTechnology {  get; }
+
+		public string SimulationToolLicenseNumber { get; }
+
 		protected bool _exemptedVehicle;
 
 		public string Name => "Vehicle";
@@ -833,7 +845,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			set => SetProperty(ref _vehicleDeclarationType, value);
 		}
 
-		public IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
+		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits { get; }
 		public TableData BoostingLimitations { get; }
 
 		private string _vehicleTypeApprovalNumber;
@@ -845,7 +857,9 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		}
 
 		public ArchitectureID ArchitectureID { get; }
-		public bool OvcHev { get; }
+		public ArchitectureID ArchitectureIDPwt2 { get; }
+
+        public bool OVC { get; }
 		public Watt MaxChargingPower { get; }
 		public VectoSimulationJobType VehicleType { get; }
 
@@ -1267,9 +1281,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			!string.IsNullOrEmpty(Error) || 
 			(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
 
-		#endregion
+		// todo amogoda: tbd (?)
+		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
-		private bool _airdragModifiedMultistepMandatory;
+		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => throw new NotImplementedException();
+
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => throw new NotImplementedException();
+
+        #endregion
+
+        private bool _airdragModifiedMultistepMandatory;
 		private int? _numberPassengersStandingLowerDeck;
 		private int? _numberPassengersStandingUpperDeck;
 

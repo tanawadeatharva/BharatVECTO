@@ -19,17 +19,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReport
 {
-
-
-
 	internal abstract class CompletedBusManufacturerReportBase : AbstractManufacturerReport, IXMLManufacturerReportCompletedBus
 	{
-	
-
-
-
-		protected XNamespace _mrf = XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
 		private bool _allSuccess = true;
+		
 		public CompletedBusManufacturerReportBase(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 
 
@@ -42,31 +35,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			if (inputData == null) {
 				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
 			}
-			Results = _resultFactory.GetMRFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetMRFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
-			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
+			InputDataIntegrity = new XElement(Namespace + XMLNames.Report_InputDataSignature,
 				inputData.JobInputData.ConsolidateManufacturingStage.Signature == null
 					? XMLHelper.CreateDummySig(_di)
 					: inputData.JobInputData.ConsolidateManufacturingStage.Signature.ToXML(_di));
 		}
 
 		#region Implementation of IXMLManufacturerReportCompletedBus
-
-		private double CalculateFactor<T>(
-			(XMLDeclarationReport.ResultEntry genericResult,
-				XMLDeclarationReport.ResultEntry specificResult) results,
-			Func<XMLDeclarationReport.ResultEntry, T> access)
-		{
-			dynamic spec = access(results.specificResult);
-			dynamic gen = access(results.genericResult);
-			dynamic factor = spec / gen;
-			if (factor is Scalar sc) {
-				return sc.Value();
-			}
-			return (double)factor;
-		}
-
-
 
 
 		public virtual void WriteResult(IResultEntry genericResult,
@@ -242,7 +219,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	internal class FCHV_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
+	{
+        public FCHV_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : 
+			base(MRFReportFactory, resultFactory) 
+		{ }
+
+        public override string OutputDataType => "FCHVCompletedBusManufacturerOutputDataType";
+
+        protected override void InitializeVehicleData(IDeclarationInputDataProvider inputData)
+        {
+            Vehicle = _mRFReportFactory.GetFCHV_CompletedBusVehicleType().GetElement(inputData);
+        }
+    }
+
+    internal class Exempted_CompletedBusManufacturerReport : CompletedBusManufacturerReportBase
 	{
 		public Exempted_CompletedBusManufacturerReport(IManufacturerReportFactory MRFReportFactory, IResultsWriterFactory resultFactory) : base(MRFReportFactory, resultFactory) { }
 

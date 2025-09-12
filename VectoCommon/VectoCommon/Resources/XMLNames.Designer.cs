@@ -556,6 +556,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WheelEnd.
+        /// </summary>
+        public static string AxleWheels_Axles_Axle_WheelEnd {
+            get {
+                return ResourceManager.GetString("AxleWheels_Axles_Axle_WheelEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxleWheelsDataDeclarationType.
         /// </summary>
         public static string AxleWheels_Type_Attr_AxleWheelsDeclarationType {
@@ -1524,6 +1533,42 @@ namespace TUGraz.VectoCommon.Resources {
         public static string CIF_OutputDataType_Exempted_LorryOutputType {
             get {
                 return ResourceManager.GetString("CIF_OutputDataType_Exempted_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_F2_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F2_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F2_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_F3_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F3_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F3_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_F4_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_F4_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_F4_LorryOutputType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEV_IEPC_F_LorryOutputType.
+        /// </summary>
+        public static string CIF_OutputDataType_HEV_IEPC_F_LorryOutputType {
+            get {
+                return ResourceManager.GetString("CIF_OutputDataType_HEV_IEPC_F_LorryOutputType", resourceCulture);
             }
         }
         
@@ -3121,6 +3166,96 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelCell.
+        /// </summary>
+        public static string FuelCell_Cell {
+            get {
+                return ResourceManager.GetString("FuelCell_Cell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to fuelConsumption.
+        /// </summary>
+        public static string FuelCell_Consumption {
+            get {
+                return ResourceManager.GetString("FuelCell_Consumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string FuelCell_ConsumptionEntry {
+            get {
+                return ResourceManager.GetString("FuelCell_ConsumptionEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string FuelCell_Count {
+            get {
+                return ResourceManager.GetString("FuelCell_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCSRatedPower.
+        /// </summary>
+        public static string FuelCell_FCSRatedPower {
+            get {
+                return ResourceManager.GetString("FuelCell_FCSRatedPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxPower.
+        /// </summary>
+        public static string FuelCell_MaxPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MaxPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinPower.
+        /// </summary>
+        public static string FuelCell_MinPower {
+            get {
+                return ResourceManager.GetString("FuelCell_MinPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellModule.
+        /// </summary>
+        public static string FuelCell_Module {
+            get {
+                return ResourceManager.GetString("FuelCell_Module", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to powerOutput.
+        /// </summary>
+        public static string FuelCell_PowerOutput {
+            get {
+                return ResourceManager.GetString("FuelCell_PowerOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelCellPowerOutputConsumptionMap.
+        /// </summary>
+        public static string FuelCell_PowerOutputConsumptionMap {
+            get {
+                return ResourceManager.GetString("FuelCell_PowerOutputConsumptionMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gear.
         /// </summary>
         public static string Gear_EntryName {
@@ -3409,6 +3544,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DisengagementClutch.
+        /// </summary>
+        public static string IEPC_DisengagementClutch {
+            get {
+                return ResourceManager.GetString("IEPC_DisengagementClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NrOfDesignTypeWheelMotorMeasured.
         /// </summary>
         public static string IEPC_NrOfDesignTypeWheelMotorMeasured {
@@ -3531,6 +3675,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string MaxTorqueCurve {
             get {
                 return ResourceManager.GetString("MaxTorqueCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string MaxTorqueCurve_attr_gear {
+            get {
+                return ResourceManager.GetString("MaxTorqueCurve_attr_gear", resourceCulture);
             }
         }
         
@@ -3778,6 +3931,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelType.
+        /// </summary>
+        public static string MonitoringFuelType {
+            get {
+                return ResourceManager.GetString("MonitoringFuelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gearbox.
         /// </summary>
         public static string MonitoringGearbox {
@@ -3900,6 +4062,42 @@ namespace TUGraz.VectoCommon.Resources {
         public static string MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType {
             get {
                 return ResourceManager.GetString("MRF_OutputDataType_ConventionalPrimaryBusManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCHV-F2_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F2_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCHV-F3_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F3_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCHV-F4_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_F4_LorryManufacturerOutputDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FCHV-IEPC-F_LorryManufacturerOutputDataType.
+        /// </summary>
+        public static string MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType {
+            get {
+                return ResourceManager.GetString("MRF_OutputDataType_HEV_IEPC_F_LorryManufacturerOutputDataType", resourceCulture);
             }
         }
         
@@ -4642,6 +4840,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HydrogenRange.
+        /// </summary>
+        public static string Report_ResultEntry_HydrogenRange {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_HydrogenRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MaxAcceleration.
         /// </summary>
         public static string Report_ResultEntry_MaxAcceleration {
@@ -4692,6 +4899,42 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_ResultEntry_Payload {
             get {
                 return ResourceManager.GetString("Report_ResultEntry_Payload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ranges.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to lifetime.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_Attr {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to begin of life.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_BOL_Val {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_BOL_Val", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to end of life.
+        /// </summary>
+        public static string Report_ResultEntry_Ranges_Lifetime_EOL_Val {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_Ranges_Lifetime_EOL_Val", resourceCulture);
             }
         }
         
@@ -5281,6 +5524,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string TorqueCurve_Entry {
+            get {
+                return ResourceManager.GetString("TorqueCurve_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string TorqueCurve_Gear {
+            get {
+                return ResourceManager.GetString("TorqueCurve_Gear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
         /// </summary>
         public static string TPMLM {
@@ -5866,6 +6127,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HydrogenStorageTechnology.
+        /// </summary>
+        public static string Vehicle_H2StorageTechnology {
+            get {
+                return ResourceManager.GetString("Vehicle_H2StorageTechnology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to H2StorageUsableCapacity.
+        /// </summary>
+        public static string Vehicle_H2StorageUsableCapacity {
+            get {
+                return ResourceManager.GetString("Vehicle_H2StorageUsableCapacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HybridElectricHDV.
         /// </summary>
         public static string Vehicle_HybridElectricHDV {
@@ -6114,6 +6393,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_SteeredAxles {
             get {
                 return ResourceManager.GetString("Vehicle_SteeredAxles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
+        /// </summary>
+        public static string Vehicle_TechnicalPermissibleMaximumLadenMass {
+            get {
+                return ResourceManager.GetString("Vehicle_TechnicalPermissibleMaximumLadenMass", resourceCulture);
             }
         }
         

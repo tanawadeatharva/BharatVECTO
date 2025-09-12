@@ -13,10 +13,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public static readonly XNamespace Xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		public static readonly XNamespace Tns = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
 		public static readonly XNamespace Tns_v20 = Tns.NamespaceName + ":v2.0";
-		//public static readonly XNamespace V26 = DeclarationDefinition + ":DEV:v2.6";
-		public static readonly XNamespace V21 = DeclarationDefinition + ":v2.1";
+        public static readonly XNamespace Tns_v30 = Tns.NamespaceName + ":v3.0";
+        //public static readonly XNamespace V26 = DeclarationDefinition + ":DEV:v2.6";
+        public static readonly XNamespace V21 = DeclarationDefinition + ":v2.1";
 		public static readonly XNamespace V23 = DeclarationDefinition + ":v2.3";
 		public static readonly XNamespace V24 = DeclarationDefinition + ":v2.4";
+		public static readonly XNamespace V27 = DeclarationDefinition + ":v2.7";
 		public static readonly XNamespace V20 = DeclarationDefinition + ":v2.0";
 		public static readonly XNamespace V10 = DeclarationDefinition + ":v1.0";
 		//public static readonly XNamespace V28 = DeclarationDefinition + ":DEV:v2.8";

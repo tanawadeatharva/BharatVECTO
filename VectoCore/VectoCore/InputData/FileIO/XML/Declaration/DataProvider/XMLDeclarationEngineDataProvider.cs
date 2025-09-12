@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -43,6 +42,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				return _engineModes ?? (_engineModes = GetNodes(XMLNames.Engine_FuelModes)
-							.Cast<XmlNode>().Select(x => new XMLDualFuelEngineMode(x)).Cast<IEngineModeDeclarationInputData>().ToList());
+							.Cast<XmlNode>().Select(x => new XMLDualFuelEngineMode(x, this)).Cast<IEngineModeDeclarationInputData>().ToList());
 			}
 		}
 
@@ -244,9 +244,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public class XMLDualFuelEngineMode : XMLSingleFuelEngineMode
 		{
-			protected IWHRData WHRData;
+			protected IXMLEngineDeclarationInputData Engine;
+			
+			protected IWHRData WHRDataEl;
+			protected IWHRData WHRDataMech;
 
-			public XMLDualFuelEngineMode(XmlNode baseNode) : base(baseNode) { }
+            public XMLDualFuelEngineMode(XmlNode baseNode,
+				IXMLEngineDeclarationInputData engine) : base(baseNode)
+			{
+				Engine = engine;
+			}
+
 
 			#region Overrides of XMLSingleFuelEngineMode
 
@@ -262,7 +270,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public override IWHRData WasteHeatRecoveryDataElectrical
 			{
 				get {
-					return WHRData ?? (WHRData = ReadWHRData(
+					if (!Engine.WHRType.IsElectrical()) {
+						return null;
+					}
+					return WHRDataEl ?? (WHRDataEl = ReadWHRData(
 								GetNodes(
 									new[] {
 										XMLNames.Engine_WHRCorrectionFactors,
@@ -276,7 +287,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public override IWHRData WasteHeatRecoveryDataMechanical
 			{
 				get {
-					return WHRData ?? (WHRData = ReadWHRData(
+					if (!Engine.WHRType.IsMechanical()) {
+						return null;
+					}
+					return WHRDataMech ?? (WHRDataMech = ReadWHRData(
 								GetNodes(
 									new[] {
 										XMLNames.Engine_WHRCorrectionFactors,
@@ -400,17 +414,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
     // ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationEngineDataProvider_DEV_V211 : XMLDeclarationEngineDataProviderV23
-	{
-		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_DEV_V211;
+    public class XMLDeclarationEngineDataProviderV26 : XMLDeclarationEngineDataProviderV23
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
 
-		public new static readonly string QUALIFIED_XSD_TYPE =
-			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-        public XMLDeclarationEngineDataProvider_DEV_V211(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+        public XMLDeclarationEngineDataProviderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) 
+		{ }
 
-
-	}
+    }
 
 	public class XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV01 : XMLDeclarationEngineDataProviderV23
 	{
@@ -430,4 +443,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+	public class XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV11 : XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistagePrimaryVehicleBusEngineDataProviderV11(
+			IXMLDeclarationVehicleData vehicle, 
+			XmlNode componentNode,
+            string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
+
 }

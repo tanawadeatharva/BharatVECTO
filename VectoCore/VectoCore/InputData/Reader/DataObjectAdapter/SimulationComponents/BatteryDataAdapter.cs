@@ -19,7 +19,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 	{
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
 			VectoSimulationJobType jobType,
-			bool ovc)
+			bool ovc,
+			double deterioration = DeclarationData.Battery.GenericDeterioration)
 		{
 			if (batteryInputData == null) {
 				return null;
@@ -50,21 +51,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				if (b.ConnectorsSubsystemsIncluded != null && !b.ConnectorsSubsystemsIncluded.Value) {
 					addConnectorSystemResistance = true;
 				}
-				var minSoc = genericSOC.SOCMin;
-				if (b.MinSOC != null && b.MinSOC > minSoc) {
-					minSoc = b.MinSOC.Value;
-				}
 
-				var maxSoc = genericSOC.SOCMax;
-				if (b.MaxSOC != null && b.MaxSOC < maxSoc && b.MaxSOC > b.MinSOC) {
-					maxSoc = b.MaxSOC.Value;
-				}
+				var minSoc = b.MinSOC.HasValue ? b.MinSOC.Value : genericSOC.SOCMin;
+				var maxSoc = b.MaxSOC.HasValue ? b.MaxSOC.Value : genericSOC.SOCMax;
+				
+				if (maxSoc <= minSoc)
+				{
+					throw new VectoException($"Battery: min SoC ({minSoc}) must be less than max SoC ({maxSoc}).");
+                }
 			
 				var batteryData = new BatteryData() {
-					MinSOC = maxSoc  * ((1d/2) * DeclarationData.Battery.GenericDeterioration)
-							+ minSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration),
-					MaxSOC = (maxSoc * (1 - (1d/2) * DeclarationData.Battery.GenericDeterioration)
-							+ minSoc * ((1d/2) * DeclarationData.Battery.GenericDeterioration)),
+					MinSOC = maxSoc  * ((1d/2) * deterioration)
+							+ minSoc * (1 - (1d/2) * deterioration),
+					MaxSOC = (maxSoc * (1 - (1d/2) * deterioration)
+							+ minSoc * ((1d/2) * deterioration)),
 					MaxCurrent = BatteryMaxCurrentReader.Create(b.MaxCurrentMap),
 					Capacity = b.Capacity,
 					InternalResistance =
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#region Implementation of IElectricStorageAdapter
 
 		public BatterySystemData CreateBatteryData(IElectricStorageSystemDeclarationInputData batteryInputData,
-			VectoSimulationJobType jobType, bool ovc)
+			VectoSimulationJobType jobType, bool ovc, double deterioration)
 		{
 			if (batteryInputData == null) {
 				return null;

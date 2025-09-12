@@ -1,7 +1,6 @@
 ﻿using System.IO.Compression;
 using System.IO;
-
-using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Configuration;
@@ -87,15 +86,29 @@ namespace TUGraz.VectoCore.OutputData
             if (manufacturerRecord != null) {
                 var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, manufacturerRecord);
                 WriteFileToZipArchive(filePath, archive);
-            }
+			}
 
-            var completedVIF = vtpProvider.JobInputData.CompletedVIFInputData?.Source;
+			var completedCIF = vtpProvider.JobInputData.CIFInputData?.Source;
+			if (completedCIF != null)
+			{
+				var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, completedCIF);
+				WriteFileToZipArchive(filePath, archive);
+			}
+
+			var completedVIF = vtpProvider.JobInputData.CompletedVIFInputData?.Source;
             if (completedVIF != null) {
 				var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, completedVIF);
 				WriteFileToZipArchive(filePath, archive);
 			}
 
-            var declarationVehicle = vtpProvider.JobInputData.Vehicle.DataSource.SourceFile;
+			var primaryVIF = vtpProvider.JobInputData.PrimaryVIFInputData?.Source;
+			if (primaryVIF != null)
+			{
+				var filePath = Path.Combine(inputDataProvider.DataSource.SourcePath, primaryVIF);
+				WriteFileToZipArchive(filePath, archive);
+			}
+
+			var declarationVehicle = vtpProvider.JobInputData.Vehicle.DataSource.SourceFile;
             if (declarationVehicle != null) {
                 WriteFileToZipArchive(declarationVehicle, archive);
             }

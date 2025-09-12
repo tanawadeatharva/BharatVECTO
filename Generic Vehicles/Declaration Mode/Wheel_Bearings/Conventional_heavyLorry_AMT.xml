@@ -5,13 +5,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob C:\projects\vecto\code\issue-196-wheel-bearings\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd" 
 	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" 
 	xmlns:v2.4="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4"
-	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6"
+	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6"
 	>
 	<v2.0:Vehicle xsi:type="Vehicle_Conventional_HeavyLorryDeclarationType" id="VEH-1234">
 		<Manufacturer>TU Graz</Manufacturer>
@@ -373,14 +373,14 @@
 				</v2.0:Signature>
 			</Axlegear>
 			<AxleWheels>
-				<v2.0:Data xsi:type="v2.6:AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-					<v2.6:Axles>
-						<v2.6:Axle axleNumber="1" xsi:type="v2.6:AxleDataDeclarationType">
+				<v2.0:Data xsi:type="AxleWheelsDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7">
+					<Axles>
+						<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
 							<AxleType>VehicleNonDriven</AxleType>
 							<TwinTyres>false</TwinTyres>
 							<Steered>true</Steered>
 							<Tyre>
-								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -390,7 +390,7 @@
 									<RRCDeclared>0.0055</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -399,16 +399,19 @@
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 										<di:DigestValue>A/sq1ng4cqeOyauDUqUEnonRSPch3VCqZDX9Pf3tW1Q=</di:DigestValue>
 									</di:Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
-							<v2.6:WheelEndFriction>3.2</v2.6:WheelEndFriction>
-						</v2.6:Axle>
-						<v2.6:Axle axleNumber="2" xsi:type="v2.6:AxleDataDeclarationType">
+							<WheelEnd>
+								<WheelEndFriction>3.2</WheelEndFriction>
+								<CertificationNumber>123</CertificationNumber>
+							</WheelEnd>
+						</Axle>
+						<Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
 							<AxleType>VehicleDriven</AxleType>
 							<TwinTyres>true</TwinTyres>
 							<Steered>false</Steered>
 							<Tyre>
-								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType">
+								<Data id="WHL-5432198760-315-70-R22.5" xsi:type="TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -418,7 +421,7 @@
 									<RRCDeclared>0.0063</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</Data>
-								<Signature>
+								<v2.0:Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
@@ -427,10 +430,10 @@
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 										<di:DigestValue>z+KDXmc5MIezM6RVgfYax5J9Efi0ghciG2/wLLmWaBk=</di:DigestValue>
 									</di:Reference>
-								</Signature>
+								</v2.0:Signature>
 							</Tyre>
-						</v2.6:Axle>
-					</v2.6:Axles>
+						</Axle>
+					</Axles>
 				</v2.0:Data>
 			</AxleWheels>
 			<Auxiliaries>

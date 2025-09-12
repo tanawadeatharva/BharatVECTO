@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_OLD_XML
+#endif
+
+//#define PROHIBIT_OLD_XML
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -16,16 +24,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 
 		public AbstractXMLDeclarationExemptedVehicleDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : 
-			base(jobData, xmlNode, sourceFile, 0)
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated = false) : 
+			base(jobData, xmlNode, sourceFile, true)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 
-		}
+#if PROHIBIT_OLD_XML
+            if (!allowDeprecated)
+            {
+                throw new VectoException("XML Jobs in version 2.4 are no longer supported!");
+            }
+#endif
+        }
 
-		#region Overrides of AbstractXMLResource
+        #region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
@@ -71,13 +85,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override XmlElement ADASNode => null;
 
-		public override AngledriveType AngledriveType => AngledriveType.None;
+		public override AngledriveType GetAngledriveType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => AngledriveType.None;
 
-		public override RetarderType RetarderType => RetarderType.None;
+		public override RetarderType GetRetarderType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => RetarderType.None;
+		
+		public override double GetRetarderRatio(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => 0;
 
-		public override double RetarderRatio => 0;
-
-		public override IPTOTransmissionInputData PTOTransmissionInputData => null;
+		public override IPTOTransmissionInputData GetPTOTransmissionInputData(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
 		public override Kilogram CurbMassChassis => GetDouble(XMLNames.CorrectedActualMass).SI<Kilogram>();
 	}
@@ -103,9 +117,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		#endregion
 	}
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
+    public class XMLDeclarationExemptedMediumLorryDataProviderV24 : AbstractXMLDeclarationExemptedVehicleDataProviderV24
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 

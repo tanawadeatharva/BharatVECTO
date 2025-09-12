@@ -50,13 +50,13 @@ namespace TUGraz.VectoCore.Tests.XML
 		
 		private void TestRetarderSequenceGroup(IXMLDeclarationVehicleData vehicle)
 		{
-			Assert.AreEqual(RetarderType.LossesIncludedInTransmission, vehicle.RetarderType);
-			Assert.AreEqual(2.000, vehicle.RetarderRatio);
+			Assert.AreEqual(RetarderType.LossesIncludedInTransmission, vehicle.GetRetarderType());
+			Assert.AreEqual(2.000, vehicle.GetRetarderRatio());
 		}
 
 		private void TestxEvParametersSequenceGroup(IXMLDeclarationVehicleData vehicle)
 		{
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.AreEqual(11.SI<Watt>(), vehicle.MaxChargingPower);
 		}
 
@@ -74,8 +74,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		private void TestHeavyLorryParametersSequenceGroup2(IXMLDeclarationVehicleData vehicle)
 		{
-			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
-			Assert.AreEqual("None", vehicle.PTOTransmissionInputData.PTOTransmissionType);
+			Assert.AreEqual(AngledriveType.None, vehicle.GetAngledriveType());
+			Assert.AreEqual("None", vehicle.GetPTOTransmissionInputData().PTOTransmissionType);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(true, vehicle.VocationalVehicle);
 			Assert.IsNull(vehicle.TankSystem);
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				Assert.IsNull(vehicle.CargoVolume);
 			}
 
-			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.None, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.IsNull(vehicle.TankSystem);
 			Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestPrimaryBusParametersSequenceGroup(vehicle);
 			Assert.AreEqual(600.RPMtoRad(), vehicle.EngineIdleSpeed);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.None, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.None, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 		}
 		
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestChassisPrimaryBusParametersSequenceGroup(vehicle);
 			Assert.AreEqual(600.00.RPMtoRad(), vehicle.EngineIdleSpeed);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
 			TestxEvParametersSequenceGroup(vehicle);
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestChassisPrimaryBusParametersSequenceGroup(vehicle);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.GetAngledriveType());
 			Assert.IsNull(vehicle.PTONode);
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 
@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestChassisPrimaryBusParametersSequenceGroup(vehicle);
 			Assert.AreEqual(600.00.RPMtoRad(), vehicle.EngineIdleSpeed);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(ArchitectureID.S_IEPC, vehicle.ArchitectureID);
 			TestxEvParametersSequenceGroup(vehicle);
@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
@@ -411,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 
@@ -425,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestChassisPrimaryBusParametersSequenceGroup(vehicle);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 
 			switch (jobfile)
@@ -441,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.XML
 					break;
 			}
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.AreEqual(null, vehicle.MaxChargingPower);
 			//TestxEvParametersSequenceGroup(vehicle);
 		}
@@ -458,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestHeavyLorryParametersSequenceGroup2(vehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
 			
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 
 		}
@@ -478,7 +478,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			TestMediumLorryParameterSequenceGroup2(vehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
 
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 
 		}
@@ -491,10 +491,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			TestChassisPrimaryBusParametersSequenceGroup(vehicle);
 			TestRetarderSequenceGroup(vehicle);
-			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.AngledriveType);
+			Assert.AreEqual(AngledriveType.SeparateAngledrive, vehicle.GetAngledriveType());
 			Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
 			Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
-			Assert.AreEqual(true, vehicle.OvcHev);
+			Assert.AreEqual(true, vehicle.OVC);
 			Assert.IsNull(vehicle.MaxChargingPower);
 		}
 	}

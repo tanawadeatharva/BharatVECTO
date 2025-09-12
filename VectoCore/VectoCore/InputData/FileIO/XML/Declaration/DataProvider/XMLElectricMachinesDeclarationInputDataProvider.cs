@@ -93,6 +93,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLElectricMachinesDeclarationInputDataProviderV27 : XMLElectricMachinesDeclarationInputDataProvider
+	{
+        public static new readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+        public static new readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        public static new readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+        public XMLElectricMachinesDeclarationInputDataProviderV27(
+            IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+            : base(vehicle, componentNode, sourceFile)
+        {}
+
+    }
+
 	public class XMLElectricMachinesDeclarationData : IElectricMachinesDeclarationInputData
 	{
 		private readonly IList<ElectricMachineEntry<IElectricMotorDeclarationInputData>> _entries;
@@ -174,7 +187,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
-	public class XMLADCDeclarationInputDataV01 : XMLADCDeclarationInputDataV23
+    public class XMLDeclarationElectricMachinesDataProviderV11 : XMLDeclarationElectricMachinesDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        public new static readonly string QUALIFIED_GEN_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_GEN_TYPE);
+
+        public XMLDeclarationElectricMachinesDataProviderV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : 
+			base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
+
+    public class XMLADCDeclarationInputDataV01 : XMLADCDeclarationInputDataV23
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -185,5 +210,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override TableData LossMap => null;
 	}
+
+	public class XMLADCDeclarationInputDataV11 : XMLADCDeclarationInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLADCDeclarationInputDataV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
 
 }

@@ -37,23 +37,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 					valid = true;
 					break;
 				case RetarderType.TransmissionInputRetarder:
-					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2);
+					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.S2, ArchitectureID.E2, ArchitectureID.F2);
 					break;
 				case RetarderType.TransmissionOutputRetarder:
 					valid = archId.IsParallelHybridVehicle() ||
-							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2);
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.E2, ArchitectureID.F2);
 					break;
 				case RetarderType.EngineRetarder:
 					valid = archId.IsParallelHybridVehicle() || archId.IsOneOf(ArchitectureID.P_IHPC);
 					break;
 				case RetarderType.LossesIncludedInTransmission:
 					valid = archId.IsParallelHybridVehicle() ||
-							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC,
-								ArchitectureID.E2) || (archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
+							archId.IsOneOf(ArchitectureID.P_IHPC, ArchitectureID.S2, ArchitectureID.S_IEPC, ArchitectureID.E2, ArchitectureID.F2) ||
+							(archId == ArchitectureID.E_IEPC && !iepc.DesignTypeWheelMotor);
 					break;
 				case RetarderType.AxlegearInputRetarder:
-					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.S_IEPC) ||
-							(archId == ArchitectureID.E_IEPC && !iepc.DifferentialIncluded &&
+					valid = archId.IsOneOf(ArchitectureID.E3, ArchitectureID.S3, ArchitectureID.F3, ArchitectureID.S_IEPC) ||
+							(archId.IsOneOf(ArchitectureID.E_IEPC, ArchitectureID.F_IEPC) && !iepc.DifferentialIncluded &&
 							!iepc.DesignTypeWheelMotor);
 					break;
 				default:
@@ -134,7 +134,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				vehicleData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
 					VectoSimulationJobType.IEPC_E,
 					VectoSimulationJobType.SerialHybridVehicle,
-					VectoSimulationJobType.IEPC_S);
+					VectoSimulationJobType.IEPC_S,
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.FCHV_IEPC,
+					VectoSimulationJobType.Multiple_FCHV,
+					VectoSimulationJobType.Multiple_PEV,
+					VectoSimulationJobType.Multiple_SHEV);
 
 			PerSecond maxMotorSpeed = isBatteryElectric
 				? vehicleData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item2.EfficiencyData.MaxSpeed

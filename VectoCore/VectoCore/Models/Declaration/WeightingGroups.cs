@@ -70,68 +70,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Group56,
 
 		// completed bus groups
-		Group31a,
-		Group31b1,
-		Group31b2,
-		Group31c,
-		Group31d,
-		Group31e,
-		Group32a,
-		Group32b,
-		Group32c,
-		Group32d,
-		Group32e,
-		Group32f,
+		Group31LF,
+		Group31L1,
+		Group31L2,
+		Group31DD,
+		Group32C2,
+		Group32C3,
+		Group32DD,
+		Group33LF,
+		Group33L1,
+		Group33L2,
+		Group33DD,
+		Group34C2,
+		Group34C3,
+		Group34DD,
+		Group35FE,
+		Group39FE,
 
-		Group33a,
-		Group33b1,
-		Group33b2,
-		Group33c,
-		Group33d,
-		Group33e,
-		Group34a,
-		Group34b,
-		Group34c,
-		Group34d,
-		Group34e,
-		Group34f,
-
-		Group35a,
-		Group35b1,
-		Group35b2,
-		Group35c,
-		Group36a,
-		Group36b,
-		Group36c,
-		Group36d,
-		Group36e,
-		Group36f,
-
-		Group37a,
-		Group37b1,
-		Group37b2,
-		Group37c,
-		Group37d,
-		Group37e,
-		Group38a,
-		Group38b,
-		Group38c,
-		Group38d,
-		Group38e,
-		Group38f,
-
-		Group39a,
-		Group39b1,
-		Group39b2,
-		Group39c,
-		Group40a,
-		Group40b,
-		Group40c,
-		Group40d,
-		Group40e,
-		Group40f,
-
-        Unknown
+		Unknown
     }
 
 	public static class WeightingGroupHelper
@@ -145,15 +101,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static string ToXMLFormat(this WeightingGroup group)
 		{
 			switch (group) {
+				case WeightingGroup.Group51:
+				case WeightingGroup.Group52:
+				case WeightingGroup.Group53:
+				case WeightingGroup.Group54:
+				case WeightingGroup.Group55:
+				case WeightingGroup.Group56:
 				case WeightingGroup.Unknown:
 					return Constants.NOT_AVAILABLE;
-				case WeightingGroup.Group1:
-				case WeightingGroup.Group2:
-				case WeightingGroup.Group3:
-				case WeightingGroup.Group11:
-				case WeightingGroup.Group12:
-				case WeightingGroup.Group16:
-					return group.ToString().Replace(Prefix, "");
 				case WeightingGroup.Group4UD:
 				case WeightingGroup.Group4RD:
 				case WeightingGroup.Group4LH:
@@ -163,9 +118,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 				case WeightingGroup.Group9LH:
 				case WeightingGroup.Group10RD:
 				case WeightingGroup.Group10LH:
+				case WeightingGroup.Group31LF:
+				case WeightingGroup.Group31L1:
+				case WeightingGroup.Group31L2:
+				case WeightingGroup.Group31DD:
+				case WeightingGroup.Group32C2:
+				case WeightingGroup.Group32C3:
+				case WeightingGroup.Group32DD:
+				case WeightingGroup.Group33LF:
+				case WeightingGroup.Group33L1:
+				case WeightingGroup.Group33L2:
+				case WeightingGroup.Group33DD:
+				case WeightingGroup.Group34C2:
+				case WeightingGroup.Group34C3:
+				case WeightingGroup.Group34DD:
+				case WeightingGroup.Group35FE:
+				case WeightingGroup.Group39FE:
 					return Regex.Split(group.ToString().Replace(Prefix, ""), @"(\d+|\w+)").Where(x => !string.IsNullOrWhiteSpace(x)).Join("-");
 				default:
-					return Constants.NOT_AVAILABLE;
+					return group.ToString().Replace(Prefix, "");
 			}
 		}
 	}

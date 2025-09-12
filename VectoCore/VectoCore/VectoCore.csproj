@@ -42,6 +42,23 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+		<DefineConstants>MOCKUP</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
+		<DefineConstants>MOCKUP</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>VectoMockup</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>VectoMockup</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+	
 	<!--<Choose>
 		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*MOCKUP(;.*)*$'))">
 			<ItemGroup>
@@ -49,9 +66,9 @@
 					<_Parameter1>VectoMockup</_Parameter1>
 				</AssemblyAttribute>
 			</ItemGroup>
-			--><!--<PropertyGroup>
+			<PropertyGroup>
 				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>--><!--
+			</PropertyGroup>
 		</When>
 	</Choose>-->
 
@@ -95,7 +112,6 @@
     <None Remove="Resources\MockupMRFResults.xml" />
     <None Remove="Resources\XSD\VectoDeclarationDefinitions.2.2.1.xsd" />
     <None Remove="Resources\XSD\VectoMonitoring.1.0.xsd" />
-    <None Remove="Resources\XSD\VectoDeclarationDefinitions.DEV.2.6.xsd" />
     <None Remove="Resources\XSD\VectoOutputPrimaryBus.xsd" />
   </ItemGroup>
 
@@ -130,6 +146,8 @@
     <InternalsVisibleTo Include="VECTOMultistep" />
     <InternalsVisibleTo Include="VectoMockup" />
     <InternalsVisibleTo Include="Vecto3GUI2020Test" />
+	<InternalsVisibleTo Include="VectoUnitTest" />
+	<InternalsVisibleTo Include="VectoIntegrationTest" />
   </ItemGroup>
 
   <ItemGroup>

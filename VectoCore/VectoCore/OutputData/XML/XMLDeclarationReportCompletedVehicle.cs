@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -22,10 +21,10 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	/// <summary>
-	/// Create MRF and CIF of the complete(d) step
-	/// </summary>
-	public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
+    /// <summary>
+    /// Create MRF and CIF of the complete(d) step
+    /// </summary>
+    public class XMLDeclarationReportCompletedVehicle : XMLDeclarationReport
 	{
 		#region Constructors
 		//public XMLDeclarationReportCompletedVehicle(IReportWriter writer) : base(writer) { }
@@ -48,6 +47,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var ihpc = (primaryVehicle.Components?.ElectricMachines?.Entries)?.Count(electric => electric.ElectricMachine.IHPCType != "None") > 0;
 			var iepc = (primaryVehicle.Components?.IEPC != null);
+			
 			ManufacturerRpt = _mrfFactory.GetManufacturerReport(
 				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				inputData.JobInputData.JobType,
@@ -56,13 +56,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				iepc,
 				ihpc);
 
-
-
 			CustomerRpt = _cifFactory.GetCustomerReport(
 				inputData.JobInputData.ConsolidateManufacturingStage.Vehicle.VehicleCategory,
 				inputData.JobInputData.JobType,
 				primaryVehicle.ArchitectureID,
-				primaryVehicle.ExemptedVehicle,
+                primaryVehicle.ExemptedVehicle,
 				iepc,
 				ihpc);
 
@@ -90,18 +88,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 		#endregion
 
-
 		protected internal override void DoWriteReport()
 		{
-			foreach (var specificResult in Results.Where(x => x.VehicleClass.IsCompletedBus()).OrderBy(x => x.VehicleClass)
-						.ThenBy(x => x.FuelMode).ThenBy(x => x.Mission))
+			foreach (var specificResult in Results
+				.Where(x => x.VehicleClass.IsCompletedBus())
+				.OrderBy(x => x.VehicleClass)
+				.ThenBy(x => x.FuelMode)
+				.ThenBy(x => x.Mission))
 			{
-
-				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus() 
-														&& x.FuelMode == specificResult.FuelMode 
-														&& x.Mission == specificResult.Mission 
-														&& x.LoadingType == specificResult.LoadingType 
+				var genericResult = Results.First(x => x.VehicleClass.IsPrimaryBus()
+														&& x.FuelMode == specificResult.FuelMode
+														&& x.Mission == specificResult.Mission
+														&& x.LoadingType == specificResult.LoadingType
 														&& x.OVCMode == specificResult.OVCMode);
+
 				var primaryResult = genericResult.PrimaryResult ?? specificResult.PrimaryResult;
 				if (primaryResult == null)
 				{
@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var result = new CompletedBusResult
             {
                 Status = VectoRun.Status.Success,
+                VectoRunData = specific.VectoRunData,
             };
             result.Status = generic.Status != VectoRun.Status.Success ? generic.Status : result.Status;
             result.Status = specific.Status != VectoRun.Status.Success ? specific.Status : result.Status;
@@ -160,6 +161,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
             result.Error = errors.Any() ? errors.Join(Environment.NewLine) : null;
 			result.StackTrace = stacktraces.Any() ? stacktraces.Join(Environment.NewLine) : null;
+			result.OVCIteration = specific.OVCIteration;
             result.OVCMode = specific.OVCMode;
             if (generic.OVCMode != specific.OVCMode)
             {
@@ -207,29 +209,48 @@ namespace TUGraz.VectoCore.OutputData.XML
             result.AverageGearboxEfficiency = specific.AverageGearboxEfficiency;
             result.AverageAxlegearEfficiency = specific.AverageAxlegearEfficiency;
 
-
-
             //Fuels
 			result.FuelData = primary.EnergyConsumption.Keys.Select(x =>
 				DeclarationData.FuelData.Lookup(x, specific.VectoRunData.VehicleData.InputData.TankSystem)).ToList(); //specific.FuelData;
             var co2Sum = 0.SI<Kilogram>();
 
-			if (primary.EnergyConsumption != null && primary.EnergyConsumption.Any()) {
-				var fuel = specific.FuelData.First();
-				var fuelFactor = CalculateFactor(combinedResults,
-					r => r.FuelConsumptionFinal(fuel.FuelType).TotalFuelConsumptionCorrected);
-
+			var hasConsumptionDefined = specific?.FuelData != null;
+			if (!hasConsumptionDefined)
+			{
 				foreach (var entry in primary.EnergyConsumption) //generic.FuelData.Select(f => f.FuelType))
 				{
-					var energyDemand = fuelFactor * (entry.Value * specific.Distance);
-					var fuelConsumption = new CompletedBusFuelConsumption() {
-						Fuel = DeclarationData.FuelData.Lookup(entry.Key,
-							specific.VectoRunData.VehicleData.InputData
-								.TankSystem), // specific.FuelData.Single(f => f.FuelType == fuel),
-						EnergyDemand = energyDemand,
+					var fuelConsumption = new CompletedBusFuelConsumption()
+					{
+						Fuel = DeclarationData.FuelData.Lookup(
+							entry.Key,
+							specific.VectoRunData.VehicleData.InputData.TankSystem),
+						EnergyDemand = 0.SI<Joule>(),
 					};
-					co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
+
 					result.CorrectedFinalFuelConsumption.Add(entry.Key, fuelConsumption);
+				}
+			}
+			else
+			{
+				if (primary.EnergyConsumption != null && primary.EnergyConsumption.Any())
+				{
+					var fuel = specific.FuelData.First();
+					var fuelFactor = CalculateFactor(combinedResults,
+						r => r.FuelConsumptionFinal(fuel.FuelType).TotalFuelConsumptionCorrected);
+
+					foreach (var entry in primary.EnergyConsumption) //generic.FuelData.Select(f => f.FuelType))
+					{
+						var energyDemand = fuelFactor * (entry.Value * specific.Distance);
+						var fuelConsumption = new CompletedBusFuelConsumption()
+						{
+							Fuel = DeclarationData.FuelData.Lookup(
+								entry.Key,
+								specific.VectoRunData.VehicleData.InputData.TankSystem), // specific.FuelData.Single(f => f.FuelType == fuel),
+							EnergyDemand = energyDemand,
+						};
+						co2Sum += fuelConsumption.TotalFuelConsumptionCorrected * fuelConsumption.Fuel.CO2PerFuelWeight;
+						result.CorrectedFinalFuelConsumption.Add(entry.Key, fuelConsumption);
+					}
 				}
 			}
 
@@ -247,8 +268,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
             }
 
-
-
             if (specific.ZEV_FuelConsumption_AuxHtr?.IsGreaterOrEqual(0) ?? false)
             {
                 result.ZEV_FuelConsumption_AuxHtr = specific.ZEV_FuelConsumption_AuxHtr;
@@ -257,11 +276,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 				result.ZEV_CO2 = result.ZEV_FuelConsumption_AuxHtr * auxHeaterFuel.CO2PerFuelWeight;
             }
 
+			if (result.VectoRunData.EngineData?.Fuels.Any(x => x.FuelData.FuelType.IsHydrogenFuel()) ?? false)
+			{
+                var h2Fuel = result.VectoRunData.EngineData?.Fuels.Where(x => x.FuelData.FuelType.IsHydrogenFuel()).Select(x => x.FuelData.FuelType).First();
+                var totalFc = result.FuelConsumptionFinal(h2Fuel.Value)?.TotalFuelConsumptionCorrected;
 
+                var completedVehicle = (specific.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.ConsolidateManufacturingStage.Vehicle;
+                
+				var H2Vehicle = (completedVehicle.H2StorageUsableCapacity != null)
+                ? completedVehicle
+                : (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.PrimaryVehicle.Vehicle;
 
+                var range = ((totalFc != null) && (totalFc > 0))
+                    ? result.Distance * (H2Vehicle.H2StorageUsableCapacity / totalFc)
+                    : null;
 
-            if (generic.VectoRunData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-                    VectoSimulationJobType.IEPC_E))
+                result.HydrogenRange = range;
+                result.ZeroCO2EmissionsRange = range;
+            }
+
+            if (generic.VectoRunData.JobType.IsBatteryElectric())
             {
                 var elRanges = DeclarationData.CalculateElectricRangesPEVCompletedBus(batteryData: result.BatteryData,
                     result.ElectricEnergyConsumption, result.Distance);
@@ -269,15 +303,80 @@ namespace TUGraz.VectoCore.OutputData.XML
                 result.EquivalentAllElectricRange = elRanges.EquivalentAllElectricRange;
                 result.ActualChargeDepletingRange = elRanges.ActualChargeDepletingRange;
                 result.ZeroCO2EmissionsRange = elRanges.ZeroCO2EmissionsRange;
+
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+
+                result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.END_OF_LIFE_DETERIORATION);
+
+                result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
             }
 
-			return result;
+            if ((result.VectoRunData.JobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) 
+                && result.VectoRunData.VehicleData.OffVehicleCharging
+                && (result.VectoRunData.OVCMode == OvcHevMode.ChargeDepleting))
+            {
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+
+                result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.END_OF_LIFE_DETERIORATION);
+
+                result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+            }
+
+            if (result.VectoRunData.JobType.IsFCHV())
+            {
+                var totalFc = result.FuelConsumptionFinal(FuelType.H2FC)?.TotalFuelConsumptionCorrected;
+
+                var completedVehicle = (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.ConsolidateManufacturingStage.Vehicle;
+				
+				var H2Vehicle = (completedVehicle.H2StorageUsableCapacity != null)
+					? completedVehicle
+					: (result.VectoRunData.InputData as IMultistepBusInputDataProvider).JobInputData.PrimaryVehicle.Vehicle;
+
+                var range = ((totalFc != null) && (totalFc > 0))
+                    ? result.Distance * (H2Vehicle.H2StorageUsableCapacity / totalFc)
+                    : null;
+                
+                result.HydrogenRange = range;
+                result.ZeroCO2EmissionsRange = range;
+
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+					result.ElectricEnergyConsumption, 
+					result.Distance, 
+					result.VectoRunData, 
+					ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+                
+				result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+					result.ElectricEnergyConsumption, 
+					result.Distance, 
+					result.VectoRunData, 
+					ResultEntry.END_OF_LIFE_DETERIORATION);
+                
+				result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+            }
+
+            return result;
 		}
 
 
 
 
-        private class CompletedBusResult : IResultEntry
+		private class CompletedBusResult : IResultEntry
         {
             #region Implementation of IResultEntry
 
@@ -286,10 +385,9 @@ namespace TUGraz.VectoCore.OutputData.XML
                 throw new NotImplementedException();
             }
 
-			public VectoRunData VectoRunData => null;
+			public VectoRunData VectoRunData { get; set; }
             public VectoRun.Status Status { get; set; }
-            public OvcHevMode OVCMode { get; set; }
-            public MissionType Mission { get; set; }
+			public MissionType Mission { get; set; }
 			public LoadingType LoadingType { get; set; }
 
 			public int FuelMode { get; set; }
@@ -322,7 +420,7 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Kilogram CO2Total { get; set; }
             public Kilogram Payload { get; set; }
             public Kilogram TotalVehicleMass { get; set; }
-            public CubicMeter CargoVolume { get; }
+            public CubicMeter CargoVolume { get; internal set; }
             public double? PassengerCount { get; set; }
             public VehicleClass VehicleClass { get; set; }
 
@@ -333,9 +431,17 @@ namespace TUGraz.VectoCore.OutputData.XML
             public Meter ActualChargeDepletingRange { get; set; }
             public Meter EquivalentAllElectricRange { get; set; }
             public Meter ZeroCO2EmissionsRange { get; set; }
+            public Meter HydrogenRange { get; set; }
+            public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; set; }
+            public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; set; }
             public IFuelProperties AuxHeaterFuel { get; set; }
             public Kilogram ZEV_FuelConsumption_AuxHtr { get; set; }
             public Kilogram ZEV_CO2 { get; set; }
+
+			public OvcHevMode OVCMode { get; set; }
+			public int OVCIteration { get; set; }
+			public double DeltaSoC { get; }
+
 
 			public double BatteryEfficiencyDischarge { get; set; }
 
@@ -352,6 +458,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public void SetResultWeightingFactor(double weightingFactor)
 			{
 				throw new NotImplementedException();
+			}
+
+			public IResultEntry SetFuelCellCDProperties(IResultEntry csResult)
+			{
+				OVCMode = OvcHevMode.ChargeDepleting;
+				FuelData = csResult.FuelData;
+				BatteryData = csResult.BatteryData;
+
+				return this;
 			}
 
 			public string Error { get; set; } 

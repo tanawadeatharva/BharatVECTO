@@ -17,8 +17,8 @@ namespace TUGraz.VectoMockup
 		private readonly HashSet<string> _supportedNamespaces = new HashSet<string>() {
 			prefix + "DeclarationDefinitions:v2.4",
 			prefix + "VectoOutputMultistep:v0.1",
-			
-		};
+			prefix + "DeclarationDefinitions:v2.7"
+        };
 
 		#region Overrides of XMLInputDataFactory
 
@@ -28,11 +28,6 @@ namespace TUGraz.VectoMockup
 			var ret =  base.ReadMultistageDeclarationJob(xmlDoc, source);
 
 			return ret;
-		}
-
-		protected override IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
-		{
-			throw new VectoException("Engineering Mode is not supported in Mockup Vecto");
 		}
 
 		protected override IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, bool allowDeprecated)

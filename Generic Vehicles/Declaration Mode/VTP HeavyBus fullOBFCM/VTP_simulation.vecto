@@ -1,0 +1,43 @@
+{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2025-06-24T13:11:54.5406168Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "DeclarationVehicle": "primary_bus_group_P33_34_non_Smart_angledrive.xml",
+    "ManufacturerRecord": "primary_bus_group_P33_34_non_Smart_angledrive.RSLT_MANUFACTURER.xml",
+    "CustomerInformationFile": "Bus_34f_FM.RSLT_CUSTOMER.xml",
+    "CompletedVIF": "Bus_34f_FM.VIF_Report_1.xml",
+    "PrimaryVIF": "primary_bus_group_P33_34_non_Smart_angledrive.RSLT_VIF.xml",
+    "Mileage": 30000.0,
+	"MileageEndOfTest": 30100.2,
+    "FanPowerCoefficients": [
+      7.32,
+      1200.0,
+      810.0,
+      1.0
+    ],
+    "FanDiameter": 0.5,
+    "FuelNCVs": [
+      {
+        "Type": "Diesel CI",
+        "NCV": 42.7
+      }
+    ],
+    "TorqueDriftLeftWheel": 0.0,
+    "TorqueDriftRightWheel": 0.0,
+    "Cycles": [
+      "VTP cycle 2Hz.vdri"
+    ],
+	"OBFCM":
+    {    
+      "LifetimeFuelConsumptionMassStart":811.00,
+      "LifetimeFuelConsumptionMassEnd":911.00,
+      "LifetimeFuelConsumptionVolStart":1081.33,
+      "LifetimeFuelConsumptionVolEnd":1214.66,
+    }
+  }
+}

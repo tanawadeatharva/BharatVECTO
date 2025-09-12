@@ -16,8 +16,53 @@ namespace VectoHashingTest
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
         }
 
-        [TestCase("HpFMjk3vmSp7FuZD6FEyBmDyrix7ifdcrKI26a5qEiw=", SortedJobPath + "HEV-S_heavyLorry_IEPC-S.xml")]
-        [TestCase("HpFMjk3vmSp7FuZD6FEyBmDyrix7ifdcrKI26a5qEiw=", UnsortedJobPath + "HEV-S_heavyLorry_IEPC-S.xml")]
+        [TestCase("e70PsDLXiOBmXvfS3yLWcWQ7HFqjebg55TN8K/6d+vw=", SortedJobPath + "Multiple_FCHV_F2_IEPC_HeavyLorry.xml")]
+        [TestCase("e70PsDLXiOBmXvfS3yLWcWQ7HFqjebg55TN8K/6d+vw=", UnsortedJobPath + "Multiple_FCHV_F2_IEPC_HeavyLorry.xml")]
+        public void TestJobMultipleFCHV_HeavyLorryHashSort(string expectedJobHash, string filePath)
+        {
+            var loadedFile = VectoHash.Load(filePath);
+
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricMachineSystem));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricEnergyStorage));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.IEPC));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ADC));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.FuelCell, 0));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.FuelCell, 1));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Gearbox));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.TorqueConverter));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Angledrive));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Retarder, 0));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Retarder, 1));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Axlegear, 0));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Axlegear, 1));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 0));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 1));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Airdrag));
+
+            Assert.AreEqual(expectedJobHash, loadedFile.ComputeHash());
+        }
+
+        [TestCase("039IS21z16yaKG4X9O4O+/UQtG1DJkvaAmwbhir3o2A=", SortedJobPath + "v24_SHEV_S2_HeavyLorry.xml")]
+        [TestCase("039IS21z16yaKG4X9O4O+/UQtG1DJkvaAmwbhir3o2A=", UnsortedJobPath + "v24_SHEV_S2_HeavyLorry.xml")]
+        public void TestJobHEV_S2_HeavyLorryHashSort(string expectedJobHash, string filePath)
+        {
+            var loadedFile = VectoHash.Load(filePath);
+
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Engine));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Gearbox));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricMachineSystem, 0));//ElectricMachineGEN
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricMachineSystem, 1));//ElectricMachineE2
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.ElectricEnergyStorage));//ElectricEnergyStorage
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Axlegear));
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 0));//AxelWheels
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Tyre, 1));//AxelWheels
+            Assert.IsTrue(loadedFile.ValidateHash(VectoComponents.Airdrag));
+
+            Assert.AreEqual(expectedJobHash, loadedFile.ComputeHash());
+        }
+
+        [TestCase("4DxfjPZXXphbl0ijjToCwGNxDQaGiV90U8b39+LuW7o=", SortedJobPath + "HEV-S_heavyLorry_IEPC-S.xml")]
+        [TestCase("4DxfjPZXXphbl0ijjToCwGNxDQaGiV90U8b39+LuW7o=", UnsortedJobPath + "HEV-S_heavyLorry_IEPC-S.xml")]
         public void TestJobHEV_S_HeavyLorryHashSort(string expectedJobHash, string filePath)
         {
             var loadedFile = VectoHash.Load(filePath);
@@ -55,8 +100,8 @@ namespace VectoHashingTest
 		}
 
 
-		[TestCase("xf+qFgxVz77cGsAoamoIPMCHztxIXqD1vFwz8sGbyiU=", SortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
-		[TestCase("xf+qFgxVz77cGsAoamoIPMCHztxIXqD1vFwz8sGbyiU=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
+		[TestCase("ZlCKn8KI9PG4I7qWuNxf0jQXITCHxQDc1unNprZn76A=", SortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
+		[TestCase("ZlCKn8KI9PG4I7qWuNxf0jQXITCHxQDc1unNprZn76A=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2.xml")]
 
         public void TestJobPEVMediumLorry(string expectedJobHash, string filePath)
 		{
@@ -78,7 +123,7 @@ namespace VectoHashingTest
 
         }
 
-		[TestCase("OLkdJQk/V5cvGFqPahsKDIVV3RUxFGgbl4z1EABouac=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2_3Bat.xml")]
+		[TestCase("l1Hf6GqKcAh5pZJ0TH3A0gV3qWQfwsQOmVrA/3sjjOE=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2_3Bat.xml")]
 
 		public void TestJobPEVMediumLorryBattery(string expectedJobHash, string filePath)
 		{
@@ -104,7 +149,7 @@ namespace VectoHashingTest
             Assert.AreEqual("bqolF4NKnQMMf9Kvc4Xj0nzMdbeIyAR4/Ov2USB5CPs=", loadedFile.ReadHash(VectoComponents.ElectricEnergyStorage, 2));
 		}
 
-		[TestCase("uEtvb6ULv7SX4tV1e5zmcl02Yl3/AFibGnt5T2oCCUg=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2_SuperCap.xml")]
+		[TestCase("AgbzuBUFTRB9b1XWfWf5VBQdPJlTsNJL+is/fQEeaUM=", UnsortedJobPath + "PEV_mediumLorry_AMT_E2_SuperCap.xml")]
 
 		public void TestJobPEVMediumLorrySuperCap(string expectedJobHash, string filePath)
 		{

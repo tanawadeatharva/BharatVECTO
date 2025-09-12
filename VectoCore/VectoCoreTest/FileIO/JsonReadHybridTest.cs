@@ -60,11 +60,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			Assert.AreEqual("0", fld.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
-			Assert.AreEqual("401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
-			Assert.AreEqual("-401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
+			Assert.AreEqual("0", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
+			Assert.AreEqual("401.07", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
+			Assert.AreEqual("-401.07", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
 
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 1);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 1);
 			Assert.AreEqual(-401.07, fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMap.FullGenerationTorque(0.RPMtoRad()).Value());
 
@@ -93,11 +93,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(400, inputProvider.VoltageLevels[0].VoltageLevel.Value());
 
 			var fldLow = inputProvider.VoltageLevels.First().FullLoadCurve;
-			Assert.AreEqual("0", fldLow.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
-			Assert.AreEqual("401.07", fldLow.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
-			Assert.AreEqual("-401.07", fldLow.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
+			Assert.AreEqual("0", fldLow.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
+			Assert.AreEqual("401.07", fldLow.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
+			Assert.AreEqual("-401.07", fldLow.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
 
-			var fldMapLow = ElectricFullLoadCurveReader.Create(fldLow, 1);
+			var fldMapLow = ElectricFullLoadCurveReader.Create(fldLow.First().LoadCurve, 1);
 			Assert.AreEqual(-401.07, fldMapLow.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(401.07, fldMapLow.FullGenerationTorque(0.RPMtoRad()).Value());
 
@@ -118,11 +118,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(600, inputProvider.VoltageLevels[1].VoltageLevel.Value());
 
 			var fldHi = inputProvider.VoltageLevels.Last().FullLoadCurve;
-			Assert.AreEqual("0", fldHi.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
-			Assert.AreEqual("476.284", fldHi.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
-			Assert.AreEqual("-486.284", fldHi.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
+			Assert.AreEqual("0", fldHi.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
+			Assert.AreEqual("476.284", fldHi.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
+			Assert.AreEqual("-486.284", fldHi.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
 
-			var fldMapHi = ElectricFullLoadCurveReader.Create(fldHi, 1);
+			var fldMapHi = ElectricFullLoadCurveReader.Create(fldHi.First().LoadCurve, 1);
 			Assert.AreEqual(-476.284, fldMapHi.FullLoadDriveTorque(0.RPMtoRad()).Value());
 			Assert.AreEqual(486.284, fldMapHi.FullGenerationTorque(0.RPMtoRad()).Value());
 
@@ -139,7 +139,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(-18768.1337, pwrMap.LookupElectricPower(120.RPMtoRad(), -800.SI<NewtonMeter>()).ElectricalPower.Value(), 1e-3);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestElectricMotorV3_Lookup()
 		{
 			var inputProvider =
@@ -154,15 +155,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var em = emData.EfficiencyData;
 			var gear = new GearshiftPosition(0);
 
-			Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(-396.076, em.FullLoadDriveTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(-365.153, em.FullLoadDriveTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(-380.6145, em.FullLoadDriveTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
+			Assert.AreEqual(-334.2300, em.FullLoadDriveTorque(400.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(-396.076, em.FullLoadDriveTorque(600.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(-365.153, em.FullLoadDriveTorque(500.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(-380.6145, em.FullLoadDriveTorque(550.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
 
-			Assert.AreEqual(334.2300, em.FullGenerationTorque(400.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(406.076, em.FullGenerationTorque(600.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad()).Value());
-			Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad()).Value());
+			Assert.AreEqual(334.2300, em.FullGenerationTorque(400.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(406.076, em.FullGenerationTorque(600.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(370.153, em.FullGenerationTorque(500.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
+			Assert.AreEqual(388.1145, em.FullGenerationTorque(550.SI<Volt>(), 2000.RPMtoRad(), gear.Gear).Value());
 
             Assert.AreEqual(-101.70072, em.EfficiencyMapLookupTorque(400.SI<Volt>(), -25000.SI<Watt>(), 2000.RPMtoRad(), -300.SI<NewtonMeter>(), gear).Value(), 1e-3);
 			Assert.AreEqual(-25000, em.LookupElectricPower(400.SI<Volt>(), 2000.RPMtoRad(), -101.70072.SI<NewtonMeter>(), gear).ElectricalPower.Value(), 1e-1);
@@ -188,11 +189,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(0.15, inputProvider.Inertia.Value(), 1e-6);
 
 			var fld = inputProvider.VoltageLevels.First().FullLoadCurve;
-			Assert.AreEqual("0", fld.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
-			Assert.AreEqual("401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
-			Assert.AreEqual("-401.07", fld.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
+			Assert.AreEqual("0", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.MotorSpeed]);
+			Assert.AreEqual("401.07", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.DrivingTorque]);
+			Assert.AreEqual("-401.07", fld.First().LoadCurve.Rows[0][ElectricFullLoadCurveReader.Fields.GenerationTorque]);
 
-			var fldMap = ElectricFullLoadCurveReader.Create(fld, 2);
+			var fldMap = ElectricFullLoadCurveReader.Create(fld.First().LoadCurve, 2);
 			Assert.AreEqual(-802.14 , fldMap.FullLoadDriveTorque(0.RPMtoRad()).Value(), 1e-3);
 			Assert.AreEqual(802.14, fldMap.FullGenerationTorque(0.RPMtoRad()).Value(), 1e-3);
 

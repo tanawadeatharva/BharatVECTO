@@ -49,7 +49,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				CurbMass = data.CurbMassChassis,
 				GrossVehicleMass = data.GrossVehicleMassRating,
 				AirDensity = Physics.AirDensity,
-				OffVehicleCharging = data.OvcHev
+				OffVehicleCharging = data.OVC,
+				H2StorageUsableCapacity = data.H2StorageUsableCapacity
 			};
 
 			return retVal;
@@ -343,8 +344,36 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		#endregion
 	}
 
+    internal class PrimaryBusVehicleDataAdapter_FCHV : PrimaryBusVehicleDataAdapter
+    {
+        protected override VehicleData DoCreateVehicleData(IVehicleDeclarationInputData data, Segment segment, Mission mission, Kilogram loading,
+            double? passengerCount, bool allowVocational)
+        {
+            var retVal = base.DoCreateVehicleData(data, segment, mission, loading, passengerCount, allowVocational);
 
-	internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
+            if (!mission.BusParameter.CurbMassTPMLMFactor.IsNaN() &&
+                (data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor) < mission.CurbMass)
+            {
+                retVal.CurbMass = data.GrossVehicleMassRating * mission.BusParameter.CurbMassTPMLMFactor;
+            }
+            else
+            {
+                retVal.CurbMass = mission.CurbMass - mission.GenericMassICE + CalculateElectricComponentMass(data) + CalculateFuelCellMass(data);
+            }
+
+            return retVal;
+        }
+
+		private Kilogram CalculateFuelCellMass(IVehicleDeclarationInputData data)
+		{
+			Watt power = data.Components.FuelCellSystem.FuelCellModules.Sum(m => m.FuelCell.FCSRatedPower * m.Count);
+			
+			return (DeclarationData.FuelCell_MassPerPower.Value() * power.Value()).SI<Kilogram>();
+		}
+    }
+
+
+    internal class CompletedBusGenericVehicleDataAdapter : PrimaryBusVehicleDataAdapter
 	{
 		#region Overrides of PrimaryBusVehicleDataAdapter
 
@@ -370,8 +399,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 	}
 
+	internal class CompletedBusGenericVehicleDataAdapter_FCHV : PrimaryBusVehicleDataAdapter_FCHV
+	{
+	
+	}
 
-	internal class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
+	public class CompletedBusSpecificVehicleDataAdapter : IVehicleDataAdapter
 	{
 		protected IVehicleDataAdapter completedBusGenericDataAdapter = new CompletedBusGenericVehicleDataAdapter();
 

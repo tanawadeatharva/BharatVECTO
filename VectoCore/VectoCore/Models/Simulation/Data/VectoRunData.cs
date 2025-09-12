@@ -37,20 +37,16 @@ using System.Linq;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
@@ -165,7 +161,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public IDrivingCycleData PTOCycleWhileDrive { get; internal set; }
 
-		public string ShiftStrategy { get; set; }
+		public string ShiftStrategy => GearboxData?.ShiftStrategy;
 
 		// only used for factor method
 		public IResult PrimaryResult { get; set; }
@@ -189,6 +185,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 		public OvcHevMode OVCMode { get; internal set; }
+
+		public bool BatteryOnlyHybridMode { get; internal set; }
 
 		public Watt MaxChargingPower { get; internal set; }
 
@@ -258,6 +256,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 			if (jobType == VectoSimulationJobType.ConventionalVehicle || jobType == VectoSimulationJobType.ParallelHybridVehicle) {
+				if (runData.AxleGearData == null) {
+					return new ValidationResult("Axlegear data is required for conventional and parallel hybrid vehicles!");
+				}
+				
 				if (gearboxData == null) {
 					return new ValidationResult("Gearbox data is required for conventional and parallel hybrid vehicles!");
 				}

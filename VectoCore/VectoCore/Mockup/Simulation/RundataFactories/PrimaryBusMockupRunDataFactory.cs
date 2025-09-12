@@ -5,9 +5,7 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
@@ -19,7 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoMockup.Simulation.RundataFactories
+namespace TUGraz.VectoCore.Mockup.Simulation.RundataFactories
 {
     public class PrimaryBusMockupRunDataFactory :  DeclarationModePrimaryBusRunDataFactory.Conventional
     {
@@ -61,11 +59,14 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 					return VectoRunDataConventionalHeavyBusPrimaryNonExempted();
                 case VectoSimulationJobType.IEPC_E:
 				case VectoSimulationJobType.BatteryElectricVehicle:
-					return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
+                case VectoSimulationJobType.FCHV:
+                case VectoSimulationJobType.FCHV_IEPC:
+                case VectoSimulationJobType.Multiple_FCHV:
+                case VectoSimulationJobType.Multiple_PEV:
+                case VectoSimulationJobType.Multiple_SHEV:
+                    return VectoRunDataBatteryElectricHeavyBusPrimaryNonExempted();
 				case VectoSimulationJobType.EngineOnlySimulation:
 					break;
-				case VectoSimulationJobType.FCHV:
-                case VectoSimulationJobType.FCHV_IEPC:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -161,23 +162,57 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
             {
 				var cycle = CycleFactory.GetDeclarationCycle(mission);
 
-                runData = new VectoRunData()
+                if (Vehicle.VehicleType.IsMultiplePowertrains())
                 {
-                    Loading = loading.Key,
-                    Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-                    ExecutionMode = ExecutionMode.Declaration,
-                    Report = Report,
-					Mission = mission,
-                    SimulationType = SimulationType.DistanceCycle,
-                    VehicleData = CreateMockupVehicleData(Vehicle, _segment, loading),
-                    Retarder = CreateMockupRetarder(Vehicle),
-                    AxleGearData = CreateMockupAxleGearData(Vehicle),
-                    GearboxData = CreateMockupGearboxData(Vehicle),
-                    AngledriveData = CreateMockupAngleDriveData(Vehicle),
-					EngineData = CreateMockupEngineData(Vehicle, modeIdx),
-                    BusAuxiliaries = CreateMockupBusAux(Vehicle),
-					InputDataHash = InputDataProvider.XMLHash,
-                };
+                    runData = new VectoRunData() 
+                    {
+                        Loading = loading.Key,
+                        Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+                        ExecutionMode = ExecutionMode.Declaration,
+                        Report = Report,
+                        Mission = mission,
+                        SimulationType = SimulationType.DistanceCycle,
+                        VehicleData = CreateMockupVehicleData(Vehicle, _segment, loading),
+                        EngineData = CreateMockupEngineData(Vehicle, modeIdx),
+                        BusAuxiliaries = CreateMockupBusAux(Vehicle),
+                        InputDataHash = InputDataProvider.XMLHash,
+                        AxlePowertrainsData = new List<AxlePowertrainData>()
+                    };
+
+                    foreach (var axlePt in Vehicle.Components.AxlePowertrainInputData)
+                    {
+                        var axlePowertrainData = new AxlePowertrainData()
+                        {
+                            AxleNumber = axlePt.AxleNumber,
+                            Retarder = CreateMockupRetarder(axlePt),
+                            AxleGearData = CreateMockupAxleGearData(axlePt.AxleGearInputData),
+                            GearboxData = CreateMockupGearboxData(axlePt.GearboxInputData),
+                            AngledriveData = CreateMockupAngleDriveData(axlePt.AngledriveInputData),
+                        };
+                        
+                        runData.AxlePowertrainsData.Add(axlePowertrainData);
+                    }
+                }
+                else
+                {
+                    runData = new VectoRunData()
+                    {
+                        Loading = loading.Key,
+                        Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+                        ExecutionMode = ExecutionMode.Declaration,
+                        Report = Report,
+                        Mission = mission,
+                        SimulationType = SimulationType.DistanceCycle,
+                        VehicleData = CreateMockupVehicleData(Vehicle, _segment, loading),
+                        Retarder = CreateMockupRetarder(Vehicle),
+                        AxleGearData = CreateMockupAxleGearData(Vehicle.Components.AxleGearInputData),
+                        GearboxData = CreateMockupGearboxData(Vehicle.Components.GearboxInputData),
+                        AngledriveData = CreateMockupAngleDriveData(Vehicle.Components.AngledriveInputData),
+                        EngineData = CreateMockupEngineData(Vehicle, modeIdx),
+                        BusAuxiliaries = CreateMockupBusAux(Vehicle),
+                        InputDataHash = InputDataProvider.XMLHash,
+                    };
+                }
             }
 
             runData.InputData = InputDataProvider;
@@ -213,80 +248,82 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				DeclaredAirdragAreaInput = airdrag.AirDragArea,
 			};
 		}
+
         public static RetarderData CreateMockupRetarder(IVehicleDeclarationInputData vehicle)
         {
             var xmlVehicle = vehicle as IXMLDeclarationVehicleData;
             return new RetarderData()
             {
-                Type = xmlVehicle.RetarderType,
+                Type = xmlVehicle.GetRetarderType(),
 
-                Ratio = xmlVehicle.RetarderType.IsDedicatedComponent() ? xmlVehicle.RetarderRatio : 0,
+                Ratio = xmlVehicle.GetRetarderType().IsDedicatedComponent() ? xmlVehicle.GetRetarderRatio() : 0,
             };
         }
 
-        public static AngledriveData CreateMockupAngleDriveData(IVehicleDeclarationInputData vehicle)
+        public static RetarderData CreateMockupRetarder(IAxlePowertrainDeclarationInputData axlePt)
         {
-            if (vehicle.Components.AngledriveInputData == null || vehicle.Components.AngledriveInputData.Type != AngledriveType.SeparateAngledrive)
+            var type = axlePt.RetarderInputData?.Type ?? RetarderType.None;
+
+            return new RetarderData()
+            {
+                Type = type,
+
+                Ratio = type.IsDedicatedComponent() ? axlePt.RetarderInputData.Ratio : 0,
+            };
+        }
+
+        public static AngledriveData CreateMockupAngleDriveData(IAngledriveInputData angledrive)
+        {
+            if (angledrive == null || angledrive.Type != AngledriveType.SeparateAngledrive)
             {
                 return null;
             }
 
-			var componentData = vehicle.Components.AngledriveInputData;
 			var angleDriveData = new AngledriveData {
-				InputData = vehicle.Components.AngledriveInputData,
-				Type = componentData.Type,
+				InputData = angledrive,
+				Type = angledrive.Type,
+                Angledrive = new TransmissionData() { Ratio = angledrive.Ratio },
+                Manufacturer = angledrive.Manufacturer,
+                ModelName = angledrive.Model,
+                CertificationNumber = angledrive.CertificationNumber,
+                Date = angledrive.Date
             };
-
-			if (componentData.Type == AngledriveType.SeparateAngledrive) {
-
-				angleDriveData.Angledrive = new TransmissionData() {
-					Ratio = componentData.Ratio,
-				};
-
-				angleDriveData.Manufacturer = componentData.Manufacturer;
-				angleDriveData.ModelName = componentData.Model;
-				angleDriveData.CertificationNumber = componentData.CertificationNumber;
-				angleDriveData.Date = componentData.Date;
-			}
 
 			return angleDriveData;
 		}
 
-        public static AxleGearData CreateMockupAxleGearData(IVehicleDeclarationInputData vehicle)
+        public static AxleGearData CreateMockupAxleGearData(IAxleGearInputData axlegear)
         {
-            if (vehicle.Components.AxleGearInputData == null)
+            if (axlegear == null)
             {
                 return null;
             }
 
-			var componentData = vehicle.Components.AxleGearInputData;
             return new AxleGearData()
             {
-                InputData = vehicle.Components.AxleGearInputData,
-
-				Manufacturer = componentData.Manufacturer,
-				ModelName = componentData.Model,
-				CertificationNumber = componentData.CertificationNumber,
-				Date = componentData.Date,
-                LineType = componentData.LineType,
+                InputData = axlegear,
+				Manufacturer = axlegear.Manufacturer,
+				ModelName = axlegear.Model,
+				CertificationNumber = axlegear.CertificationNumber,
+				Date = axlegear.Date,
+                LineType = axlegear.LineType,
                 AxleGear = new TransmissionData()
                 {
-                    Ratio = vehicle.Components.AxleGearInputData.Ratio,
-
+                    Ratio = axlegear.Ratio,
 				}
             };
         }
 
-        public static GearboxData CreateMockupGearboxData(IVehicleDeclarationInputData vehicle)
+        public static GearboxData CreateMockupGearboxData(IGearboxDeclarationInputData gearbox)
         {
-            if (vehicle.Components.GearboxInputData == null)
+            if (gearbox == null)
             {
                 return null;
             }
 
-			var componentData = vehicle.Components.GearboxInputData;
 			var gears = new Dictionary<uint, GearData>();
-            foreach (var gearInputData in componentData.Gears) {
+            
+            foreach (var gearInputData in gearbox.Gears) {
 				gears.Add((uint)gearInputData.Gear, new GearData() {
                     Ratio = gearInputData.Ratio,
                     MaxTorque = gearInputData.MaxTorque,
@@ -294,17 +331,15 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				});
 			}
 				
-
 			return new GearboxData()
             {
-                InputData = vehicle.Components.GearboxInputData,
-                Type = vehicle.Components.GearboxInputData.Type,
-				Manufacturer = componentData.Manufacturer,
-				ModelName = componentData.Model,
-				CertificationNumber = componentData.CertificationNumber,
-				Date = componentData.Date,
-                Gears = gears,
-
+                InputData = gearbox,
+                Type = gearbox.Type,
+				Manufacturer = gearbox.Manufacturer,
+				ModelName = gearbox.Model,
+				CertificationNumber = gearbox.CertificationNumber,
+				Date = gearbox.Date,
+                Gears = gears
 			};
         }
 
@@ -356,7 +391,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
 				SleeperCab = vehicleData.SleeperCab,
 				//Loading = loading.Value.Item1,
 				VehicleClass = segment.VehicleClass,
-				OffVehicleCharging = vehicleData.OvcHev,
+				OffVehicleCharging = vehicleData.OVC,
 				VehicleCategory = vehicleData.VehicleCategory,
 				ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
 				//ADAS = CreateMockupAdasData(vehicleData),
@@ -382,7 +417,7 @@ namespace TUGraz.VectoMockup.Simulation.RundataFactories
                 SleeperCab = vehicleData.SleeperCab,
                 Loading = loading.Value.Item1,
                 VehicleClass = segment.VehicleClass,
-                OffVehicleCharging = vehicleData.OvcHev,
+                OffVehicleCharging = vehicleData.OVC,
                 VehicleCategory = vehicleData.VehicleCategory,
                 ZeroEmissionVehicle = vehicleData.ZeroEmissionVehicle,
                 ADAS = CreateMockupAdasData(vehicleData),

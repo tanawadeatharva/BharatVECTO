@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -13,15 +14,22 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFIepcType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFIepcType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFIepcType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.IEPC);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.IEPCInputData);
+        }
+
+        private XElement GetElement(IIEPCDeclarationInputData iepc)
 		{
-			var iepc = inputData.JobInputData.Vehicle.Components.IEPC;
 			if (iepc == null)
 				return null;
 
@@ -32,10 +40,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 			var certificationMethod = xmlIepc.XMLSource
 				.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_CertificationMethod))?.InnerText;
-
-			return new XElement(_vif + XMLNames.Component_IEPC,
+			
+            return new XElement(_vif + XMLNames.Component_IEPC,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
-						new XAttribute(_xsi + XMLNames.XSIType, "IEPCDataDeclarationType"),
+						new XAttribute(XNamespace.Xmlns + "vif", _vif.NamespaceName),
+                        new XAttribute(_xsi + XMLNames.XSIType, "vif:IEPCDataDeclarationType"),
 						new XElement(_vif + XMLNames.Component_Manufacturer, iepc.Manufacturer),
 						new XElement(_vif + XMLNames.Component_Model, iepc.Model),
 						new XElement(_vif + XMLNames.Component_CertificationNumber, iepc.CertificationNumber),
@@ -53,14 +62,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 						GetGears(iepc.Gears),
 						GetVoltageLevels(iepc.VoltageLevels),
 						GetDragCurves(iepc.DragCurves),
-						GetConditioning(iepc.Conditioning)
-					)
+						GetConditioning(iepc.Conditioning),
+                        new XElement(_vif + XMLNames.IEPC_DisengagementClutch, iepc.DisengagementClutch)
+                    )
 			);
 		}
 		
-		#endregion
-
-
 		private XElement GetGears(IList<IGearEntry> gearsData)
 		{
 			var gears = new List<XElement>();
@@ -102,9 +109,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadTorque, voltageEntry.OverloadTorque.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_TestSpeedOverloadTorque, voltageEntry.OverloadTestSpeed.AsRPM.ToXMLFormat(2)),
 					new XElement(_vif + XMLNames.ElectricMachine_OverloadDuration, voltageEntry.OverloadTime.ToXMLFormat(2)),
-					GetMaxTorqueCurve(voltageEntry.FullLoadCurve)
+					voltageEntry.FullLoadCurve.Select(x => GetMaxTorqueCurve(x))
 					//GetPowerMap(voltageEntry.PowerMap)
-				);
+                );
 
 				voltageLevels.Add(voltage);
 			}
@@ -112,18 +119,17 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return voltageLevels;
 		}
 
-
-		private XElement GetMaxTorqueCurve(DataTable maxTorqueData)
+        private XElement GetMaxTorqueCurve(IElectricMotorLoadCurve curve)
 		{
 			var maxTorqueCurveEntries = new List<XElement>();
 
-			for (int r = 0; r < maxTorqueData.Rows.Count; r++) {
-				var row = maxTorqueData.Rows[r];
+			for (int r = 0; r < curve.LoadCurve.Rows.Count; r++) {
+				var row = curve.LoadCurve.Rows[r];
 				var outShaftSpeed = row[XMLNames.MaxTorqueCurve_OutShaftSpeed];
 				var maxTorque = row[XMLNames.MaxTorqueCurve_MaxTorque];
 				var minTorque = row[XMLNames.MaxTorqueCurve_MinTorque];
 				
-				var element = new XElement(_v23 + XMLNames.MaxTorqueCurve_Entry,
+				var element = new XElement(_v26 + XMLNames.MaxTorqueCurve_Entry,
 					new XAttribute(XMLNames.MaxTorqueCurve_OutShaftSpeed, outShaftSpeed),
 					new XAttribute(XMLNames.MaxTorqueCurve_MaxTorque, maxTorque),
 					new XAttribute(XMLNames.MaxTorqueCurve_MinTorque, minTorque)
@@ -131,39 +137,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 				maxTorqueCurveEntries.Add(element);
 			}
-
-			return new XElement(_vif + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
+            
+            return (curve.Gear > 0)
+				? new XElement(_vif + XMLNames.MaxTorqueCurve, new XAttribute(XMLNames.MaxTorqueCurve_attr_gear, curve.Gear), maxTorqueCurveEntries)
+				: new XElement(_vif + XMLNames.MaxTorqueCurve, maxTorqueCurveEntries);
 		}
 		
-		private List<XElement> GetPowerMap(IList<IElectricMotorPowerMap> powerMapData)
-		{
-			var powerMaps = new List<XElement>();
-
-			foreach (var powerMapEntry in powerMapData) {
-				
-				var entries = new List<XElement>();
-				for (int r = 0; r < powerMapEntry.PowerMap.Rows.Count; r++) {
-					var outShaftSpeed = powerMapEntry.PowerMap.Rows[r][XMLNames.PowerMap_OutShaftSpeed].ToString().ToDouble();
-					var torque = powerMapEntry.PowerMap.Rows[r][XMLNames.PowerMap_Torque].ToString().ToDouble();
-					var electricPower = powerMapEntry.PowerMap.Rows[r][XMLNames.PowerMap_ElectricPower].ToString().ToDouble();
-
-					var entry = new XElement(_vif + XMLNames.PowerMap_Entry,
-						new XAttribute(XMLNames.PowerMap_OutShaftSpeed, outShaftSpeed.ToXMLFormat(2)),
-						new XAttribute(XMLNames.PowerMap_Torque, torque.ToXMLFormat(2)),
-						new XAttribute(XMLNames.PowerMap_ElectricPower, electricPower.ToXMLFormat(2)));
-					entries.Add(entry);
-				}
-
-				var powerEntry = new XElement(_vif + XMLNames.PowerMap,
-					new XAttribute("gear", powerMapEntry.Gear),
-					entries);
-
-				powerMaps.Add(powerEntry);
-			}
-
-			return powerMaps;
-		}
-
 		private IList<XElement> GetDragCurves(IList<IDragCurve> dragCurves)
 		{
 			var result = new List<XElement>();

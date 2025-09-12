@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -22,16 +23,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 	{
 		public abstract class PrimaryBusBase : BaseSimulationDataAdapter, IPrimaryBusDeclarationDataAdapter
 		{
+			[Inject]
+			public IShiftStrategyFactory ShiftStrategyFactory { get; private set; }
 
-			public abstract GearboxType[] SupportedGearboxTypes { get; }
+            public abstract GearboxType[] SupportedGearboxTypes { get; }
 
-			private readonly IDriverDataAdapterBus _driverDataAdapter = new PrimaryBusDriverDataAdapter();
-			//protected readonly IVehicleDataAdapter _vehicleDataAdapter = new PrimaryBusVehicleDataAdapter();
-			protected readonly IAxleGearDataAdapter _axleGearDataAdapter = new AxleGearDataAdapter();
-			//protected readonly IPrimaryBusAuxiliaryDataAdapter _auxDataAdapter = new PrimaryBusAuxiliaryDataAdapter();
-			protected readonly IRetarderDataAdapter _retarderDataAdapter = new RetarderDataAdapter();
-			protected readonly IAirdragDataAdapter _airdragDataAdapter = new AirdragDataAdapter();
-			private readonly IAngledriveDataAdapter _angledriveDataAdapter = new AngledriveDataAdapter();
+			protected virtual IDriverDataAdapterBus DriverDataAdapter => new PrimaryBusDriverDataAdapter();
+			protected virtual IAxleGearDataAdapter AxleGearDataAdapter => new AxleGearDataAdapter();
+			protected virtual IRetarderDataAdapter RetarderDataAdapter => new RetarderDataAdapter();
+			protected virtual IAirdragDataAdapter AirdragDataAdapter => new AirdragDataAdapter();
+			protected virtual IAngledriveDataAdapter AngledriveDataAdapter => new AngledriveDataAdapter();
 
 			protected virtual IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter();
 			protected abstract IEngineDataAdapter EngineDataAdapter { get; }
@@ -44,11 +45,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected abstract IPrimaryBusAuxiliaryDataAdapter AuxDataAdapter { get; }
 
+			protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
+			protected string GetShiftStrategyName(IVehicleDeclarationInputData inputData,
+				GearboxType? overrideGearboxType, bool batteryOnlyHybrid, bool isTestPowertrain = false)
+			{
+				var gbxType = overrideGearboxType ?? inputData.Components.GearboxInputData.Type;
+				return ShiftStrategyFactory.GetShiftStrategyName(gbxType, inputData.VehicleType, batteryOnlyHybrid);
+			}
 
-			public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
+            public DriverData CreateBusDriverData(Segment segment, VectoSimulationJobType jobType, ArchitectureID arch,
 				CompressorDrive compressorDrive)
 			{
-				return _driverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
+				return DriverDataAdapter.CreateBusDriverData(segment, jobType, arch, compressorDrive);
 			}
 
 
@@ -59,9 +67,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 					loading.Value.Item2, allowVocational);
 			}
 
-			public virtual AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragData, IVehicleInMotionChargingDeclaration imcData, Mission mission, Segment segment, OvcHevMode ovcMode, double cycleShareDistanceHighway)
+			public virtual AirdragData CreateAirdragData(IVehicleDeclarationInputData vehicleData, Mission mission, Segment segment, OvcHevMode ovcMode)
 			{
-				return _airdragDataAdapter.CreateAirdragData(airdragData, imcData, mission, segment, ovcMode, cycleShareDistanceHighway);
+				return AirdragDataAdapter.CreateAirdragData(vehicleData, mission, segment, ovcMode);
 			}
 
 			public abstract void CreateREESSData(IElectricStorageSystemDeclarationInputData componentsElectricStorage,
@@ -100,12 +108,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			public virtual AxleGearData CreateAxleGearData(IAxleGearInputData axlegearData)
 			{
-				return _axleGearDataAdapter.CreateAxleGearData(axlegearData);
+				return AxleGearDataAdapter.CreateAxleGearData(axlegearData);
 			}
 
 			public virtual AngledriveData CreateAngledriveData(IAngledriveInputData angledriveData)
 			{
-				return _angledriveDataAdapter.CreateAngledriveData(angledriveData);
+				return AngledriveDataAdapter.CreateAngledriveData(angledriveData);
 			}
 
 			public virtual CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode,
@@ -114,13 +122,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 				return EngineDataAdapter.CreateEngineData(vehicle, engineMode, mission);
 			}
 
-			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
-				IShiftPolygonCalculator shiftPolygonCalc)
+			public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData, GearboxType? overrideGearboxType = null)
 			{
-				return GearboxDataAdapter.CreateGearboxData(inputData, runData, shiftPolygonCalc, SupportedGearboxTypes);
-			}
+				var name = GetShiftStrategyName(inputData, overrideGearboxType, runData.BatteryOnlyHybridMode);
+				var retVal = GearboxDataAdapter.CreateGearboxData(inputData, runData, ShiftStrategyFactory.CreateShiftPolygonCalculator(name, runData.GearshiftParameters), supportedGearboxTypes: SupportedGearboxTypes);
+				retVal.ShiftStrategy = name;
+				return retVal;
 
-			public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
+            }
+
+            public virtual ShiftStrategyParameters CreateGearshiftData(double axleRatio, PerSecond engineIdlingSpeed,
 				GearboxType gearboxType, int gearsCount)
 			{
 				return GearboxDataAdapter.CreateGearshiftData(axleRatio, engineIdlingSpeed, gearboxType, gearsCount);
@@ -130,11 +141,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual RetarderData CreateRetarderData(IRetarderInputData retarderData, ArchitectureID archID,
 				IIEPCDeclarationInputData iepcInputData)
 			{
-				return _retarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
+				return RetarderDataAdapter.CreateRetarderData(retarderData, archID, iepcInputData);
 			}
 
 
-			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> torqueLimits,
+			public virtual IList<Tuple<PowertrainPosition, ElectricMotorData>> CreateElectricMachines(IElectricMachinesDeclarationInputData electricMachines, IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
 				Volt averageVoltage, GearList gears = null)
 			{
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
@@ -148,11 +159,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData,
 				IBusAuxiliariesDeclarationData busAuxData,
 				MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength, int? numSteeredAxles,
-				VectoSimulationJobType jobType)
+				VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 			{
 				{
 					return AuxDataAdapter.CreateAuxiliaryData(auxData, busAuxData, missionType, vehicleClass, vehicleLength,
-						numSteeredAxles, jobType);
+						numSteeredAxles, jobType, batteryOnlyHybridMode);
 				}
 			}
 
@@ -173,6 +184,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			public RetarderData CreateGenericRetarderData(IRetarderInputData retarderData, VectoRunData vectoRun)
 			{
 				throw new NotImplementedException("Not applicable to Primary Buses");
+			}
+
+			public FuelCellSystemDeclarationData CreateFuelCells(IFuelCellSystemDeclarationInputData fuelCellSystem)
+			{
+				return FuelCellDataAdapter.CreateFuelCells(fuelCellSystem);
 			}
 		}
 
@@ -289,6 +305,44 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 			#endregion
 		}
 
+		public class FuelCellHybrid : BatteryElectric
+        {
+            protected override IVehicleDataAdapter VehicleDataAdapter { get; } = new PrimaryBusVehicleDataAdapter_FCHV();
+
+            protected override IFuelCellDataAdapter FuelCellDataAdapter { get; } = new FuelCellDataAdapter();
+        }
+
+		public class HEV_F2 : FuelCellHybrid
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new GearboxDataAdapter(new TorqueConverterDataAdapter());
+
+			#region Overrides of SerialHybrid
+
+			public override GearboxType[] SupportedGearboxTypes => new[]
+				{ GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.APTN, GearboxType.ATSerial };
+
+			#endregion
+		}
+
+		public class HEV_F3 : FuelCellHybrid
+		{
+		}
+
+		public class HEV_F4 : FuelCellHybrid
+		{
+		}
+
+		public class HEV_F_IEPC : FuelCellHybrid
+		{
+			protected override IGearboxDataAdapter GearboxDataAdapter { get; } = new IEPCGearboxDataAdapter();
+
+			#region Overrides of PrimaryBusBase
+
+			public override GearboxType[] SupportedGearboxTypes => Array.Empty<GearboxType>();
+
+			#endregion
+		}
+
 		public abstract class ParallelHybrid : Hybrid
 		{
 			public override GearboxType[] SupportedGearboxTypes => new[]
@@ -307,7 +361,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 		public class HEV_P1 : ParallelHybrid
 		{
-
 		}
 
 		public class HEV_P2 : ParallelHybrid
@@ -425,7 +478,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus
 
 			protected override IHybridStrategyDataAdapter HybridStrategyDataAdapter => throw new NotImplementedException();
 
-			#endregion
-		}
+			protected override IAxleGearDataAdapter AxleGearDataAdapter => throw new NotImplementedException();
+
+			protected override IRetarderDataAdapter RetarderDataAdapter => throw new NotImplementedException();
+
+			protected override IAirdragDataAdapter AirdragDataAdapter => throw new NotImplementedException();
+
+			protected override IAngledriveDataAdapter AngledriveDataAdapter => throw new NotImplementedException();
+
+            #endregion
+        }
     }
 }

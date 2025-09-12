@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -51,9 +52,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	//public delegate void WriteSumData(IModalDataContainer data);
+    //public delegate void WriteSumData(IModalDataContainer data);
 
-	public interface ISumData
+    public interface ISumData
 	{
 		void Write(IModalDataContainer modData, VectoRunData runData);
 		void RegisterComponent(VectoSimulationComponent component, VectoRunData runData);
@@ -130,6 +131,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly Tuple<string, Type>[] CommonColumns = {
 			Tuple.Create(SumDataFields.SORT, typeof(int)),
+			Tuple.Create(SumDataFields.JOB_SPECS, typeof(string)),
 			Tuple.Create(SumDataFields.JOB, typeof(string)),
 			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
 			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
@@ -463,10 +465,10 @@ namespace TUGraz.VectoCore.OutputData
 					UpdateTableColumns(runData.EngineData);
 					CreateColumns(CO2Columns);
 					break;
-				case BusAuxiliariesAdapter _:
+				case IBusAuxiliariesAdapter _:
 					CreateColumns(BusAuxiliariesSignals);
 					break;
-				case EngineAuxiliary _:
+				case IEngineAuxiliary _:
 					break;
 				case IClutch _:
 					CreateColumns(ClutchColumns);
@@ -484,7 +486,7 @@ namespace TUGraz.VectoCore.OutputData
 					CreateGearTimeShareColumns(runData.GearboxData.GearList);
 					CreateGearRatioColumns(runData);
 					break;
-				case VTPCycle _:
+				case IVTPCycle _:
 					CreateColumns(VTPCycleColumns);
 					break;
 				case ITorqueConverter _:
@@ -867,134 +869,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		public ISummaryWriter SummaryWriter { get { return _sumWriter; } }
 
-		private void InitTableColumns()
-		{
-			//lock (Table) {
-			//	Table.Columns.AddRange(
-			//		new[] {
-			//			Tuple.Create(SumDataFields.SORT, typeof(int)),
-			//			Tuple.Create(SumDataFields.JOB, typeof(string)),
-			//			Tuple.Create(SumDataFields.INPUTFILE, typeof(string)),
-			//			Tuple.Create(SumDataFields.CYCLE, typeof(string)),
-			//			Tuple.Create(SumDataFields.STATUS, typeof(string)),
-			//			Tuple.Create(SumDataFields.VEHICLE_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.VIN_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.VEHICLE_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.HDV_CO2_VEHICLE_CLASS, typeof(string)),
-			//			Tuple.Create(SumDataFields.CURB_MASS, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.LOADING, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.PassengerCount, typeof(double)),
-			//			Tuple.Create(SumDataFields.TOTAL_VEHICLE_MASS, typeof(ConvertedSI)),
-						
-			//			Tuple.Create(SumDataFields.AIRDRAG_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.CD_x_A_DECLARED, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.CD_x_A, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.SLEEPER_CAB, typeof(string)),
-			//			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE1, typeof(double)),
-			//			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE1, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE2, typeof(double)),
-			//			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE2, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE3, typeof(double)),
-			//			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE3, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.DECLARED_RRC_AXLE4, typeof(double)),
-			//			Tuple.Create(SumDataFields.DECLARED_FZISO_AXLE4, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
-			//			Tuple.Create(SumDataFields.ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
-			//			Tuple.Create(SumDataFields.R_DYN, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.NUM_AXLES_DRIVEN, typeof(int)),
-			//			Tuple.Create(SumDataFields.NUM_AXLES_NON_DRIVEN, typeof(int)),
-			//			Tuple.Create(SumDataFields.NUM_AXLES_TRAILER, typeof(int)),
-			//			Tuple.Create(SumDataFields.GEARBOX_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.GEARBOX_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.GEARBOX_TYPE, typeof(string)),
-			//			Tuple.Create(SumDataFields.GEAR_RATIO_FIRST_GEAR, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.GEAR_RATIO_LAST_GEAR, typeof(ConvertedSI)),
-			//			Tuple.Create(SumDataFields.TORQUECONVERTER_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.TORQUECONVERTER_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.RETARDER_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.RETARDER_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.RETARDER_TYPE, typeof(string)),
-			//			Tuple.Create(SumDataFields.ANGLEDRIVE_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.ANGLEDRIVE_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.ANGLEDRIVE_RATIO, typeof(string)),
-			//			Tuple.Create(SumDataFields.AXLE_MANUFACTURER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AXLE_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.AXLE_RATIO, typeof(ConvertedSI)),
-			//			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.SteeringPump),
-			//				typeof(string)),
-			//			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.Fan),
-			//				typeof(string)),
-			//			Tuple.Create(
-			//				string.Format(SumDataFields.AUX_TECH_FORMAT,
-			//					Constants.Auxiliaries.IDs.HeatingVentilationAirCondition),
-			//				typeof(string)),
-			//			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem),
-			//				typeof(string)),
-			//			Tuple.Create(string.Format(SumDataFields.AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem),
-			//				typeof(string)),
-			//			Tuple.Create(SumDataFields.TCU_MODEL, typeof(string)),
-			//			Tuple.Create(SumDataFields.ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
-			//			Tuple.Create(SumDataFields.PTO_TECHNOLOGY, typeof(string)),
-			//			Tuple.Create(SumDataFields.REESS_CAPACITY, typeof(string)),
-			//			//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
-			//		}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
-
-			//	Table.Columns.AddRange(
-			//		new[] {
-			//			SumDataFields.CARGO_VOLUME, SumDataFields.TIME, SumDataFields.DISTANCE, SumDataFields.SPEED, SumDataFields.ALTITUDE_DELTA,
-			//		}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
-
-
-			//	Table.Columns.AddRange(
-			//		new[] {
-			//			SumDataFields.CO2_KM, SumDataFields.CO2_TKM, SumDataFields.CO2_M3KM, SumDataFields.CO2_PKM, SumDataFields.P_WHEEL,
-			//			SumDataFields.P_WHEEL_POS, SumDataFields.P_FCMAP, SumDataFields.P_FCMAP_POS,
-			//			SumDataFields.E_FCMAP_POS, SumDataFields.E_FCMAP_NEG, SumDataFields.E_POWERTRAIN_INERTIA, SumDataFields.E_AUX,
-			//			SumDataFields.E_AUX_EL_HV, SumDataFields.E_CLUTCH_LOSS,
-			//			SumDataFields.E_TC_LOSS, SumDataFields.E_SHIFT_LOSS, SumDataFields.E_GBX_LOSS, SumDataFields.E_RET_LOSS,
-			//			SumDataFields.E_ANGLE_LOSS,
-			//			SumDataFields.E_AXL_LOSS, SumDataFields.E_BRAKE, SumDataFields.E_VEHICLE_INERTIA, SumDataFields.E_WHEEL, SumDataFields.E_AIR,
-			//			SumDataFields.E_ROLL, SumDataFields.E_GRAD,
-			//			SumDataFields.AirConsumed, SumDataFields.AirGenerated, SumDataFields.E_PS_CompressorOff, SumDataFields.E_PS_CompressorOn,
-			//			SumDataFields.E_BusAux_ES_consumed, SumDataFields.E_BusAux_ES_generated, SumDataFields.Delta_E_BusAux_Battery,
-			//			SumDataFields.E_BusAux_PS_corr, SumDataFields.E_BusAux_ES_mech_corr,
-			//			SumDataFields.E_BusAux_HVAC_Mech, SumDataFields.E_BusAux_HVAC_El,
-			//			SumDataFields.E_BusAux_AuxHeater,
-			//			SumDataFields.E_WHR_EL, SumDataFields.E_WHR_MECH, SumDataFields.E_ICE_START, SumDataFields.E_AUX_ESS_missing,
-			//			SumDataFields.NUM_ICE_STARTS, SumDataFields.ACC,
-			//			SumDataFields.ACC_POS, SumDataFields.ACC_NEG, SumDataFields.ACC_TIMESHARE, SumDataFields.DEC_TIMESHARE,
-			//			SumDataFields.CRUISE_TIMESHARE,
-			//			SumDataFields.MAX_SPEED, SumDataFields.MAX_ACCELERATION, SumDataFields.MAX_DECELERATION, SumDataFields.AVG_ENGINE_SPEED,
-			//			SumDataFields.MAX_ENGINE_SPEED, SumDataFields.NUM_GEARSHIFTS, SumDataFields.STOP_TIMESHARE,
-			//			SumDataFields.ICE_FULL_LOAD_TIME_SHARE, SumDataFields.ICE_OFF_TIME_SHARE,
-			//			SumDataFields.COASTING_TIME_SHARE, SumDataFields.BRAKING_TIME_SHARE, SumDataFields.AVERAGE_POS_ACC
-			//		}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
-
-			//	Table.Columns.AddRange(
-			//		new[] {
-			//			Tuple.Create(SumDataFields.ENGINE_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AVERAGE_ENGINE_EFFICIENCY, typeof(double)),
-			//			Tuple.Create(SumDataFields.TORQUE_CONVERTER_CERTIFICATION_METHOD, typeof(string)),
-			//			Tuple.Create(SumDataFields.TORQUE_CONVERTER_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP, typeof(double)),
-			//			Tuple.Create(SumDataFields.AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, typeof(double)),
-			//			Tuple.Create(SumDataFields.GEARBOX_CERTIFICATION_METHOD, typeof(string)),
-			//			Tuple.Create(SumDataFields.GEARBOX_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AVERAGE_GEARBOX_EFFICIENCY, typeof(double)),
-			//			Tuple.Create(SumDataFields.RETARDER_CERTIFICATION_METHOD, typeof(string)),
-			//			Tuple.Create(SumDataFields.RETARDER_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.ANGLEDRIVE_CERTIFICATION_METHOD, typeof(string)),
-			//			Tuple.Create(SumDataFields.ANGLEDRIVE_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AVERAGE_ANGLEDRIVE_EFFICIENCY, typeof(double)),
-			//			Tuple.Create(SumDataFields.AXLEGEAR_CERTIFICATION_METHOD, typeof(string)),
-			//			Tuple.Create(SumDataFields.AXLEGEAR_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AVERAGE_AXLEGEAR_EFFICIENCY, typeof(double)),
-			//			Tuple.Create(SumDataFields.AIRDRAG_CERTIFICATION_NUMBER, typeof(string)),
-			//			Tuple.Create(SumDataFields.AIRDRAG_CERTIFICATION_METHOD, typeof(string)),
-			//		}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
-			//}
-		}
-
 		/// <summary>
 		/// Finishes the summary data container (writes the data to the sumWriter).
 		/// </summary>
@@ -1002,6 +876,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (_sumWriter != null) {
 				lock (Table) {
+					AddFinalCSResult();
 					var outputColumns = GetOutputColumnsOrdered().Distinct().ToArray();
 					var view = new DataView(Table, "", SumDataFields.SORT, DataViewRowState.CurrentRows).ToTable(false, outputColumns);
 					
@@ -1012,6 +887,76 @@ namespace TUGraz.VectoCore.OutputData
 					}
 				}
 			}
+		}
+
+		private void AddFinalCSResult()
+		{
+			lock (Table) {
+				if (!Table.Columns.Contains(SumDataFields.OVCHEVMode) || !Table.AsEnumerable().Any(r =>
+						r.Field<string>(SumDataFields.OVCHEVMode) == OvcHevMode.ChargeSustaining.ToString())) {
+					return;
+				}
+
+				var bestCSResult = Table.AsEnumerable()
+					.GroupBy(r => Tuple.Create(
+						r.Field<string>(SumDataFields.JOB).Split('-').First(),
+						r.Field<string>(SumDataFields.CYCLE),
+						r.Field<ConvertedSI>(SumDataFields.LOADING),
+						r.Field<string>(SumDataFields.HDV_CO2_VEHICLE_CLASS),
+						r.Field<string>(SumDataFields.OVCHEVMode)),
+					(grp, rows) => {
+						if (rows.Count() == 1) {
+							return null; // it is the only result - no need to duplicate
+						}
+						var myRows = rows.ToList();
+						var bestResult = DeclarationData.GetSumDataFinalResultEntryIndex(myRows);
+						if (bestResult < 0 || bestResult >= myRows.Count) {
+							throw new VectoException(
+								$"Invalid index for best result entry. got {bestResult}, max. {myRows.Count}");
+						}
+
+						return myRows[bestResult];
+					}).ToList();
+				
+				// copy row with best results (for OVC-CS) at the end of sum data
+				foreach (var row in bestCSResult) {
+					if (row == null || row.Field<string>(SumDataFields.OVCHEVMode) != OvcHevMode.ChargeSustaining.ToString()) {
+						continue;
+					}
+
+					var jobNbrs = row.Field<string>(SumDataFields.JOB).Split('-');
+
+					var newRow = Table.Rows.Add(row.ItemArray);
+					if (jobNbrs.Length < 2) {
+						throw new VectoException(
+							"error writing sum data - expected at least two parts in JobNumber field");
+					}
+
+					newRow[SumDataFields.JOB] =
+						SumDataFields.GetSumDataJobID(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
+					newRow[SumDataFields.SORT] =
+						SumDataFields.GetSumDataSortingValue(jobNbrs[0].ToInt(), jobNbrs[1].ToInt(), -1);
+
+					var isFCHVJob = row.Field<string>(SumDataFields.JOB_SPECS).Split('-')[2] == "FuelCell";
+					if (isFCHVJob)
+					{
+						newRow[SumDataFields.REESS_CAPACITY] = GetBatteryCapacity(row, Table);
+					}
+				}
+			}
+		}
+
+		private string GetBatteryCapacity(DataRow csRow, DataTable fullTable)
+		{
+			string fchvRunIteration = "1";
+			var jobSpecs = csRow.Field<string>(SumDataFields.JOB_SPECS).Split('-').ToList();
+			var fchvJobSpecs = string.Join("-", jobSpecs.Take(jobSpecs.Count() - 1).Append(fchvRunIteration));
+
+			return fullTable
+				.AsEnumerable()
+				.Where(r => r.Field<string>(SumDataFields.JOB_SPECS) == fchvJobSpecs)
+				.Select(r => r.Field<string>(SumDataFields.REESS_CAPACITY))
+				.First();
 		}
 
 		protected internal void UpdateTableColumns(CombustionEngineData engineData)
@@ -1036,42 +981,10 @@ namespace TUGraz.VectoCore.OutputData
 			
 		}
 
-		/// <summary>
-		/// Writes the result of one run into the summary data container.
-		/// </summary>
-		//[MethodImpl(MethodImplOptions.Synchronized)]
-		//protected DataRow GetResultRow(IModalDataContainer modData, VectoRunData runData)
-		//{
-		//	lock (_tableLock) {
-		//		if (modData.HasCombustionEngine) {
-		//			UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
-		//		}
-		//	}
-
-		//	lock (Table) {
-		//		var row = Table.NewRow();
-		//		//Table.Rows.Add(row);
-		//		return row;
-		//	}
-		//}
-
 		protected Dictionary<string, object> GetResultDictionary(IModalDataContainer modData, VectoRunData runData)
 		{
-			//if (modData.HasCombustionEngine) {
-			//	lock (_tableLock) {
-			//		UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
-			//	}
-			//}
-
 			return new Dictionary<string, object>();
 		}
-
-		//protected void AddResultRow(DataRow row)
-		//{
-		//	lock (_tableLock) {
-		//		Table.Rows.Add(row);
-		//	}
-		//}
 
 		private void AddResultDictionary(Dictionary<string, object> row)
 		{
@@ -1128,7 +1041,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (runData.JobType.IsOneOf(VectoSimulationJobType.FCHV, VectoSimulationJobType.FCHV_IEPC) 
-				&& runData.FuelCellSystemData.FuelCellStrings.Count > 0) {
+				&& runData.FuelCellSystemData?.FuelCellStrings?.Count > 0) {
 
 				foreach (DataColumn col in Table.Columns) {
 					SetValue(modData, runData, col, row, SumDataFields.FuelCellValue.GetVECTOValueOrDefault(col.ColumnName));
@@ -1167,141 +1080,9 @@ namespace TUGraz.VectoCore.OutputData
 					: SumDataFields.E_AUX_FORMAT, auxKey);
 		}
 
-
-	//	//[MethodImpl(MethodImplOptions.Synchronized)
-	//	[Obsolete]
-	//	public virtual void WriteXXX(IModalDataContainer modData, VectoRunData runData)
-	//	{
-	//		//var row = GetResultRow(modData, runData); // Replace row with dictionary
-
-	//		var row = GetResultDictionary(modData, runData);
-	//		//row[SumDataFields.SORT] = runData.JobNumber * 1000 + runData.RunNumber;
-	//		//row[SumDataFields.JOB] = $"{runData.JobNumber}-{runData.RunNumber}"; //ReplaceNotAllowedCharacters(current);
-	//		//row[SumDataFields.INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
-	//		//row[SumDataFields.CYCLE] = ReplaceNotAllowedCharacters(runData.Cycle.Name + Constants.FileExtensions.CycleFile);
-
-	//		//row[SumDataFields.STATUS] = modData.RunStatus;
-
-	//		var vehicleLoading = 0.SI<Kilogram>();
-	//		var cargoVolume = 0.SI<CubicMeter>();
-	//		var gearCount = 0u;
-	//		double? passengerCount = null;
-	//		if (runData.Cycle.CycleType != CycleType.EngineOnly) {
-	//			//WriteFullPowertrain(runData, row);
-
-	//			cargoVolume = runData.VehicleData.CargoVolume;
-	//			vehicleLoading = runData.VehicleData.Loading;
-	//			gearCount = (uint?)runData.GearboxData?.Gears.Count ?? 0u;
-	//			passengerCount = runData.VehicleData.PassengerCount;
-	//		}
-
-	//		//row[SumDataFields.VEHICLE_FUEL_TYPE] = modData.FuelData.Select(x => x.GetLabel()).Join();
-
-	//		var totalTime = modData.Duration;
-	//		//row[SumDataFields.TIME] = (ConvertedSI)totalTime;
-
-	//		var distance = modData.Distance;
-	//		if (distance != null) {
-	//			//row[SumDataFields.DISTANCE] = distance.ConvertToKiloMeter();
-	//		}
-
-	//		var speed = modData.Speed();
-	//		if (speed != null) {
-	//			//row[SumDataFields.SPEED] = speed.ConvertToKiloMeterPerHour();
-	//		}
-
-	//		//row[SumDataFields.ALTITUDE_DELTA] = (ConvertedSI)modData.AltitudeDelta();
-
-	//		if (modData.HasCombustionEngine) {
-	//			//WriteFuelConsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
-	//		} else {
-	//			if (runData.ElectricMachinesData.Count > 0) {
-	//				//lock (Table) {
-	//				//	if (!Table.Columns.Contains(SumDataFields.EC_el_final_KM)) {
-	//				//		lock (_tableLock) {
-	//				//			var col = Table.Columns.Add(SumDataFields.EC_el_final_KM, typeof(ConvertedSI));
-	//				//			col.SetOrdinal(Table.Columns[SumDataFields.CO2_KM].Ordinal);
-	//				//		}
-	//				//	}
-	//				//}
-
-	//				//row[SumDataFields.EC_el_final_KM] =
-	//				//	(-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) / modData.Distance).Cast<JoulePerMeter>().ConvertToKiloWattHourPerKiloMeter();
-	//			}
-	//		}
-
-	//		if (runData.Mission?.MissionType == MissionType.VerificationTest) {
-	//			//var fuelsWhtc = runData.EngineData.Fuels.Select(
-	//			//							fuel => modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
-	//			//									modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
-	//			//						.Select(dummy => (double)dummy).ToArray();
-	////            row[SumDataFields.ENGINE_ACTUAL_CORRECTION_FACTOR] = fuelsWhtc.Join(" / ");
-	//		}
-
-	//		//row[SumDataFields.P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
-	//		//row[SumDataFields.P_WHEEL] = modData.PowerWheel().ConvertToKiloWatt();
-
-	//		if (modData.HasCombustionEngine) {
-	//			//row[SumDataFields.P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
-	//			//row[SumDataFields.P_FCMAP] = modData.TotalPowerEngineAverage().ConvertToKiloWatt();
-	//		}
-			
-	//		WriteAuxiliaries(modData, row, runData.BusAuxiliaries != null);
-
-	//		//WriteWorkEntries(modData, row, runData);
-
-	//		//WritePerformanceEntries(runData, modData, row);
-
-	//		//row[SumDataFields.COASTING_TIME_SHARE] = (ConvertedSI)modData.CoastingTimeShare();
-	//		//row[SumDataFields.BRAKING_TIME_SHARE] = (ConvertedSI)modData.BrakingTimeShare();
-
-	//		if (runData.EngineData != null) {
-	//			//row[SumDataFields.ICE_FULL_LOAD_TIME_SHARE] = (ConvertedSI)modData.ICEMaxLoadTimeShare();
-	//			//row[SumDataFields.ICE_OFF_TIME_SHARE] = (ConvertedSI)modData.ICEOffTimeShare();
-	//			//row[SumDataFields.NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
-	//		}
-
-	//		if (gearCount > 0) {
-	//			WriteGearshiftStats(modData, row, gearCount);
-	//		}
-
-	//		//AddResultRow(row); //Add dictionary to datatable
-	//		AddResultDictionary(row);
-	//	}
-
-
 		private static string FcCol(string col, string suffix)
 		{
 			return string.Format(col, suffix);
-		}
-
-		private void WriteAuxiliaries(IModalDataContainer modData, Dictionary<string, object> row, bool writeBusAux)
-		{
-			foreach (var aux in modData.Auxiliaries) {
-				string colName;
-				if (aux.Key == Constants.Auxiliaries.IDs.PTOConsumer || aux.Key == Constants.Auxiliaries.IDs.PTOTransmission) {
-					colName = string.Format(SumDataFields.E_FORMAT, aux.Key);
-				} else {
-					colName = string.Format(SumDataFields.E_AUX_FORMAT, aux.Key);
-				}
-
-				lock (Table)
-					if (!Table.Columns.Contains(colName)) {
-					lock (_tableLock) {
-						var col = Table.Columns.Add(colName, typeof(ConvertedSI));
-
-						// move the new column to correct position
-						col.SetOrdinal(Table.Columns[SumDataFields.E_AUX].Ordinal);
-					}
-				}
-
-				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertToKiloWattHour();
-			}
-
-            if (writeBusAux) {
-				//row[SumDataFields.E_BusAux_HVAC_Mech] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_HVACmech_consumer).ConvertToKiloWattHour();
-				//row[SumDataFields.E_BusAux_HVAC_El] = modData.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_HVAC).ConvertToKiloWattHour();
-			}
 		}
 
 		private void WriteGearshiftStats(IModalDataContainer modData, Dictionary<string, object> row, uint gearCount)

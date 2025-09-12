@@ -31,6 +31,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, false));
 			Bind<IResultsWriter>().To<VIFResultsWriter.HEVOVCBus>().Named(
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.Hybrid, true));
+			Bind<IResultsWriter>().To<VIFResultsWriter.FCHV_Non_OVC_Bus>().Named(
+				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, false));
+			Bind<IResultsWriter>().To<VIFResultsWriter.FCHV_OVC_Bus>().Named(
+				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.FuelCell, true));
 			Bind<IResultsWriter>().To<VIFResultsWriter.PEVBus>().Named(
 				_namingHelper.GetName(vif, VehicleCategoryHelper.PrimaryBus, VectoSimulationJobTypeHelper.PureElectric, true));
 			Bind<IResultsWriter>().To<VIFResultsWriter.ExemptedVehicle>().Named(
@@ -50,26 +54,21 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusHEVOVCResultWriterChargeSustaining(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<VIFPEVResultWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));
+			Bind<IResultGroupWriter>().To<VIF_FCHV_Non_OVC_ResultWriter>().When(AccessedViaVIFResultsWriterFactory)
+                .NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusFCHVNonOVCSuccessResultWriter(null, XNamespace.None));
+            Bind<IResultGroupWriter>().To<VIF_FCHV_OVC_ResultWriter>().When(AccessedViaVIFResultsWriterFactory)
+                .NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusFCHVOVCSuccessResultWriter(null, XNamespace.None));
 
-			Bind<IResultSequenceWriter>().To<VIFResultSuccessMissionWriter>().When(AccessedViaVIFResultsWriterFactory)
+            Bind<IResultSequenceWriter>().To<VIFResultSuccessMissionWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetSuccessMissionWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<ResultSimulationParameterVIFBusWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusSimulationParameterWriter(null, XNamespace.None));
-
-			Bind<IResultGroupWriter>().To<VehiclePerformanceVIFWriter>().When(AccessedViaVIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetVehiclePerformanceBus(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<VehiclePerformanceVIFWriter>().When(AccessedViaVIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetVehiclePerformancePEVBus(null, XNamespace.None));
 
 			Bind<IFuelConsumptionWriter>().To<VIFFuelConsumptionWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetFuelConsumptionBus(null, XNamespace.None));
 			Bind<IElectricEnergyConsumptionWriter>().To<VIFElectricEnergyConsumptionWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetElectricEnergyConsumptionBus(null, XNamespace.None));
-			Bind<ICO2Writer>().To<VIFCO2Writer>().When(AccessedViaVIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultBus(null, XNamespace.None));
-			Bind<ICO2Writer>().To<VIFCO2Writer>().When(AccessedViaVIFResultsWriterFactory)
-				.NamedLikeFactoryMethod((IMRFResultsWriterFactory c) => c.GetCO2ResultPEVBus(null, XNamespace.None));
-
+			
 			Bind<IResultGroupWriter>().To<VIFErrorResultWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusErrorResultWriter(null, XNamespace.None));
 			Bind<IResultSequenceWriter>().To<VIFResultErrorMissionWriter>().When(AccessedViaVIFResultsWriterFactory)
@@ -89,8 +88,11 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusHEVOVCSummaryWriter(null, XNamespace.None));
 			Bind<IReportResultsSummaryWriter>().To<NoSummaryWriter>().When(AccessedViaVIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusPEVSummaryWriter(null, XNamespace.None));
-
-		}
+            Bind<IReportResultsSummaryWriter>().To<NoSummaryWriter>().When(AccessedViaVIFResultsWriterFactory)
+                .NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusFCHVOVCSummaryWriter(null, XNamespace.None));
+            Bind<IReportResultsSummaryWriter>().To<NoSummaryWriter>().When(AccessedViaVIFResultsWriterFactory)
+                .NamedLikeFactoryMethod((IVIFResultsWriterFactory c) => c.GetBusFCHVNonOVCSummaryWriter(null, XNamespace.None));
+        }
 
 		#endregion
 

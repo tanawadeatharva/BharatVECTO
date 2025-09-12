@@ -10,7 +10,7 @@
         "Manufacturer": "Fuel Cell Manufacturer",
         "Model": "Generic Fuel Cell",
         "MinElectricPower": 10,
-        "MaxElectricPower": 100,
+        "MaxElectricPower": 120,
         "MassFlowMap": "GenericFuelCellMassflowMap.vfcm"
     }
 }

@@ -45,11 +45,10 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
-Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Simulation
-Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
@@ -1054,10 +1053,7 @@ lbFound:
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                            
-                                Using reader As XmlReader = XmlReader.Create(jobFile)
-                                    input = xmlInputReader.CreateDeclaration(reader)
-                                End Using
+                                input = xmlInputReader.CreateDeclaration(jobFile)
                             Case XMLNames.VectoOutputMultistep
                                 Using reader As XmlReader = XmlReader.Create(jobFile)
                                     Dim vifInput = DirectCast(xmlInputReader.Create(reader), IMultistepBusInputDataProvider)

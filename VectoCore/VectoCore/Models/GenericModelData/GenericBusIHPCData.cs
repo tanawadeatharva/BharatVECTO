@@ -62,11 +62,11 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 
 			foreach (var voltageLevel in voltageLevels) {
 
-				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve);
+				var ratedPoint = GenericRatedPointHelper.GetRatedPointOfFullLoadCurveAtEM(voltageLevels[0].FullLoadCurve.First().LoadCurve);
 				
 				var ihpcVoltageLevel = new IHPCVoltageLevelData {
 					Voltage = voltageLevel.VoltageLevel,
-					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel.FullLoadCurve),
+					FullLoadCurve = GetElectricMotorFullLoadCurve(voltageLevel.FullLoadCurve.First().LoadCurve),
 					EfficiencyMaps = GetEfficiencyMaps(ratedPoint, normalizedMap, gearboxData,count)
 				};
 
@@ -116,7 +116,9 @@ namespace TUGraz.VectoCore.Models.GenericModelData
 			result.Columns.Add(ElectricMotorMapReader.Fields.MotorSpeed);
 			result.Columns.Add(ElectricMotorMapReader.Fields.Torque);
 			result.Columns.Add(ElectricMotorMapReader.Fields.PowerElectrical);
-			foreach (DataRow row in normalizedMap.Rows)
+
+			///Efficiency maps are saved in rpm
+            foreach (DataRow row in normalizedMap.Rows)
 			{
 				var motorSpeed = row.ParseDouble(MotorSpeedNorm) * ratedPoint.NRated;
 				var torque = row.ParseDouble(TorqueNorm) * ratedPoint.TRated;

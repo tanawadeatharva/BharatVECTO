@@ -148,9 +148,15 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 		public IElectricMachinesDeclarationInputData ElectricMachines => throw new NotImplementedException();
 		public IIEPCDeclarationInputData IEPC { get => throw new NotImplementedException(); }
 
-		#endregion
+		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
-	}
+        public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => throw new NotImplementedException();
+
+        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator => throw new NotImplementedException();
+
+        #endregion
+
+    }
 	public class ComponentsViewModel_v1_0 : ComponentsViewModel
 	{
 

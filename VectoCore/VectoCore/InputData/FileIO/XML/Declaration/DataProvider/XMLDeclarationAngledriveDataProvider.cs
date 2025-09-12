@@ -31,12 +31,13 @@
 
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -49,8 +50,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		protected IXMLDeclarationVehicleData Vehicle;
+        public static readonly string AXLE_NUMBER_VERSION = $"{XSD_TYPE}:AxleNumberVersion";
 
+        protected IXMLDeclarationVehicleData Vehicle;
+		private int? _axleNumber;
 
 		public XMLDeclarationAngledriveDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
@@ -60,13 +63,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			Vehicle = vehicle;
 		}
 
-		#region Implementation of IAngledriveInputData
+        public XMLDeclarationAngledriveDataProviderV10(
+            int axleNumber, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+            base(componentNode, sourceFile)
+        {
+			_axleNumber = axleNumber;
+            SourceType = DataSourceType.XMLFile;
+            Vehicle = vehicle;
+        }
 
-		public virtual AngledriveType Type => Vehicle.AngledriveType;
+        #region Implementation of IAngledriveInputData
+
+        public virtual AngledriveType Type => Vehicle.GetAngledriveType(AxleNumber.Value);
 
 		public virtual double Ratio => GetDouble(XMLNames.AngleDrive_Ratio);
 
-		public virtual TableData LossMap =>
+        private int? AxleNumber => 
+			_axleNumber ?? (_axleNumber = int.Parse(GetAttribute(BaseNode?.ParentNode, "axleNumber") ?? $"{Constants.NOT_IN_AXLE_POWERTRAIN}"));
+
+        public virtual TableData LossMap =>
 			ReadTableData(
 				XMLNames.AngleDrive_TorqueLossMap, XMLNames.Angledrive_LossMap_Entry,
 				AttributeMappings.TransmissionLossmapMapping);
@@ -129,4 +144,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
+
+    public class XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV11 : XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV01
+	{
+        public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV11(
+            IXMLDeclarationVehicleData vehicle, 
+			XmlNode componentNode, 
+			string sourceFile)
+            : base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
 }

@@ -9,6 +9,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery
+Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Battery), "ValidateBattery")>
@@ -220,6 +221,12 @@ Public Class Battery
     Public ReadOnly Property MaxSOC As Double? Implements IBatteryPackDeclarationInputData.MaxSOC
         Get
             Return BatMaxSoc / 100.0
+        End Get
+    End Property
+
+    Public ReadOnly Property DeteriorationPerformanceRatio As Double? Implements IBatteryPackDeclarationInputData.DeteriorationPerformanceRatio
+        Get
+            Return Nothing
         End Get
     End Property
 

@@ -6,6 +6,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 
 Public Class IHPCInputData
@@ -67,7 +68,7 @@ Public Class IHPCInputData
         If Not File.Exists(tmp.FullPath) Then 
             Throw New VectoException("Full-Load Curve is missing or invalid")
         Else
-            level.FullLoadCurve = VectoCSVFile.Read(tmp.FullPath)
+            level.FullLoadCurve = New List(Of IElectricMotorLoadCurve) From {New ElectricMotorLoadCurve With {.LoadCurve = VectoCSVFile.Read(tmp.FullPath), .Gear = 0}}
         End If
         level.PowerMap = GetPowerMap(powerMap)
         

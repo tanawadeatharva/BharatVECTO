@@ -53,6 +53,21 @@ namespace TUGraz.VectoCore.Utils
 			return defaultValue;
 		}
 
+		public static bool TryParseDouble(this DataRow row, string columnName, out double output)
+		{
+			if (row.Table.Columns.Contains(columnName))
+			{
+				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+				{
+					output = result;
+					return true;
+				}
+			}
+
+			output = default;
+			return false;
+		}
+
 		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) =>
 			self.Rows.Cast<DataRow>().Where(predicate);
 

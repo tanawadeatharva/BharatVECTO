@@ -52,8 +52,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHevSxPrimaryBusDataProviderV24>()
 				.Named(XMLDeclarationHevSxPrimaryBusDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHeviepcsHeavyLorryDataProviderV24>()
-				.Named(XMLDeclarationHeviepcsHeavyLorryDataProviderV24.QUALIFIED_XSD_TYPE);
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHevIEPCSHeavyLorryDataProviderV24>()
+				.Named(XMLDeclarationHevIEPCSHeavyLorryDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHeviepcsMediumLorryDataProviderV24>()
 				.Named(XMLDeclarationHeviepcsMediumLorryDataProviderV24.QUALIFIED_XSD_TYPE);
@@ -61,8 +61,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationHeviepcsPrimaryBusDataProviderV24>()
 				.Named(XMLDeclarationHeviepcsPrimaryBusDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPevHeavyLorryE2DataProviderV24>()
-				.Named(XMLDeclarationPevHeavyLorryE2DataProviderV24.QUALIFIED_XSD_TYPE);
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPevHeavyLorryDataProviderV24>()
+				.Named(XMLDeclarationPevHeavyLorryDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPevMediumLorryExDataProviderV24>()
 				.Named(XMLDeclarationPevMediumLorryExDataProviderV24.QUALIFIED_XSD_TYPE);
@@ -70,8 +70,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPevPrimaryBusDataProviderV24>()
 				.Named(XMLDeclarationPevPrimaryBusDataProviderV24.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationIepcHeavyLorryDataProviderV24>()
-				.Named(XMLDeclarationIepcHeavyLorryDataProviderV24.QUALIFIED_XSD_TYPE);
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationIEPCHeavyLorryDataProviderV24>()
+				.Named(XMLDeclarationIEPCHeavyLorryDataProviderV24.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationIepcMediumLorryDataProviderV24>()
 				.Named(XMLDeclarationIepcMediumLorryDataProviderV24.QUALIFIED_XSD_TYPE);
@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24>()
 				.Named(XMLDeclarationPrimaryBusAuxiliariesHEVSDataProviderV24.QUALIFIED_XSD_TYPE);
-			
+
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24>()
 				.Named(XMLDeclarationPrimaryBusAuxiliariesPEVDataProviderV24.QUALIFIED_XSD_TYPE);
 
@@ -316,8 +316,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV23>()
 				.Named(XMLElectricMotorIEPCIInputDataProviderV23.QUALIFIED_XSD_TYPE);
 
-			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV23>()
-				.Named(XMLElectricMotorIepciStandardInputDataProviderV23.QUALIFIED_XSD_TYPE);
+			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCStandardInputDataProviderV23>()
+				.Named(XMLElectricMotorIEPCStandardInputDataProviderV23.QUALIFIED_XSD_TYPE);
 			
 			Bind<IXMLElectricStorageSystemDeclarationInputData>().To<XMLElectricStorageSystemDeclarationInputDataV24>()
 				.Named(XMLElectricStorageSystemDeclarationInputDataV24.QUALIFIED_XSD_TYPE);

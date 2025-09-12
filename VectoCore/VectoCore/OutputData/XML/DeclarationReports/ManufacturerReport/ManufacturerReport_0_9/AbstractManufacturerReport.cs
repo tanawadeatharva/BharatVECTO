@@ -21,12 +21,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 {
 	public abstract class AbstractManufacturerReport : IXMLManufacturerReport
     {
-        protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+        public static XNamespace XSI = XNamespace.Get(XMLDefinitions.XML_SCHEMA_NAMESPACE);
 
-		public static XNamespace Mrf => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput");
+		private static XNamespace BaseNamespace => XNamespace.Get(XMLDefinitions.DECLARATION_OUTPUT);
 
-		public static XNamespace Mrf_0_9 => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9");
-		public static XNamespace _di => XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
+		public static XNamespace Namespace => XNamespace.Get(XMLDefinitions.DECLARATION_OUTPUT_NAMESPACE_URI);
+
+		public static XNamespace _di => XNamespace.Get(XMLDefinitions.DI_NAMESPACE);
 
 
 		protected readonly IManufacturerReportFactory _mRFReportFactory;
@@ -40,8 +41,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
-
-		protected XElement Signature { get; set; }
 
 		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
@@ -78,13 +77,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			InitializeVehicleData(modelData.InputData);
 			_ovc = modelData.VehicleData.OffVehicleCharging;
 			
-			Results = _resultFactory.GetMRFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetMRFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
-			InputDataIntegrity = new XElement(Mrf_0_9 + XMLNames.Report_InputDataSignature,
+			InputDataIntegrity = new XElement(Namespace + XMLNames.Report_InputDataSignature,
 				modelData.InputData.XMLHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputData.XMLHash));
 		}
 
-		public XDocument Report { get; protected set; }
+        public XDocument Report { get; protected set; }
 
 		protected List<IResultEntry> _results = new List<IResultEntry>();
 
@@ -97,16 +96,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		public void GenerateReport()
 		{
-			var retVal = new XDocument(new XElement(Mrf + "VectoOutput",
-					new XAttribute(XNamespace.Xmlns + "xsi", xsi),
-					new XAttribute(XNamespace.Xmlns + "mrf", Mrf),
-					new XAttribute(XNamespace.Xmlns + "mrf0.9", Mrf_0_9),
-					new XAttribute("xmlns", Mrf_0_9),
-					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "schemaLocation",
-						$"{Mrf.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputManufacturer.xsd"),
-
-					new XElement(Mrf + XMLNames.Report_DataWrap,
-						new XAttribute(xsi + XMLNames.XSIType, $"{OutputDataType}"),
+			var retVal = new XDocument(new XElement(BaseNamespace + "VectoOutput",
+					new XAttribute(XNamespace.Xmlns + "xsi", XSI),
+					new XAttribute(XNamespace.Xmlns + "mrf", BaseNamespace),
+					new XAttribute("xmlns", Namespace),
+					
+					new XElement(BaseNamespace + XMLNames.Report_DataWrap,
+						new XAttribute(XSI + XMLNames.XSIType, $"{OutputDataType}"),
 						GetContents()
 					)
 				)
@@ -115,8 +111,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 			double? LHOperationalRange = RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null;
 
-			Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
-				DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, LHOperationalRange).ToXMLFormat();
+			VehicleClass actualVehicleClass = _results.All(e => e.VehicleClass.IsCompletedBus()) && (_results.Count() > 0)
+				? _results.First().VehicleClass 
+				: VehicleClass.Unknown;
+			
+			if(Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']") != null)
+			{
+				Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
+					DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, LHOperationalRange, actualVehicleClass).ToXMLFormat();
+			}
 
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
@@ -133,7 +136,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				Vehicle,
 				InputDataIntegrity,
 				Results.GenerateResults(_results),
-				XMLHelper.GetApplicationInfo(Mrf_0_9)
+				XMLHelper.GetApplicationInfo(Namespace)
 			};
 		}
 

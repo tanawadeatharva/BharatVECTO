@@ -32,16 +32,16 @@ namespace VectoMockupTest
 	[TestFixture]
     public class MockUpVectoTest
 	{
+		private const string v27LorryPath = @"TestDataMockup/SchemaVersion2.7/Lorries/";
+		private const string v27PrimaryBusPath = @"TestDataMockup/SchemaVersion2.7/PrimaryBuses/";
+		private const string v27CompleteBusPath = @"TestDataMockup/SchemaVersion2.7/CompletedBuses/";
 
 		private const string BasePath = @"TestDataMockup\SchemaVersion2.4\Distributed\";
 
 		private const string BasePathMockup = @"TestDataMockup\SchemaVersion2.4\MockupBusTest\";
 
-		private const string XsdPath = @".. /../../../../VectoCore/VectoCore/Resources/XSD";
-
 		private IKernel _vectoKernel;
 		private ISimulatorFactoryFactory _simFactoryFactory;
-		//private ISimulatorFactory _simulatorFactory;
 		private IXMLInputDataReader _inputDataReader;
 
 		#region Heavy Lorry Testfiles
@@ -247,7 +247,8 @@ namespace VectoMockupTest
 			IList<string> filesToBeCleared = new List<string>() {
 				fileWriter.XMLPrimaryVehicleReportName,
 				fileWriter.XMLFullReportName,
-				fileWriter.XMLCustomerReportName
+				fileWriter.XMLCustomerReportName,
+				fileWriter.XMLMonitoringReportName
 			};
 			foreach (var fileName in filesToBeCleared) {
 				if (File.Exists(fileName)) {
@@ -341,14 +342,91 @@ namespace VectoMockupTest
 		[TestCase(HEV_mediumLorry_IHPC, TestName = "HEV_IHPC_MediumLorry")]
 		[TestCase(HEV_mediumLorry_Px_SuperCap, TestName = "HEV_Px_Medium_Lorry_SuperCap")]
 		[TestCase(PEV_mediumLorry_AMT_E2_BatStd, TestName = "PEV_E2_Medium_Lorry_BatteryStd")]
-		public void LorryMockupTest(string fileName, bool mockup = true)
+
+		[TestCase(v27LorryPath + "Conventional_HeavyLorry.xml", TestName = "v27_Conventional_HeavyLorry")]
+        [TestCase(v27LorryPath + "Conventional_HeavyLorry_requiredOnly.xml", TestName = "v27_Conventional_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Conventional_MediumLorry.xml", TestName = "v27_Conventional_MediumLorry")]
+        [TestCase(v27LorryPath + "Conventional_MediumLorry_requiredOnly.xml", TestName = "v27_Conventional_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F2_HeavyLorry.xml", TestName = "v27_FCHV_F2_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F2_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F2_MediumLorry.xml", TestName = "v27_FCHV_F2_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F2_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F3_HeavyLorry.xml", TestName = "v27_FCHV_F3_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F3_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F3_MediumLorry.xml", TestName = "v27_FCHV_F3_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F3_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F4_HeavyLorry.xml", TestName = "v27_FCHV_F4_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_F4_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_F4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_F4_MediumLorry.xml", TestName = "v27_FCHV_F4_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_F4_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_F4_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_2xFC_HeavyLorry.xml", TestName = "v27_FCHV_IEPC_2xFC_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_HeavyLorry.xml", TestName = "v27_FCHV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_FCHV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_MediumLorry.xml", TestName = "v27_FCHV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "FCHV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_FCHV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "H2_ICE_HeavyLorry.xml", TestName = "v27_H2_ICE_HeavyLorry")]
+        [TestCase(v27LorryPath + "H2_ICE_MediumLorry.xml", TestName = "v27_H2_ICE_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_IHPC_HeavyLorry.xml", TestName = "v27_HEV_IHPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "HEV_IHPC_MediumLorry.xml", TestName = "v27_HEV_IHPC_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_HeavyLorry.xml", TestName = "v27_HEV_P2_HeavyLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_HeavyLorry_requiredOnly.xml", TestName = "v27_HEV_P2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "HEV_P2_MediumLorry.xml", TestName = "v27_HEV_P2_MediumLorry")]
+        [TestCase(v27LorryPath + "HEV_P2_MediumLorry_requiredOnly.xml", TestName = "v27_HEV_P2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "HEV_P2_supercap_HeavyLorry.xml", TestName = "v27_HEV_P2_supercap_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_HeavyLorry.xml", TestName = "v27_PEV_E2_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E2_MediumLorry.xml", TestName = "v27_PEV_E2_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E2_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E3_HeavyLorry.xml", TestName = "v27_PEV_E3_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E3_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E3_MediumLorry.xml", TestName = "v27_PEV_E3_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E3_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E4_HeavyLorry.xml", TestName = "v27_PEV_E4_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_E4_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_E4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_E4_MediumLorry.xml", TestName = "v27_PEV_E4_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_E4_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_E4_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_HeavyLorry.xml", TestName = "v27_PEV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_PEV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_MediumLorry.xml", TestName = "v27_PEV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_PEV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "PEV_IEPC_multiCurve_HeavyLorry.xml", TestName = "v27_PEV_IEPC_multiCurve_HeavyLorry")]
+        [TestCase(v27LorryPath + "PEV_IEPC_stdValues_HeavyLorry.xml", TestName = "v27_PEV_IEPC_stdValues_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_HeavyLorry.xml", TestName = "v27_SHEV_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_MediumLorry.xml", TestName = "v27_SHEV_IEPC_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_IEPC_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_IEPC_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S2_HeavyLorry.xml", TestName = "v27_SHEV_S2_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S2_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S2_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S2_MediumLorry.xml", TestName = "v27_SHEV_S2_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S2_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S2_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S3_HeavyLorry.xml", TestName = "v27_SHEV_S3_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S3_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S3_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S3_MediumLorry.xml", TestName = "v27_SHEV_S3_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S3_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S3_MediumLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S4_HeavyLorry.xml", TestName = "v27_SHEV_S4_HeavyLorry")]
+        [TestCase(v27LorryPath + "SHEV_S4_HeavyLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "SHEV_S4_MediumLorry.xml", TestName = "v27_SHEV_S4_MediumLorry")]
+        [TestCase(v27LorryPath + "SHEV_S4_MediumLorry_requiredOnly.xml", TestName = "v27_SHEV_S4_MediumLorry_requiredOnly")]
+		[TestCase(v27LorryPath + "Multiple_FCHV_F2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F3_F4_HeavyLorry.xml", TestName = "v27_Multiple_FCHV_F3_F4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_FCHV_F3_F4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F3_F4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_PEV_E2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_PEV_E2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E3_E4_HeavyLorry.xml", TestName = "v27_Multiple_PEV_E3_E4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_PEV_E3_E4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_PEV_E3_E4_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S2_IEPC_HeavyLorry.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S2_IEPC_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S3_S4_HeavyLorry.xml", TestName = "v27_Multiple_SHEV_S3_S4_HeavyLorry")]
+        [TestCase(v27LorryPath + "Multiple_SHEV_S3_S4_HeavyLorry_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S3_S4_HeavyLorry_requiredOnly")]
+        public void LorryMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.CreateDeclaration(fileName);
 			var fileWriter = GetOutputFileWriter(TestContext.CurrentContext.Test.Name, fileName);
 			var sumWriter = new SummaryDataContainer(null);
 			var jobContainer = new JobContainer(sumWriter);
-
+			
 			var _simulatorFactory =
 				_simFactoryFactory.Factory(ExecutionMode.Declaration, inputProvider, fileWriter, null, null, true);
 			Clearfiles(fileWriter);
@@ -359,8 +437,9 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLCustomerReportName), XmlDocumentType.CustomerReport), "CIF invalid");
+			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
 
-			if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
+            if (inputProvider.JobInputData.Vehicle.VocationalVehicle) {
 				Assert.IsFalse(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
 			} else {
 				Assert.IsTrue(CheckElementExists(XMLNames.Report_Results_Summary, fileWriter.XMLCustomerReportName));
@@ -409,7 +488,52 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus_StdEM, TestName = "PEV_E2_PrimaryBus_EM-Std")]
 		[TestCase(PEV_E2_PrimaryBus_StdBat, TestName = "PEV_E2_PrimaryBus_BatteryStd")]
 		[TestCase(Conventional_PrimaryBus_DF, TestName = "ConventionalPrimaryBus_DualFuel")]
-		public void PrimaryBusMockupTest(string fileName, bool mockup = true)
+
+		[TestCase(v27PrimaryBusPath + "Conventional_PrimaryBus.xml", TestName = "v27_Conventional_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Conventional_PrimaryBus_requiredOnly.xml", TestName = "v27_Conventional_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Exempted_PrimaryBus.xml", TestName = "v27_Exempted_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Exempted_PrimaryBus_requiredOnly.xml", TestName = "v27_Exempted_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus.xml", TestName = "v27_FCHV_F2_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F2_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus.xml", TestName = "v27_FCHV_F3_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F3_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus.xml", TestName = "v27_FCHV_F4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_F4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", TestName = "v27_FCHV_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_FCHV_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "H2_ICE_PrimaryBus.xml", TestName = "v27_H2_ICE_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "HEV_IHPC_PrimaryBus.xml", TestName = "v27_HEV_IHPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "HEV_P2_PrimaryBus.xml", TestName = "v27_HEV_P2_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "HEV_P2_PrimaryBus_requiredOnly.xml", TestName = "v27_HEV_P2_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus")]
+		[TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly.xml", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "PEV_E2_PrimaryBus.xml", TestName = "v27_PEV_E2_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "PEV_E2_PrimaryBus_requiredOnly.xml", TestName = "v27_PEV_E2_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "PEV_E3_PrimaryBus.xml", TestName = "v27_PEV_E3_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "PEV_E3_PrimaryBus_requiredOnly.xml", TestName = "v27_PEV_E3_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "PEV_E4_PrimaryBus.xml", TestName = "v27_PEV_E4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "PEV_E4_PrimaryBus_requiredOnly.xml", TestName = "v27_PEV_E4_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "PEV_IEPC_PrimaryBus.xml", TestName = "v27_PEV_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "PEV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_PEV_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "SHEV_IEPC_PrimaryBus.xml", TestName = "v27_SHEV_IEPC_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "SHEV_IEPC_PrimaryBus_requiredOnly.xml", TestName = "v27_SHEV_IEPC_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S2_PrimaryBus.xml", TestName = "v27_SHEV_S2_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S2_PrimaryBus_requiredOnly.xml", TestName = "v27_SHEV_S2_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S3_PrimaryBus.xml", TestName = "v27_SHEV_S3_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S3_PrimaryBus_requiredOnly.xml", TestName = "v27_SHEV_S3_PrimaryBus_requiredOnly")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S4_PrimaryBus.xml", TestName = "v27_SHEV_S4_PrimaryBus")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S4_PrimaryBus_requiredOnly.xml", TestName = "v27_SHEV_S4_PrimaryBus_requiredOnly")]
+        public void PrimaryBusMockupTest(string fileName, bool mockup = true)
 		{
 			CopyInputFile(fileName);
 			var inputProvider = _inputDataReader.Create(fileName);
@@ -427,7 +551,8 @@ namespace VectoMockupTest
 			CheckFileExists(fileWriter, CifShouldExist:false, PrimaryReportShouldExist:true);
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLPrimaryVehicleReportName), XmlDocumentType.MultistepOutputData), "VIF invalid" );
 			Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLFullReportName), XmlDocumentType.ManufacturerReport), "MRF invalid");
-		}
+            Assert.IsTrue(MRF_CIF_WriterTestBase.ValidateAndPrint(XDocument.Load(fileWriter.XMLMonitoringReportName), XmlDocumentType.MonitoringReport), "Monitoring Report invalid");
+        }
 
 		
 
@@ -449,19 +574,41 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus")]
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E3_Bus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E4_Bus")]
-		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_Bus")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Whl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Whl")]
-
-		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "Interim PEV_IEPC-std_Bus")]
+		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_Bus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC_PrimaryBus_Gbx2Whl")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "Interim PEV_IEPC-std_Bus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "Interim PEV_E2_Bus_EM-Std")]
-		public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
+
+        [TestCase(v27PrimaryBusPath + "Conventional_PrimaryBus.xml", v27CompleteBusPath + "Conventional_CompletedBus_requiredOnly.xml", "Conventional", TestName = "v27_Conventional_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "Fx", "FCHV", TestName = "v27_FCHV_F2_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "Fx", "FCHV", TestName = "v27_FCHV_F3_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "Fx", "FCHV", TestName = "v27_FCHV_F4_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "Fx", "FCHV", TestName = "v27_FCHV_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "H2_ICE_PrimaryBus.xml", v27CompleteBusPath + "Conventional_CompletedBus_requiredOnly.xml", "Conventional", TestName = "v27_H2_ICE_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "HEV_IHPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "Px", "HEV", TestName = "v27_HEV_IHPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "HEV_P2_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "Px", "HEV", TestName = "v27_HEV_P2_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "PEV_E2_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "Ex", "PEV", TestName = "v27_PEV_E2_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "PEV_E3_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "Ex", "PEV", TestName = "v27_PEV_E3_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "PEV_E4_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "Ex", "PEV", TestName = "v27_PEV_E4_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "PEV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "IEPC", "PEV", TestName = "v27_PEV_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S2_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "Sx", "HEV", TestName = "v27_SHEV_S2_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S3_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "Sx", "HEV", TestName = "v27_SHEV_S3_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S4_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "Sx", "HEV", TestName = "v27_SHEV_S4_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "SHEV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "IEPC-S", "HEV", TestName = "v27_SHEV_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "FCHV", TestName = "v27_Multiple_FCHV_F2_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus_requiredOnly.xml", "FCHV", TestName = "v27_Multiple_FCHV_F3_F4_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "PEV", TestName = "v27_Multiple_PEV_E2_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus_requiredOnly.xml", "PEV", TestName = "v27_Multiple_PEV_E3_E4_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "HEV", TestName = "v27_Multiple_SHEV_S2_IEPC_BusInterim")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus_requiredOnly.xml", "HEV", TestName = "v27_Multiple_SHEV_S3_S4_BusInterim")]
+        public void InterimTest(string primaryBusInput, string interimBusInput, params string[] expectedType)
 		{
 			var interimCopy = CopyInputFile(interimBusInput)[0];
 			// VIF + interim input =>  VIF
@@ -508,7 +655,7 @@ namespace VectoMockupTest
 			// assertions
 			File.Delete(fileWriter.XMLPrimaryVehicleReportName);
 
-			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false);
+			CheckFileExists(interimFileWriter, VifShouldExist: true, MrfShouldExist: false, CifShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(interimFileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -529,18 +676,18 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus")]
 		[TestCase(PEV_E3_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E4_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Whl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Whl")]
-		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "IEPC", TestName = "PrimaryAndInterim PEV_IEPC-std_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterim PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterimPEV_IEPC_PrimaryBus_Gbx2Whl")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_InterimBusInput, "PEV", "IEPC", TestName = "PrimaryAndInterim PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_InterimBusInput, "Ex", "PEV", TestName = "PrimaryAndInterim PEV_E2_PrimaryBus_EM-Std")]
-		public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
+        public void PrimaryWithInterimTest(string primaryBusInput, string interimInput, params string[] expectedType)
 		{
 			var copied = CopyInputFile(primaryBusInput, interimInput);
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
@@ -564,7 +711,7 @@ namespace VectoMockupTest
 
 			// assertions
 
-			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false);
+			CheckFileExists(fileWriter, PrimaryMrfShouldExist: true, VifShouldExist: true, CifShouldExist: false, MrfShouldExist: false, MonitoringReportShouldExist: false);
 
 			CheckElementTypeNameContains(fileWriter.XMLMultistageReportFileName, "Vehicle", expectedType);
 		}
@@ -589,18 +736,42 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus")]
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "E3", "PEV", TestName = "Complete PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "E4", "PEV", TestName = "Complete PEV_E4_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Whl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Whl")]
-		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Complete PEV_IEPC-std_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC_PrimaryBus_Gbx2Whl")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Complete PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "E2", "PEV", TestName = "Complete PEV_E2_PrimaryBus_EM-Std")]
-		public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
+
+        [TestCase(v27PrimaryBusPath + "Conventional_PrimaryBus.xml", v27CompleteBusPath + "Conventional_CompletedBus.xml", "Conventional", TestName = "v27_Conventional_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F2_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_FCHV_F2_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F3_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_FCHV_F3_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "FCHV_F4_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_FCHV_F4_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "FCHV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_FCHV_IEPC_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "H2_ICE_PrimaryBus.xml", v27CompleteBusPath + "Conventional_CompletedBus.xml", "Conventional", TestName = "v27_H2_ICE_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "HEV_IHPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Px", "HEV", TestName = "v27_HEV_IHPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "HEV_P2_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Px", "HEV", TestName = "v27_HEV_P2_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "PEV_E2_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "Ex", "PEV", TestName = "v27_PEV_E2_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "PEV_E3_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "Ex", "PEV", TestName = "v27_PEV_E3_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "PEV_E4_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "Ex", "PEV", TestName = "v27_PEV_E4_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "PEV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "IEPC", "PEV", TestName = "v27_PEV_IEPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S2_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Sx", "HEV", TestName = "v27_SHEV_S2_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S3_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Sx", "HEV", TestName = "v27_SHEV_S3_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "SHEV_S4_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Sx", "HEV", TestName = "v27_SHEV_S4_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "SHEV_IEPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "IEPC", "HEV", TestName = "v27_SHEV_IEPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_Multiple_FCHV_F2_IEPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_FCHV_F3_F4_PrimaryBus.xml", v27CompleteBusPath + "FCHV_CompletedBus.xml", "Fx", "FCHV", TestName = "v27_Multiple_FCHV_F3_F4_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "Ex", "PEV", TestName = "v27_Multiple_PEV_E2_IEPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_PEV_E3_E4_PrimaryBus.xml", v27CompleteBusPath + "PEV_CompletedBus.xml", "Ex", "PEV", TestName = "v27_Multiple_PEV_E3_E4_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S2_IEPC_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Sx", "HEV", TestName = "v27_Multiple_SHEV_S2_IEPC_PrimaryBus_BusInterimFullComplete")]
+        [TestCase(v27PrimaryBusPath + "Multiple_SHEV_S3_S4_PrimaryBus.xml", v27CompleteBusPath + "HEV_CompletedBus.xml", "Sx", "HEV", TestName = "v27_Multiple_SHEV_S3_S4_PrimaryBus_BusInterimFullComplete")]
+
+        public void CompleteTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
 			var copied = CopyInputFile(primaryBusInput, completeBusInput);
 			// complete: primary input + complete input (full) => MRF Primary, VIF (step 1), MRF Complete, CIF Complete
@@ -654,18 +825,18 @@ namespace VectoMockupTest
 		[TestCase(PEV_E2_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus")]
 		[TestCase(PEV_E3_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E3_PrimaryBus")]
 		[TestCase(PEV_E4_PrimaryBus, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E4_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Whl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
-		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
-		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Axl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx1Whl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx1Whl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2_drag, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Axl_drag, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Axl_drag")]
+		[TestCase(PEV_IEPC_PrimaryBus_Gbx2Whl, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC_PrimaryBus_Gbx2Whl")]
+		[TestCase(PEV_IEPC_std_PrimaryBus, PEV_IEPC_CompletedBusInput, "PEV", "IEPC", TestName = "Completed PEV_IEPC-std_PrimaryBus")]
 		[TestCase(PEV_E2_PrimaryBus_StdEM, PEV_CompletedBusInput, "Ex", "PEV", TestName = "Completed PEV_E2_PrimaryBus_EM-Std")]
-		public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
+        public void CompletedTest(string primaryBusInput, string completeBusInput, params string[] expectedType)
 		{
 			var completeCopy = CopyInputFile(completeBusInput)[0];
 			CopyInputFile(primaryBusInput);
@@ -785,25 +956,11 @@ namespace VectoMockupTest
 			bool CifShouldExist = true, 
 			bool VifShouldExist = false, 
 			bool PrimaryMrfShouldExist = false,
-			bool PrimaryReportShouldExist = false)
+			bool PrimaryReportShouldExist = false,
+			bool MonitoringReportShouldExist = true)
 		{
 			var fail = false;
-			if (CifShouldExist) {
-				if (File.Exists(fileWriter.XMLCustomerReportName)) {
-					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
-						XmlDocumentType.CustomerReport);
-				} else {
-					TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
-					fail = true;
-				}
-			} else {
-				var fileName = fileWriter.XMLCustomerReportName;
-				if (File.Exists(fileName)) {
-					fail = true;
-					TestContext.WriteLine($"{fileName} should not exist");
-				}
-			}
-
+			
 			if (MrfShouldExist) {
 				if (File.Exists(fileWriter.XMLFullReportName)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLFullReportName),
@@ -821,7 +978,53 @@ namespace VectoMockupTest
 				}
             }
 
-			var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
+            if (CifShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLCustomerReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLCustomerReportName),
+                        XmlDocumentType.CustomerReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLCustomerReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLCustomerReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            if (MonitoringReportShouldExist)
+            {
+                if (File.Exists(fileWriter.XMLMonitoringReportName))
+                {
+                    MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMonitoringReportName),
+                        XmlDocumentType.MonitoringReport);
+                }
+                else
+                {
+                    TestContext.WriteLine(fileWriter.XMLMonitoringReportName + " Missing\n");
+                    fail = true;
+                }
+            }
+            else
+            {
+                var fileName = fileWriter.XMLMonitoringReportName;
+                if (File.Exists(fileName))
+                {
+                    fail = true;
+                    TestContext.WriteLine($"{fileName} should not exist");
+                }
+            }
+
+            var primaryMrfPath = fileWriter.XMLFullReportName.Replace("RSLT_MANUFACTURER", "RSLT_MANUFACTURER_PRIMARY");
 			if (PrimaryMrfShouldExist) {
 				if (File.Exists(primaryMrfPath)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(primaryMrfPath), XmlDocumentType.ManufacturerReport);
@@ -856,7 +1059,7 @@ namespace VectoMockupTest
 				}
             }
 
-			if (VifShouldExist) {
+            if (VifShouldExist) {
 				if (File.Exists(fileWriter.XMLMultistageReportFileName)) {
 					MRF_CIF_WriterTestBase.Validate(XDocument.Load(fileWriter.XMLMultistageReportFileName),
 						XmlDocumentType.MultistepOutputData);
@@ -873,7 +1076,7 @@ namespace VectoMockupTest
 				}
             }
 
-			if (fail) {
+            if (fail) {
 				Assert.Fail();
 			}
 			
@@ -1033,7 +1236,11 @@ namespace VectoMockupTest
 			false, 
 			true, 
 			TestName="ExemptedPrimaryBus")]
-		public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
+        [TestCase(v27LorryPath + "Exempted_HeavyLorry.xml", false, true, true, false, false, TestName = "v27_Exempted_HeavyLorry")]
+        [TestCase(v27LorryPath + "Exempted_HeavyLorry_requiredOnly.xml", false, true, true, false, false, TestName = "v27_Exempted_HeavyLorry_requiredOnly")]
+        [TestCase(v27LorryPath + "Exempted_MediumLorry.xml", false, true, true, false, false, TestName = "v27_Exempted_MediumLorry")]
+        [TestCase(v27LorryPath + "Exempted_MediumLorry_requiredOnly.xml", false, true, true, false, false, TestName = "v27_Exempted_MediumLorry_requiredOnly")]
+        public void ExemptedTest(string fileName, bool checkVif, bool checkCif, bool checkMrf, bool checkPrimaryMrf,
 			bool checkPrimaryReport)
 		{
 			CopyInputFile(fileName);

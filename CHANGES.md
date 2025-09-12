@@ -2,6 +2,205 @@
 
 
 
+**VECTO v5.0.4-DEV (25-08-2025)**
+
+
+- Features
+
+    * CodeEU n.a.: 3rd amendment reports for buses (vecto/vecto!421)
+    * CodeEU n.a.: V1.0 reports for multiple powertrain lorries (vecto/vecto!395)
+    * CodeEU n.a.: Add Diesel B100 CI fuel (vecto/vecto!399)
+    * CodeEU n.a.: MRF and Monitoring report for multiple-powertrain primary buses (vecto/vecto!410)
+    * CodeEU n.a.: battery only mode for P2 (vecto/vecto!425)
+    * CodeEU n.a.: Run simulation for H2-ICE bus (primary + completed) (vecto/vecto!432)
+    * CodeEU n.a.: FCHV bus simulation, primary & completed (vecto/vecto!433)
+    * CodeEU n.a.: Single-bus mode for FCHV (vecto/vecto!435)
+    * CodeEU n.a.: Enable all v2.7 vehicles (vecto/vecto!436)
+    * CodeEU #1061: VTP input and formulas for buses and trucks (vecto/vecto!424)
+
+- Bug Fixes
+
+    * CodeEU #1058: Exception when getting MaxWindowsSize (vecto/vecto!422)
+    * CodeEU #1096: For FCHV, APT-S/P gearboxes simulated as APT-N. (vecto/vecto!423)
+    * CodeEU #1043: Ovc s-hev cs cd (vecto/vecto!420)
+    * CodeEU n.a.: Convert property Type to Architecture in axle powertrains (vecto/vecto!393)
+    * CodeEU n.a.: 3 job types for multiple powertrains (vecto/vecto!394)
+    * CodeEU n.a.: Removed NgTankSystem from Multiple_SHEV primary bus (vecto/vecto!398)
+    * CodeEU n.a.: Remove Retarder component from X4 architectures (vecto/vecto!400)
+    * CodeEU n.a.: Use multiple factory methods for Retarder and Angledrive data providers (vecto/vecto!406)
+    * CodeEU n.a.: Added FCHV missing gearbox bindings (vecto/vecto!427)
+    * CodeEU n.a.: Airdrag element in VIF report. (vecto/vecto!430)
+    * CodeEU n.a.: Do not require SoC limits for HV non-OVC (vecto/vecto!431)
+    * CodeEU n.a.: B100 density to 890 kg/m3 (vecto/vecto!411)
+    * CodeEU n.a.: Run old VIFs with v2.7 Completed vehicles (vecto/vecto!434)
+    * CodeEU #1065: 1065 vehicle co2 group (vecto/vecto!428)
+    * CodeEU #1066: DoCoast - add drive condition for overload (vecto/vecto!426)
+    * CodeEU n.a.: Generic retarder and failing tests (vecto/vecto!437)
+    * CodeEU #1109: IEPC data adaptation (vecto/vecto!438)
+    * CodeEU n.a.: IHPC VECTO run data (vecto/vecto!439)
+    * CodeEU n.a.: FCHV IEPC rundata gearbox creation (vecto/vecto!440)
+    * CodeEU n.a.: Generic vehicles that failed to run (vecto/vecto!441)
+    * CodeEU n.a.: WHRCharger creation (vecto/vecto!442)
+    * CodeEU n.a.: Update wheelEnd sample (vecto/vecto!443)
+    * CodeEU n.a.: FCHV files in engineering mode (vecto/vecto!444)
+    * CodeEU n.a.: Initialize MaxChargingPower from static data if not available in input (vecto/vecto!445)
+    * CodeEU n.a.: FCHV battery and CD and CS runs (vecto/vecto!446)
+
+- Refactor
+
+    * CodeEU n.a.: Merge refactoring branch (vecto/vecto!419)
+    * CodeEU n.a.: Merging refactorings from SW3 project to (vecto/vecto!396)
+
+
+
+**VECTO v5.0.3 Official Release (08-07-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU n.a.: Avoid em conditioning calculation for non-FCHV (vecto/vecto!416)
+    * CodeEU n.a.: Safe conditioning data lookup (vecto/vecto!417)
+
+
+
+**VECTO v5.0.1 Official Release (03-07-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU n.a.: FCHV engineering run (vecto/vecto!391)
+    * CodeEU n.a.: H2 check in bus job (vecto/vecto!392)
+    * CodeEU n.a.: Auxiliaries REESS connection (vecto/vecto!397)
+    * CodeEU n.a.: Read PowerOutputConsumptionMap as kW (vecto/vecto!401)
+    * CodeEU n.a.: Select pruned missions for FCHV primary bus (vecto/vecto!403)
+    * CodeEU n.a.: Use angledrive in lorries' gearshift data creation (vecto/vecto!404)
+    * CodeEU n.a.: Remove wrong bus angledrive restrictions (vecto/vecto!405)
+    * CodeEU #1058: Decl GUI error message when FCHV in eng mode (vecto/vecto!407)
+    * CodeEU n.a.: Set NgTankSystem default for primary buses (vecto/vecto!408)
+    * CodeEU n.a.: FCHV F-IEPC simulation runs! (vecto/vecto!409)
+    * CodeEU #1047: Operational range for group 10 vehicle weights (vecto/vecto!402)
+    * CodeEU #1045: Ovc fc weighting to correspond to CO2 computation (vecto/vecto!413)
+    * CodeEU #848: 3s Buffer compute max EM PLoss for FL OPs (vecto/vecto!412)
+    * CodeEU #1067: Conditioning power demand for FCHVs (vecto/vecto!414)
+
+
+
+**VECTO v5.0.0-RC (05-06-2025)**
+
+
+- Features
+
+    * CodeEU n.a.: Readers for v2.7 vehicle XSD, and support for fuel cell vehicles. (vecto/vecto!341)
+    * CodeEU n.a.: Read monitoring data from job (vecto/vecto!345)
+    * CodeEU #1002: 3rd amendment mrf cif xml schemas (vecto/vecto!340)
+    * CodeEU n.a.: MRF v1.0 vehicle (lorries and FCHV primary buses) writers (vecto/vecto!354)
+    * CodeEU n.a.: CIF v1.0 vehicle part (v2.4 vehicles and v2.7 lorries) (vecto/vecto!355)
+    * CodeEU n.a.: Use monitoring data from job to write report (vecto/vecto!360)
+    * CodeEU n.a.: In motion charging postprocessing (vecto/vecto!344)
+    * CodeEU n.a.: Disable (for RC & official) v27 vehicles except H2-ICE & FCHV lorries (vecto/vecto!375)
+    * CodeEU n.a.: Readers for v2.7 buses, improved reader tests. (vecto/vecto!382)
+    * CodeEU n.a.: HEV - Get Best dSOC in vsum (vecto/vecto!383)
+    * CodeEU 968: Forbid AT upshift for reduced dt before brake (vecto/vecto!381)
+    * CodeEU n.a.: New (v2.7) XSD for vehicles (vecto/vecto!334)
+    * CodeEU n.a.: Partial implementation for new vehicle battery (vecto/vecto!337)
+    * CodeEU n.a.: EM-IEPC Thermal Derating - Tq_max and Buffer Mods - Post VECTO-4.3.4 Feed-Back (vecto/vecto!378)
+
+- Bug Fixes
+
+    * CodeEU n.a.: Non-https link in manual (vecto/vecto!339)
+    * CodeEU n.a.: V2.7 reader & XSD (vecto/vecto!342)
+    * CodeEU n.a.: Updated XSLT file and hashing code for new vehicles and components. (vecto/vecto!338)
+    * CodeEU #1007: Lock StoredResults list before accessing it to avoid race condition (vecto/vecto!343)
+    * CodeEU n.a.: V27 vehicle issues (vecto/vecto!346)
+    * CodeEU n.a.: 882 merge artifacts (vecto/vecto!347)
+    * CodeEU n.a.: FCHV angledrive input (vecto/vecto!348)
+    * CodeEU n.a.: Modify schema so that results can be written compatible with results for 2nd amendment: (vecto/vecto!349)
+    * CodeEU n.a.: Restore deleted code in monitoring report (vecto/vecto!350)
+    * CodeEU n.a.: Typo in MRF Inject module (vecto/vecto!351)
+    * CodeEU n.a.: Proper namespace for VIF IEPC sub-element (vecto/vecto!352)
+    * CodeEU n.a.: Mockup tests run successfully (vecto/vecto!353)
+    * CodeEU #1002: Correcting errors in XML schema (and sample files): no engine output in... (vecto/vecto!356)
+    * CodeEU n.a.: Bugfixes/updates for the Monitoring report and testing via the MockupTests. (vecto/vecto!357)
+    * CodeEU n.a.: Replace U+2013 by regular dashes (vecto/vecto!359)
+    * CodeEU n.a.: Added missing IMC testdata (vecto/vecto!361)
+    * CodeEU n.a.: Retarder compulsory in all MRF vehicle components. (vecto/vecto!362)
+    * CodeEU n.a.: Add further condition to decide which results to write in case the input data is a Multistep bus (vecto/vecto!363)
+    * CodeEU n.a.: Check Articulated in json vehicle (vecto/vecto!365)
+    * CodeEU n.a.: Segment in Bus AirDrag data creation (vecto/vecto!364)
+    * CodeEU n.a.: FCHV pre-run execution (vecto/vecto!366)
+    * CodeEU n.a.: Write ZeroCO2EmissionsRange and HydrogenRange to H2-ICE reports. (vecto/vecto!367)
+    * CodeEU n.a.: Remove wrong angledrive restrictions (vecto/vecto!369)
+    * CodeEU n.a.: Set vectorundata in completed bus results, (vecto/vecto!368)
+    * CodeEU n.a.: Simulate OVC for FCHVs (vecto/vecto!370)
+    * CodeEU n.a.: FCHV H2 range in reports (vecto/vecto!371)
+    * CodeEU n.a.: Architecture in some MRF v1.0 tests (vecto/vecto!372)
+    * CodeEU n.a.: H2 properties check in exempted vehicle input (vecto/vecto!373)
+    * CodeEU n.a.: FCHV input classes inheritance (vecto/vecto!374)
+    * CodeEU n.a.: Standard values enum entry for v2.6 (vecto/vecto!376)
+    * CodeEU n.a.: Add Driving Actions for IEPC gearshift (vecto/vecto!377)
+    * CodeEU n.a.: Of v2.7, allow only IMC, H2-ICE conventional, FCHV Lorries (vecto/vecto!384)
+    * CodeEU n.a.: Disable reading data from external csv (vecto/vecto!385)
+    * CodeEU n.a.: OVC results (vecto/vecto!387)
+    * CodeEU n.a.: Ignore FCHV pre-run in best deltaSoC calculation (vecto/vecto!388)
+    * CodeEU 972: Take battery limit into account for EM overload - REESS Empty (vecto/vecto!380)
+    * CodeEU 994: ReEngage1C tolerance in AT (vecto/vecto!379)
+    * CodeEU 886, 888, 889: Add Driving Actions for IEPC gearshift (vecto/vecto!377)
+    * CodeEU n.a.: Updated Monitoring Report XSD (FCHV, Multiple powertrains) (vecto/vecto!335)
+
+- Drop
+
+    * CodeEU n.a.: MaxChargingPower requirement for OVC in v2.7 (vecto/vecto!358)
+
+
+
+**VECTO 0.11.4-DEV (02.04.2025)**
+
+* Features
+  - CodeEU #855: IEPC with multiple load curves (!321)
+  - H2 ICE vehicles in declaration mode (!325)
+
+* Fixes
+  - Add max-windows-size to fuel cell (!312)
+  - Electric system power demand compensation for FCS (!313)
+  - Add error message for unknown completed vehicle missions (!330)
+  - Segment lookup method (!331)
+  - FullLoadCurves proper initialization (!332)
+  - Manage 'GetTruckSegment' exception behavior (!333)
+
+
+
+**VECTO v4.3.3 Official Release (04-03-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU #950: Check if XML element is signed (#950) (vecto/vecto!314)
+    * CodeEU #954: NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+    * fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+    * fix: secure XML loading against external entity injection (vecto/vecto!319)
+    * fix: correct interim supercap reader type (vecto/vecto!320)
+    * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+    
+- Documentation
+
+    * CodeEU n.a.: Update XSD parameter IDs documentation (vecto/vecto!327)
+
+
+
+**VECTO v4.3.3 Official Release (03-03-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU #950: Check if XML element is signed (#950) (vecto/vecto!314)
+    * CodeEU #954: NgTankSystem optional for HEV lorries MRF XSD (vecto/vecto!315)
+    * fix: monitoring report for dual fuel vehicles (vecto/vecto!318)
+    * fix: secure XML loading against external entity injection (vecto/vecto!319)
+    * fix: correct interim supercap reader type (vecto/vecto!320)
+    * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
+
+
+
 **VECTO v4.3.2-RC (06-02-2025)**
 
 - Features

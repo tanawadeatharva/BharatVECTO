@@ -25,19 +25,22 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		protected readonly IVIFReportFactory _vifFactory;
 		protected readonly IResultsWriterFactory _resultFactory;
 
-		public static XNamespace VIF => XNamespace.Get("urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1");
+		public static XNamespace VIF => XNamespace.Get(XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION);
 
-		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+        public static XNamespace XSI => XNamespace.Get(XMLDefinitions.XML_SCHEMA_NAMESPACE);
+
 		protected XNamespace _di = "http://www.w3.org/2000/09/xmldsig#";
 		protected XNamespace _v20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
 		protected XNamespace _v21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
 		protected XNamespace _v23 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3";
 		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
-		protected XNamespace _v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
+		protected XNamespace _v26 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.6";
+        protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
+        protected XNamespace _v10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 
 		public abstract string OutputDataType { get; }
 
-		protected XElement Vehicle { get; set; }
+        protected XElement Vehicle { get; set; }
 		protected IResultsWriter Results { get; set; }
 
 		protected  List<IResultEntry> _results = new List<IResultEntry>();
@@ -56,15 +59,19 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		public void Initialize(VectoRunData modelData)
 		{
 			InitializeVehicleData(modelData.InputData);
-			Results = _resultFactory.GetVIFResultsWriter(modelData.VehicleData.VehicleCategory.GetVehicleType(),
+			Results = _resultFactory.GetVIFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);
 			InputDataIntegrity = new XElement(VIF + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? XMLHelper.CreateDummySig(_di) : new XElement(modelData.InputDataHash));
 
 		}
 
-		
-		public void WriteResult(IResultEntry result)
+		protected virtual string GetVehicleXMLType(VectoRunData modelData)
+		{
+			return modelData.VehicleData.InputData.XMLSource.Name;
+		}
+
+        public void WriteResult(IResultEntry result)
 		{
 			_results.Add(result);
 		}
@@ -73,15 +80,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var retVal = new XDocument(new XElement(VIF + XMLNames.VectoOutputMultistep,
 				new XAttribute(XNamespace.Xmlns + "di", _di),
-				new XAttribute(XNamespace.Xmlns + "xsi", _xsi.NamespaceName),
+				new XAttribute(XNamespace.Xmlns + "xsi", XSI.NamespaceName),
 				new XAttribute(XNamespace.Xmlns + "vif", VIF),
 				new XAttribute(XNamespace.Xmlns + "v1.0", _v10),
 				new XAttribute(XNamespace.Xmlns + "v2.0", _v20),
-				new XAttribute(XNamespace.Xmlns + "v2.1", _v21),
-				new XAttribute(XNamespace.Xmlns + "v2.3", _v23),
+                new XAttribute(XNamespace.Xmlns + "v2.1", _v21),
+                new XAttribute(XNamespace.Xmlns + "v2.3", _v23),
 				new XAttribute(XNamespace.Xmlns + "v2.4", _v24),
-				new XAttribute(_xsi + "schemaLocation", $"{_tns.NamespaceName} " + @"V:\VectoCore\VectoCore\Resources\XSD/VectoOutputMultistep.0.1.xsd"),
-				new XAttribute("xmlns", _tns),
+				new XAttribute(XNamespace.Xmlns + "v2.6", _v26),
+                new XAttribute(XNamespace.Xmlns + "v2.7", _v27),
+                new XAttribute("xmlns", _tns),
 
 				GeneratePrimaryVehicle(fullReportHash)
 			));
@@ -90,8 +98,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		}
 
 		public XDocument Report { get; protected set; }
-
-		public XNamespace Tns => _tns;
 
         #endregion
 
@@ -102,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var primaryVehicle = new XElement(VIF + XMLNames.Bus_PrimaryVehicle,
 				new XElement(VIF + XMLNames.Report_DataWrap,
 					new XAttribute(XMLNames.Component_ID_Attr, vehicleId),
-					new XAttribute(_xsi + XMLNames.XSIType, "PrimaryVehicleDataType"),
+					new XAttribute(XSI + XMLNames.XSIType, "PrimaryVehicleDataType"),
 					Vehicle,
 					InputDataIntegrity,
 					new XElement(VIF + "ManufacturerRecordSignature", resultSignature),

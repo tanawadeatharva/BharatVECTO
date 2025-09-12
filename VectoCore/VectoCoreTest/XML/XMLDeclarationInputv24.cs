@@ -389,14 +389,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(400.SI<Volt>(), voltageLevel.VoltageLevel);
 			
 			TestOverloadValues(voltageLevel);
-			TestMaxTorqueCurve(voltageLevel.FullLoadCurve);
+			TestMaxTorqueCurve(voltageLevel.FullLoadCurve.First().LoadCurve);
 			TestPowerMap(voltageLevel.PowerMap);
 
 			voltageLevel = voltageLevels[1];
 			Assert.AreEqual(600.SI<Volt>(), voltageLevel.VoltageLevel);
 			
 			TestOverloadValues(voltageLevel);
-			TestMaxTorqueCurve(voltageLevel.FullLoadCurve);
+			TestMaxTorqueCurve(voltageLevel.FullLoadCurve.First().LoadCurve);
 			TestPowerMap(voltageLevel.PowerMap);
 
 		}
@@ -408,14 +408,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(400.SI<Volt>(), voltageLevel.VoltageLevel);
 
 			TestOverloadValues(voltageLevel);
-			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve);
+			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve.First().LoadCurve);
 			TestPowerMap(voltageLevel.PowerMap);
 
 			voltageLevel = voltageLevels[1];
 			Assert.AreEqual(600.SI<Volt>(), voltageLevel.VoltageLevel);
 
 			TestOverloadValues(voltageLevel);
-			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve);
+			TestMaxTorqueCurveIEPC(voltageLevel.FullLoadCurve.First().LoadCurve);
 			TestPowerMap(voltageLevel.PowerMap);
 
 		}
@@ -662,7 +662,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		#region Test Electric Motor TorqueLimits Reader
 
-		private void TestElectricMotorTorqueLimits(IDictionary<PowertrainPosition, IList<Tuple<Volt, TableData>>> limits)
+		private void TestElectricMotorTorqueLimits(IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> limits)
 		{
 			Assert.IsNotNull(limits);
 			Assert.AreEqual(1, limits.Count);
@@ -2128,7 +2128,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("None", eMachine.ElectricMachine.IHPCType);
 			
 			Assert.AreEqual(1, eMachine.ElectricMachine.VoltageLevels.Count);
-			TestMaxTorqueCurve(eMachine.ElectricMachine.VoltageLevels[0].FullLoadCurve);
+			TestMaxTorqueCurve(eMachine.ElectricMachine.VoltageLevels[0].FullLoadCurve.First().LoadCurve);
 			Assert.IsNotNull(eMachine.ElectricMachine.VoltageLevels[0].PowerMap);
 			TestPowerMapData01(eMachine.ElectricMachine.VoltageLevels[0].PowerMap[0]);
 			Assert.IsNull(eMachine.ElectricMachine.Conditioning);

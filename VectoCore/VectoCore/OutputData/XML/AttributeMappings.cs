@@ -30,12 +30,11 @@
 */
 
 using System.Collections.Generic;
-using System.Security;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 
-namespace TUGraz.IVT.VectoXML
+namespace TUGraz.VectoCore.OutputData.XML
 {
 	internal static class AttributeMappings
 	{
@@ -162,6 +161,12 @@ namespace TUGraz.IVT.VectoXML
 			{ElectricMotorMapReader.Fields.Torque, XMLNames.PowerMap_Torque },
 			{ ElectricMotorMapReader.Fields.PowerElectrical, XMLNames.PowerMap_ElectricPower }
 		};
+
+		public static readonly Dictionary<string, string> EMTorqueCurve = new Dictionary<string, string> {
+			{ XMLNames.MaxTorqueCurve_OutShaftSpeed, XMLNames.MaxTorqueCurve_OutShaftSpeed },
+            { XMLNames.MaxTorqueCurve_MaxTorque, XMLNames.MaxTorqueCurve_MaxTorque },
+            { XMLNames.MaxTorqueCurve_MinTorque, XMLNames.MaxTorqueCurve_MinTorque }
+        };
 
 		public static readonly Dictionary<string, string> BoostingLimitsMapping = new Dictionary<string, string> {
 				{MaxBoostingTorqueReader.Fields.MotorSpeed, XMLNames.BoostingLimitation_RotationalSpeed},

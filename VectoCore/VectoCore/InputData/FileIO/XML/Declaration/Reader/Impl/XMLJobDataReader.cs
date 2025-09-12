@@ -29,10 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
@@ -77,14 +80,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
 
-			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);  	
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader =  GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
-			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader); 
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
 			return vehicle;
 		}
 
-	}
+		protected void CheckH2Properties(IVehicleDeclarationInputData vehicle)
+		{
+            if (vehicle.Components?.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
+            {
+                if (vehicle.H2StorageUsableCapacity == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare H2StorageUsableCapacity.");
+                }
+
+				if (vehicle.HydrogenStorageTechnology == null)
+				{
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare HydrogenStorageTechnology.");
+                }
+            }
+        }
+
+        protected void DisallowV27NonHydrogenFueledConventionalLorries(IXMLDeclarationVehicleData vehicle, string version)
+        {
+            var conventionalLorries = new string[2]
+            {
+                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_HeavyLorryDeclarationType",
+                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_MediumLorryDeclarationType"
+            };
+
+            if (!conventionalLorries.Contains(version))
+            {
+                return;
+            }
+        }
+
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -102,12 +137,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
-			
+
+
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
 			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+            vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
-			return vehicle;
+			CheckH2Properties(vehicle);
+
+            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
+
+            return vehicle;
 		}
 	}
 
@@ -133,13 +174,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
 			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
-			return vehicle;
+            CheckH2Properties(vehicle);
+
+            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
+
+            return vehicle;
 		}
 	}
-	
+
 
 	// ---------------------------------------------------------------------------------------
-	
+
+	public class XMLJobDataReaderV27 : XMLJobDataReaderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
+
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataReaderV27(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool allowDeprecated) : base(
+			jobData, jobNode, allowDeprecated)
+		{ }
+
+		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		{
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile, AllowDeprecated);
+
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
+			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
+
+			CheckH2Properties(vehicle);
+
+            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
+
+            return vehicle;
+		}
+    }
+
+	// ---------------------------------------------------------------------------------------
+
+
 	public class XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -170,13 +247,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
 
-			return vehicle;
+            CheckH2Properties(vehicle);
+
+            return vehicle;
 		}
-	}
 
-	// ---------------------------------------------------------------------------------------
+        protected void CheckH2Properties(IVehicleDeclarationInputData vehicle)
+        {
+            if (vehicle.Components?.EngineInputData?.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())) ?? false)
+            {
+                if (vehicle.H2StorageUsableCapacity == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare H2StorageUsableCapacity.");
+                }
 
-	public class XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+                if (vehicle.HydrogenStorageTechnology == null)
+                {
+                    throw new VectoException("Vehicle with hydrogen-powered engine must declare HydrogenStorageTechnology.");
+                }
+            }
+        }
+    }
+
+    public class XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -189,9 +295,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{ }
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV11 : XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -203,6 +320,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			: base(busJobData, jobNode)
 		{ }
 	}
+
+	public class XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV11 : XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_HEV_Sx_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
 
 	// ---------------------------------------------------------------------------------------
 
@@ -219,39 +347,141 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{ }
 	}
 
-	// ---------------------------------------------------------------------------------------
-
-	public class XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	public class XMLJobDataMultistage_HEV_IEPC_S_PrimaryVehicleReaderV11 : XMLJobDataMultistage_HEV_IEPC_S_PrimaryVehicleReaderV01
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-		public const string XSD_TYPE = "PEV_Ex_VehicleVIFType";
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+        public XMLJobDataMultistage_HEV_IEPC_S_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+
+		public new const string XSD_TYPE = "PEV_Ex_VehicleVIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
 			: base(busJobData, jobNode)
 		{ }
 	}
 
+	public class XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV11 : XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_PEV_Ex_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
-		public const string XSD_TYPE = "IEPC_VehicleVIFType";
+		public new const string XSD_TYPE = "IEPC_VehicleVIFType";
 
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
 			: base(busJobData, jobNode)
 		{ }
 	}
 
+	public class XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV11 : XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataMultistage_PEV_IEPC_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+			: base(busJobData, jobNode)
+		{ }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLJobDataMultistage_FCHV_Fx_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "FCHV_Fx_VehicleVIFType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_FCHV_Fx_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+    public class XMLJobDataMultistage_FCHV_IEPC_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "FCHV_IEPC_VehicleVIFType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_FCHV_IEPC_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLJobDataMultistageExemptedPrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+    public class XMLJobDataMultistage_Multiple_FCHV_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_FCHV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_Multiple_FCHV_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+	public class XMLJobDataMultistage_Multiple_PEV_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_PEV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_Multiple_PEV_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+	public class XMLJobDataMultistage_Multiple_SHEV_PrimaryVehicleReaderV11 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_SHEV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistage_Multiple_SHEV_PrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode)
+            : base(busJobData, jobNode)
+        { }
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLJobDataMultistageExemptedPrimaryVehicleReaderV01 : XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 
@@ -261,4 +491,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public XMLJobDataMultistageExemptedPrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode) : base(busJobData, jobNode) { }
 	}
+
+	public class XMLJobDataMultistageExemptedPrimaryVehicleReaderV11 : XMLJobDataMultistageExemptedPrimaryVehicleReaderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLJobDataMultistageExemptedPrimaryVehicleReaderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode) : base(busJobData, jobNode) { }
+    }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VectoMockResults xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9" 
+<VectoMockResults xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.9 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.9.xsd">
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0 V:\VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.1.0.xsd">
 	<Results>
 		<Status>success</Status>
 		<!-- non-OVC HEV Lorry  -->

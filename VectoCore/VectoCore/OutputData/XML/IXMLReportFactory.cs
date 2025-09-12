@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {

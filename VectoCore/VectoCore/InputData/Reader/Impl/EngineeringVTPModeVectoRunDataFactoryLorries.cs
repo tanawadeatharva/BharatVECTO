@@ -45,18 +45,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	internal class EngineeringVTPModeVectoRunDataFactoryLorries : DeclarationVTPModeVectoRunDataFactoryLorries
 	{
 
-		private EngineeringDataAdapter _engineeringDao = new EngineeringDataAdapter();
-
-		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider, null)
+		public EngineeringVTPModeVectoRunDataFactoryLorries(IVTPEngineeringInputDataProvider ivtpProvider, ILorryDeclarationDataAdapter declarationDataAdapter) : base(ivtpProvider, null, declarationDataAdapter)
 		{
 
 		}
 
-		public override IEnumerable<VectoRunData> NextRun()
+		protected override IEnumerable<VectoRunData> GetNextRun()
 		{
-			if (InitException != null) {
-				throw InitException;
-			}
 			return JobInputData.Cycles.Select(
 				cycle => {
 					var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);

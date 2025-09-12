@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -32,17 +33,25 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
             result.AddRange(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			result.AddRange(_mrfFactory.GetCompletedBusDimensionSequenceGroup().GetElements(consolidatedVehicleData));
 			result.Add(new XElement(_mrf + XMLNames.Bus_DoorDriveTechnology, consolidatedVehicleData.DoorDriveTechnology.ToXMLFormat()));
-			result.Add(GetNGTankSystem(multiStageInputData));
+			result.Add(GetTankSystem(multiStageInputData));
 			return result;
 		}
 
-		protected virtual XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
+		protected virtual XElement GetTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
-			var consolidatedVehicleData = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
-			if (consolidatedVehicleData.TankSystem == null) {
+			var vehicle = multiStageInputData.JobInputData.ConsolidateManufacturingStage.Vehicle;
+
+            var tankSystem = vehicle.TankSystem.HasValue
+                ? vehicle.TankSystem.Value.ToString()
+                : (vehicle.HydrogenStorageTechnology.HasValue
+                    ? vehicle.HydrogenStorageTechnology?.ToXMLFormat()
+                    : null);
+
+            if (tankSystem == null) {
 				return null;
 			}
-			return new XElement(_mrf + XMLNames.Vehicle_NgTankSystem, consolidatedVehicleData.TankSystem);
+
+			return new XElement(_mrf + "TankSystem", tankSystem);
 		}
 
 		protected virtual XElement GetManufacturers(IMultistepBusInputDataProvider multiStageInputData)
@@ -90,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of ConventionalCompletedBusGeneralVehicleOutputGroup
 
-		protected override XElement GetNGTankSystem(IMultistepBusInputDataProvider multiStageInputData)
+		protected override XElement GetTankSystem(IMultistepBusInputDataProvider multiStageInputData)
 		{
 			return null;
 		}
@@ -104,6 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractMrfXmlGroup
 
+		[ExcludeFromCodeCoverage] // never called for completed bus
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			throw new NotImplementedException();

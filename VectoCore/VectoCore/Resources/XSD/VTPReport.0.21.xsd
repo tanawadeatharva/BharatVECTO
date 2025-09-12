@@ -213,9 +213,9 @@
 		  </xs:sequence>
 		</xs:complexType>
       </xs:element>
-    </xs:sequence> 
+    </xs:sequence>
 	</xs:complexType>
-  <xs:complexType name="VTPEmissionsType"> 
+  <xs:complexType name="VTPEmissionsType">
   <xs:sequence>
 	<xs:element name="Measured">
 	  <xs:complexType>

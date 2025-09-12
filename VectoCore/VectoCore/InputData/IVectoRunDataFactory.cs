@@ -40,5 +40,7 @@ namespace TUGraz.VectoCore.InputData
 		IEnumerable<VectoRunData> NextRun();
 
 		IInputDataProvider DataProvider { get; }
-	}
+
+        IVehicleDeclarationInputData CompletedVehicle { get; set; }
+    }
 }

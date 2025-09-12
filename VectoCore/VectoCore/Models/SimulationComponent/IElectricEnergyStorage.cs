@@ -9,8 +9,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public interface IElectricSystemInfo 
 	{
-
-
 		Watt ElectricAuxPower { get; }
 
 		Watt ChargePower { get; }
@@ -18,11 +16,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		Watt BatteryPower { get; }
 
 		Watt ConsumerPower { get; }
+
+		Watt FuelCellPower { get; }
 	}
 
-	public interface IElectricSystem : IElectricSystemInfo
-	{
+	public interface IElectricSystem : IElectricSystemInfo, IBatteryConnector, IElectricChargerConnector, IElectricAuxConnector
+    {
 		IElectricSystemResponse Request(Second absTime, Second dt, Watt powerDemand, bool dryRun = false);
+
 		void Connect(IElectricChargerPort charger);
 	}
 
@@ -30,4 +31,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
     {
 		
 	}
+
+	public interface ITestpowertrainElectricSystem : IElectricSystem
+	{
+		IList<IElectricChargerPort> Charger { get; }
+	}
+
 }
