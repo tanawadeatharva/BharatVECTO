@@ -2,8 +2,8 @@
   <PropertyGroup>
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +24,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="TestData\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -9,16 +9,15 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	<MyType>WindowsForms</MyType>
-		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
-		
-		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net48;net6.0-windows</TargetFrameworks>
-		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net48;net6.0-windows</TargetFrameworks>
-	<DefineTrace>false</DefineTrace>
-	 
+		<TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Release'">net48;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'Deploy'">net48;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks Condition="'$(Configuration)' == 'MockupDeploy'">net48;net8.0-windows</TargetFrameworks>
+		<DefineTrace>false</DefineTrace>
+
 		<Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 	<!--Final Define Constants https://developercommunity.visualstudio.com/t/vbprojuser-defineconstants-dont-affect/865956-->
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
@@ -28,7 +27,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
 	  <DebugType>full</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0-windows|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net8.0-windows|AnyCPU'">
 	  <DebugType>full</DebugType>
 	</PropertyGroup>
   <ItemGroup>
@@ -50,51 +49,31 @@
 	<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 	<PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
 	</ItemGroup>
-	
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-	<Reference Include="System.ComponentModel.DataAnnotations" />
-	<Reference Include="System.Windows.Forms.DataVisualization" />
+		<Reference Include="System.ComponentModel.DataAnnotations" />
+		<Reference Include="System.Windows.Forms.DataVisualization" />
 	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
 		<PackageReference Include="System.Data.SqlClient">
-		  <Version>4.8.3</Version>
+			<Version>4.8.3</Version>
 		</PackageReference>
 		<PackageReference Include="System.Windows.Forms.DataVisualization">
-		  <Version>1.0.0-prerelease.20110.1</Version>
+			<Version>1.0.0-prerelease.20110.1</Version>
 		</PackageReference>
 	</ItemGroup>
-
-	<!--<Choose>
-		<When Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(&#xD;&#xA;         $(FinalDefineConstants), '^(.*,)*MOCKUP(,.*)*$'))">
-			<ItemGroup>
-				<ProjectReference Include="..\VectoMockup\VectoMockup\VectoMockup.csproj" />
-
-			</ItemGroup>
-			--><!--<PropertyGroup>
-				<DefineConstants>MOCKUP</DefineConstants>
-			</PropertyGroup>--><!--
-		</When>
-	</Choose>-->
-
 	<ItemGroup>
-	<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
-	<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-	<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
+		<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
+		<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
+		<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
 	</ItemGroup>
-
 	<ItemGroup>
-	<Import Include="Microsoft.VisualBasic" />
-	<Import Include="System" />
-	<Import Include="System.Collections" />
-	<Import Include="System.Data" />
-	<Import Include="System.Drawing" />
-	<Import Include="System.Diagnostics" />
-	<Import Include="System.Windows.Forms" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="Microsoft.VisualBasic" />
+		<Reference Include="Microsoft.VisualBasic" />
+		<Import Include="System" />
+		<Import Include="System.Collections" />
+		<Import Include="System.Data" />
+		<Import Include="System.Drawing" />
+		<Import Include="System.Diagnostics" />
+		<Import Include="System.Windows.Forms" />
 	</ItemGroup>
 
 	<ItemGroup>

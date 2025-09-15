@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,9 +56,9 @@
 	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExempted.vecto" />
 	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifExemptedIncomplete.vecto" />
 	  <Content Remove="..\VectoCore\VectoCoreTest\TestData\Integration\Multistage\newVifInterimDiesel.vecto" />-->
-    
-    
-    
+
+
+
     <Content Include="..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersionMultistage.0.1\AidragComponent.xml" Link="Testdata\AidragComponent.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
