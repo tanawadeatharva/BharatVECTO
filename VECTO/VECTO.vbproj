@@ -43,28 +43,19 @@
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
 	<PackageReference Include="NLog" Version="4.7.13" />
-	<PackageReference Include="Ninject" Version="3.3.6">
-		<PrivateAssets>all</PrivateAssets>
-	</PackageReference>
-	<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 	<PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 		<Reference Include="System.ComponentModel.DataAnnotations" />
 		<Reference Include="System.Windows.Forms.DataVisualization" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
-		<PackageReference Include="System.Data.SqlClient">
-			<Version>4.8.3</Version>
-		</PackageReference>
+	<ItemGroup Condition="'$(TargetFramework)' != 'net48'">
 		<PackageReference Include="System.Windows.Forms.DataVisualization">
 			<Version>1.0.0-prerelease.20110.1</Version>
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
-		<ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-		<ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Microsoft.VisualBasic" />

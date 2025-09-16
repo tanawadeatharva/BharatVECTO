@@ -1009,8 +1009,8 @@ Public Class GearboxForm
         s.ChartType = SeriesChartType.FastLine
         s.BorderWidth = 2
         s.Color = Color.DarkBlue
-        s.Name = "Dirve Torque"
-        
+        s.Name = "Drive Torque"
+
         chart.Series.Add(s)
 
         s = New Series
