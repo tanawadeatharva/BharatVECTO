@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
@@ -15,8 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VECTO3GUI2020\VECTO3GUI2020.csproj" />
-    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj" />
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 
 
