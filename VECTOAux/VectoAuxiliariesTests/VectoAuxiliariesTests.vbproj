@@ -7,8 +7,8 @@
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>On</OptionStrict>
     <OptionInfer>On</OptionInfer>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 

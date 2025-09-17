@@ -286,7 +286,7 @@ Public Class MainForm
         _genCheckAllLock = False
         _genChecked = 0
 
-        Dim logMessageTimer As New Windows.Forms.Timer(components)
+        Dim logMessageTimer As New System.Windows.Forms.Timer(components)
         logMessageTimer.Interval = 100
         AddHandler logMessageTimer.Tick, AddressOf TimerLogMessages_Tick
         logMessageTimer.Start()

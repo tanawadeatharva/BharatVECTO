@@ -665,8 +665,8 @@ Public Class EngineForm
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
-		CmOpenFile.Show(Windows.Forms.Cursor.Position)
-	End Sub
+        CmOpenFile.Show(System.Windows.Forms.Cursor.Position)
+    End Sub
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
