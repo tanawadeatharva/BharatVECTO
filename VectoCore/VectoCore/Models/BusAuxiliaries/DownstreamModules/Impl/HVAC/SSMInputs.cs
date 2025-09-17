@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {

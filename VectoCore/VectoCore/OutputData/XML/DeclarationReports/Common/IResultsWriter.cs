@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {

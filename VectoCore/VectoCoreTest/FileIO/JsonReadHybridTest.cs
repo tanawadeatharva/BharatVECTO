@@ -9,7 +9,6 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.FileIO

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;

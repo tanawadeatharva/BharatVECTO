@@ -34,14 +34,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {

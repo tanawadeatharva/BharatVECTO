@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using Ninject.Extensions.Factory;
-using TUGraz.VectoCore.OutputData.XML.GroupWriter;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration;
 using TUGraz.VectoCore.Utils.Ninject;
 

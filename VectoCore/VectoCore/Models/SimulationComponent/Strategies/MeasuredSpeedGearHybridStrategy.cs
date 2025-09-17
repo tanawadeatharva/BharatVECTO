@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {

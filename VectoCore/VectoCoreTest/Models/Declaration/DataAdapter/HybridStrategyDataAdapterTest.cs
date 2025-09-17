@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Castle.Components.DictionaryAdapter;
-using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Tests.Utils;
 

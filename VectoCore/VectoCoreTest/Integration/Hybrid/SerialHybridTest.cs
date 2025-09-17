@@ -5,7 +5,6 @@ using System.Linq;
 using NUnit.Framework;
 using System.Data;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;

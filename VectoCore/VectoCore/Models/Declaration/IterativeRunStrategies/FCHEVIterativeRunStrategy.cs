@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog.Fluent;
-using TUGraz.VectoCore.Models.Simulation.Data;
+﻿using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 

@@ -29,17 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Drawing;
-using System.Linq;
 #if !NET5_0_OR_GREATER
 using System.Windows.Forms.DataVisualization.Charting;
 #endif
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 

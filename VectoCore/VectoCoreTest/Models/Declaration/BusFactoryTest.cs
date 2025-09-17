@@ -2,7 +2,6 @@
 using System.Linq;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
@@ -10,11 +9,6 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
-using TUGraz.VectoCore.Tests.Models.Simulation;
-using TUGraz.VectoCore.Utils;
-using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {

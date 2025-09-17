@@ -1,9 +1,6 @@
 ﻿using TUGraz.VectoCommon.Models;
 using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {

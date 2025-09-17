@@ -1,5 +1,4 @@
 ﻿using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
-
-namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
+﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
 	//public class DelegateParallelHybridStrategy : IHybridControlStrategy
 	//{

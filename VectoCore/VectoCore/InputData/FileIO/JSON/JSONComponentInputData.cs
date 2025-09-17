@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -43,7 +42,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON

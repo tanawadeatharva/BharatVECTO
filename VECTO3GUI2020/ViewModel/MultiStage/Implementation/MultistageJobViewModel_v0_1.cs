@@ -24,7 +24,6 @@ using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;

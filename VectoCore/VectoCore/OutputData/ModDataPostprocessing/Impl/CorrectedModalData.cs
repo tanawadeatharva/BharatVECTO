@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {

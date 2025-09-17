@@ -8,7 +8,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;

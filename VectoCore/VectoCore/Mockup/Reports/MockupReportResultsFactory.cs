@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;

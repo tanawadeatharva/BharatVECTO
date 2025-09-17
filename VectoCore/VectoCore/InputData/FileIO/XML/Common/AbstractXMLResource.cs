@@ -33,7 +33,6 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
-using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	public abstract class AbstractXMLResource : AbstractXMLType, IXMLResource

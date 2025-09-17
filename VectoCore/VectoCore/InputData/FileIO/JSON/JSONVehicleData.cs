@@ -35,7 +35,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -46,7 +45,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {

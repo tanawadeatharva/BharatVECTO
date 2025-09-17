@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TUGraz.VectoCommon.Exceptions;

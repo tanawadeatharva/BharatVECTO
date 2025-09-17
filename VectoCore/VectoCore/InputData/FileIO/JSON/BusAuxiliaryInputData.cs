@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -7,9 +6,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;

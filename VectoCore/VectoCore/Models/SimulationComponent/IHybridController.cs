@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 

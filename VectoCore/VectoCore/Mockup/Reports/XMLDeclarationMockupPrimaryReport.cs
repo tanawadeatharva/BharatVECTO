@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Simulation.Data;
+﻿using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 

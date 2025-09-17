@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration

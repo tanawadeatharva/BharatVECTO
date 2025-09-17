@@ -6,7 +6,6 @@ using Ninject;
 using TUGraz.VectoCore;
 using VECTO3GUI2020.Ninject;
 using VECTO3GUI2020.Ninject.Factories;
-using VECTO3GUI2020.Ninject.Vehicle;
 using VECTO3GUI2020.Properties;
 using Application = System.Windows.Application;
 

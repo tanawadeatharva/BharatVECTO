@@ -2,18 +2,14 @@
 
 //#define singlethreaded
 
-using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 

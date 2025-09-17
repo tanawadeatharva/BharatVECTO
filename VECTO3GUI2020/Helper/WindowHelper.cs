@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using Binding = System.Windows.Data.Binding;

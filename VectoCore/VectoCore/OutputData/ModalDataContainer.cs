@@ -35,7 +35,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Xml;
 using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -49,7 +48,6 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData

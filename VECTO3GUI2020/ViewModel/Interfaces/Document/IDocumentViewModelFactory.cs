@@ -1,6 +1,4 @@
 ﻿using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Utils;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.ViewModel.Interfaces.Document
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;

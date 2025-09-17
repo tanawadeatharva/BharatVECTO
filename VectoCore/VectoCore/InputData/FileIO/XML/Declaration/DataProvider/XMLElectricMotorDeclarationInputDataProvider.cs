@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -12,7 +10,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.OutputData.XML;

@@ -34,17 +34,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter;
 using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl

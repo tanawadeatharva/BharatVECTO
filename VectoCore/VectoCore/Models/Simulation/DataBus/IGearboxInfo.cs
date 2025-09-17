@@ -34,7 +34,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {

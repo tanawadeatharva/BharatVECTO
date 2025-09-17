@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Moq;
-using NLog.LayoutRenderers;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 

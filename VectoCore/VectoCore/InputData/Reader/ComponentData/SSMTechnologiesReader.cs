@@ -2,10 +2,8 @@
 using System.Data;
 using System.IO;
 using System.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 

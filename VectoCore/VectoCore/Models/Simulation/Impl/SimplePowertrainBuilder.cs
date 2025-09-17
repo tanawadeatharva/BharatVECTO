@@ -5,21 +5,13 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
-using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {

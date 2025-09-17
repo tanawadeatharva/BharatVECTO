@@ -1,9 +1,7 @@
-﻿using System;
-using TUGraz.VectoCommon.Exceptions;
+﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 {

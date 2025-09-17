@@ -2,7 +2,6 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.Ninject.Factories;
-using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 
 namespace VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components
 {

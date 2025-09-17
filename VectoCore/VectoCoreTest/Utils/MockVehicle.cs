@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Reflection.Metadata.Ecma335;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;

@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;

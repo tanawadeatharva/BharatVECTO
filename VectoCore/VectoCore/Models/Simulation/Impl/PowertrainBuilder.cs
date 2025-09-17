@@ -31,15 +31,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -49,10 +46,6 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 

@@ -4,7 +4,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData

@@ -1,12 +1,6 @@
-﻿using System.Linq;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Resources;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
 

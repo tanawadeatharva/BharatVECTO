@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-using VECTOStart;
+﻿using VECTOStart;
 
 namespace TUGraz.VECTO
 {

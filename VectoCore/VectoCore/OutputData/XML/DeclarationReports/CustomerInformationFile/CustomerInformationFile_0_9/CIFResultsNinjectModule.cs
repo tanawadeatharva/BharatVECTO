@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Xml.Linq;
 using Ninject.Activation;
 using Ninject.Extensions.Factory;

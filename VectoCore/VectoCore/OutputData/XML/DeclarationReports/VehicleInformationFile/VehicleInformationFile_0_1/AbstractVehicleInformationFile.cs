@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
@@ -11,7 +8,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;

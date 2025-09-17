@@ -1,17 +1,12 @@
 ﻿using System.Xml.Linq;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;

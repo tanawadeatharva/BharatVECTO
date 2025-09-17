@@ -12,10 +12,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 

@@ -36,7 +36,6 @@ using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 

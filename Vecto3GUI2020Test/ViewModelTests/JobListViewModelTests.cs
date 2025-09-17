@@ -1,19 +1,15 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel.__Internals;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.ViewModel;
 using VECTO3GUI2020.ViewModel.Implementation;
 using VECTO3GUI2020.ViewModel.Implementation.Document;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using Vecto3GUI2020Test.BugReports;
 using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.ViewModelTests

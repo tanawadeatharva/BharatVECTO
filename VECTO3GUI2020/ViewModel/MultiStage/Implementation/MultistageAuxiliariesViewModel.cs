@@ -15,7 +15,6 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 

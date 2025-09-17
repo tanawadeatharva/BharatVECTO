@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
-using EnvironmentVariableTarget = System.EnvironmentVariableTarget;
 
 namespace VECTO3GUI2020.Util.XML.Components
 {

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;

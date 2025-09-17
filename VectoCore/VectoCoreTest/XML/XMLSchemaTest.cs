@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
+﻿using System.Xml.Schema;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML

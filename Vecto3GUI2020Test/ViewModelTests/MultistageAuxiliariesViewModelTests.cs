@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject;
+﻿using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;

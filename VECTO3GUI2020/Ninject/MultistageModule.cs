@@ -1,11 +1,8 @@
 ﻿using Ninject.Extensions.Factory;
 using Ninject.Modules;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using VECTO3GUI2020.Model.Multistage;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
-using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 

@@ -32,14 +32,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
 using System.Xml.XPath;
 using Ninject;
-using System.Xml.Xsl;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
