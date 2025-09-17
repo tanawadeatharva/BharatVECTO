@@ -1074,7 +1074,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							break;
                         case ResponseOverload _:
                             // for cases with IEPC while first is overspeed, second ist overload due to brake + downshift, third is coast with overload
-                            if (DataBus.GearboxInfo.GearboxType is GearboxType.APTN && absTime.IsEqual(DataBus.GearboxInfo.LastDownshift)) {
+							// also for case with xEV having to accelerate before stop due to positive gradient
+                            if (DataBus.GearboxInfo.GearboxType is GearboxType.APTN) {
                                 third = Driver.DrivingActionAccelerate(absTime, ds, velocityWithOverspeed, gradient);
                                 debug.Add("[DMD.HRE-12] third:Overload (APTN,IEPC) -> Accelerate", third);
                             }
