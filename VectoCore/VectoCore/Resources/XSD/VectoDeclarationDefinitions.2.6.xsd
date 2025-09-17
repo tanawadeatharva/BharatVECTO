@@ -6,6 +6,12 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3" schemaLocation="VectoDeclarationDefinitions.2.3.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4" schemaLocation="VectoDeclarationDefinitions.2.4.xsd"/>
+
+	<!-- 
+	Changelog
+	17-09-2025: DeltaCdxA_declared and DeltaTransferredCdxA can have zero as their value.
+	-->
+	
 	<xs:complexType name="WHRTypeType">
 		<xs:sequence>
 			<xs:element name="MechanicalOutputICE" type="xs:boolean">
@@ -494,7 +500,7 @@
 							</xs:annotation>
 						</xs:element>
 					</xs:sequence>
-					<xs:element name="DeltaCdxA_declared" type="v1.0:AirdragCdxAType">
+					<xs:element name="DeltaCdxA_declared" type="v2.6:AirdragCdxAType">
 						<xs:annotation>
 							<xs:documentation>P563 - [m²]</xs:documentation>
 						</xs:annotation>
@@ -512,7 +518,7 @@
 								</xs:simpleType>
 								<xs:simpleType>
 									<xs:restriction base="v1.0:Double2">
-										<xs:minExclusive value="0.00"/>
+										<xs:minInclusive value="0.00"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:union>
@@ -522,6 +528,23 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="AirdragCdxAType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Airdrag">245</vectoParam:parameterId>
+					<vectoParam:parameterId component="Airdrag">246</vectoParam:parameterId>
+					<vectoParam:parameterId component="Airdrag">146</vectoParam:parameterId>
+					<vectoParam:comment>In Declaration Mode a fixed amound is added for cycles simulated with trailer</vectoParam:comment>
+					<vectoParam:unit>m²</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P146, 147 - [m²]  Drag Coefficient * Cross Sectional Area</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="v1.0:Double2">
+			<xs:minInclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:group name="IEPCCommonParametersSequenceGroup">
 		<xs:sequence>
 			<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
