@@ -43,6 +43,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+	<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	<PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
 	<PackageReference Include="NLog" Version="4.7.13" />
@@ -61,7 +62,6 @@
 		<ProjectReference Include="..\HashingTool\HashingTool.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Reference Include="Microsoft.VisualBasic" />
 		<Import Include="System" />
 		<Import Include="System.Collections" />
 		<Import Include="System.Data" />
