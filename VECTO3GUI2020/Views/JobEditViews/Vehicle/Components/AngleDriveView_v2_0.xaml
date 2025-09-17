@@ -10,7 +10,6 @@
     <Grid>
         <DockPanel>
             <ContentControl Content="{Binding CommonComponentViewModel}" DockPanel.Dock="Top"/>
-            <customControls:ScatterPlot MyDataTable="{Binding LossMap}"></customControls:ScatterPlot> 
         </DockPanel>
     </Grid>
 </UserControl>

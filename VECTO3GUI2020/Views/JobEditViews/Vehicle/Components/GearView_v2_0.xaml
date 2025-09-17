@@ -57,7 +57,6 @@
                 ElementName=btn_toggletableview,
                 Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20">
 
-                <custom:ScatterPlot DockPanel.Dock="Top" MyDataTable="{Binding LossMap}" Height="300"></custom:ScatterPlot>
                 <DataGrid ItemsSource="{Binding LossMapDataView}" 
                           DockPanel.Dock="Top" 
                           Width="Auto"  
