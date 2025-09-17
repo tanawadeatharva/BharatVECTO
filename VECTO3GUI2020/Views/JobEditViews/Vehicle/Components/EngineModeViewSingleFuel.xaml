@@ -25,7 +25,6 @@
             </StackPanel>
         <!--Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Grid}}, Mode=OneWay}"-->
 
-        <custom:ScatterPlot Height="300" MyDataTable="{Binding FullLoadDT}"></custom:ScatterPlot>
             <StackPanel>
                 <Separator/>
                 <ItemsControl ItemsSource="{Binding FuelViewModels}" Name="Fuels" AlternationCount="2">

@@ -187,9 +187,6 @@
         <componentviews:EngineModeViewSingleFuel/>
     </DataTemplate>
 
-    <DataTemplate x:Shared="False"  DataType="{x:Type componentimpl:EngineFuelViewModel}">
-        <componentviews:EngineFuelView/>
-    </DataTemplate>
     <!--#endregion-->
     
     <DataTemplate x:Shared="False" DataType="{x:Type componentimpl:AirDragViewModel_v2_4}">
