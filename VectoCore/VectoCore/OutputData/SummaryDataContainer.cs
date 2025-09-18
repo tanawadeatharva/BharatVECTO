@@ -862,9 +862,9 @@ namespace TUGraz.VectoCore.OutputData
 
 			cols.AddRange(RetarderCols);
 
-			cols.AddRange(AngledriveCols);
+			cols.AddRange(AngledriveCols.Where(c => !c.StartsWith("Average")));
 
-			cols.AddRange(AxlegearCols);
+			cols.AddRange(AxlegearCols.Where(c => !c.StartsWith("Average")));
 
 			cols.AddRange(new[] {
 				SumDataFields.E_WHEELEND_SAVED,
@@ -924,12 +924,23 @@ namespace TUGraz.VectoCore.OutputData
 				SumDataFields.RETARDER_CERTIFICATION_NUMBER, 
 				SumDataFields.ANGLEDRIVE_CERTIFICATION_METHOD, 
 				SumDataFields.ANGLEDRIVE_CERTIFICATION_NUMBER,
-				SumDataFields.AXLEGEAR_CERTIFICATION_METHOD, 
-				SumDataFields.AXLEGEAR_CERTIFICATION_NUMBER, 
-				SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
-				SumDataFields.AIRDRAG_CERTIFICATION_METHOD, 
 			});
-			cols.AddRange(GearColumns);
+
+            cols.AddRange(AngledriveCols.Where(c => c.StartsWith("Average")).ToArray());
+
+			cols.AddRange(new[] {
+				SumDataFields.AXLEGEAR_CERTIFICATION_METHOD,
+                SumDataFields.AXLEGEAR_CERTIFICATION_NUMBER,
+            });
+
+            cols.AddRange(AxlegearCols.Where(c => c.StartsWith("Average")).ToArray());
+
+            cols.AddRange(new[] {
+                SumDataFields.AIRDRAG_CERTIFICATION_NUMBER,
+                SumDataFields.AIRDRAG_CERTIFICATION_METHOD,
+            });
+
+            cols.AddRange(GearColumns);
 
 			return cols.Where(x => Table.Columns.Contains(x)).ToArray();
 		}
