@@ -115,7 +115,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public NewtonMeter WheelEndFriction { get; internal set; }
 
-		public double AxleWeightShare { get; internal set; }
+		public string WheelEndCertificationNumber { get; internal set; }
+
+        public double AxleWeightShare { get; internal set; }
 
 		public DataSource DataSource { get; internal set; }
 	}
