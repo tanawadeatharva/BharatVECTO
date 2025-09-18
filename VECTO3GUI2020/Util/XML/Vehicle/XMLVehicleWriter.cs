@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.RightsManagement;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -10,21 +7,13 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.ComponentWriter;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
 using TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration;
 using TUGraz.VectoCore.Utils;
-using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.Util.XML;
-using VECTO3GUI2020.Util.XML.Vehicle;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Util.XML.Vehicle
 {

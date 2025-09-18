@@ -2,13 +2,11 @@
 using System;
 using System.IO;
 using System.Linq;
-using Ninject;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {

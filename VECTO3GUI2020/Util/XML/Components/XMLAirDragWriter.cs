@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 
 namespace VECTO3GUI2020.Util.XML.Components
 {

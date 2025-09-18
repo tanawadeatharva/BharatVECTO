@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 
 namespace VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle

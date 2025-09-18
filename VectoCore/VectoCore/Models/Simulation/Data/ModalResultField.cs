@@ -32,11 +32,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {

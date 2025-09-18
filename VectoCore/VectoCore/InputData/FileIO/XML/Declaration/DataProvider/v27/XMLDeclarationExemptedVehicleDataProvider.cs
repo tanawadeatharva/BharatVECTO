@@ -3,11 +3,9 @@ using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 {

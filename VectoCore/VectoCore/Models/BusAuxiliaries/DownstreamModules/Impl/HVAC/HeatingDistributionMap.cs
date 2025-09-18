@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {

@@ -31,7 +31,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models

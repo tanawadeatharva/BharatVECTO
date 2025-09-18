@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-#if(MOCKUP)
+#if (MOCKUP)
 using System.IO;
 using System.Reflection;
 #endif
@@ -47,7 +47,6 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
 
 using TUGraz.VectoCore.OutputData.XML.GroupWriter;
-using TUGraz.VectoMockup.Ninject;
 
 namespace TUGraz.VectoCore
 {

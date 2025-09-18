@@ -31,7 +31,6 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;

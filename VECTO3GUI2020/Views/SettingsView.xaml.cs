@@ -1,8 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.ViewModel.Implementation;
-using VECTO3GUI2020.ViewModel.Interfaces;
+﻿using System.Windows.Controls;
 
 namespace VECTO3GUI2020.Views
 {

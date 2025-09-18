@@ -6,7 +6,6 @@ using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Utils.Ninject;
-using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.Resources.XML;
 using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.Util.XML.Components;

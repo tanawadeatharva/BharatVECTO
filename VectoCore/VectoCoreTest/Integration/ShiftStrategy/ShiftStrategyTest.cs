@@ -32,20 +32,11 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
-using System.Collections.Generic;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 {

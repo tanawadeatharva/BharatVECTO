@@ -1,6 +1,4 @@
-﻿using System;
-using Ninject.Planning.Bindings.Resolvers;
-using TUGraz.VectoCommon.BusAuxiliaries;
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models {

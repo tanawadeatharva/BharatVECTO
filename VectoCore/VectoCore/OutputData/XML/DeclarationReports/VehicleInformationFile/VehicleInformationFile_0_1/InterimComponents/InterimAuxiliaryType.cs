@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using NLog.LayoutRenderers;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;

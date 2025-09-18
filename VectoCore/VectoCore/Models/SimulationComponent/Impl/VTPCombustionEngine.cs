@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.ComponentModel;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -44,7 +43,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
-using static TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.FuelConsumptionMap;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {

@@ -51,9 +51,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent

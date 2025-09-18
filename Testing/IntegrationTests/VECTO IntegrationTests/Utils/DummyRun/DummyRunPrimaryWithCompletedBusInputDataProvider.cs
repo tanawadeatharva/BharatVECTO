@@ -1,5 +1,4 @@
 ﻿using System.Xml;
-using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 

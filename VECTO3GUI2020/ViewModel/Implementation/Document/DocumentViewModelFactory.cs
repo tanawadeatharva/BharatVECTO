@@ -1,11 +1,6 @@
 ﻿using System;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using VECTO3GUI2020.Views.Multistage;
 
 namespace VECTO3GUI2020.ViewModel.Implementation.Document
 {

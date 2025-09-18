@@ -1,5 +1,4 @@
 ﻿using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 
 namespace VECTO3GUI2020.Model.Interfaces
