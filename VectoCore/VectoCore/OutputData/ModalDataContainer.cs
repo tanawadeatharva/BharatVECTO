@@ -769,27 +769,6 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			// axlegears
-			foreach (var axlegear in Data.Axlegears)
-			{
-				var cols = ModalResults.AxlegearSignals;
-				dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, axlegear.FormatAxleNumber())));
-			}
-
-			// retarders
-			foreach (var retarder in Data.Retarders)
-			{
-				var cols = ModalResults.RetarderSignals;
-				dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, retarder.FormatAxleNumber())));
-			}
-
-			// angledrives
-			foreach (var angledrive in Data.Angledrives)
-			{
-				var cols = ModalResults.AngledriveSignals;
-				dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, angledrive.FormatAxleNumber())));
-			}		
-					
 			dataColumns.AddRange(
 				new[] {
 					// TC
@@ -812,8 +791,32 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.n_gbx_out_avg,
 
 					ModalResultField.T_gbx_in,
-					ModalResultField.T_gbx_out,
+					ModalResultField.T_gbx_out
+				}.Select(x => x.GetName()));
 
+            // retarders
+            foreach (var retarder in Data.Retarders)
+			{
+				var cols = ModalResults.RetarderSignals;
+				dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, retarder.FormatAxleNumber())));
+			}
+
+			// angledrives
+			foreach (var angledrive in Data.Angledrives)
+			{
+				var cols = ModalResults.AngledriveSignals;
+				dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, angledrive.FormatAxleNumber())));
+			}
+
+            // axlegears
+            foreach (var axlegear in Data.Axlegears)
+            {
+                var cols = ModalResults.AxlegearSignals;
+                dataColumns.AddRange(cols.Select(c => string.Format(c.GetAttribute().Caption, axlegear.FormatAxleNumber())));
+            }
+
+            dataColumns.AddRange(
+                new[] {
 					// wheelEnd
 					ModalResultField.P_wheelEnd_in,
 					ModalResultField.P_wheelEnd_saving,
