@@ -164,7 +164,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public CertificationMethod CertificationMethod { get; private set; }
 		public string CertificationNumber { get; private set; }
 		public DigestData DigestValue { get; private set; }
-		public string SimulationToolLicenseNumber { get; private set; }
         public Kilogram H2StorageUsableCapacity { get; private set; }
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; private set; }
 		public bool BatteryOnlyMode { get; private set; }
@@ -192,6 +191,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool ExemptedVehicle => false;
 
 		public string VIN => VehicleData.VIN;
+
+		public string SimulationToolLicenseNumber => VehicleData.SimulationToolLicenseNumber;
 
 		public LegislativeClass? LegislativeClass => VehicleData.LegislativeClass;
 

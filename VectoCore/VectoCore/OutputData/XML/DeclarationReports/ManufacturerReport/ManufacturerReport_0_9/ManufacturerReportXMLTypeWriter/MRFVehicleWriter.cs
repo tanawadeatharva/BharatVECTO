@@ -698,7 +698,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
                 throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
             }
 
-            return new XElement(_mrf + XMLNames.Component_Vehicle,
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
                 _mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
                 _mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
                 new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
@@ -746,7 +746,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					consolidatedVehicleData.NumberPassengersStandingLowerDeck),
 				new XElement(_mrf + XMLNames.Vehicle_BodyworkCode, consolidatedVehicleData.VehicleCode.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry),
-                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.PrimaryVehicle.Vehicle.SimulationToolLicenseNumber ?? "N/A")
+                new XElement(_mrf + "SimulationToolLicenseNumber", consolidatedVehicleData.SimulationToolLicenseNumber ?? "N/A")
                 );
 			//result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			return result;

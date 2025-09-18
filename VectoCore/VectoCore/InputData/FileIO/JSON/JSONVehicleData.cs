@@ -545,6 +545,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string VIN => Constants.NOT_AVAILABLE;
 
+		public string VerificationToolLicenseNumber => Constants.NOT_AVAILABLE;
+
 		public virtual LegislativeClass? LegislativeClass =>
 			Body["LegislativeClass"]?.Value<string>().ParseEnum<LegislativeClass>() ?? VectoCommon.Models.LegislativeClass.Unknown;
 
@@ -884,7 +886,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual DynamicChargingTechnology DynamicChargingTechnology => (Body["DynamicChargingTechnology"] != null)
 			? DynamicChargingTechnologyHelper.Parse(Body.GetEx<string>("DynamicChargingTechnology"))
 			: DynamicChargingTechnology.None;
-    }
+	}
 
 
 

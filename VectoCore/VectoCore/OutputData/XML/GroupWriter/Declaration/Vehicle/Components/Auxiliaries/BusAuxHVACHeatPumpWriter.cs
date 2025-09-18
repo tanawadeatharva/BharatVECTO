@@ -7,9 +7,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries
 {
-    class BusAuxHVACHeatPumpWriter_v2_4 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
+    class BusAuxHVACHeatPumpWriter : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
     {
-		public BusAuxHVACHeatPumpWriter_v2_4(XNamespace writerNamespace) : base(writerNamespace) { }
+		public BusAuxHVACHeatPumpWriter(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationGroupWriter
 

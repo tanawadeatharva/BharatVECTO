@@ -538,11 +538,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public DateTime Date => _manufacturingStages?.First().Vehicle.Date ?? DateTime.MinValue;
 
 		public string VIN => _manufacturingStages?.First().Vehicle.VIN;
+		
+		public string SimulationToolLicenseNumber => _manufacturingStages?.First().Vehicle.SimulationToolLicenseNumber;
 
 		public VehicleDeclarationType VehicleDeclarationType => _manufacturingStages?.First().Vehicle.VehicleDeclarationType ?? default(VehicleDeclarationType);
 
-
 		public IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits => throw new NotImplementedException();
+		
 		public TableData BoostingLimitations => throw new NotImplementedException();
 
 		#endregion
@@ -623,7 +625,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
 		public string Identifier { get; }
-		public string SimulationToolLicenseNumber { get; }
         public string VehicleMonitoringData { get; }
 
         public bool ExemptedVehicle
@@ -687,20 +688,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
         #endregion
 
+		public CubicMeter CargoVolume { get; }
 
-
-
-
-
-
-
-        public CubicMeter CargoVolume { get; }
 		public bool Articulated { get; }
 
 		public XmlNode XMLSource { get; }
-
-
-
 
 		#endregion
 

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var inputData = modelData.InputData as IMultistepBusInputDataProvider;
 			Input = inputData.JobInputData.PrimaryVehicle.Vehicle;
 			if (inputData == null) {
-				throw new VectoException("CompletedBus ManrufacturersRecordFile requires MultistepBusInputData");
+				throw new VectoException("CompletedBus ManufacturersRecordFile requires MultistepBusInputData");
 			}
 			Results = _resultFactory.GetMRFResultsWriter(modelData.InputData, modelData.VehicleData.VehicleCategory.GetVehicleType(),
 				modelData.JobType, modelData.VehicleData.OffVehicleCharging, modelData.Exempted);

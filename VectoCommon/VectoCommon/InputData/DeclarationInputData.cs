@@ -102,7 +102,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool ExemptedVehicle { get; }
 
 		string VIN { get; }
-
+		
 		LegislativeClass? LegislativeClass { get; }
 
 		/// <summary>

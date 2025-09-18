@@ -151,14 +151,16 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		public void SaveInputDataExecute(string filename)
 		{
 			var dialogHelper = _multistageDependencies.DialogHelper;
-			if (VehicleViewModel.HasErrors) {
+			if (VehicleViewModel.HasErrors)
+			{
 				var errorMessage = "Vehicle:\n";
 				var vehicleErrorInfo = VehicleViewModel as IDataErrorInfo;
 				errorMessage += vehicleErrorInfo.Error.Replace(",", "\n");
 
 
 				if (VehicleViewModel.MultistageAuxiliariesViewModel is IDataErrorInfo auxiliariesErrorInfo &&
-					!string.IsNullOrEmpty(auxiliariesErrorInfo.Error)) {
+					!string.IsNullOrEmpty(auxiliariesErrorInfo.Error))
+				{
 					errorMessage += "\nAuxiliaries:\n";
 					errorMessage += auxiliariesErrorInfo.Error.Replace(",", "\n");
 				}
@@ -182,41 +184,48 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
 			var xElement = vehicleWriter.GetElement();
-			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V24);
-			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V24).ToString());
+			var xDoc = xElement.CreateWrapperDocument(XMLNamespaces.V27);
+			Debug.WriteLine(xElement.CreateWrapperDocument(XMLNamespaces.V27).ToString());
 
 
 			var valid = false;
 			var validationError = "";
-			try {
+			try
+			{
 				var validator = new XMLValidator(xDoc.ToXmlDocument());
 				valid = validator.ValidateXML(XmlDocumentType.DeclarationJobData);
 				validationError = validator.ValidationError;
-			} catch (Exception e) {
+			} 
+			catch (Exception e)
+			{
 				dialogHelper.ShowMessageBox(messageBoxText: (e.Message + "\n" + e.InnerException),
 					caption: "Error saving File");
 			}
 
-			if (!valid) {
+			if (!valid)
+			{
 				dialogHelper.ShowMessageBox($"Invalid Document: {validationError}", "Error");
 				var tempFile = Path.GetTempFileName();
-				try {
+				try
+				{
 					xDoc.Save(tempFile, SaveOptions.OmitDuplicateNamespaces);
 					LoadStageInputData(tempFile);
 
-				} catch (Exception e) {
+				} catch (Exception e)
+				{
 					dialogHelper.ShowMessageBox(e.Message, "Error");
 					throw;
-				} finally {
-					if (File.Exists(tempFile)) {
+				} finally
+				{
+					if (File.Exists(tempFile))
+					{
 						File.Delete(tempFile);
 					}
-
-					;
 				}
 
 
-			} else {
+			} else
+			{
 				xDoc.Save(filename, SaveOptions.OmitDuplicateNamespaces);
 				LoadStageInputData(filename);
 			}

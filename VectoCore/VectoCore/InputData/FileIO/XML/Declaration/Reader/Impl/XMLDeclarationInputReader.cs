@@ -95,7 +95,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	// todo amogoda: correct v2.7? - assumption: yes
 	public class XMLDeclarationInputReaderV27 : XMLDeclarationInputReaderV10
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;

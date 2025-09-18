@@ -6379,6 +6379,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SimulationToolLicenseNumber.
+        /// </summary>
+        public static string Vehicle_SimulationToolLicenseNumber {
+            get {
+                return ResourceManager.GetString("Vehicle_SimulationToolLicenseNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SleeperCab.
         /// </summary>
         public static string Vehicle_SleeperCab {

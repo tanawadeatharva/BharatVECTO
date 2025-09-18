@@ -21,7 +21,9 @@ namespace VECTO3GUI2020.Util.XML.Components
 		protected readonly IGroupWriterFactory _groupWriterFactory;
 
 		protected abstract string AuxType { get; }
-		protected XNamespace DefaultNamespace => XMLNamespaces.V24;
+
+		// todo amogoda: delete virtual property
+		protected virtual XNamespace DefaultNamespace => XMLNamespaces.V27;
 
 		protected XMLCompletedBusAuxiliariesWriter(IGroupWriterFactory groupWriterFactory)
 		{
@@ -83,7 +85,7 @@ namespace VECTO3GUI2020.Util.XML.Components
         {
 
             var dataElement = new XElement(DefaultNamespace + XMLNames.ComponentDataWrapper,
-                new XAttribute("xmlns", XMLNamespaces.V24),
+                new XAttribute("xmlns", XMLNamespaces.V27),
                 new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, AuxType));
 
             if (_inputData.ElectricConsumers != null)
@@ -151,7 +153,7 @@ namespace VECTO3GUI2020.Util.XML.Components
 		{
 
 			var dataElement = new XElement(DefaultNamespace + XMLNames.ComponentDataWrapper,
-				new XAttribute("xmlns", XMLNamespaces.V24),
+				new XAttribute("xmlns", XMLNamespaces.V27),
 				new XAttribute(XMLNamespaces.Xsi + XMLNames.Attr_Type, AuxType));
 
 			if (_inputData.ElectricConsumers != null)
@@ -178,9 +180,6 @@ namespace VECTO3GUI2020.Util.XML.Components
 			}
 
 			_xElement.Add(dataElement);
-
 		}
-
-
 	}
 }

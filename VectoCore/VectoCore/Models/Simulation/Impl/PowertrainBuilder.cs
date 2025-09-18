@@ -141,8 +141,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			
         }
 
-		// todo amogoda: m9. understand how declaration fc and engineering fc work together. should fc engineering be deprecated.
-		// todo amogoda: m9. implement IFuelCellPort.
 		private IVehicleContainer BuildFullPowertrainFCHV_IEPC(VectoRunData data, IModalDataContainer modData, ISumData sumWriter)
 		{
 			var container = BuildFullPowertrainIEPCE(data, modData, sumWriter);
