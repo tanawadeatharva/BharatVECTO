@@ -70,7 +70,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual NewtonMeter WheelEndFriction => null;
 
-		public bool Steered =>
+		public virtual string WheelEndCertificationNumber => null;
+
+        public bool Steered =>
 			_steered ?? (_steered = XmlConvert.ToBoolean(GetString(XMLNames.AxleWheels_Axles_Axle_Steered))).Value;
 
 		#endregion
@@ -130,7 +132,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override NewtonMeter WheelEndFriction => 
 			GetNode(XMLNames.AxleWheels_Axles_Axle_Friction, BaseNode, false)?.InnerText.ToDouble().SI<NewtonMeter>();
 
-		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+        public override string WheelEndCertificationNumber => GetNode("WheelEnd/CertificationNumber".Split('/'), BaseNode, false)?.InnerText;
+
+        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 	}
 
 }
