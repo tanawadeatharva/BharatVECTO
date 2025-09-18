@@ -1108,7 +1108,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			foreach (var retarder in runData.GetRetarderData())
 			{
-				if (retarder.Item2.Type == RetarderType.None)
+				if (!retarder.Item2.Type.IsDedicatedComponent())
 				{
 					continue;
 				}
