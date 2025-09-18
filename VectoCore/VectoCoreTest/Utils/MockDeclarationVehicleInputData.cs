@@ -217,6 +217,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
 
 		IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering { get; }
+
 
 		#endregion
 	}

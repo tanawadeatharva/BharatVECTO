@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -11,17 +13,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 
 	public class SimplePowertrainContainer : VehicleContainer, IDriverInfo, ISimpleVehicleContainer
-    {
-		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder) : base(runData, null, null, ptBuilder)
+	{
+		public SimplePowertrainContainer(VectoRunData runData, ISimplePowertrainBuilder ptBuilder, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : base(runData, null, null, ptBuilder)
 		{
 			RunData = runData;
+			AxleNumber = axleNumber;
 		}
 
 		//public IDriverDemandOutPort VehiclePort => (VehicleInfo as Vehicle)?.OutPort();
+		public int AxleNumber { get; private set; }
 
-		public ITnOutPort GearboxOutPort => (GearboxInfo as IGearbox)?.OutPort();
+		public ITnOutPort GearboxOutPort => (GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber) as IGearbox)?.OutPort();
 
-		public IGearbox GearboxCtlTest => GearboxInfo as IGearbox;
+		public IGearbox GearboxCtlTest => GearboxesInfo.First(x => x.AxleNumber == AxleNumber) as IGearbox;
 
 		public override Second AbsTime => 0.SI<Second>();
 
@@ -42,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		#endregion
 
-		public Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors => base.ElectricMotors;
+		public Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors => base.EMs.ToDictionary(x => x.Position, x => x);
 
 		public void UpdateComponents(IDataBus realContainer) => UpdateComponentsInternal(realContainer);
 	}

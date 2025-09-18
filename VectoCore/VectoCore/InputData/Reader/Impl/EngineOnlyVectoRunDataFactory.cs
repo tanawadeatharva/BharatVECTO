@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		public const string Name = "EngineOnlyRunDataFactory";
 
 
-        internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder, IEngineeringDataAdapter dataAdapter) : base(dataProvider, ptBuilder, dataAdapter) {}
+        internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder, IEngineeringDataAdapter dataAdapter) : base(dataProvider, dataAdapter) {}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{

@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
-			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, PowertrainBuilder, DataAdapter);
+			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, DataAdapter);
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);

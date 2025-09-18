@@ -40,6 +40,8 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
+using System.Linq;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -58,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 		public BusAuxiliariesAdapter(
-			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null) : base(container)
+			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(container, axleNumber)
 		{
 			//container.AddComponent(this);
 
@@ -336,9 +339,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.ResetCalculations();
 
 			var signals = Auxiliaries.Signals;
+			var gearbox = DataBus.GearboxInfo(AxleNumber);
+			var clutch = DataBus.ClutchInfo(AxleNumber);
 
 			signals.SimulationInterval = dt;
-			signals.ClutchEngaged = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime);
+			signals.ClutchEngaged = clutch.ClutchClosed(absTime) && gearbox.GearEngaged(absTime);
 			signals.EngineDrivelineTorque = torquePowerTrain;
 			
 			signals.EngineSpeed = angularSpeed;
@@ -356,8 +361,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!dryRun && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake && torquePowerTrain.IsGreater(0) &&
-				DataBus.GearboxInfo.Gear.TorqueConverterLocked.HasValue &&
-				!DataBus.GearboxInfo.Gear.TorqueConverterLocked.Value) {
+				gearbox.Gear.TorqueConverterLocked.HasValue &&
+				!gearbox.Gear.TorqueConverterLocked.Value) {
 				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
 			}
 			if (!dryRun && DataBus.DriverInfo.DrivingAction != DrivingAction.Brake) {
@@ -367,7 +372,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			
 			signals.ExcessiveDragPower = CurrentState.ExcessiveDragPower;
 			signals.Idle = DataBus.VehicleInfo.VehicleStopped;
-			signals.InNeutral = DataBus.GearboxInfo.Gear.Gear == 0 || !DataBus.EngineCtl.CombustionEngineOn;
+			signals.InNeutral = gearbox.Gear.Gear == 0 || !DataBus.EngineCtl.CombustionEngineOn;
 
 
 

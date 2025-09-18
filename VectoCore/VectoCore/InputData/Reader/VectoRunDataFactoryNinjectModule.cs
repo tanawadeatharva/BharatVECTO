@@ -123,7 +123,43 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV_IEPC,
 				ArchitectureID.F_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_P1>().Named(
+			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E2));
+            
+			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P1));
 
@@ -201,7 +237,43 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV_IEPC,
 					ArchitectureID.F_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P1>().Named(
+			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P1));
 

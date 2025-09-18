@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag, bool dummy) : base(container)
+		protected Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag, bool dummy) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			ModelData = modelData;
 			AirdragData = airdrag;
@@ -104,48 +104,90 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual void SetMaxVehicleSpeed()
 		{
-			if (DataBus.PowertrainInfo.VehicleArchitecutre != VectoSimulationJobType.SerialHybridVehicle && DataBus.PowertrainInfo.HasCombustionEngine) {
-				if (DataBus.GearboxInfo == null || DataBus.AxlegearInfo == null) {
+			if (!DataBus.PowertrainInfo.VehicleArchitecutre.IsOneOf(
+					VectoSimulationJobType.SerialHybridVehicle, 
+					VectoSimulationJobType.Multiple_FCHV,
+					VectoSimulationJobType.Multiple_PEV,
+					VectoSimulationJobType.Multiple_SHEV) 
+				&& DataBus.PowertrainInfo.HasCombustionEngine) 
+			{
+				if (DataBus.GearboxInfo() == null || 
+					DataBus.AxlegearInfo() == null) 
+				{	
 					throw new VectoException("Powertrain with combustion engine requires gearbox and axlegear!");
 					//return;
 				}
 
+				var gearbox = DataBus.GearboxInfo();
+
 				var maxDrivetrainSpeed = VectoMath.Min(
 					DataBus.EngineInfo.EngineN95hSpeed, 
-					DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).MaxSpeed);
+					gearbox.GetGearData(gearbox.NumGears).MaxSpeed);
 
 				MaxVehicleSpeed = maxDrivetrainSpeed /
-					DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio /
-					DataBus.AxlegearInfo.Ratio /
-					(DataBus.AngledriveInfo?.Ratio ?? 1.0) * 
+					gearbox.GetGearData(gearbox.NumGears).Ratio /
+					DataBus.AxlegearInfo().Ratio /
+					(DataBus.AngledriveInfo()?.Ratio ?? 1.0) * 
 					DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
 			}
 
-			
-			if (DataBus.PowertrainInfo.HasElectricMotor) {
-				var positions = DataBus.PowertrainInfo.ElectricMotorPositions.Where(x => x != PowertrainPosition.GEN).ToArray();
-				;
-				if (positions.Length > 1) {
-					throw new VectoException("Multiple electrical machines are currently not supported");
-				}
+			if (DataBus.PowertrainInfo.VehicleArchitecutre.IsMultiplePowertrains())
+			{
+				var ems = DataBus.ElectricMotorsInfo.Where(x => x.Position != PowertrainPosition.GEN);
 
-				var pos = positions.First();
+				MaxVehicleSpeed = ems.Select(em => 
+				{
+					var maxEMSpeed = em.MaxSpeedDt;
+					var ratio = 1.0;
+
+					if (em.Position == PowertrainPosition.BatteryElectricE3)
+					{
+						ratio = DataBus.AxlegearsInfo.First(x => x.AxleNumber == em.AxleNumber).Ratio;
+					}
+
+					if (em.Position == PowertrainPosition.BatteryElectricE2 || em.Position == PowertrainPosition.IEPC)
+					{
+						var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == em.AxleNumber);
+
+						ratio = gearbox.GetGearData(gearbox.NumGears).Ratio *
+								(DataBus.AxlegearsInfo.FirstOrDefault(x => x.AxleNumber == em.AxleNumber)?.Ratio ?? 1.0) *
+								(DataBus.AngledrivesInfo.FirstOrDefault(x => x.AxleNumber == em.AxleNumber)?.Ratio ?? 1.0);
+						
+						maxEMSpeed = VectoMath.Min(
+							em.MaxSpeedDt,
+							gearbox.GetGearData(gearbox.NumGears).MaxSpeed);
+					}
+
+					return maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
+				}).Min();
+
+				return;
+			}
+
+			if (DataBus.PowertrainInfo.HasElectricMotor) {
+				var ems = DataBus.ElectricMotorsInfo.Where(x => x.Position != PowertrainPosition.GEN).ToArray();
+
+				var em = ems.First();
+				var pos = em.Position;
+
 				if (pos.IsBatteryElectric()) {
-					var maxEMSpeed = DataBus.ElectricMotorInfo(pos).MaxSpeedDt;
+					var maxEMSpeed = em.MaxSpeedDt;
 
 					var ratio = 1.0;
 					if (pos == PowertrainPosition.BatteryElectricE3) {
-						ratio = DataBus.AxlegearInfo.Ratio;
+						ratio = DataBus.AxlegearsInfo.First().Ratio;
 					}
 
 					if (pos == PowertrainPosition.BatteryElectricE2 || pos == PowertrainPosition.IEPC) {
-						ratio = DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).Ratio *
-								(DataBus.AxlegearInfo?.Ratio ?? 1.0) *
-								(DataBus.AngledriveInfo?.Ratio ?? 1.0);
+						var gearbox = DataBus.GearboxesInfo.First();
+
+						ratio = gearbox.GetGearData(gearbox.NumGears).Ratio *
+								(DataBus.AxlegearsInfo.FirstOrDefault()?.Ratio ?? 1.0) *
+								(DataBus.AngledrivesInfo.FirstOrDefault()?.Ratio ?? 1.0);
 
 						maxEMSpeed = VectoMath.Min(
-							DataBus.ElectricMotorInfo(pos).MaxSpeedDt,
-							DataBus.GearboxInfo.GetGearData(DataBus.GearboxInfo.NumGears).MaxSpeed);
+							em.MaxSpeedDt,
+							gearbox.GetGearData(gearbox.NumGears).MaxSpeed);
 					}
 					MaxVehicleSpeed = maxEMSpeed / ratio * DataBus.WheelsInfo.DynamicTyreRadius * 0.995;
 				}

@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -242,7 +243,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 	public class DummyCycle : VectoSimulationComponent, IDrivingCycleInfo
 	{
-		public DummyCycle(IVehicleContainer container) :base(container)
+		public DummyCycle(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			
 		}

@@ -95,7 +95,19 @@ public class NullGearboxDataAdapter : IGearboxDataAdapter
 		return null;
 	}
 
-	#endregion
+    public GearboxData CreateGearboxData(VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalculator, IIEPCDeclarationInputData iepc)
+	{
+		return null;
+	}
+
+    public GearboxData CreateGearboxData(IVehicleDeclarationInputData vehicle, VectoRunData runData,
+            IShiftPolygonCalculator shiftPolygonCalculator, GearboxType[] supportedGearboxTypes, IGearboxDeclarationInputData gearbox,
+            ITorqueConverterDeclarationInputData torqueConverter)
+	{
+		return null;
+	}
+
+    #endregion
 }
 
 public class NullAxlegearDataAdapter : IAxleGearDataAdapter

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -6,13 +7,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	{
 		public static IList<IElectricMotorInfo> GetElectricMotors(this IDataBus db)
 		{
-			var result = new List<IElectricMotorInfo>();
-
-			foreach (var pos in db.PowertrainInfo.ElectricMotorPositions) {
-				result.Add(db.ElectricMotorInfo(pos));
-			}
-
-			return result;
+			return db.ElectricMotorsInfo;
 		}
 	}
 }

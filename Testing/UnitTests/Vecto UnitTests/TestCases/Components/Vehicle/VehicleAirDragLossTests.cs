@@ -4,6 +4,7 @@ using TUGraz.Vecto.UnitTests.Utils.MockComponents;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -113,13 +114,13 @@ public class VehicleAirDragLossTests
 		container.Setup(c => c.EngineInfo).Returns(eng.Object);
 		var axl = new Mock<IAxlegearInfo>();
 		axl.Setup(a => a.Ratio).Returns(1);
-		container.Setup(c => c.AxlegearInfo).Returns(axl.Object);
+		container.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axl.Object);
 		var whl = new Mock<IWheelsInfo>();
 		whl.Setup(w => w.DynamicTyreRadius).Returns(0.5.SI<Meter>());
 		container.Setup(c => c.WheelsInfo).Returns(whl.Object);
 		var gbx = new Mock<IGearboxInfo>();
 		gbx.Setup(g => g.GetGearData(It.IsAny<uint>())).Returns(new GearData() { Ratio = 1 });
-		container.Setup(c => c.GearboxInfo).Returns(gbx.Object);
+		container.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gbx.Object);
 
 		return container;
 	}

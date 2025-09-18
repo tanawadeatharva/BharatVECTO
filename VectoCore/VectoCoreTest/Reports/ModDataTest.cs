@@ -465,6 +465,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var emPos = EnumHelper.GetValues<PowertrainPosition>().FirstOrDefault(p =>
 				sumData.Table.Columns.Contains(string.Format(SumDataFields.EM_AVG_SPEED_FORMAT, p.GetName())));
+
 			var emDriveCol = emPos != PowertrainPosition.HybridPositionNotSet
 				? string.Format(string.Format(SumDataFields.E_EM_DRIVE_FORMAT, emPos.GetName()))
 				: null;

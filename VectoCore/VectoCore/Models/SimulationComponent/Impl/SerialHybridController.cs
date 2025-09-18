@@ -10,6 +10,9 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
+using System.Linq;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -21,7 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     public class SerialHybridController : StatefulProviderComponent<SerialHybridController.HybridControllerState,
 			ITnOutPort, ITnInPort, ITnOutPort>, ISerialHybridController, ITnOutPort, ITnInPort
 	{
-		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl;
+		protected readonly Dictionary<EMPlacement, ElectricMotorController> _electricMotorCtl;
 
 		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque =
 			new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
@@ -34,10 +37,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected ITnOutPort GenSetPort;
 
-		public SerialHybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : base(container)
+		public SerialHybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			GenSet = new TnInPortWrapper(this);
-			_electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
+			_electricMotorCtl = new Dictionary<EMPlacement, ElectricMotorController>();
 			//_shiftStrategy = container.RunData.GearboxData.Type.AutomaticTransmission()
 			//	? new HybridController.HybridCtlATShiftStrategy(this, container)
 			//	: new HybridController.HybridCtlShiftStrategy(this, container);
@@ -134,7 +138,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gensetResponse);
 				}
 
-				var gear = DataBus.GearboxInfo.Gear;
+				var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+				var gear = gearbox.Gear;
 				retVal = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add("SHC.R", new {
 					DrivingAction = DataBus.DriverInfo.DrivingAction,
@@ -143,7 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DryRun = dryRun
 				});
 
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !gear.Equals(DataBus.GearboxInfo.Gear)) {
+				if (gearbox.GearboxType.AutomaticTransmission() && !gear.Equals(gearbox.Gear)) {
 					retryCount++;
 					retry = true;
 					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
@@ -200,8 +205,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DuringInitialize = true;
 
 			var retVal = NextComponent.Initialize(outTorque, outAngularVelocity);
-			if (DataBus.GearboxInfo != null) {
-				SelectedGear = DataBus.GearboxInfo.Gear;
+
+			var gearbox = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber);
+			if (gearbox != null) {
+				SelectedGear = gearbox.Gear;
 			}
 
 
@@ -245,18 +252,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		SimpleComponentState IHybridController.PreviousState => PreviousState;
 		public ITnInProvider GenSet { get; }
 
-		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
+		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
-			return _electricMotorCtl[pos];
+			return _electricMotorCtl.First(x => (x.Key.Position == pos) && (x.Key.AxleNumber == axleNumber)).Value;
 		}
 
-		public void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData)
+		public void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
-			if (_electricMotorCtl.ContainsKey(pos)) {
+			if (_electricMotorCtl.Any(x => (x.Key.Position == pos) && (x.Key.AxleNumber == axleNumber))) {
 				throw new VectoException("Electric motor already registered as position {0}", pos);
 			}
 
-			_electricMotorCtl[pos] = new ElectricMotorController(this, motorData);
+			_electricMotorCtl[new EMPlacement(pos, axleNumber)] = new ElectricMotorController(this, motorData);
 		}
 
 

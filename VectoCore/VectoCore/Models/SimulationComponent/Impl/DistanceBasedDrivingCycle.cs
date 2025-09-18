@@ -69,7 +69,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IIdleControllerSwitcher IdleController { get; set; }
 
-        public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
+        public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
@@ -109,6 +110,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			StartSpeed = container.RunData.GearshiftParameters?.StartSpeed;
 			StartAcceleration = container.RunData.GearshiftParameters?.StartAcceleration;
+
+			if (container.RunData.AxlePowertrainsData.Count() > 0)
+			{
+				var gearParams = container.RunData.AxlePowertrainsData.First(x => x.GearshiftParameters != null).GearshiftParameters;
+				
+				StartSpeed = gearParams.StartSpeed;
+				StartAcceleration = gearParams.StartAcceleration;
+			}
 		}
 
 		public IResponse Initialize()

@@ -11,6 +11,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.A
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.StrategyDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -60,6 +61,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
             protected virtual IFuelCellDataAdapter FuelCellDataAdapter { get; }
 
             #region Implementation of IGenericCompletedBusDeclarationDataAdapter
+            
+            public IList<AxlePowertrainData> CreateAxlePowertrainsData(IDeclarationInputDataProvider input, Volt averageVoltage, 
+				bool batteryOnlyHybridMode, VehicleData vehicleData, Mission mission)
+            {
+                return null;
+            }
+
             public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData vehicle, Segment segment, Mission mission,
 				KeyValuePair<LoadingType, Tuple<Kilogram, double?>> loading, bool allowVocational)
 			{
@@ -132,6 +140,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.CompletedBus.Gener
 			{
 				return ElectricMachinesDataAdapter.CreateElectricMachines(electricMachines, torqueLimits, averageVoltage, gears);
 			}
+
+            public virtual Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
+                ElectricMachineEntry<IElectricMotorDeclarationInputData> em,
+                IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
+                Volt averageVoltage,
+                int axleNumber)
+            {
+                return ElectricMachinesDataAdapter.CreateElectricMachine(em, torqueLimits, averageVoltage, axleNumber);
+            }
 
             public virtual List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc, Volt averageVoltage)
 			{

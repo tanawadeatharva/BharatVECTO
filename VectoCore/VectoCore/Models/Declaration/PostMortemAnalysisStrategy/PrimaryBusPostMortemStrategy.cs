@@ -102,6 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				var gbx = testPowertrain.Gearbox;
 				gbx.SetGear = testPowertrain.Container.RunData.GearboxData.GearList.First();
 			}
+			
 			vehicle.Initialize(0.KMPHtoMeterPerSecond(), gradient);
 
 			var architecture = testPowertrain.Container.VehicleArchitecutre;

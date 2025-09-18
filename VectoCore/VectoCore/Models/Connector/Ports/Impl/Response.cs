@@ -235,4 +235,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public PerSecond DeltaEngineSpeed { get; set; }
 	}
+
+	[DebuggerDisplay("ElectricSystemNotReady")]
+	internal class ResponseElectricSystemNotReady : AbstractResponse
+	{
+		public ResponseElectricSystemNotReady(object source) : base(source) { }
+	}
 }

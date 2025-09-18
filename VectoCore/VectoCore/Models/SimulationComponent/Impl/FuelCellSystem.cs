@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -24,7 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly IMileageCounter _mileageCounter;
 		private readonly FuelCellSystemShareMap _fuelCellShareMap;
 
-		public FuelCellSystem(FuelCellSystemData fuelCellSystemData, IVehicleContainer databus) : base(databus)
+		public FuelCellSystem(FuelCellSystemData fuelCellSystemData, IVehicleContainer databus) : 
+			base(databus, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			_fuelCellShareMap = fuelCellSystemData.FuelCellShareMap;
 			_mileageCounter = databus.MileageCounter;

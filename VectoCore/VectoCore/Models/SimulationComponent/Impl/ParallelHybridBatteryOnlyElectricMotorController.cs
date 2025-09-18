@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var emOffResponse = GetEmOffResultEntry(absTime, dt, outTorque, outAngularVelocity);
 
-			var gear = DataBus.GearboxInfo.Gear;
+			var gear = DataBus.GearboxInfo().Gear;
 			TestPowertrain.UpdateComponents();
 
 			var emPos = ElectricMotorsOff.Keys.First();
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			
-			var gear = DataBus.GearboxInfo.Gear;
+			var gear = DataBus.GearboxInfo().Gear;
 			var emPos = ElectricMotorsOff.Keys.First();
 			var emCtl = TestPowertrain.ElectricMotors[emPos].Control as ITestPowertrainElectricMotorControl;
 

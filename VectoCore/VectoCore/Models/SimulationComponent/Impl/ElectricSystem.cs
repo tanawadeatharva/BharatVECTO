@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
         }
 
-		protected ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData, bool dummy) : base(container)
+		protected ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData, bool dummy) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
         {
             Charger = new List<IElectricChargerPort>();
             ModelData = batterySystemData;

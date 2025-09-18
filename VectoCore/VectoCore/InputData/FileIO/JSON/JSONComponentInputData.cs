@@ -240,7 +240,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
-		public IIEPCDeclarationInputData IEPC => IEPCData;
+		public ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering => null;
+
+        public IIEPCDeclarationInputData IEPC => IEPCData;
 
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {

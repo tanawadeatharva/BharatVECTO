@@ -224,7 +224,7 @@ public class LorrySimulation
 
 		var columnsWithoutUnitHashSet = new HashSet<string>();
 		foreach (var col in columnsWithoutUnit) {
-			var emPositions = run.GetContainer().PowertrainInfo.ElectricMotorPositions;
+			var emPositions = run.GetContainer().ElectricMotorsInfo.Select(x => x.Position);
 			foreach (var emPosition in emPositions) {
 				columnsWithoutUnitHashSet.Add(string.Format(col, emPosition.GetLabel()));
 			}
@@ -1401,7 +1401,7 @@ public class LorrySimulation
 	//runs.First().GetContainer().PowertrainInfo.ElectricMotorPositions;
 	public void AssertSHEV_PEV_Conditioning(DataRow modDataRow, IVectoRun run)
 	{
-		var electricMotorPositions = run.GetContainer().PowertrainInfo.ElectricMotorPositions;
+		var electricMotorPositions = run.GetContainer().ElectricMotorsInfo.Select(x => x.Position);
 		var position = electricMotorPositions.Single(e => e != PowertrainPosition.GEN);
 
 		var hasGen = electricMotorPositions.Any(e => e == PowertrainPosition.GEN);

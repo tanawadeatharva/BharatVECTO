@@ -2,12 +2,14 @@
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class BEVCycleGearbox : CycleGearbox
     {
-        public BEVCycleGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
+        public BEVCycleGearbox(IVehicleContainer container, VectoRunData runData) : 
+            base(container)
         {}
 
         protected override IResponse GetDisengagedResponse(Second absTime, Second dt, PerSecond outAngularVelocity)

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		IAngledrive CreateAngledrive(IVehicleContainer container, AngledriveData modelData);
 		
-		IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio);
+		IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio, int axleNumber);
 
 		IGearbox CreateGearbox(VectoSimulationJobType jobType, CycleType cycle, GearboxType gbxType, IVehicleContainer container, IShiftStrategy strategy);
 

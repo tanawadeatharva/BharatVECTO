@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
             }
             LastShift = -double.MaxValue.SI<Second>();
             TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
-                container.RunData);
+                container.RunData, AxleNumber);
             EngineInertia = container.RunData.EngineData.Inertia;
         }
 

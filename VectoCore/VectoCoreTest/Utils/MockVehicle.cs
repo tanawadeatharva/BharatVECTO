@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		internal RequestData LastRequest = new RequestData();
 
-		public MockVehicle(IVehicleContainer cockpit) : base(cockpit)
+		public MockVehicle(IVehicleContainer cockpit) : base(cockpit, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 		}
 
