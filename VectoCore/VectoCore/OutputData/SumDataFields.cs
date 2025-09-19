@@ -1200,7 +1200,7 @@ namespace TUGraz.VectoCore.OutputData
 
 					var eAxlIn = m.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, a, x => x > 0);
 					var eAxlOut = m.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
-					return eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
+					return (eAxlOut == null) ? double.NaN : (eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value());
 				}, ModalResultField.P_axle_in, ModalResultField.P_brake_in)
 			},
 		};
