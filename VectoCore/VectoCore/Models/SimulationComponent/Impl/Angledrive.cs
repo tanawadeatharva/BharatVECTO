@@ -36,6 +36,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -58,10 +59,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var avgAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			
-			container[ModalResultField.P_angle_loss, AxleNumber] = 
+			container[ModalResultField.P_angle_loss, AxleNumber.FormatAxleNumber()] = 
 				(CurrentState.InTorque - CurrentState.OutTorque / ModelData.Ratio) * avgAngularVelocity;
 
-			container[ModalResultField.P_angle_in, AxleNumber] = CurrentState.InTorque * avgAngularVelocity;
+			container[ModalResultField.P_angle_in, AxleNumber.FormatAxleNumber()] = CurrentState.InTorque * avgAngularVelocity;
 		}
 
 		public double Ratio => ModelData.Ratio;
