@@ -115,7 +115,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 15:
 					return new JSONInputDataV15_FCHV_IEPC(json, filename, tolerateMissing);
 				case 16:
-					return new JSONInputDataV16_MultiplePowertrains(json, filename, tolerateMissing);
+                    throw new VectoException("Vehicles with multiple powertrains are not yet supported.");
+                    //return new JSONInputDataV16_MultiplePowertrains(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
