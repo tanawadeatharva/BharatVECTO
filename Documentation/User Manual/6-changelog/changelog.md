@@ -30,6 +30,7 @@
     * CodeEU #1167: Added WheelEnd info to MRF (vecto/vecto!476)
     * CodeEU n.a.: Angledrive mod data, and PWheel axlegear efficiency (vecto/vecto!477)
     * CodeEU n.a.: Disable engineering mode for multiple powertrains (vecto/vecto!478)
+    * CodeEU n.a.: VectoException using reference (vecto/vecto!479)
 
 - Refact
 
@@ -38,8 +39,6 @@
     * CodeEU n.a.: Old .NET references (vecto/vecto!468)
     * CodeEU n.a.: MultistepTool deprecated views (vecto/vecto!470)
     * CodeEU n.a.: Remove unnecessary usings and nugets (vecto/vecto!473)
-
-
 
 
 **VECTO v5.0.4-DEV (25-08-2025)**
@@ -220,7 +219,7 @@
     * fix: secure XML loading against external entity injection (vecto/vecto!319)
     * fix: correct interim supercap reader type (vecto/vecto!320)
     * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
-    
+
 - Documentation
 
     * CodeEU n.a.: Update XSD parameter IDs documentation (vecto/vecto!327)

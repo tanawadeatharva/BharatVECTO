@@ -46,7 +46,6 @@
 - Remove unnecessary usings and nugets (vecto/vecto!473)
 
 
-
 # VECTO v5.0.4-DEV (25-08-2025)
 
 
