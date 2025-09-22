@@ -1,49 +1,39 @@
-
-## VECTO v5.0.4-DEV (25-08-2025)
+## VECTO v5.0.6-RC (22-09-2025)
 
 
 ### Features
 
-- 3rd amendment reports for buses (vecto/vecto!421)
-- V1.0 reports for multiple powertrain lorries (vecto/vecto!395)
-- Add Diesel B100 CI fuel (vecto/vecto!399)
-- MRF and Monitoring report for multiple-powertrain primary buses (vecto/vecto!410)
-- battery only mode for P2 (vecto/vecto!425)
-- Run simulation for H2-ICE bus (primary + completed) (vecto/vecto!432)
-- FCHV bus simulation, primary & completed (vecto/vecto!433)
-- Single-bus mode for FCHV (vecto/vecto!435)
-- Enable all v2.7 vehicles (vecto/vecto!436)
-- VTP input and formulas for buses and trucks (vecto/vecto!424)
+- Update jobs in Generic Vehicles to version v2.7 (vecto/vecto!453)
+- Disable v2.4 jobs (vecto/vecto!458)
+- CodeEU #1140: Update multistep GUI to work with new XSDs (vecto/vecto!469)
+- Multiple axles partial implementation (vecto/vecto!471)
+
 
 ### Bug Fixes
 
-- Exception when getting MaxWindowsSize (vecto/vecto!422)
-- For FCHV, APT-S/P gearboxes simulated as APT-N. (vecto/vecto!423)
-- Ovc s-hev cs cd (vecto/vecto!420)
-- Convert property Type to Architecture in axle powertrains (vecto/vecto!393)
-- 3 job types for multiple powertrains (vecto/vecto!394)
-- Removed NgTankSystem from Multiple_SHEV primary bus (vecto/vecto!398)
-- Remove Retarder component from X4 architectures (vecto/vecto!400)
-- Use multiple factory methods for Retarder and Angledrive data providers (vecto/vecto!406)
-- Added FCHV missing gearbox bindings (vecto/vecto!427)
-- Airdrag element in VIF report. (vecto/vecto!430)
-- Do not require SoC limits for HV non-OVC (vecto/vecto!431)
-- B100 density to 890 kg/m3 (vecto/vecto!411)
-- Run old VIFs with v2.7 Completed vehicles (vecto/vecto!434)
-- 1065 vehicle co2 group (vecto/vecto!428)
-- DoCoast - add drive condition for overload (vecto/vecto!426)
-- Generic retarder and failing tests (vecto/vecto!437)
-- IEPC data adaptation (vecto/vecto!438)
-- IHPC VECTO run data (vecto/vecto!439)
-- FCHV IEPC rundata gearbox creation (vecto/vecto!440)
-- Generic vehicles that failed to run (vecto/vecto!441)
-- WHRCharger creation (vecto/vecto!442)
-- Update wheelEnd sample (vecto/vecto!443)
-- FCHV files in engineering mode (vecto/vecto!444)
-- Initialize MaxChargingPower from static data if not available in input (vecto/vecto!445)
-- FCHV battery and CD and CS runs (vecto/vecto!446)
+- Fix FCHV unit tests (vecto/vecto!448)
+- XMLConversionTool bug fixes, more test cases, refactoring (vecto/vecto!452)
+- Bug fixes for FCHV bus (vecto/vecto!454)
+- CodeEU #1147: Made FuelCell Minpower, Maxpower optional (vecto/vecto!456)
+- Engine-only simulation (vecto/vecto!457)
+- EM data in PHEV rundata creation (vecto/vecto!459)
+- CodeEU #1164: Lifetime ranges in reports for PEV, HEV-OVC. (vecto/vecto!461)
+- Work-around in ranges to make tests succeed (vecto/vecto!462)
+- CodeEU #1163: Respect job's battery SoC limits (vecto/vecto!463)
+- CodeEU #870, #871, #924: Extend Accelerate condition after xEV Overload (vecto/vecto!466)
+- VTP generic vehicles (vecto/vecto!465)
+- Extend Accelerate condition after xEV Overload
+- Changed v2.6 XSD to allow DeltaCdxA_declared and DeltaTransferredCdxA value: zero (vecto/vecto!472)
+- Avoid cyclic refs from !473 (vecto/vecto!475)
+- CodeEU #1167: Added WheelEnd info to MRF (vecto/vecto!476)
+- Angledrive mod data, and PWheel axlegear efficiency (vecto/vecto!477)
+- Disable engineering mode for multiple powertrains (vecto/vecto!478)
+
 
 ### Refactor
 
-- Merge refactoring branch (vecto/vecto!419)
-- Merging refactorings from SW3 project to (vecto/vecto!396)
+- FCHV iterative run strategy  (vecto/vecto!449)
+- Update VECTO to NET 8 (vecto/vecto!467)
+- Old .NET references (vecto/vecto!468)
+- MultistepTool deprecated views (vecto/vecto!470)
+- Remove unnecessary usings and nugets (vecto/vecto!473)
