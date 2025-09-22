@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -34,11 +35,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
                 throw new VectoException("XML Jobs in version 2.4 are no longer supported!");
             }
 #endif
-        }
+		}
 
-        #region Overrides of AbstractXMLResource
+		#region Overrides of AbstractXMLResource
 
-        protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
 		protected override DataSourceType SourceType { get; }
 
