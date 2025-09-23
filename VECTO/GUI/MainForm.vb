@@ -820,13 +820,12 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes Vecto DEV.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto.pdf")
     End Sub
 
-    Private Sub OpenFileExternal(filename As String)
-        Dim filepath = Path.Combine(MyAppPath, filename)
+    Private Sub OpenFileExternal(filepath As String)
         If File.Exists(filepath) Then
-            Process.Start(new ProcessStartInfo(filepath) With {.UseShellExecute = true})
+            Process.Start(New ProcessStartInfo(filepath) With {.UseShellExecute = True})
         Else
             MsgBox("File not found!", MsgBoxStyle.Critical)
         End If
