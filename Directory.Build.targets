@@ -241,12 +241,8 @@
 			<UserManual Include="$(SolutionDir)Documentation\MultiStepTool\MultiStepToolHelp.html"/>
 			<!-- <ParameterDocu Include="$(SolutionDir)Documentation\ParameterDocumentation\VectoParameterDocumentation.html"/> -->
 
-			<UserManual Include="$(SolutionDir)Documentation\XML\*.png"/>
-			<!-- <UserManual Include="$(SolutionDir)Documentation\XML\VectoParameters.html"/> -->
-			<UserManual Include="$(SolutionDir)Documentation\User Manual Source\JIRA Quick Start Guide.pdf"/>
 			<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
 			<UserManual Include="$(SolutionDir)Documentation\OVC_IMC.xlsx"/>
-			<UserManual Include="$(SolutionDir)Documentation\XML\Documentation_OfficialResults_2ndAmendment_20230425.xlsx"/>
 			<ParameterDocu Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\*.*"/>
 			<ParameterDocuStyle Include="$(SolutionDir)Documentation\XML\ParameterDocumentation\HTML\css\*.*"/>
 			<ReleaseNotesPdf Include="$(SolutionDir)Documentation\User Manual\Release Notes Vecto.pdf"/>
