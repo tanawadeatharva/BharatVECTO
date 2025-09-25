@@ -161,8 +161,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 				PowertrainPosition.HybridP2));
 			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
 				VectoSimulationJobType.IHPC, CycleType.DistanceBased, GearboxType.IHPC, PowertrainPosition.IHPC));
+			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
+				VectoSimulationJobType.IHPC, CycleType.DistanceBased, GearboxType.IHPC, PowertrainPosition.HybridP2));
 
-			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.ParallelHybridVehicle));
+            Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.ParallelHybridVehicle));
 			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.IHPC));
 
             #endregion

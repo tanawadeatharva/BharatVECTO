@@ -77,6 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                     }
                 case GearboxType.IHPC:
                     switch (jobType) {
+						case VectoSimulationJobType.IHPC when batteryOnlyHybridMode:
+							return ParallelHybridBatteryOnlyModeShiftStrategy.Name;
                         case VectoSimulationJobType.IHPC:
                             return AMTShiftStrategyOptimized.Name;
                         default:
