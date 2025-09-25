@@ -144,7 +144,7 @@ if ($(Test-Path -Path $ReleaseNotesPdfMarkdown) -eq $false) {
     throw "Release Notes version ${MajorVersionNumber} not supported. Consider creating 'ReleaseNotesVecto${MajorVersionNumber}x.md' file."
 }
 
-# Declare files to update
+# Declare files to update.
 $UserManualHtml = "Documentation/User Manual/help.html"
 $ChangelogMarkdownPath = "Documentation/User Manual/6-changelog/changelog.md"
 $BuildPropsFile = "Directory.Build.props"
@@ -164,10 +164,14 @@ Update-MarkdownContent $ChangelogMarkdownPath $CliffReleaseNotesHtmlMarkdown $Ch
 $ChangesMarkdown = "CHANGES.md"
 Copy-Item $ChangelogMarkdownPath $ChangesMarkdown -Force
 
-# Convert md to pdf
+# Convert md to pdf.
 Push-Location "Documentation/User Manual Source/ReleaseNotesMDs"
 pandoc "..\..\..\$ReleaseNotesPdfMarkdown" -o "..\..\..\$ReleaseNotesPdf" --css "..\..\..\BuildTools\templates\md-style.css" --pdf-engine=$Env:weasyprint  --title="Changelog"
 Pop-Location
+
+# Create Release Notes Dev for Vecto GUI help dialog.
+$HelpDialogReleaseNotesPdf = "Documentation/User Manual/Release Notes Vecto.pdf"
+Copy-Item $ReleaseNotesPdf $HelpDialogReleaseNotesPdf -Force
 
 # User Manual HTML conversion script.
 Push-Location "Documentation/User Manual/"
@@ -178,6 +182,7 @@ Update-BuildPropsVersion $VersionNumber
 
 # Stage the modified files by the script in git.
 git add $CliffReleaseNotesMarkdown
+git add $HelpDialogReleaseNotesPdf
 git add $ReleaseNotesPdfMarkdown
 git add $ChangelogMarkdownPath
 git add $ChangesMarkdown
