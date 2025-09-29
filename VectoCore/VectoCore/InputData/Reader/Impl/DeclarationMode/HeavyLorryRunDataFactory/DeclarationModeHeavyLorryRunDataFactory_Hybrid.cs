@@ -12,6 +12,8 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
@@ -230,21 +232,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 				}
 
 			    var gearboxType = InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType();
-				if (gearboxType == GearboxType.IHPC)
-				{
-                    CreateGearboxAndGearshiftData(runData);
-                }
 
-                runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
-					Vehicle.Components.ElectricMachines, 
-					Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateVoltageCenterSoc(), 
-					gearboxType == GearboxType.IHPC ? runData.GearboxData.GearList : null);
+				var gearlist = gearboxType == GearboxType.IHPC
+					? new GearList(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Gears
+						.Select(x => new GearshiftPosition((uint)x.Gear)).ToArray())
+					: null;
+				
+				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+						Vehicle.Components.ElectricMachines,
+						Vehicle.ElectricMotorTorqueLimits,
+						runData.BatteryData.CalculateVoltageCenterSoc(),
+						gearlist);
 
-				if (gearboxType != GearboxType.IHPC)
-				{
-                    CreateGearboxAndGearshiftData(runData);
-                }
+                CreateGearboxAndGearshiftData(runData);
+                
 
                 runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
