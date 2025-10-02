@@ -119,14 +119,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
             {
                 var batteries = electricStorages.Where(x => x.REESSPack.StorageType == REESSType.Battery);
 
+				var requiredForVehicles = "It is required for the following vehicles: a) Pure electric, b) Hybrid with OVC: true and BatteryOnlyMode: true.";
+
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MinSOC == null))
                 {
-                    throw new VectoException("Battery SOCmin is undefined");
+                    throw new VectoException($"Battery SOCmin is undefined. {requiredForVehicles}");
                 }
 
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MaxSOC == null))
                 {
-                    throw new VectoException("Battery SOCmax is undefined");
+                    throw new VectoException($"Battery SOCmax is undefined. {requiredForVehicles}");
                 }
 
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).DeteriorationPerformanceRatio == null))
