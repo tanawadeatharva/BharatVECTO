@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				fuelCellData.Manufacturer = GetString("Manufacturer");
 				fuelCellData.Model = GetString("Model");
 				fuelCellData.CertificationMethod = GetString("CertificationMethod").ParseEnum<CertificationMethod>();
-				fuelCellData.CertificationNumber = GetString("CertificationNumber");
+				fuelCellData.CertificationNumber = ElementExists("CertificationNumber") ? GetString("CertificationNumber") : null;
 				fuelCellData.AppVersion = GetString("AppVersion");
 				fuelCellData.FCSRatedPower = GetDouble("FCSRatedPower").SI<Watt>();
 				fuelCellData.FuelCellPowerOutputConsumptionMap = GenericBusFuelCellData.CreateFuelCellPowerOutputMap(fuelCellData.FCSRatedPower);
