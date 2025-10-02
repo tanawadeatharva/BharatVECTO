@@ -47,6 +47,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly List<ShiftPolygonEntry> _upShiftPolygon;
 		private readonly List<ShiftPolygonEntry> _downShiftPolygon;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="downshift">Entries must be ordered clockwise</param>
+		/// <param name="upShift">Entries must be ordered clockwise</param>
 		internal ShiftPolygon(IList<ShiftPolygonEntry> downshift, IList<ShiftPolygonEntry> upShift)
 		{
 			_upShiftPolygon = upShift.ToList();
@@ -92,15 +97,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public bool IsAboveDownshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
 			var section = Downshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
-
+			var emTorque = inTorque; //* (-1); 
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
 				return true;
 			}
-			return IsRightOf(inAngularVelocity, inTorque, section);
+			return IsRightOf(inAngularVelocity, emTorque, section);
 		}
 
 		public bool IsAboveUpshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
+			var emTorque = inTorque; //* (-1); 
 			if (!Upshift.Any()) {
 				return false;
 			}
@@ -109,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
 				return true;
 			}
-			return IsRightOf(inAngularVelocity, inTorque, section);
+			return IsRightOf(inAngularVelocity, emTorque, section);
 		}
 
 		/// <summary>

@@ -726,8 +726,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return GearboxModelData.Gears[gear.Gear].ShiftPolygon;
 		}
 
-		protected bool IsBelowDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter emTorque, PerSecond emSpeed)
+		protected bool IsBelowDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter inTorque, PerSecond emSpeed)
 		{
+			var emTorque = inTorque; //* (-1); 
 			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
 				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
@@ -742,8 +743,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 			return false;
 		}
 
-		protected bool IsAboveDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter emTorque, PerSecond emSpeed)
+		protected bool IsAboveDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter inTorque, PerSecond emSpeed)
 		{
+			var emTorque = inTorque; //* (-1); 
 			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
 				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
