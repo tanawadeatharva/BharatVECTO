@@ -1,6 +1,7 @@
 ﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -36,7 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class IEPC : ElectricMotor
 	{
 		public IEPC(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
-			PowertrainPosition position) : base(container, data, control, position, false)
+			PowertrainPosition position, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : base(container, data, control, position, axleNumber)
 		{
 			if (container.IsTestPowertrain) {
 				throw new VectoException(
@@ -45,8 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected IEPC(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control,
-			PowertrainPosition position, bool dummy) : base(container, data, control, position, false) { }
-
+			PowertrainPosition position, bool dummy, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) 
+			: base(container, data, control, position, false, axleNumber) { }
 
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
@@ -57,35 +58,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgDTSpeed = (prevDtSpeed + CurrentState.DrivetrainSpeed) / 2;
 
 			//container[ModalResultField.EM_ratio_, Position] = ModelData.RatioADC.SI<Scalar>();
-			container[ModalResultField.n_IEPC_int_, EMPosition] = avgEMSpeed;
-			container[ModalResultField.T_IEPC_, EMPosition] = CurrentState.EMTorque;
-			container[ModalResultField.T_IEPC_map_, EMPosition] = CurrentState.EmTorqueMap;
+			container[ModalResultField.n_IEPC_int_, EMPosition, AxleNumber] = avgEMSpeed;
+			container[ModalResultField.T_IEPC_, EMPosition, AxleNumber] = CurrentState.EMTorque;
+			container[ModalResultField.T_IEPC_map_, EMPosition, AxleNumber] = CurrentState.EmTorqueMap;
 
-			container[ModalResultField.T_IEPC_int_drive_max_, EMPosition] = CurrentState.DriveMax;
-			container[ModalResultField.T_IEPC_int_gen_max_, EMPosition] = CurrentState.DragMax;
+			container[ModalResultField.T_IEPC_int_drive_max_, EMPosition, AxleNumber] = CurrentState.DriveMax;
+			container[ModalResultField.T_IEPC_int_gen_max_, EMPosition, AxleNumber] = CurrentState.DragMax;
 
-			container[ModalResultField.P_IEPC_int_gen_max_, EMPosition] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
-			container[ModalResultField.P_IEPC_int_drive_max_, EMPosition] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_gen_max_, EMPosition, AxleNumber] = (CurrentState.DragMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_drive_max_, EMPosition, AxleNumber] = (CurrentState.DriveMax ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 
 			//container[ModalResultField.P_EM_electricMotor_em_mech_, Position] = (CurrentState.EMTorque ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
-			container[ModalResultField.P_IEPC_int_mech_map_, EMPosition] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
+			container[ModalResultField.P_IEPC_int_mech_map_, EMPosition, AxleNumber] = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed;
 
 
 			//container[ModalResultField.P_EM_in_, Position] = CurrentState.DrivetrainInTorque * avgDTSpeed;
-			container[ModalResultField.P_IEPC_out_, EMPosition] = CurrentState.DrivetrainOutTorque * avgDTSpeed;
+			container[ModalResultField.P_IEPC_out_, EMPosition, AxleNumber] = CurrentState.DrivetrainOutTorque * avgDTSpeed;
 			//container[ModalResultField.P_EM_mech_, Position] = (CurrentState.DrivetrainInTorque - CurrentState.DrivetrainOutTorque) * avgDTSpeed;
 
-			container[ModalResultField.P_IEPC_el_, EMPosition] = CurrentState.ElectricPowerToBattery;
+			container[ModalResultField.P_IEPC_el_, EMPosition, AxleNumber] = CurrentState.ElectricPowerToBattery;
 
-			container[ModalResultField.P_IEPC_electricMotorLoss_, EMPosition] = (CurrentState.DrivetrainInTorque - CurrentState.DrivetrainOutTorque) * avgDTSpeed - CurrentState.ElectricPowerToBattery;
+			container[ModalResultField.P_IEPC_electricMotorLoss_, EMPosition, AxleNumber] = (CurrentState.DrivetrainInTorque - CurrentState.DrivetrainOutTorque) * avgDTSpeed - CurrentState.ElectricPowerToBattery;
 
 			//container[ModalResultField.P_EM_TransmissionLoss_, Position] = CurrentState.TransmissionTorqueLoss * avgDTSpeed;
 
-			container[ModalResultField.P_IEPC_electricMotorInertiaLoss_, EMPosition] = CurrentState.InertiaTorqueLoss * avgEMSpeed;
+			container[ModalResultField.P_IEPC_electricMotorInertiaLoss_, EMPosition, AxleNumber] = CurrentState.InertiaTorqueLoss * avgEMSpeed;
 
 			//container[ModalResultField.P_EM_loss_, Position] = (CurrentState.DrivetrainInTorque - CurrentState.DrivetrainOutTorque) * avgDTSpeed - CurrentState.ElectricPowerToBattery;
 
-			container[ModalResultField.IEPC_Off_, EMPosition] = CurrentState.EMTorque == null ? 1.SI<Scalar>() : 0.SI<Scalar>();
+			container[ModalResultField.IEPC_Off_, EMPosition, AxleNumber] = CurrentState.EMTorque == null ? 1.SI<Scalar>() : 0.SI<Scalar>();
 
 			var losses = (CurrentState.EmTorqueMap ?? 0.SI<NewtonMeter>()) * avgEMSpeed - CurrentState.ElectricPowerToBattery;
 			var contribution = (losses - ModelData.Overload.ContinuousPowerLoss) * simulationInterval;
@@ -97,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				contribution = (ModelData.Overload.OverloadBuffer - ThermalBuffer).Cast<WattSecond>();
 			}
 			if (ModelData.Overload.OverloadBuffer.Value() != 0) { // mk2021-08-03 overloadbuffer was 0 in Test Case: "ADASTestPEV.TestPCCEngineeringSampleCases G5Eng PCC12 Case A"
-				container[ModalResultField.IEPC_OvlBuffer_, EMPosition] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
+				container[ModalResultField.IEPC_OvlBuffer_, EMPosition, AxleNumber] = VectoMath.Max(0, (ThermalBuffer + contribution) / ModelData.Overload.OverloadBuffer);
 			}
 
 			if (NextComponent == null && BusAux != null) {

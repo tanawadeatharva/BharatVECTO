@@ -1,7 +1,6 @@
 ﻿
 using System;
 using NUnit.Framework;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils

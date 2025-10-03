@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Xml.Linq;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;

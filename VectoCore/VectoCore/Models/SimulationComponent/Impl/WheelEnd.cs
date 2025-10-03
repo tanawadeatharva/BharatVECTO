@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -17,9 +14,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         protected ITnOutPort _nextComponent;
         protected NewtonMeter _deltaFrictionTorque;
-
-        public WheelEnd(IVehicleContainer container, WheelEndData wheelEndData) : base(container)
-        {
+        
+        public WheelEnd(IVehicleContainer container, WheelEndData wheelEndData) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
+        { 
             _deltaFrictionTorque = wheelEndData?.DeltaFrictionTorque ?? 0.SI<NewtonMeter>();
         }
 

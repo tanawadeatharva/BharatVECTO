@@ -1,16 +1,13 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.GenericModelData;
@@ -179,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				fuelCellData.Manufacturer = GetString("Manufacturer");
 				fuelCellData.Model = GetString("Model");
 				fuelCellData.CertificationMethod = GetString("CertificationMethod").ParseEnum<CertificationMethod>();
-				fuelCellData.CertificationNumber = GetString("CertificationNumber");
+				fuelCellData.CertificationNumber = ElementExists("CertificationNumber") ? GetString("CertificationNumber") : null;
 				fuelCellData.AppVersion = GetString("AppVersion");
 				fuelCellData.FCSRatedPower = GetDouble("FCSRatedPower").SI<Watt>();
 				fuelCellData.FuelCellPowerOutputConsumptionMap = GenericBusFuelCellData.CreateFuelCellPowerOutputMap(fuelCellData.FCSRatedPower);

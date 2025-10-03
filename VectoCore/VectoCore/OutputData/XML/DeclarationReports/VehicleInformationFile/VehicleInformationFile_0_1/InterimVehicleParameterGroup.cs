@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				new XElement(_v27 + XMLNames.Vehicle_VIN, vehicleInputData.VIN),
 				new XElement(_v27 + XMLNames.Component_Date,
 					XmlConvert.ToString(vehicleInputData.Date, XmlDateTimeSerializationMode.Utc)),
-
+				new XElement(_v27 + "SimulationToolLicenseNumber", vehicleInputData.SimulationToolLicenseNumber ?? "N/A"),
 			};
 		}
 

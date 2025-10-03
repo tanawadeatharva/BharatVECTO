@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using ScottPlot;
-using ScottPlot.Plottable;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -519,9 +514,7 @@ public class FuelCellDataTest
 
 			//var measured = plt.AddScatterPoints(measuredMax.ToArray(), measuredMax.Select(m =>
 			//	LookupMaxActiveFc(fcStringData, power: m.SI<Watt>(), out _, i)).ToArray());
-			//measured.OnNaN = ScatterPlot.NanBehavior.Gap;
 			activeFcAllActive.YAxisIndex = yaxis3.AxisIndex;
-			fuelConsumptionAllActive.OnNaN = ScatterPlot.NanBehavior.Gap;
 		}
 
 
@@ -599,12 +592,6 @@ public class FuelCellDataTest
 		var fc1 = plt.AddScatterLines(a, fuelConsumption.Select(fc => fc.Item2).ToArray(), label:"FC String 1 in g/h");
 		var fc2 = plt.AddScatterLines(a, fuelConsumption.Select(fc => fc.Item3).ToArray(), label:"FC String 2 in g/h");
 		var share = plt.AddScatterPoints(shares.Select(s => s.ShareA).ToArray(), shares.Select(s => Lookup(s.ShareA, power, fcString1, fcString2).Item1).ToArray());
-
-
-		total.OnNaN = ScatterPlot.NanBehavior.Gap;
-		fc1.OnNaN = ScatterPlot.NanBehavior.Gap;
-		fc2.OnNaN = ScatterPlot.NanBehavior.Gap;
-		//share.OnNaN = ScatterPlot.NanBehavior.Gap; //should not happen because only valid shares should be provided by GetValidShares() <- as the name suggests
 
 		plt.XAxis.Label("Share of String 1");
 		plt.YAxis.Label("Fuel consumption in g/h");

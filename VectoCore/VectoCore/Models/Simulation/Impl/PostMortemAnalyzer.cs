@@ -1,5 +1,4 @@
 ﻿using System;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl

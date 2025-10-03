@@ -53,9 +53,7 @@ using System.IO;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
@@ -608,7 +606,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			absTime += dt;
 			var successResponse = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity, false);
-			Assert.AreEqual((uint)newGear, container.GearboxInfo.Gear.Gear);
+			Assert.AreEqual((uint)newGear, container.GearboxesInfo.First().Gear.Gear);
 		}
 
 		[TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
@@ -654,7 +652,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CycleData = new CycleData() {
 					LeftSample = cycleData.Entries.First(),
 				},
-				ElectricMotorPositions = new PowertrainPosition[]{},
 				HasCombustionEngine = true,
 			};
 			var cycle = new MockDrivingCycle(container, cycleData);

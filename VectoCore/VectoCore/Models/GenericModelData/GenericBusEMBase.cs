@@ -1,6 +1,4 @@
-﻿using System.IO;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Models.Declaration;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.GenericModelData

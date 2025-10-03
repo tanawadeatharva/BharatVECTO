@@ -33,6 +33,7 @@
 	27-05-2025: Making new fields of completed buses optional (multiple OEMs can be involved in completed buses).
 	17-06-2025: Removed NgTankSystem from multiple-SHEV Primary Bus.
 	17-06-2025: Removed Retarder from components of X4 architectures.
+	17-06-2025: Set correct RetarderType for multiple powertrains retarder type.
 	15-07-2025: Removed redundant types: Vehicle_Multiple_SHEV_CompletedBusDeclarationType, Vehicle_Multiple_PEV_CompletedBusDeclarationType,
 		Vehicle_Multiple_FCHV_CompletedBusDeclarationType.
 	23-07-2025: FCHV Completed Bus: H2 properties appear both or not at all.
@@ -2007,7 +2008,7 @@
 	</xs:complexType>
 	<xs:complexType name="RetarderOnAxleTypeType">
 		<xs:simpleContent>
-			<xs:extension base="v1.0:RetarderTypeType">
+			<xs:extension base="v2.4:RetarderTypeType">
 				<xs:attribute name="axleNumber" use="required">
 					<xs:simpleType>
 						<xs:restriction base="xs:int">

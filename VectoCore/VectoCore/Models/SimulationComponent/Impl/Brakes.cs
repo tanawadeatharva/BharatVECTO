@@ -37,6 +37,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public Watt BrakePower { get; set; }
 
-		public Brakes(IVehicleContainer container) : base(container) {}
+		public Brakes(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN) {}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{

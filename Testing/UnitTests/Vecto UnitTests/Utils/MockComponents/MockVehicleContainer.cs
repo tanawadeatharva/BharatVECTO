@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -53,15 +54,29 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
 
-		public IAxlegearInfo AxlegearInfo => this;
+		public int AxleNumber => Constants.NOT_IN_AXLE_POWERTRAIN;
 
-		public IEngineInfo EngineInfo { get; set; }
+		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition position, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
+
+        public IList<IElectricMotorInfo> ElectricMotorsInfo { get; set; }
+
+        public IElectricSystemInfo JunctionBox { get; set; }
+
+        public IAxlegearInfo AxlegearInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
+
+		public IAngledriveInfo AngledriveInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
+
+        public IList<IAxlegearInfo> AxlegearsInfo { get; set; }
+
+        public IEngineInfo EngineInfo { get; set; }
 
 		public IEngineControl EngineCtl => this;
 
 		public IVehicleInfo VehicleInfo => this;
 
-		public IClutchInfo ClutchInfo => this;
+		public IClutchInfo ClutchInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
+
+		public IList<IClutchInfo> ClutchesInfo { get; set; }
 
 		public IBrakes Brakes => this;
 
@@ -92,15 +107,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IMileageCounter MileageCounter => this;
 
-		public IGearboxInfo GearboxInfo => this;
+		public IGearboxInfo GearboxInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
 
-		public IShiftStrategy Strategy => null;
+		public IList<IGearboxInfo> GearboxesInfo { get; set; }
+
+        public IShiftStrategy Strategy => null;
 
 		public event Action GearShiftTriggered;
 
 		public IGearboxControl GearboxCtl => this;
 
-		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
+        public IList<IGearboxControl> GearboxesCtl { get; set; }
+
+        public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
 		{
 			return null;
 		}
@@ -121,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
-		public IAngledriveInfo AngledriveInfo { get; }
+		public IList<IAngledriveInfo> AngledrivesInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
 		public IWHRCharger WHRCharger { get; }
 

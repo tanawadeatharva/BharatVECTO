@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 
 
 namespace TUGraz.VectoCore.Utils.Ninject

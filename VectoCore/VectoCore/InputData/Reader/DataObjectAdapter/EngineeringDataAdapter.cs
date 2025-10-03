@@ -60,7 +60,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell;
@@ -108,10 +107,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
         HybridStrategyParameters CreateHybridStrategyParameters(
             IEngineeringJobInputData jobInputData,
-            CombustionEngineData combustionEngineData, GearboxData gearboxData);
+            CombustionEngineData combustionEngineData, GearboxData gearboxData, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN);
 
         List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCEngineeringInputData iepc, Volt averageVoltage);
-        GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData);
+        GearboxData CreateIEPCGearboxData(IIEPCEngineeringInputData iepc, VectoRunData runData);
         PTOData CreateBatteryElectricPTOTransmissionData(IPTOTransmissionInputData pto);
     }
 
@@ -214,47 +213,85 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 		}
 
-		public IList<AxlePowertrainData> CreateAxlePowertrainsData(IEngineeringInputDataProvider input, Volt averageVoltage, IPowertrainBuilder powertrainBuilder)
+		public static bool CheckIEPCData(IIEPCEngineeringInputData iepcInput, IAxleGearInputData axlegearInput)
+		{
+			var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
+			if (axleGearRequired && axlegearInput == null)
+			{
+				throw new VectoException(
+					$"Axlegear required for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
+			}
+
+			var numGearsPowermap =
+				iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
+			var gearCount = iepcInput.Gears.Count;
+			var numGearsDrag = iepcInput.DragCurves.Count;
+
+			if (numGearsPowermap.Any(x => x.Item2 != gearCount))
+			{
+				throw new VectoException(
+					$"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
+			}
+
+			if (numGearsDrag > 1 && numGearsDrag != gearCount)
+			{
+				throw new VectoException(
+					$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
+			}
+
+			return axleGearRequired;
+		}
+
+		public IList<AxlePowertrainData> CreateAxlePowertrainsData(
+			IEngineeringInputDataProvider input, 
+			Volt averageVoltage, 
+			IDrivingCycleData cycle)
 		{
 			IList<AxlePowertrainData> axlePts = new List<AxlePowertrainData>();
 
-			var axlePowertrainData = input.JobInputData.Vehicle.Components.AxlePowertrainEngineeringInputData;
-
-			if (axlePowertrainData == null)
-			{	
-				return axlePts;
-			}
-
-			foreach (var axlePtData in axlePowertrainData)
+			foreach (var axlePtData in input.JobInputData.Vehicle.Components.AxlePowertrainEngineeringInputData)
 			{
-				var axlegearData = (axlePtData.AxleGearInputData != null)
-					? CreateAxleGearData(axlePtData.AxleGearInputData)
-					: null;
+				var isIEPC = (axlePtData.IEPCEngineeringInputData != null);
 
-				var emData = CreateElectricMachine(
-					axlePtData.ElectricMotor, 
-					input.JobInputData.Vehicle.ElectricMotorTorqueLimits, 
-					averageVoltage);
+				var axlegearRequiredByIEPC = isIEPC && CheckIEPCData(axlePtData.IEPCEngineeringInputData, axlePtData.AxleGearInputData);
+				var axlegearRequired = axlegearRequiredByIEPC || (axlePtData.AxleGearInputData != null);
+
+                var axlegearData = axlegearRequired ? CreateAxleGearData(axlePtData.AxleGearInputData) : null;
+
+				var emData = isIEPC
+					? CreateIEPCElectricMachines(axlePtData.IEPCEngineeringInputData, averageVoltage).First()
+					: CreateElectricMachine(
+						axlePtData.ElectricMotor, 
+						input.JobInputData.Vehicle.ElectricMotorTorqueLimits, 
+						averageVoltage,
+						axleNumber: axlePtData.AxleNumber);
 
 				var angledriveData = CreateAngledriveData(axlePtData.AngledriveInputData);
 
 				var (gearboxData, gearshiftParams) = CreateGearboxDataForAxlePowertrain(
-					emData, axlePtData, axlegearData, angledriveData, input, powertrainBuilder);
+					emData, axlePtData, axlegearData, angledriveData, input, cycle);
 
-				var pto = axlePtData.Type.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
-					? CreateBatteryElectricPTOTransmissionData(axlePtData.PTOTransmissionInputData)
-					: CreatePTOTransmissionData(axlePtData.PTOTransmissionInputData);
+				var ptoCycleWhileDrive = GetPTOCycleWhileDrive(axlePtData);
+
+				var pto = CreateBatteryElectricPTOTransmissionData(axlePtData.PTOTransmissionInputData);
+
+				var retarder = axlegearRequired && (axlePtData.RetarderInputData.Type != RetarderType.None)
+					? CreateRetarderData(axlePtData.RetarderInputData, emData.Item1)
+					: isIEPC
+						? new RetarderData() { Type = RetarderType.LossesIncludedInTransmission, Ratio = 1.0 }
+						: null;
 
 				axlePts.Add(new AxlePowertrainData()
 				{
 					AxleNumber = axlePtData.AxleNumber,
-					Type = axlePtData.Type,
+					Architecture = axlePtData.Architecture,
 					AxleGearData = axlegearData,
 					ElectricMachineData = emData,
 					AngledriveData = angledriveData,
 					GearboxData = gearboxData,
-					Retarder = CreateRetarderData(axlePtData.RetarderInputData, emData.Item1),
+					Retarder = retarder,
 					PTO = pto,
+					PTOCycleWhileDrive = ptoCycleWhileDrive,
 					GearshiftParameters = gearshiftParams,
 				});
 			}
@@ -262,13 +299,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return axlePts;
 		}
 
-		private Tuple<GearboxData, ShiftStrategyParameters> CreateGearboxDataForAxlePowertrain(
+		private IDrivingCycleData GetPTOCycleWhileDrive(IAxlePowertrainEngineeringInputData axlePt)
+		{
+            return (axlePt.PTOTransmissionInputData?.PTOCycleWhileDriving != null)
+                ? DrivingCycleDataReader.ReadFromDataTable(axlePt.PTOTransmissionInputData.PTOCycleWhileDriving, "PTO During Drive", false)
+                : null;
+        }
+
+        private Tuple<GearboxData, ShiftStrategyParameters> CreateGearboxDataForAxlePowertrain(
 			Tuple<PowertrainPosition, ElectricMotorData> emData,
 			IAxlePowertrainEngineeringInputData axlePtData,
 			AxleGearData axlegearData,
 			AngledriveData angledriveData,
 			IEngineeringInputDataProvider input,
-			IPowertrainBuilder powertrainBuilder
+			IDrivingCycleData cycle
 			)
 		{
 			GearboxData gearboxData = null;
@@ -276,30 +320,46 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			ShiftStrategyParameters gearshiftParams = new ShiftStrategyParameters()
 			{
 				StartSpeed = DeclarationData.GearboxTCU.StartSpeed,
-				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration
+				StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
+				TimeBetweenGearshifts = DeclarationData.Gearbox.MinTimeBetweenGearshifts,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 
-			if (emData.Item1 == PowertrainPosition.BatteryElectricE2)
+			if (emData.Item1.IsOneOf(PowertrainPosition.BatteryElectricE2, PowertrainPosition.IEPC))
 			{
+				var gearboxType = (emData.Item1 == PowertrainPosition.BatteryElectricE2) 
+					? axlePtData.GearboxInputData.Type 
+					: GearboxType.APTN;
+				
 				gearshiftParams = CreateGearshiftData(
-					axlePtData.GearboxInputData.Type,
+					gearboxType,
 					axlePtData.GearshiftInputData,
-					axlegearData?.AxleGear.Ratio ?? 1.0 * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
+					(axlegearData?.AxleGear.Ratio ?? 1.0) * (angledriveData?.Angledrive.Ratio ?? 1.0), null);
 
-     //           gearboxData = CreateGearboxData(
-					//input,
-					//axlePtData.GearboxInputData,
-					//axlePtData.TorqueConverterInputData,
-					
+				var gearboxRunData = new VectoRunData()
+				{
+					JobType = input.JobInputData.JobType,
+					VehicleData = CreateVehicleData(input.JobInputData.Vehicle),
+					AxleGearData = axlegearData,
+					ElectricMachinesData = new List<Tuple<PowertrainPosition, ElectricMotorData>>() { emData },
+					Cycle = cycle
+				};
+
+				gearboxData = (emData.Item1 == PowertrainPosition.BatteryElectricE2) 
+					? CreateGearboxData(input, gearboxRunData)
+					: CreateIEPCGearboxData(axlePtData.IEPCEngineeringInputData, gearboxRunData);
 			}
-
+			
 			return new Tuple<GearboxData, ShiftStrategyParameters>(gearboxData, gearshiftParams);
 		}
 
-		private Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
+		public Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
 			ElectricMachineEntry<IElectricMotorEngineeringInputData> em,
 			IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage,
-			GearList gearlist = null
+			GearList gearlist = null,
+			int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN
 			)
 		{
 			return (em == null)
@@ -314,7 +374,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						em.RatioPerGear, 
 						em.MechanicalTransmissionEfficiency,
 						em.MechanicalTransmissionLossMap, 
-						torqueLimits?.First(t => t.Key.Position == em.Position).Value, 
+						torqueLimits?.First(t => (t.Key.Position == em.Position) && (t.Key.AxleNumber == axleNumber)).Value, 
 						averageVoltage, 
 						gearlist));
 		}
@@ -531,12 +591,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
 			}
 
-			if ((vehicle.VehicleType == VectoSimulationJobType.BatteryElectricVehicle || vehicle.VehicleType == VectoSimulationJobType.SerialHybridVehicle) &&
-				gearbox.Type.AutomaticTransmission())
+			if (vehicle.VehicleType.IsOneOf(
+					VectoSimulationJobType.BatteryElectricVehicle, 
+					VectoSimulationJobType.SerialHybridVehicle,
+					VectoSimulationJobType.FCHV,
+					VectoSimulationJobType.Multiple_FCHV,
+					VectoSimulationJobType.Multiple_PEV,
+					VectoSimulationJobType.Multiple_SHEV
+				) 
+				&& gearbox.Type.AutomaticTransmission())
 			{
 				// PEV with APT-S or APT-P transmission are simulated as APT-N
 				retVal.Type = GearboxType.APTN;
 			}
+
 			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
 			if (retVal.Type == GearboxType.IEPC)
@@ -556,7 +624,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
-			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(inputData.JobInputData.Vehicle.TorqueLimits, gearbox);
+			var gearsInput = GearboxDataAdapterBase.FilterDisabledGears(vehicle.TorqueLimits, gearbox);
 
 			SetEngineeringData(gearbox, retVal);
 
@@ -1587,11 +1655,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public HybridStrategyParameters CreateHybridStrategyParameters(
 			IEngineeringJobInputData jobInputData,
-			CombustionEngineData combustionEngineData, GearboxData gearboxData)
+			CombustionEngineData combustionEngineData, 
+			GearboxData gearboxData,
+			int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			var hybridStrategyParameters = jobInputData.HybridStrategyParameters;
 			
-			var torqueLimit = CreateMaxPropulsionTorque(jobInputData.Vehicle, combustionEngineData, gearboxData);
+			var torqueLimit = CreateMaxPropulsionTorque(jobInputData.Vehicle, combustionEngineData, gearboxData, axleNumber);
 
 			var retVal = new HybridStrategyParameters() {
 				EquivalenceFactorDischarge = hybridStrategyParameters.EquivalenceFactorDischarge,
@@ -1610,7 +1680,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(IVehicleEngineeringInputData vehicleInputData, CombustionEngineData engineData, GearboxData gearboxData)
+		protected internal static Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque> CreateMaxPropulsionTorque(
+			IVehicleEngineeringInputData vehicleInputData, 
+			CombustionEngineData engineData, 
+			GearboxData gearboxData,
+			int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 
 			// engine data contains full-load curves already cropped with max gearbox torque and max ICE torque (vehicle level)
@@ -1620,8 +1694,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var belowIdle = offset?.FullLoadEntries.Where(x => x.MotorSpeed < engineData.IdleSpeed).ToList();
 
 			var retVal = new Dictionary<GearshiftPosition, VehicleMaxPropulsionTorque>();
-			var isP3OrP4Hybrid = vehicleInputData.Components.ElectricMachines.Entries.Select(x => x.Position)
-				.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4);
+			var isP3OrP4Hybrid = (axleNumber == Constants.NOT_IN_AXLE_POWERTRAIN)
+				? vehicleInputData.Components.ElectricMachines.Entries
+					.Select(x => x.Position)
+					.Any(x => x == PowertrainPosition.HybridP3 || x == PowertrainPosition.HybridP4)
+				: false;
+			
 			var isAtGearbox = gearboxData?.Type.IsOneOf(GearboxType.ATSerial, GearboxType.ATPowerSplit) ?? false;
 			foreach (var key in engineData.FullLoadCurves.Keys) {
 				if (key == 0) {
@@ -1769,12 +1847,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 
-		public GearboxData CreateIEPCGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData)
+		public GearboxData CreateIEPCGearboxData(IIEPCEngineeringInputData iepc, VectoRunData runData)
 		{
-			var vehicle = inputData.JobInputData.Vehicle;
-
-			var iepc = vehicle.Components.IEPCEngineeringInputData;
-
 			var axlegearRatio = runData.AxleGearData?.AxleGear.Ratio ?? 1.0; 
 			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
 
@@ -1795,7 +1869,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var gears = new Dictionary<uint, GearData>();
 
 			retVal.ShiftStrategy =
-				ShiftStrategyFactory?.GetShiftStrategyName(GearboxType.APTN, vehicle.VehicleType, false);
+				ShiftStrategyFactory?.GetShiftStrategyName(GearboxType.APTN, runData.JobType, false);
 			var shiftPolygonCalc = ShiftStrategyFactory?.CreateShiftPolygonCalculator(retVal.ShiftStrategy, runData.GearshiftParameters);
 
 			for (uint i = 0; i < iepc.Gears.Count; i++) {

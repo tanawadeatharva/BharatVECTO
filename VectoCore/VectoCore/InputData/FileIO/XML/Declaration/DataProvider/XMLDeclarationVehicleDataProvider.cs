@@ -47,7 +47,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -127,6 +126,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual bool ExemptedVehicle => ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle);
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => null;
 
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
@@ -559,6 +560,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         #region IXMLDeclarationVehicleData interface
 
         public string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => ElementExists(XMLNames.Vehicle_SimulationToolLicenseNumber) 
+			? GetString(XMLNames.Vehicle_SimulationToolLicenseNumber) : null;
 
 		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
 

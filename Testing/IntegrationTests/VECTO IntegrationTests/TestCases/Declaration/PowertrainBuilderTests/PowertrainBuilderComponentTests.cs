@@ -29,26 +29,18 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Moq;
 using Ninject;
 using Ninject.Activation;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -231,8 +223,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         {
             var retVal = new Dictionary<TestPowertrainSource, ISimpleVehicleContainer> {
 				{ TestPowertrainSource.Driver , FindSimpleVehicleContainerInDriver(vehicleContainer.DriverInfo)},
-                {TestPowertrainSource.ShiftStrategySimplePowertrain, FindSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo))},
-                {TestPowertrainSource.ShiftStrategyTestPowertrain, FindTestpowertrainSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo))},
+                {TestPowertrainSource.ShiftStrategySimplePowertrain, FindSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo()))},
+                {TestPowertrainSource.ShiftStrategyTestPowertrain, FindTestpowertrainSimpleVehicleContainerInShiftStrategy(GetShiftStrategy(vehicleContainer.GearboxInfo()))},
                 {TestPowertrainSource.HybridStrategyTestPowertrain, FindTestpowertrainSimpleVehicleContainerHybridStrategy(GetHybridStrategy(vehicleContainer.HybridControllerInfo))}
             };
             return retVal.Where(x => x.Value != null).ToDictionary(x => x.Key, x => x.Value);
@@ -294,9 +286,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 }
 
                 if (axlegear != null) {
-                    Assert.IsInstanceOf(axlegear, container.AxlegearInfo, "Axlegear");
+                    Assert.IsInstanceOf(axlegear, container.AxlegearInfo(), "Axlegear");
                 } else {
-                    Assert.IsNull(container.AxlegearInfo, "Axlegear");
+                    Assert.IsNull(container.AxlegearInfo(), "Axlegear");
                 }
 
                 if (angledrive != null) {
@@ -312,15 +304,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                 }
 
                 if (gearbox != null) {
-                    Assert.IsInstanceOf(gearbox, container.GearboxInfo, "Gearbox");
-                    var strategy = GetShiftStrategy(container.GearboxInfo);
+                    Assert.IsInstanceOf(gearbox, container.GearboxInfo(), "Gearbox");
+                    var strategy = GetShiftStrategy(container.GearboxInfo());
                     if (shiftStrategyT != null) {
                         Assert.IsInstanceOf(shiftStrategyT, strategy, "ShiftStrategy");
                     } else {
                         Assert.IsNull(strategy, "ShiftStrategy");
                     }
                 } else {
-                    Assert.IsNull(container.GearboxInfo, "Gearbox");
+                    Assert.IsNull(container.GearboxInfo(), "Gearbox");
                 }
 
                 if (torqueConverter != null) {
@@ -329,9 +321,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                     Assert.IsNull(container.TorqueConverterInfo);
                 }
                 if (clutch != null) {
-                    Assert.IsInstanceOf(clutch, container.ClutchInfo, "Clutch");
+                    Assert.IsInstanceOf(clutch, container.ClutchInfo(), "Clutch");
                 } else {
-                    Assert.IsNull(container.ClutchInfo, "Clutch");
+                    Assert.IsNull(container.ClutchInfo(), "Clutch");
                 }
 
                 if (engine != null) {
@@ -561,8 +553,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
         public static object[] MeasuredSpeedGear_Conventional_Source =
         {
-            new object[] { "MeasuredSpeedGear Conv MT", CycleType.MeasuredSpeedGear, GearboxType.MT, CycleGearboxT, null, null, ATClutchInfoT},
-            new object[] { "MeasuredSpeedGear Conv AMT", CycleType.MeasuredSpeedGear, GearboxType.AMT, CycleGearboxT, null, null, ATClutchInfoT},
+            new object[] { "MeasuredSpeedGear Conv MT", CycleType.MeasuredSpeedGear, GearboxType.MT, CycleGearboxT, null, null, ClutchT},
+            new object[] { "MeasuredSpeedGear Conv AMT", CycleType.MeasuredSpeedGear, GearboxType.AMT, CycleGearboxT, null, null, ClutchT},
             new object[] { "MeasuredSpeedGear Conv APT-S", CycleType.MeasuredSpeedGear, GearboxType.ATSerial, CycleGearboxT, TorqueConverterT, null, ATClutchInfoT},
             new object[] { "MeasuredSpeedGear Conv APT-P", CycleType.MeasuredSpeedGear, GearboxType.ATPowerSplit, CycleGearboxT, TorqueConverterT, null, ATClutchInfoT},
 

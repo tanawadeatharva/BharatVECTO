@@ -1,5 +1,4 @@
-﻿using System;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Utils

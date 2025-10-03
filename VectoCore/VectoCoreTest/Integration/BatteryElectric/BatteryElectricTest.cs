@@ -1206,7 +1206,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BatteryElectric
 
 	public class MockEngineInfo : VectoSimulationComponent, IEngineInfo
 	{
-		public MockEngineInfo(IVehicleContainer container) : base(container)
+		public MockEngineInfo(IVehicleContainer container, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(container, axleNumber)
 		{
 		}
 

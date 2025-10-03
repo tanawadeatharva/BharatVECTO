@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -148,9 +149,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual TableData LossMap => ReadTableData(XMLNames.ADC_TorqueLossMap, XMLNames.ADC_TorqueLossMap_Entry,
 			new Dictionary<string, string> {
-				{ XMLNames.ADC_TorqueLossMap_InputSpeed, XMLNames.ADC_TorqueLossMap_InputSpeed },
-				{ XMLNames.ADC_TorqueLossMap_InputTorque, XMLNames.ADC_TorqueLossMap_InputTorque },
-				{ XMLNames.ADC_TorqueLossMap_TorqueLoss, XMLNames.ADC_TorqueLossMap_TorqueLoss },
+				{ TransmissionLossMapReader.Fields.InputSpeed, XMLNames.ADC_TorqueLossMap_InputSpeed },
+				{ TransmissionLossMapReader.Fields.InputTorque, XMLNames.ADC_TorqueLossMap_InputTorque },
+				{ TransmissionLossMapReader.Fields.TorqeLoss, XMLNames.ADC_TorqueLossMap_TorqueLoss },
 			});
 
 		#endregion

@@ -66,7 +66,6 @@ namespace TUGraz.VectoCommon.InputData {
 				return (HybridPrefix + prefix + pos).Replace(".", "_").ParseEnum<PowertrainPosition>();
 			}
 
-			// todo amogoda: m3.x F prefix added, treated as B or E.
 			var supportedPrefixes = new[] { "B", "E", "F", "S" };
 			if (supportedPrefixes.Contains(prefix, StringComparer.InvariantCultureIgnoreCase)) {
 				return $"{BatteryElectricPrefix}E{pos}".ParseEnum<PowertrainPosition>();

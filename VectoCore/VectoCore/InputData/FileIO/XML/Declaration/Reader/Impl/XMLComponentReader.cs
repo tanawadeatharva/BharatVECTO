@@ -34,17 +34,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter;
 using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
@@ -1583,6 +1580,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
         {
             return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
         }
+
+        public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
     }
 
     public class XML_Multiple_PEV_PrimaryBus_ComponentReaderV27 : XML_Multiple_Powertrains_ComponentReader
@@ -1604,6 +1603,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
         {
             return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
         }
+
+        public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
     }
 
     public class XML_Multiple_SHEV_PrimaryBus_ComponentReaderV27 : XML_Multiple_Powertrains_ComponentReader
@@ -1640,6 +1641,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
             electricMachine.ElectricMachineSystemReader = Factory.CreateElectricMotorReader(version, Vehicle, componentNode, sourcefile);
             return electricMachine.Entries[0];
         }
+
+        public override IAuxiliariesDeclarationInputData AuxiliaryData => null;
     }
 
     // ---------------------------------------------------------------------------------------

@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Ninject;
 using NUnit.Framework;
 using VECTO3GUI2020.Helper;

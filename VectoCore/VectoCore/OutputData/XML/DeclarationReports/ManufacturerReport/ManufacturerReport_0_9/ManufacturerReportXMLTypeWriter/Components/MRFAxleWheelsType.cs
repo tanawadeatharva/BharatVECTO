@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -33,6 +28,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					new XElement(_mrf + XMLNames.Component_CertificationNumber, axleDeclaration.Tyre.CertificationNumber),
 					new XElement(_mrf + "SpecificRRC", axleDeclaration.Tyre.RollResistanceCoefficient.ToXMLFormat(4)),
 					new XElement(_mrf + XMLNames.DI_Signature_Reference_DigestValue, axleDeclaration.Tyre.DigestValue?.DigestValue ?? "")));
+
+				if (axleDeclaration.WheelEndFriction != null)
+				{
+					axle.Add(new XElement(_mrf + "WheelEnd",
+						new XElement(_mrf + "WheelEndFriction", axleDeclaration.WheelEndFriction.ToXMLFormat(1)),
+						new XElement(_mrf + "CertificationNumber", axleDeclaration.WheelEndCertificationNumber)));
+				}
+
 				result.Add(axle);
 			}
 

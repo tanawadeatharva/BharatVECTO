@@ -8,6 +8,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -165,19 +166,19 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in, x => x > 0);
 		}
 
-		public static WattSecond WorkAxlegear(this IModalDataContainer data)
+		public static WattSecond WorkAxlegear(this IModalDataContainer data, int axleNumber)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss, axleNumber: axleNumber);
 		}
 
-		public static WattSecond WorkRetarder(this IModalDataContainer data)
+		public static WattSecond WorkRetarder(this IModalDataContainer data, int axleNumber)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_ret_loss);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ret_loss, axleNumber: axleNumber);
 		}
 
-		public static WattSecond WorkAngledrive(this IModalDataContainer data)
+		public static WattSecond WorkAngledrive(this IModalDataContainer data, int axleNumber)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss, axleNumber: axleNumber);
 		}
 
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
@@ -485,14 +486,15 @@ namespace TUGraz.VectoCore.OutputData
 			return 100 * (1 - iceOn / data.Duration);
 		}
 
-		public static Scalar ElectricMotorOffTimeShare(this IModalDataContainer data, PowertrainPosition pos)
+		public static Scalar ElectricMotorOffTimeShare(this IModalDataContainer data, PowertrainPosition pos, int axleNumber)
 		{
 			if (data.Duration == 0.SI<Second>()) {
 				return null;
 			}
 			var offField = pos == PowertrainPosition.IEPC ? ModalResultField.IEPC_Off_ : ModalResultField.EM_Off_;
 			var emOff = data.GetValues(x => new {
-				dt = x[string.Format(offField.GetCaption(), pos.GetName())] is DBNull || !x.Field<Scalar>(string.Format(offField.GetCaption(), pos.GetName())).IsEqual(1)
+				dt = x[string.Format(offField.GetCaption(), pos.GetName(), axleNumber.FormatAxleNumber())] is DBNull 
+						|| !x.Field<Scalar>(string.Format(offField.GetCaption(), pos.GetName(), axleNumber.FormatAxleNumber())).IsEqual(1)
 					? 0.SI<Second>()
 					: x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.dt) ?? 0.SI<Second>();

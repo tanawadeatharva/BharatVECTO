@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -73,11 +74,11 @@ public class ClutchRequestTests
 	{
 		var container = new Mock<IVehicleContainer>();
 		var gi = new Mock<IGearboxInfo>();
-		container.Setup(c => c.GearboxInfo).Returns(gi.Object);
+		container.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gi.Object);
 		gi.Setup(g => g.GearEngaged(It.IsAny<Second>())).Returns(true);
 		gi.Setup(g => g.Gear).Returns(new GearshiftPosition((uint)gear));
 		var ci = new Mock<IClutchInfo>();
-		container.Setup(c => c.ClutchInfo).Returns(ci.Object);
+		container.Setup(c => c.ClutchInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(ci.Object);
 		ci.Setup(c => c.ClutchClosed(It.IsAny<Second>())).Returns(true);
 		var vi = new Mock<IVehicleInfo>();
 		container.Setup(c => c.VehicleInfo).Returns(vi.Object);

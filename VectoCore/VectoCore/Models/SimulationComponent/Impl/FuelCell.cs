@@ -1,9 +1,9 @@
-﻿using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public FuelCellData.FuelCellId Id { get; private set; }
 
 
-		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus, FuelCellData.FuelCellId id) : base(null) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
+		public FuelCell(FuelCellData fcData, IVehicleContainer dataBus, FuelCellData.FuelCellId id) : 
+			base(null, Constants.NOT_IN_AXLE_POWERTRAIN) //provide null here, when registering the component the Id is accessed but is not set in the base constructor
 		{
 			DataBus = dataBus;
 			ModelData = fcData;

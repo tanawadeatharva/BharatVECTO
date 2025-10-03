@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl

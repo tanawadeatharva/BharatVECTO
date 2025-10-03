@@ -2295,4 +2295,7 @@
   <data name="Vehicle_TechnicalPermissibleMaximumLadenMass" xml:space="preserve">
     <value>TechnicalPermissibleMaximumLadenMass</value>
   </data>
+  <data name="Vehicle_SimulationToolLicenseNumber" xml:space="preserve">
+    <value>SimulationToolLicenseNumber</value>
+  </data>
 </root>

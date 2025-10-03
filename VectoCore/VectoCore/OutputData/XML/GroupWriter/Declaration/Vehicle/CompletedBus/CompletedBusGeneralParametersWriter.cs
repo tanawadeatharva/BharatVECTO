@@ -5,9 +5,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.CompletedBus
 {
-    public class CompletedBusGeneralParametersWriterV2_4 : GroupWriter, IVehicleDeclarationGroupWriter
+    public class CompletedBusGeneralParametersWriter : GroupWriter, IVehicleDeclarationGroupWriter
     {
-		public CompletedBusGeneralParametersWriterV2_4(XNamespace writerNamespace) : base(writerNamespace)
+		public CompletedBusGeneralParametersWriter(XNamespace writerNamespace) : base(writerNamespace)
 		{
 
 		}
@@ -26,7 +26,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Comple
 				new XElement(writerNamespace + XMLNames.Component_ManufacturerAddress,
 					inputData.ManufacturerAddress),
 				new XElement(writerNamespace + XMLNames.Vehicle_VIN, inputData.VIN),
-				new XElement(writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat())
+				new XElement(writerNamespace + XMLNames.Component_Date, inputData.Date.ToXmlFormat()),
+				new XElement(writerNamespace + XMLNames.Vehicle_SimulationToolLicenseNumber,
+					inputData.SimulationToolLicenseNumber)
 			};
 		}
 

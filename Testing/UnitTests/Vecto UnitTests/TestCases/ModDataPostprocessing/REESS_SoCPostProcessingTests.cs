@@ -4,6 +4,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -43,7 +44,7 @@ public class REESS_SoCPostProcessingTests
         modData.Data.CreateColumns(ModalResults.BusAuxiliariesSignals);
         modData.Data.CreateColumns(ModalResults.DCDCConverterSignals);
         modData.Data.CreateColumns(ModalResults.BatterySignals);
-        modData.Data.CreateElectricMotorColumns(runData.ElectricMachinesData.First().Item1, null, ModalResults.ElectricMotorSignals);
+        modData.Data.CreateElectricMotorColumns(runData.ElectricMachinesData.First().Item1, Constants.NOT_IN_AXLE_POWERTRAIN, ModalResults.ElectricMotorSignals);
         //modData.AddElectricMotor(emPos);
 
         var fuel = runData.EngineData.Fuels[0];
@@ -91,9 +92,9 @@ public class REESS_SoCPostProcessingTests
             modData[ModalResultField.P_busAux_PS_generated_dragOnly] = 0.SI<Watt>();
             modData[ModalResultField.P_busAux_PS_generated_alwaysOn] = 0.SI<Watt>();
 
-            modData[ModalResultField.P_EM_electricMotor_el_, PostProcessingRunData.emPos] = 120.SI<Watt>() * emEff;
-            modData[ModalResultField.P_EM_mech_, PostProcessingRunData.emPos] = 120.SI<Watt>();
-            modData[ModalResultField.EM_Off_, PostProcessingRunData.emPos] = 0.SI<Scalar>();
+            modData[ModalResultField.P_EM_electricMotor_el_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = 120.SI<Watt>() * emEff;
+            modData[ModalResultField.P_EM_mech_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = 120.SI<Watt>();
+            modData[ModalResultField.EM_Off_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = 0.SI<Scalar>();
 
             modData[ModalResultField.P_reess_int] = P_bat;
             modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);
@@ -143,9 +144,9 @@ public class REESS_SoCPostProcessingTests
             modData[ModalResultField.P_busAux_PS_generated_dragOnly] = 0.SI<Watt>();
             modData[ModalResultField.P_busAux_PS_generated_alwaysOn] = 0.SI<Watt>();
 
-            modData[ModalResultField.P_EM_electricMotor_el_, PostProcessingRunData.emPos] = -120.SI<Watt>() / emEff;
-            modData[ModalResultField.P_EM_mech_, PostProcessingRunData.emPos] = -120.SI<Watt>();
-            modData[ModalResultField.EM_Off_, PostProcessingRunData.emPos] = 0.SI<Scalar>();
+            modData[ModalResultField.P_EM_electricMotor_el_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = -120.SI<Watt>() / emEff;
+            modData[ModalResultField.P_EM_mech_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = -120.SI<Watt>();
+            modData[ModalResultField.EM_Off_, PostProcessingRunData.emPos, Constants.NOT_IN_AXLE_POWERTRAIN] = 0.SI<Scalar>();
 
             modData[ModalResultField.P_reess_int] = P_bat;
             modData[ModalResultField.P_reess_terminal] = P_bat * (P_bat < 0 ? batEff : 1 / batEff);

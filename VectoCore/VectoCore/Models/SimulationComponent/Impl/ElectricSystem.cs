@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
         }
 
-		protected ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData, bool dummy) : base(container)
+		protected ElectricSystem(IVehicleContainer container, BatterySystemData batterySystemData, bool dummy) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
         {
             Charger = new List<IElectricChargerPort>();
             ModelData = batterySystemData;

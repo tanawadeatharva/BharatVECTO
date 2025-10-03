@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
+﻿using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -17,7 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private SuperCapData ModelData;
 
-		public SuperCap(IVehicleContainer container, SuperCapData modelData) : base(container)
+		public SuperCap(IVehicleContainer container, SuperCapData modelData) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			ModelData = modelData;
 		}

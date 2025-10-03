@@ -1,4 +1,4 @@
-﻿/*
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -97,16 +97,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public bool IsAboveDownshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
 			var section = Downshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
-			var emTorque = inTorque; //* (-1); 
+
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
 				return true;
 			}
-			return IsRightOf(inAngularVelocity, emTorque, section);
+			return IsRightOf(inAngularVelocity, inTorque, section);
 		}
 
 		public bool IsAboveUpshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
-			var emTorque = inTorque; //* (-1); 
 			if (!Upshift.Any()) {
 				return false;
 			}
@@ -115,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			if (section.Item2.AngularSpeed < inAngularVelocity) {
 				return true;
 			}
-			return IsRightOf(inAngularVelocity, emTorque, section);
+			return IsRightOf(inAngularVelocity, inTorque, section);
 		}
 
 		/// <summary>

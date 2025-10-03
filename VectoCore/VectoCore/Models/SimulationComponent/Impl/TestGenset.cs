@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Container = container;
 			CombustionEngine = Container.EngineInfo as ITestpowertrainCombustionEngine;
 			EngineAux = CombustionEngine?.GetEngineAux;
-			_em = container.ElectricMotors.FirstOrDefault(x => x.Key == PowertrainPosition.GEN).Value as ITestpowertrainElectricMotor;
+			_em = container.ElectricMotorsInfo.FirstOrDefault(x => x.Position == PowertrainPosition.GEN) as ITestpowertrainElectricMotor;
 			ElectricMotorCtl = _em.Control as IGensetMotorController;
 
 			Battery = Container.BatteryInfo as Battery;

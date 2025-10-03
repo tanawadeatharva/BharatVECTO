@@ -17,9 +17,12 @@ Imports TUGraz.VectoCore.Utils
 ''' <remarks></remarks>
 Public Class WelcomeDialog
 
-	Private Const UserManualPDF = "User Manual\Release Notes Vecto DEV.pdf"
-	'Close
-	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
+    Private Const UserManualPDF = "User Manual\Release Notes Vecto.pdf"
+    Private Const HelpDocumentationHtml = "User Manual\help.html"
+
+    'Close
+    'Close
+    Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
 		DialogResult = DialogResult.Cancel
 		Close()
 	End Sub
@@ -31,19 +34,19 @@ Public Class WelcomeDialog
 
 	'Open Release Notes
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		If File.Exists(Path.Combine(MyAppPath, UserManualPDF)) Then
-			Process.Start(New ProcessStartInfo(Path.Combine(MyAppPath, UserManualPDF)) With {.UseShellExecute = true})
-		Else
-			MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
+        If File.Exists(UserManualPDF) Then
+            Process.Start(New ProcessStartInfo(UserManualPDF) With {.UseShellExecute = True})
+        Else
+            MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
 		End If
 	End Sub
 
 	'Open Quick Start Guide
 	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
-			Process.Start(new ProcessStartInfo(Path.Combine(MyAppPath, "User Manual\help.html")) With {.UseShellExecute = true})
-		Else
-			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        If File.Exists(HelpDocumentationHtml) Then
+            Process.Start(New ProcessStartInfo(HelpDocumentationHtml) With {.UseShellExecute = True})
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
 	End Sub
 End Class

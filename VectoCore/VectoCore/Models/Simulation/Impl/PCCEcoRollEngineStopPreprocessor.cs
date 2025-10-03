@@ -7,7 +7,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -43,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("Vehicle not applicable for PCC Preprocessor");
 			}
 
-			switch (TestPowertrain.Container.GearboxInfo) {
+			switch (TestPowertrain.Container.GearboxInfo()) {
 				case IAMTGearbox _:
 				case IEPCGearboxMultipleGears _:
                     RunPreprocessingAMTGearbox();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -68,6 +67,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IGearboxEngineeringInputData _gearbox;
 		private IGearshiftEngineeringInputData _gearShift;
 		private ElectricMachineEntry<IElectricMotorEngineeringInputData> _electricMotor;
+		private IIEPCEngineeringInputData _IEPC;
 
 		public JSONAxlePowertrainInputData(JToken axlePt, string basePath)
 		{
@@ -80,10 +80,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					$"{JsonKeys.Vehicle_AxlePowertrain_AxleNumber} not defined in {JsonKeys.Vehicle_AxlePowertrains}");
 			}
 
-			if (!Type.IsMultiplePowertrains())
+			if (Architecture == ArchitectureID.UNKNOWN)
 			{
 				throw new VectoException(
-					$"{JsonKeys.Vehicle_AxlePowertrain_Type} bad or missing in {JsonKeys.Vehicle_AxlePowertrains}");
+					$"Architecture bad or missing in {JsonKeys.Vehicle_AxlePowertrains}");
 			}
 		}
 
@@ -91,9 +91,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			? int.MinValue
 			: _axlePt.GetEx<int>(JsonKeys.Vehicle_AxlePowertrain_AxleNumber);
 
-		public virtual VectoSimulationJobType Type => (_axlePt[JsonKeys.Vehicle_AxlePowertrain_Type] == null)
-			? VectoSimulationJobType.EngineOnlySimulation
-			: JSONFile.ParsePowertrainType(_axlePt, JsonKeys.Vehicle_AxlePowertrain_Type);
+		public virtual ArchitectureID Architecture => (_axlePt["Architecture"] == null)
+			? ArchitectureID.UNKNOWN
+			: ArchitectureIDHelper.Parse(_axlePt.GetEx<string>("Architecture"));
 
 		public virtual IGearboxEngineeringInputData GearboxInputData => _gearbox ?? (_gearbox = ReadGearbox());
 
@@ -116,6 +116,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual ElectricMachineEntry<IElectricMotorEngineeringInputData> ElectricMotor => _electricMotor ?? 
 			(_electricMotor = new JTokenElectricMotorInputData(_axlePt[JsonKeys.Vehicle_ElectricMotor], _basePath)
 				.ReadElectricMotor());
+
+		public virtual IIEPCEngineeringInputData IEPCEngineeringInputData => _IEPC ?? (_IEPC = ReadIEPC());
 
 		private IGearshiftEngineeringInputData ReadGearShift()
 		{
@@ -154,6 +156,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			catch (Exception e)
 			{
 				throw new VectoException($"JobFile: Failed to read Gearbox file '{gearboxFile}': {e.Message}", e);
+			}
+		}
+
+		private IIEPCEngineeringInputData ReadIEPC()
+		{
+			var iepcFile = "";
+
+			try
+			{
+				iepcFile = (_axlePt[JsonKeys.Vehicle_IEPC] != null)
+					? _axlePt.GetEx(JsonKeys.Vehicle_IEPC).Value<string>()
+					: null;
+
+				return (iepcFile != null)
+					? JSONInputDataFactory.ReadIEPCEngineeringInputData(Path.Combine(_basePath, iepcFile))
+					: null;
+			}
+			catch (Exception e)
+			{
+				throw new VectoException($"JobFile: Failed to read IEPC file '{iepcFile}': {e.Message}", e);
 			}
 		}
 
@@ -219,9 +241,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	// ###################################################################
 	// ###################################################################
 
-	internal class JTokenBase : LoggingObject, IComponentInputData
+	public class JTokenBase : LoggingObject, IComponentInputData
 	{
-		protected enum TableType {
+		public enum TableType {
 			LossMap,
 			Cycle,
 			PTO_Cycle_Driving,
@@ -304,7 +326,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						Position = PowertrainPositionHelper.Parse(_token.GetEx<string>(JsonKeys.Vehicle_EM_Position)),
 						RatioADC = _token.GetEx<double>(JsonKeys.Vehicle_EM_Ratio),
 						MechanicalTransmissionLossMap = ReadTable(JsonKeys.Vehicle_EM_MechTransLossMap, TableType.EM_ADC_LossMap),
-						Count = 1,
+						Count = _token.GetEx<int>(JsonKeys.Vehicle_EM_Count),
 
 						RatioPerGear = (_token[JsonKeys.Vehicle_EM_RatioPerGear] != null)
 									? _token[JsonKeys.Vehicle_EM_RatioPerGear].Select(x => x.Value<double>()).ToArray()

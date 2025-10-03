@@ -297,7 +297,7 @@ public class CombustionEngineIdleControllerTests
 		iceCtl.Setup(i => i.CombustionEngineOn).Returns(true);
 		veh.Setup(v => v.VehicleStopped).Returns(false);
 
-		container.Setup(c => c.GearboxInfo).Returns(gbx.Object);
+		container.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gbx.Object);
 		container.Setup(c => c.EngineInfo).Returns(ice.Object);
 		container.Setup(c => c.EngineCtl).Returns(iceCtl.Object);
 		container.Setup(c => c.VehicleInfo).Returns(veh.Object);

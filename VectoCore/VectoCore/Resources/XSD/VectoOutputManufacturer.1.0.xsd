@@ -8,6 +8,7 @@
 	2025-05-11: Fixed type of Engine FuelType to include all new types (e.g. H2).
 	2025-05-11: Fixed FCHV_IEPC Primary Bus Aux type (HEVPrimaryBusAuxOutputType -> PEVPrimaryBusAuxOutputType).
 	2025-05-14: Made Retarder compulsory everywhere.
+	2025-09-18: Added missing optional WheelEnd sub-element to AxleType.
 	-->
 	<!-- Imports_______________________________________________ -->
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
@@ -153,8 +154,28 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Tyre" type="mrf:TyreType"/>
+			<xs:element name="WheelEnd" type="mrf:WheelEndType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="axleNumber" type="xs:int" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="WheelEndType">
+		<xs:sequence>
+			<xs:element name="WheelEndFriction">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>P549 - [Nm]</xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="v1.0:Double1">
+						<xs:minInclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+				<xs:annotation>
+					<xs:documentation>P550 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxleWheelsType">
 		<xs:sequence>

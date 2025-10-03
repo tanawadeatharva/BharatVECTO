@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -13,7 +14,7 @@ public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo
 	private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _left;
 	private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _right;
 
-	public MockDrivingCycle(IVehicleContainer container, DrivingCycleData data) : base(container)
+	public MockDrivingCycle(IVehicleContainer container, DrivingCycleData data) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 	{
 		if (data != null) {
 			_left = data.Entries.GetEnumerator();

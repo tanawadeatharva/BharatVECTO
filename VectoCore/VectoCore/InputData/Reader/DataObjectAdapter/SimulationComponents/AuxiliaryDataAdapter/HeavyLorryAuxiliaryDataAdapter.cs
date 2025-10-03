@@ -130,7 +130,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				VectoSimulationJobType.IEPC_E,
 				VectoSimulationJobType.IEPC_S,
 				VectoSimulationJobType.FCHV,
-				VectoSimulationJobType.FCHV_IEPC);
+				VectoSimulationJobType.FCHV_IEPC,
+				VectoSimulationJobType.Multiple_FCHV,
+				VectoSimulationJobType.Multiple_PEV,
+				VectoSimulationJobType.Multiple_SHEV);
 			auxDataList.Add(aux);
 		}
 
@@ -163,7 +166,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				VectoSimulationJobType.IEPC_S,
 				VectoSimulationJobType.ParallelHybridVehicle,
 				VectoSimulationJobType.FCHV,
-				VectoSimulationJobType.FCHV_IEPC));
+				VectoSimulationJobType.FCHV_IEPC,
+				VectoSimulationJobType.Multiple_FCHV,
+				VectoSimulationJobType.Multiple_PEV,
+				VectoSimulationJobType.Multiple_SHEV));
 			auxDataList.Add(aux);
 		}
 
@@ -184,7 +190,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				VectoSimulationJobType.IEPC_S,
 				VectoSimulationJobType.IEPC_E,
 				VectoSimulationJobType.FCHV,
-				VectoSimulationJobType.FCHV_IEPC);
+				VectoSimulationJobType.FCHV_IEPC,
+				VectoSimulationJobType.Multiple_FCHV,
+				VectoSimulationJobType.Multiple_PEV,
+				VectoSimulationJobType.Multiple_SHEV);
 			auxDataList.Add(aux);
 			return;
 		}

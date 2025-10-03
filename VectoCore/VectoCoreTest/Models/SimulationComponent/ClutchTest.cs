@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Tests.Integration.BatteryElectric;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using MockDriver = TUGraz.VectoCore.Tests.Utils.MockDriver;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -167,7 +168,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 	public class MockEngine : VectoSimulationComponent, IEngineInfo, IEngineControl
 	{
-		public MockEngine(IVehicleContainer container) : base(container) {}
+		public MockEngine(IVehicleContainer container, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(container, axleNumber) {}
 
 		public PerSecond EngineSpeed { get; set; }
 		public NewtonMeter EngineTorque { get; set; }

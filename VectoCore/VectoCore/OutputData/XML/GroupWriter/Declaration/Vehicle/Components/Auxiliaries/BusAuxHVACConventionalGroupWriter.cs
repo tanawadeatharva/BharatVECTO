@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -24,9 +23,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 		#endregion
 	}
 
-    public class BusAuxHVACConventionalGroupWriter_v2_4 : BuxAuxHVACGroupWriter_v2_4
+    public class BusAuxHVACConventionalGroupWriter : BuxAuxHVACGroupWriter_v2_4
     {
-		public BusAuxHVACConventionalGroupWriter_v2_4(XNamespace writerNamespace,
+		public BusAuxHVACConventionalGroupWriter(XNamespace writerNamespace,
 			IGroupWriterFactory groupWriterFactory) : base(writerNamespace, groupWriterFactory)
 		{
 
@@ -64,9 +63,9 @@ namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Compon
 #endregion
 	}
 
-	public class BusAuxHVACxEVGroupWriter_v2_4 : BuxAuxHVACGroupWriter_v2_4
+	public class BusAuxHVACxEVGroupWriter : BuxAuxHVACGroupWriter_v2_4
     {
-		public BusAuxHVACxEVGroupWriter_v2_4(XNamespace writerNamespace, IGroupWriterFactory groupWriterFactory) : base(writerNamespace, groupWriterFactory) { }
+		public BusAuxHVACxEVGroupWriter(XNamespace writerNamespace, IGroupWriterFactory groupWriterFactory) : base(writerNamespace, groupWriterFactory) { }
 
 		#region Overrides of BuxAuxHVACGroupWriter_v2_4
 

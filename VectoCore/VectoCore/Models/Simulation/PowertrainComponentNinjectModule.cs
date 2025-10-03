@@ -8,7 +8,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -18,7 +17,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -163,8 +161,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 				PowertrainPosition.HybridP2));
 			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
 				VectoSimulationJobType.IHPC, CycleType.DistanceBased, GearboxType.IHPC, PowertrainPosition.IHPC));
+			Bind<IGearbox>().To<PEVGearbox>().Named(_realPowertrain.GearboxNameBatteryOnlyHybrid(
+				VectoSimulationJobType.IHPC, CycleType.DistanceBased, GearboxType.IHPC, PowertrainPosition.HybridP2));
 
-			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.ParallelHybridVehicle));
+            Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.ParallelHybridVehicle));
 			Bind<IClutch>().To<Clutch>().Named(_realPowertrain.ClutchBatteryOnlyHybridName(VectoSimulationJobType.IHPC));
 
             #endregion

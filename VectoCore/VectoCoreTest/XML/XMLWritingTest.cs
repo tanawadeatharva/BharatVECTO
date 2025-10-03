@@ -30,11 +30,7 @@
 */
 
 using System.IO;
-using System.Xml;
 using Ninject;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.OutputData.XML;
 using NUnit.Framework;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 

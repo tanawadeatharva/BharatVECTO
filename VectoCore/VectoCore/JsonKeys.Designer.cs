@@ -1494,9 +1494,35 @@ namespace TUGraz.VectoCore {
         /// <summary>
         ///   Looks up a localized string similar to PrimaryVIF.
         /// </summary>
-        internal static string VTP_PrimaryVIF {
-            get {
+        internal static string VTP_PrimaryVIF
+        {
+            get
+            {
                 return ResourceManager.GetString("VTP_PrimaryVIF", resourceCulture);
+            }
+        }
+        
+        internal static string Vehicle_EM_Count
+        {
+            get
+            {
+                return ResourceManager.GetString("Vehicle_EM_Count", resourceCulture);
+            }
+        }
+
+		internal static string Vehicle_IEPC
+		{
+			get
+			{
+				return ResourceManager.GetString("Vehicle_IEPC", resourceCulture);
+			}
+		}
+
+        internal static string Vehicle_HybridStrategyParams
+        {
+            get 
+            {
+                return ResourceManager.GetString("Vehicle_HybridStrategyParams", resourceCulture);
             }
         }
     }

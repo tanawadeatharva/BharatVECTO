@@ -2,6 +2,45 @@
 
 
 
+**VECTO v5.0.6-RC (22-09-2025)**
+
+
+- Features
+    * CodeEU n.a.: Update jobs in Generic Vehicles to version v2.7 (vecto/vecto!453)
+    * CodeEU n.a.: Disable v2.4 jobs (vecto/vecto!458)
+    * CodeEU #1140: Update multistep GUI to work with new XSDs (vecto/vecto!469)
+    * CodeEU n.a.: Multiple axles partial implementation (vecto/vecto!471)
+
+- Bug Fixes
+
+    * CodeEU n.a.: Fix FCHV unit tests (vecto/vecto!448)
+    * CodeEU n.a.: XMLConversionTool bug fixes, more test cases, refactoring (vecto/vecto!452)
+    * CodeEU n.a.: Bug fixes for FCHV bus (vecto/vecto!454)
+    * CodeEU #1147: Made FuelCell Minpower, Maxpower optional (vecto/vecto!456)
+    * CodeEU n.a.: Engine-only simulation (vecto/vecto!457)
+    * CodeEU n.a.: EM data in PHEV rundata creation (vecto/vecto!459)
+    * CodeEU #1164: Lifetime ranges in reports for PEV, HEV-OVC. (vecto/vecto!461)
+    * CodeEU n.a.: Work-around in ranges to make tests succeed (vecto/vecto!462)
+    * CodeEU #1163: Respect job's battery SoC limits (vecto/vecto!463)
+    * CodeEU #870, #871, #924: Extend Accelerate condition after xEV Overload (vecto/vecto!466)
+    * CodeEU n.a.: VTP generic vehicles (vecto/vecto!465)
+    * CodeEU n.a.: Extend Accelerate condition after xEV Overload
+    * CodeEU n.a.: Changed v2.6 XSD to allow DeltaCdxA_declared and DeltaTransferredCdxA value: zero (vecto/vecto!472)
+    * CodeEU n.a.: Avoid cyclic refs from !473 (vecto/vecto!475)
+    * CodeEU #1167: Added WheelEnd info to MRF (vecto/vecto!476)
+    * CodeEU n.a.: Angledrive mod data, and PWheel axlegear efficiency (vecto/vecto!477)
+    * CodeEU n.a.: Disable engineering mode for multiple powertrains (vecto/vecto!478)
+    * CodeEU n.a.: VectoException using reference (vecto/vecto!479)
+
+- Refact
+
+    * CodeEU n.a.: FCHV iterative run strategy  (vecto/vecto!449)
+    * CodeEU n.a.: Update VECTO to NET 8 (vecto/vecto!467)
+    * CodeEU n.a.: Old .NET references (vecto/vecto!468)
+    * CodeEU n.a.: MultistepTool deprecated views (vecto/vecto!470)
+    * CodeEU n.a.: Remove unnecessary usings and nugets (vecto/vecto!473)
+
+
 **VECTO v5.0.4-DEV (25-08-2025)**
 
 
@@ -180,7 +219,7 @@
     * fix: secure XML loading against external entity injection (vecto/vecto!319)
     * fix: correct interim supercap reader type (vecto/vecto!320)
     * fix: parameter IDs for XSDs v2.3 and v2.6 (vecto/vecto!322)
-    
+
 - Documentation
 
     * CodeEU n.a.: Update XSD parameter IDs documentation (vecto/vecto!327)

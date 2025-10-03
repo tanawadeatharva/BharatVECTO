@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
@@ -19,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly IPTOCycleController _ptoCycleController;
 		private readonly IDataBus _dataBus;
 
-		public EPTO(IPTOCycleController cycleController, IVehicleContainer dataBus) : base(dataBus)
+		public EPTO(IPTOCycleController cycleController, IVehicleContainer dataBus) : base(dataBus, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			_dataBus = dataBus;
 			_ptoCycleController = cycleController;

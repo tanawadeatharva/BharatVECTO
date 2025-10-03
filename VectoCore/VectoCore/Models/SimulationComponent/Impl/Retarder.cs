@@ -37,6 +37,9 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
+using System.Linq;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -61,11 +64,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="container"></param>
 		/// <param name="lossMap"></param>
 		/// <param name="ratio"></param>
-		public Retarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio) : base(container)
+		public Retarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) : 
+			base(container, axleNumber)
 		{
 			_lossMap = lossMap;
 			_ratio = ratio;
-			_primaryRetarder = container.RunData != null && container.RunData.Retarder.Type == RetarderType.TransmissionInputRetarder;
+			_primaryRetarder = (axleNumber == Constants.NOT_IN_AXLE_POWERTRAIN)
+				? container.RunData != null && container.RunData.Retarder.Type == RetarderType.TransmissionInputRetarder
+				: container.RunData.AxlePowertrainsData.Where(x => x.AxleNumber == axleNumber).All(x => x.Retarder.Type == RetarderType.TransmissionInputRetarder);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
@@ -77,7 +83,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			if (angularVelocity == null || (_primaryRetarder && (!DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.GearEngaged(absTime)))) {
+			if (angularVelocity == null || (_primaryRetarder && (!DataBus.ClutchesInfo.First(x => x.AxleNumber == AxleNumber).ClutchClosed(absTime) ||
+				!DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber).GearEngaged(absTime)))) 
+			{
 				return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
 			}
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
@@ -92,8 +100,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.P_ret_loss] = (CurrentState.InTorque - CurrentState.OutTorque) * avgAngularSpeed;
-			container[ModalResultField.P_retarder_in] = CurrentState.InTorque * avgAngularSpeed;
+			container[ModalResultField.P_ret_loss, AxleNumber.FormatAxleNumber()] = 
+				(CurrentState.InTorque - CurrentState.OutTorque) * avgAngularSpeed;
+			
+			container[ModalResultField.P_retarder_in, AxleNumber.FormatAxleNumber()] = CurrentState.InTorque * avgAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)

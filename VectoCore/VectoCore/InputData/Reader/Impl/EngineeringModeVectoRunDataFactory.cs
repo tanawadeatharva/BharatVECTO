@@ -40,25 +40,20 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -73,17 +68,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
 		protected IEngineeringDataAdapter DataAdapter { get; }
 
-		protected IPowertrainBuilder PowertrainBuilder { get; }
 		/// Used only for debug output
 		/// </summary>
 		public IOutputDataWriter Writer { get; set; }
 
 
-        internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider,
-			IPowertrainBuilder ptBuilder, IEngineeringDataAdapter dataAdapter)
+        internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IEngineeringDataAdapter dataAdapter)
 		{
 			InputDataProvider = dataProvider;
-			PowertrainBuilder = ptBuilder;
 			DataAdapter = dataAdapter;
 		}
 
@@ -116,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				case VectoSimulationJobType.Multiple_FCHV:
 				case VectoSimulationJobType.Multiple_PEV:
 				case VectoSimulationJobType.Multiple_SHEV:
-					return GetMultiplePowertrainsRunData();
+					return GetFCHV_RunData(GetMultiplePowertrainsRunData, InputDataProvider.JobInputData.JobType);
 				default:
 					throw new ArgumentOutOfRangeException($"Invalid JobType {InputDataProvider.JobInputData.JobType}");
 			}
@@ -125,15 +117,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private IEnumerable<VectoRunData> GetFCHV_RunData(Func<IEnumerable<VectoRunData>> baseDataFunc, VectoSimulationJobType jobType)
 		{
 			var dao = new EngineeringDataAdapter() {
-
 				DebugOutputDataWriter = Writer,
+				JobFilePath = InputDataProvider.DataSource.SourceFile
 			};
 
 			foreach (var pevRd in baseDataFunc()) {
-				var fuelCellData = 
-					dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
-						.FuelCellSystemInputData);
-                var iterativeRunStrategy = new FCHEVIterativeRunStrategy( new []{
+				if (InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData != null)
+				{
+					var fuelCellData =
+						dao.CreateFuelCellSystemData(InputDataProvider.JobInputData.Vehicle.Components
+							.FuelCellSystemInputData);
+					var iterativeRunStrategy = new FCHEVIterativeRunStrategy(new[]{
 					//Prerun, iteration 0
 					new PreRunOptions() {
 #if TRACE_FC
@@ -148,35 +142,39 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					}
 				});
 
-				//pevRd.BatteryData.ConnectionSystemResistance = 0.SI<Ohm>();
-				pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData, out var fcBat);
-				//pevRd.SimulationType = jobType;
+					//pevRd.BatteryData.ConnectionSystemResistance = 0.SI<Ohm>();
+					pevRd.BatteryData = dao.CreateFuelCellPreProcessingBattery(InputDataProvider.JobInputData.Vehicle.Components.FuelCellSystemInputData, pevRd.BatteryData, out var fcBat);
+					//pevRd.SimulationType = jobType;
 #if TRACE_FC
-				pevRd.ModFileSuffix += "pre";
+					pevRd.ModFileSuffix += "pre";
 #else
 
 #endif
 
-				iterativeRunStrategy.Update = (modData, runData) => {
-					runData.JobType = jobType;
-					runData.ModFileSuffix = "";
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
-					//In case the battery is modified after creating the rundata (testing, do not create new battery data)
-					pevRd.BatteryData.Batteries =
-						pevRd.BatteryData.Batteries.Where(b => b.Item1 != fcBat.Item1).ToList();
+
+					iterativeRunStrategy.Update = (modData, runData) =>
+					{
+						runData.JobType = jobType;
+						runData.ModFileSuffix = "";
+						modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
+						//In case the battery is modified after creating the rundata (testing, do not create new battery data)
+						pevRd.BatteryData.Batteries =
+							pevRd.BatteryData.Batteries.Where(b => b.Item1 != fcBat.Item1).ToList();
 
 
-                    //runData.BatteryData = pevBat;
-                    //runData.BatteryData =
-                    //	dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
-					runData.FuelCellSystemData = fuelCellData;
-					runData.FuelCellSystemData.FuelCellPowerMap =
-						dao.CreateFuelCellPowerMap(modData, runData.FuelCellSystemData, runData.BatteryData);
-					runData.FuelCellSystemData.FuelCellShareMap = dao.CreateFuelCellShareMap(fuelCellData);
-					pevRd.BatteryData.ChargeSustainingBatterySystem = false; //In the real run we don't use a chargesustaining battery
+						//runData.BatteryData = pevBat;
+						//runData.BatteryData =
+						//	dao.CreateBatteryData(InputDataProvider.JobInputData.Vehicle.Components.ElectricStorage, 0.5);
+						runData.FuelCellSystemData = fuelCellData;
+						runData.FuelCellSystemData.FuelCellPowerMap =
+							dao.CreateFuelCellPowerMap(modData, runData.FuelCellSystemData, runData.BatteryData);
+						runData.FuelCellSystemData.FuelCellShareMap = dao.CreateFuelCellShareMap(fuelCellData);
+						pevRd.BatteryData.ChargeSustainingBatterySystem = false; //In the real run we don't use a chargesustaining battery
 
-                };
-				pevRd.IterativeRunStrategy = iterativeRunStrategy;
+					};
+					pevRd.IterativeRunStrategy = iterativeRunStrategy;
+				}
+
 				yield return pevRd;
 			}
 		}
@@ -347,47 +345,129 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 		}
 
-		private IEnumerable<VectoRunData> GetMultiplePowertrainsRunData()
+		private VectoRunData GetMultiplePowertrainsCycleRunData(
+			ICycleData cycle, 
+			IEngineEngineeringInputData engine = null,
+			int engineModeIndex = -1)
 		{
-			foreach (var cycle in InputDataProvider.JobInputData.Cycles)
+			var dao = new EngineeringDataAdapter();
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+
+			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
+			driver.EngineStopStart.UtilityFactorDriving = 1;
+			driver.EngineStopStart.UtilityFactorStandstill = 1;
+
+			CombustionEngineData engineData = null;
+			if (engine != null)
 			{
-				var dao = new EngineeringDataAdapter();
-				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				engineData = dao.CreateEngineData(vehicle, engine.EngineModes[engineModeIndex]);
+				engineData.FuelMode = engineModeIndex;
+                engineData.PTORoadSweepEngineSpeed = vehicle.PTO_DriveEngineSpeed;
+            }
 
-				var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
-				var averageVoltage = (batteryData != null) ? CalculateAverageVoltage(batteryData) : null;
+			var batteryData = dao.CreateBatteryData(vehicle.Components.ElectricStorage, vehicle.InitialSOC);
+			var averageVoltage = (batteryData != null) ? CalculateAverageVoltage(batteryData) : null;
 
-				var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
-										CrossWindCorrectionMode.VAirBetaLookupTable;
+			var generatorData = (vehicle.Components.GeneratorEngineering != null)
+				? dao.CreateElectricMachine(vehicle.Components.GeneratorEngineering, vehicle.ElectricMotorTorqueLimits, averageVoltage)
+				: null;
 
-				var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
+			var emData = new List<Tuple<PowertrainPosition, ElectricMotorData>>();
 
-				var vehicleData = dao.CreateVehicleData(vehicle);
+			if (generatorData != null)
+			{
+				emData.Add(generatorData);
+			}
 
-				yield return new VectoRunData {
-					JobName = InputDataProvider.JobInputData.JobName,
-					JobType = InputDataProvider.JobInputData.JobType,
-					VehicleData = vehicleData,
-					WheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle),
-					AirdragData = dao.CreateAirdragData(
-						vehicle.Components.AirdragInputData, 
-						vehicle),
-					DriverData = dao.CreateDriverData(InputDataProvider.DriverInputData),
-					Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-					BusAuxiliaries = dao.CreateBusAuxiliariesData(
-						vehicle.Components.AuxiliaryInputData, 
-						vehicleData,
-                        InputDataProvider.JobInputData.JobType),
-					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
-					ExecutionMode = ExecutionMode.Engineering,
-					BatteryData = batteryData,
-					SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
-					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
-					ElectricAuxDemand = vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
-					InMotionCharging = vehicle.InMotionCharging.Enabled,
-					InMotionChargingTechnology = IMCTechnology.NotApplicable,
-					AxlePowertrainsData = dao.CreateAxlePowertrainsData(InputDataProvider, averageVoltage, PowertrainBuilder)
-				};
+			var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable;
+
+			var drivingCycle = GetDrivingCycle(cycle, crossWindRequired);
+
+			var vehicleData = dao.CreateVehicleData(vehicle);
+
+			var cycleProxy = new DrivingCycleProxy(drivingCycle, cycle.Name);
+
+            var axlePtData = dao.CreateAxlePowertrainsData(InputDataProvider, averageVoltage, cycleProxy);
+
+            //TODO: Adjust code below instead of arbitrarily getting axlePtData[0] data
+            SetDriverPTOProperties(vehicle, driver, axlePtData[0].AxleGearData, axlePtData[0].GearboxData, axlePtData[0].AngledriveData);
+
+            //TODO: Adjust code below instead of arbitrarily getting axlePtData[0] data
+            var hybridParameters = (engineData != null)
+				? dao.CreateHybridStrategyParameters(InputDataProvider.JobInputData, engineData, axlePtData[0].GearboxData, axlePtData[0].AxleNumber)
+				: null;
+
+			return new VectoRunData
+			{
+				JobName = InputDataProvider.JobInputData.JobName,
+				JobType = InputDataProvider.JobInputData.JobType,
+				VehicleData = vehicleData,
+				EngineData = engineData,
+				ElectricMachinesData = emData,
+				WheelEndData = dao.CreateWheelEndData(vehicleData.VehicleClass, vehicle),
+				AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
+				DriverData = driver,
+				Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
+				BusAuxiliaries = dao.CreateBusAuxiliariesData(vehicle.Components.AuxiliaryInputData, vehicleData, InputDataProvider.JobInputData.JobType),
+				Cycle = cycleProxy,
+				ExecutionMode = ExecutionMode.Engineering,
+				BatteryData = batteryData,
+				SuperCapData = dao.CreateSuperCapData(vehicle.Components.ElectricStorage, vehicle.InitialSOC),
+				SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
+				ElectricAuxDemand = vehicle.Components.AuxiliaryInputData.Auxiliaries.ElectricPowerDemand,
+				InMotionCharging = vehicle.InMotionCharging.Enabled,
+				InMotionChargingTechnology = vehicle.InMotionCharging.Technology,
+				HybridStrategyParameters = hybridParameters,
+				AxlePowertrainsData = axlePtData
+			};
+		}
+
+        private void SetDriverPTOProperties(
+			IVehicleEngineeringInputData vehicle, 
+			DriverData driver, 
+			AxleGearData axlegearData,
+			GearboxData gearboxData,
+			AngledriveData angledriveData
+            )
+        {
+			if ((axlegearData == null) || (gearboxData == null))
+			{
+				return;
+			}
+
+			if (vehicle.PTO_DriveGear == null || vehicle.PTO_DriveEngineSpeed == null)
+			{
+				return;
+			}
+            
+			driver.PTODriveMinSpeed = vehicle.PTO_DriveEngineSpeed /
+                axlegearData.AxleGear.Ratio /
+                gearboxData.Gears[vehicle.PTO_DriveGear.Gear].Ratio /
+                (angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
+
+            driver.PTODriveRoadsweepingGear = vehicle.PTO_DriveGear;
+        }
+
+        private IEnumerable<VectoRunData> GetMultiplePowertrainsRunData()
+		{
+			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
+
+			if (engine == null)
+			{
+				foreach (var cycle in InputDataProvider.JobInputData.Cycles)
+				{
+					yield return GetMultiplePowertrainsCycleRunData(cycle);
+				}
+			}			
+			else
+			{
+				for (var modeIdx = 0; modeIdx < engine.EngineModes.Count; modeIdx++)
+				{
+					foreach (var cycle in InputDataProvider.JobInputData.Cycles)
+					{
+						yield return GetMultiplePowertrainsCycleRunData(cycle, engine, modeIdx);
+					}
+				}
 			}
 		}
 
@@ -476,43 +556,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> GetIEPCRunData()
 		{
-			var axleGearRequired = AxleGearRequired();
+			var axleGearRequired = EngineeringDataAdapter.CheckIEPCData(
+				InputDataProvider.JobInputData.Vehicle.Components.IEPCEngineeringInputData,
+				InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
+			
+			var dao = new EngineeringDataAdapter();
 			foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 				yield return GetIEPCVectoRunData(axleGearRequired, cycle, DataAdapter);
 			}
 		}
 
-		private bool AxleGearRequired()
-		{
-			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			var iepcInput = vehicle.Components.IEPCEngineeringInputData;
-			var axleGearRequired = !iepcInput.DifferentialIncluded && !iepcInput.DesignTypeWheelMotor;
-			if (axleGearRequired && vehicle.Components.AxleGearInputData == null) {
-				throw new VectoException(
-					$"Axlegear reqhired for selected type of IEPC! DifferentialIncluded: {iepcInput.DifferentialIncluded}, DesignTypeWheelMotor: {iepcInput.DesignTypeWheelMotor}");
-			}
-
-			var numGearsPowermap =
-				iepcInput.VoltageLevels.Select(x => Tuple.Create(x.VoltageLevel, x.PowerMap.Count)).ToArray();
-			var gearCount = iepcInput.Gears.Count;
-			var numGearsDrag = iepcInput.DragCurves.Count;
-
-			if (numGearsPowermap.Any(x => x.Item2 != gearCount)) {
-				throw new VectoException(
-					$"Number of gears for voltage levels does not match! PowerMaps: {numGearsPowermap.Select(x => $"{x.Item1}: {x.Item2}").Join()}; Gear count: {gearCount}");
-			}
-
-			if (numGearsDrag > 1 && numGearsDrag != gearCount) {
-				throw new VectoException(
-					$"Number of gears drag curve does not match gear count! DragCurve {numGearsDrag}; Gear count: {gearCount}");
-			}
-
-			return axleGearRequired;
-		}
+		
 
 		private IEnumerable<VectoRunData> GetIEPC_S_RunData()
 		{
-			var axleGearRequired = AxleGearRequired();
+			var axleGearRequired = EngineeringDataAdapter.CheckIEPCData(
+				InputDataProvider.JobInputData.Vehicle.Components.IEPCEngineeringInputData,
+				InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			var engine = vehicle.Components.EngineInputData;
@@ -612,7 +672,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
             };
 			
-			var gearboxData = dao.CreateIEPCGearboxData(InputDataProvider, retVal);
+			var gearboxData = dao.CreateIEPCGearboxData(InputDataProvider.JobInputData.Vehicle.Components.IEPCEngineeringInputData, retVal);
 
 			retVal.GearboxData = gearboxData;
 			return retVal;

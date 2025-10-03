@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -35,7 +33,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly IVehicleContainer _vehicleContainer;
 
 
-		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : base(container)
+		public HybridController(IVehicleContainer container, IHybridControlStrategy strategy, IElectricSystem es) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			_electricMotorCtl = new Dictionary<PowertrainPosition, HybridCtlElectricMotorController>();
 			_vehicleContainer = container;
@@ -64,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IElectricSystem ElectricSystem { get; }
 
-		public virtual void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData)
+		public virtual void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			if (_electricMotorCtl.ContainsKey(pos)) {
 				throw new VectoException("Electric motor already registered as position {0}", pos);
@@ -85,7 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		SimpleComponentState IHybridController.PreviousState => PreviousState;
 
-		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos) => _electricMotorCtl[pos];
+		public virtual IElectricMotorControl ElectricMotorControl(PowertrainPosition pos, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => 
+			_electricMotorCtl[pos];
 
 		public virtual IShiftStrategy ShiftStrategy => _shiftStrategy;
 
@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retryCount > 10) {
 					throw new VectoException("HybridStrategy: retry count exceeded! {0}", DebugData);
 				}
-				var engaged = DataBus.GearboxInfo.GearEngaged(absTime);
+				var gearbox = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber);
+				var engaged = gearbox.GearEngaged(absTime);
 				retry = false;
 				var strategyResponse = Strategy.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				DebugData.Add($"[HC-R-0-{retryCount}]", strategyResponse);
@@ -201,7 +202,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (retVal is ResponseOverload && DataBus.DriverInfo.DrivingAction == DrivingAction.Brake &&
-					engaged != DataBus.GearboxInfo.GearEngaged(absTime)) {
+					engaged != gearbox.GearEngaged(absTime)) {
 					retryCount++;
 					retry = true;
 					Strategy.OperatingpointChangedDuringRequest(absTime, dt, outTorque, outAngularVelocity, dryRun,
@@ -234,18 +235,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
 			retry = false;
             if (!dryRun && strategySettings.ShiftRequired) {
-				var oldGear = DataBus.GearboxInfo.Gear;
-                DataBus.GearboxCtl.TriggerGearshift(absTime, dt);
+				var gearbox = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber);
+				var oldGear = gearbox.Gear;
+                DataBus.GearboxesCtl.First().TriggerGearshift(absTime, dt);
 
 				_shiftStrategy.SetNextGear(strategySettings.NextGear);
 				SelectedGear = strategySettings.NextGear;
 
-				if (DataBus.GearboxInfo.GearboxType == GearboxType.IHPC) {
+				if (gearbox.GearboxType == GearboxType.IHPC) {
 					retry = true;
 					return null;
 				}
 
-				if (!DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				if (!gearbox.GearboxType.AutomaticTransmission()) {
 		
 					return new ResponseGearShift(this);
 				}
@@ -268,12 +270,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual bool AdjustStrategyWhenExceedingGearMaxSpeed(bool dryRun, IResponse retVal, Second absTime, Second dt, 
 			NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var gear = DataBus.GearboxInfo.Gear;
-			var maxSpeed = VectoMath.Min(DataBus.GearboxInfo.GetGearData(gear.Gear).MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed);
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			var gear = gearbox.Gear;
+			var maxSpeed = VectoMath.Min(gearbox.GetGearData(gear.Gear).MaxSpeed, DataBus.EngineInfo.EngineN95hSpeed);
 
 			if (!dryRun 
 				&& retVal is ResponseSuccess 
-				&& DataBus.GearboxInfo.GearEngaged(absTime) 
+				&& gearbox.GearEngaged(absTime) 
 				&& (retVal.Gearbox.InputSpeed != null) 
 				&& retVal.Gearbox.InputSpeed.IsGreater(maxSpeed)) {
 				
@@ -293,7 +296,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.StrategyResponse = strategyResponse as HybridStrategyResponse;
 			_electricMotorTorque = PreviousState.StrategyResponse.MechanicalAssistPower;
 			var retVal = NextComponent.Initialize(outTorque, outAngularVelocity);
-			SelectedGear = DataBus.GearboxInfo.Gear;
+			SelectedGear = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber).Gear;
 			return retVal;
 		}
 

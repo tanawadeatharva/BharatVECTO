@@ -4,8 +4,8 @@
     <RootNamespace>VectoConsole</RootNamespace>
     <AssemblyName>vectocmd</AssemblyName>
     <ApplicationIcon>VECTO.ico</ApplicationIcon>
-    <TargetFrameworks>net48;net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net48;net6.0;net8.0</TargetFrameworks>
+
     <Configurations>Debug;Release;MockupDebug;MockupRelease</Configurations>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net48|AnyCPU'">
@@ -14,13 +14,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net6.0|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='MockupDebug|net8.0|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
 	<PropertyGroup Condition="('$(Configuration)' == 'MockupRelease') Or ('$(Configuration)' == 'MockupDebug')">
 		<DefineConstants>$(DefineConstants);MOCKUP</DefineConstants>
 	</PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.6" />
-    <PackageReference Include="NLog" Version="4.7.13" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="Components\*.*">

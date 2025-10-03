@@ -1,13 +1,7 @@
 using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 {

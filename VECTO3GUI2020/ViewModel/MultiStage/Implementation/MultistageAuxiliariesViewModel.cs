@@ -15,7 +15,6 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using EnumHelper = VECTO3GUI2020.Helper.EnumHelper;
 
@@ -40,7 +39,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 	public abstract class MultistageAuxiliariesViewModel : ViewModelBase, IMultistageAuxiliariesViewModel, IDataErrorInfo
 	{
-		protected XNamespace Version => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
+		protected virtual XNamespace Version => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 		protected abstract string XSDType { get; }
         protected MultistageAuxiliariesViewModel()
 		{
@@ -546,13 +545,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		#region Implementation of interfaces (unused Properties);
 
-		public DataSource DataSource
+		public virtual DataSource DataSource
 		{
 			get => new DataSource () {
 				Type = XSDType,
 				TypeVersion = Version.ToString(),
 			};
 		}
+
 		public XmlNode XMLSource => throw new NotImplementedException();
 
 		public string FanTechnology => throw new NotImplementedException();
@@ -728,13 +728,26 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			
 		}
 
-		protected MultistageAuxiliariesViewModel_xEV(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData) : base(consolidatedAuxiliariesInputData)
+		protected MultistageAuxiliariesViewModel_xEV(IBusAuxiliariesDeclarationData consolidatedAuxiliariesInputData)
+			: base(consolidatedAuxiliariesInputData)
 		{ }
 
 		#region Overrides of MultistageAuxiliariesViewModel
+		
+		protected override XNamespace Version => XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
 		protected override string XSDType => XMLTypes.AUX_xEV_CompletedBusType;
+		
 		public override bool ShowxEVProperties => true;
+
+		public override DataSource DataSource
+		{
+			get => new DataSource()
+			{
+				Type = XSDType,
+				TypeVersion = Version.ToString(),
+			};
+		}
 
 		#endregion
 	}

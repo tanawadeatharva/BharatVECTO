@@ -58,7 +58,7 @@ Public Class frmAuxiliaryConfig
 
 
         If Not ValidateAuxFileName(fileName) Then
-            Me.DialogResult = Windows.Forms.DialogResult.Abort
+            Me.DialogResult = DialogResult.Abort
             Me.Close()
         End If
 
@@ -80,7 +80,7 @@ Public Class frmAuxiliaryConfig
         Catch ex As Exception
 
             MessageBox.Show("The filename you supplied {0} was invalid or could not be found ", fileName)
-            Me.DialogResult = Windows.Forms.DialogResult.Abort
+            Me.DialogResult = DialogResult.Abort
             Me.Close()
 
         End Try
@@ -567,7 +567,7 @@ Public Class frmAuxiliaryConfig
     Private Sub frmAuxiliaryConfig_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
 
-        If Me.DialogResult = Windows.Forms.DialogResult.Cancel Then Return
+        If Me.DialogResult = System.Windows.Forms.DialogResult.Cancel Then Return
 
         Dim result As DialogResult
 
@@ -589,18 +589,18 @@ Public Class frmAuxiliaryConfig
                 Case DialogResult.No
                     'just allow the form to close
                     'without saving
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                    Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
 
 
                 Case DialogResult.Cancel
                     'cancel the close
                     e.Cancel = True
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                    Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
 
 
             End Select
         Else
-            Me.DialogResult = Windows.Forms.DialogResult.Cancel
+            Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
             e.Cancel = False
         End If
     End Sub
@@ -899,12 +899,12 @@ Public Class frmAuxiliaryConfig
 
             Using frm As New frmCombinedAlternators(absoluteAALTPath)
                 'If Dialog result is OK, then take action else bail
-                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                If frm.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
                     If suppliedAALTPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(aauxPath) Then
                         txtAlternatorMapPath.Text =
                             If(suppliedAALTPath.Contains(aauxPath), suppliedAALTPath.Replace(aauxPath, ""), suppliedAALTPath)
                     Else
-                        txtAlternatorMapPath.Text = path.GetFileName(suppliedAALTPath)
+                        txtAlternatorMapPath.Text = Path.GetFileName(suppliedAALTPath)
                     End If
                 Else
                     Return
@@ -965,7 +965,7 @@ Public Class frmAuxiliaryConfig
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
 
 
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Close()
     End Sub
 
@@ -1058,12 +1058,12 @@ Public Class frmAuxiliaryConfig
         If fileExists OrElse newFile Then
 
             Using frm As New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile, Not fileExists)
-                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                If frm.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
                     If suppliedSSMPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(aauxPath) Then
                         txtSSMFilePath.Text =
                             If(suppliedSSMPath.Contains(aauxPath), suppliedSSMPath.Replace(aauxPath, ""), suppliedSSMPath)
                     Else
-                        txtSSMFilePath.Text = path.GetFileName(suppliedSSMPath)
+                        txtSSMFilePath.Text = Path.GetFileName(suppliedSSMPath)
                     End If
                 Else
                     Return

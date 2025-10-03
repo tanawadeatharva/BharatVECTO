@@ -15,13 +15,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Auxiliaries;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Utils;
-using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -248,13 +244,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IVehicleContainer container,
 			IElectricSystem es,
 			IDistanceBasedDrivingCycle cycle,
-			IDCDCConverter dcdc)
+			IDCDCConverter dcdc,
+			AxlePowertrainData axlePt = null)
 		{
 			var elAux = new ElectricAuxiliaries(container);
 
-			IEPTO epto = null;
-			if (data.PTO?.PTOCycle != null) {
-				var pevPTOController = GetPEV_SHEVIdleController(data.PTO, container);
+            var dataPTO = (axlePt != null) ? axlePt.PTO : data.PTO;
+
+            IEPTO epto = null;
+			if (dataPTO?.PTOCycle != null) {
+				var pevPTOController = GetPEV_SHEVIdleController(dataPTO, container);
 				if (cycle != null) {
 					cycle.IdleController = pevPTOController;
 				}
@@ -269,7 +268,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Aux.Any(aux => aux.ID == Constants.Auxiliaries.IDs.Cond))
 			{
 				var conditioningAux = data.Aux.FirstOrDefault(aux => aux.ID == Constants.Auxiliaries.IDs.Cond);
-				var emConditioning = data.JobType.IsFCHV() 
+				var emConditioning = (data.JobType.IsFCHV() || data.JobType == VectoSimulationJobType.Multiple_FCHV) 
 					? DeclarationData.Conditioning.LookupPowerDemand(
 						data.VehicleData.VehicleClass,
 						VectoSimulationJobType.BatteryElectricVehicle,
@@ -332,53 +331,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected IPowerTrainComponent GetPEVPTO(IVehicleContainer container, VectoRunData data)
+		protected IPowerTrainComponent GetPEVPTO(IVehicleContainer container, VectoRunData data, AxlePowertrainData axlePt = null)
 		{
-			if (data.PTO == null) {
-				return null;
-			}
+            var ptoData = axlePt?.PTO ?? data.PTO;
+			var ptoCycleWhileDrive = axlePt?.PTOCycleWhileDrive ?? data.PTOCycleWhileDrive;
 
-			var pto = new PEVPtoTransm(container);
+            if (ptoData == null)
+            {
+                return null;
+            }
 
-			RoadSweeperAuxiliary rdSwpAux = null;
-			PTODriveAuxiliary ptoDrive = null;
-			if (data.ExecutionMode == ExecutionMode.Engineering &&
-				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
-				if (data.DriverData.PTODriveMinSpeed == null) {
-					throw new VectoSimulationException(
-						"PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
+            var pto = new PEVPtoTransm(container, axlePt?.AxleNumber ?? Constants.NOT_IN_AXLE_POWERTRAIN);
+
+            if ((data.ExecutionMode == ExecutionMode.Engineering) && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) 
+			{
+				if (data.DriverData.PTODriveMinSpeed == null) 
+				{
+					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
 				}
 
-				rdSwpAux = new RoadSweeperAuxiliary(container);
-				pto.Add(Constants.Auxiliaries.IDs.PTORoadsweeping,
-					(nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
-				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+                RoadSweeperAuxiliary rdSwpAux = new RoadSweeperAuxiliary(container);
+				pto.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
 			}
 
-			if (data.ExecutionMode == ExecutionMode.Engineering &&
-				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
-				if (data.PTOCycleWhileDrive == null) {
+			if ((data.ExecutionMode == ExecutionMode.Engineering) && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) 
+			{
+				if (ptoCycleWhileDrive == null) {
 					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
 				}
 
-				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
-				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive,
-					(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
-				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
+                PTODriveAuxiliary ptoDrive = new PTODriveAuxiliary(container, ptoCycleWhileDrive);
+				pto.Add(Constants.Auxiliaries.IDs.PTODuringDrive,(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun) / nEng);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 
-			if (data.PTO.TransmissionType != null) {
-				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).TorqueLoss);
-				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission + " [kW]");
-
-				//pto.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-				//		(n, absTime, dt, dryRun) => container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false) ? null : data.PTO.LossMap.GetTorqueLoss(n));
-				//container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-				//								Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+			if (ptoData.TransmissionType != null) 
+			{
+				pto.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission, DeclarationData.PTOTransmission.Lookup(ptoData.TransmissionType).TorqueLoss);
+				container.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission + " [kW]");
 			}
 
 			return pto;
@@ -392,8 +383,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return dcdcEff;
 		}
 
-		protected IPowerTrainComponent GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container) =>
-			type == data.Type ? ComponentFactory.CreateRetarder(container, data.LossMap, data.Ratio) : null;
+		protected IPowerTrainComponent GetRetarder(RetarderType type, RetarderData data, IVehicleContainer container, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) =>
+			type == data.Type ? ComponentFactory.CreateRetarder(container, data.LossMap, data.Ratio, axleNumber) : null;
 
 
 		protected IElectricMotor GetElectricMachineBatteryOnlyP2(PowertrainPosition pos, IList<Tuple<PowertrainPosition,
@@ -497,11 +488,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		protected void AddAuxiliariesSerialHybrid(ICombustionEngine engine, IVehicleContainer container,
-			VectoRunData data)
+			VectoRunData data, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			// aux --> engine
 			if (data.BusAuxiliaries != null) {
-				engine.Connect(CreateAdvancedAuxiliaries(data, container).Port());
+				engine.Connect(CreateAdvancedAuxiliaries(data, container, axleNumber).Port());
 			} else {
 				if (data.Aux != null) {
 					engine.Connect(CreateAuxiliariesSerialHybrid(data, container).Port());
@@ -509,11 +500,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
+		protected IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
-			var conventionalAux = CreateAuxiliaries(data, container);
+			var conventionalAux = CreateAuxiliaries(data, container, axleNumber);
 			// TODO: MQ 2019-07-30 -- which fuel map for advanced auxiliaries?!
-			var busAux = new BusAuxiliariesAdapter(container, data.BusAuxiliaries, conventionalAux);
+			var busAux = new BusAuxiliariesAdapter(container, data.BusAuxiliaries, conventionalAux, axleNumber);
 			var auxCfg = data.BusAuxiliaries;
 			var electricStorage = auxCfg.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart
 				? new SimpleBattery(container, auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity,
@@ -523,7 +514,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return busAux;
 		}
 
-		protected IEngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
+		protected IEngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			var aux = ComponentFactory.CreateEngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
@@ -548,11 +539,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			RoadSweeperAuxiliary rdSwpAux = null;
 			PTODriveAuxiliary ptoDrive = null;
 
-			if (data.ExecutionMode == ExecutionMode.Engineering &&
-				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
-				if (data.DriverData.PTODriveMinSpeed == null) {
-					throw new VectoSimulationException(
-						"PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
+			if ((data.ExecutionMode == ExecutionMode.Engineering) && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) 
+			{
+				if (data.DriverData.PTODriveMinSpeed == null) 
+				{
+					throw new VectoSimulationException("PTO activity 'road sweeping' requested, but no min. engine speed or gear provided");
 				}
 
 				rdSwpAux = new RoadSweeperAuxiliary(container);
@@ -561,32 +552,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
 			}
 
-			if (data.ExecutionMode == ExecutionMode.Engineering &&
-				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
-				if (data.PTOCycleWhileDrive == null) {
+			var axlePt = data.AxlePowertrainsData.FirstOrDefault(x => x.AxleNumber == axleNumber);
+            var ptoData = axlePt?.PTO ?? data.PTO;
+            var ptoCycleWhileDrive = axlePt?.PTOCycleWhileDrive ?? data.PTOCycleWhileDrive;
+
+            if ((data.ExecutionMode == ExecutionMode.Engineering) && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) 
+			{
+				if (ptoCycleWhileDrive == null) 
+				{
 					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
 				}
 
-				ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
+				ptoDrive = new PTODriveAuxiliary(container, ptoCycleWhileDrive);
 				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive,
 					(nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun),
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 
-			if (data.PTO != null) {
-				//aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-				//				DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
-
-				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					data.PTO.TransmissionPowerDemand,
+            if (ptoData != null) 
+			{
+                aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+                    ptoData.TransmissionPowerDemand,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 					(n, absTime, dt, dryRun) =>
-						container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) ||
-						(ptoDrive?.Active(absTime) ?? false)
+						container.DrivingCycleInfo.PTOActive || (rdSwpAux?.Active(absTime) ?? false) || (ptoDrive?.Active(absTime) ?? false)
 							? null
-							: data.PTO.LossMap.GetTorqueLoss(n) * n,
+							: ptoData.LossMap.GetTorqueLoss(n) * n,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 

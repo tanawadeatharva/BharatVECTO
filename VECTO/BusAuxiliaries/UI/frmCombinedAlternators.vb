@@ -265,7 +265,7 @@ Public Class frmCombinedAlternators
     End Function
 
     'Other events
-    Private Sub groupBoxUserInput_Paint(sender As Object, e As Windows.Forms.PaintEventArgs) _
+    Private Sub groupBoxUserInput_Paint(sender As Object, e As PaintEventArgs) _
         Handles grpTable2000PRM.Paint, grpTable6000PRM.Paint, grpTable4000PRM.Paint
 
 
@@ -312,11 +312,11 @@ Public Class frmCombinedAlternators
                 Case "Delete"
                     Dim dr As DialogResult = MessageBox.Show($"Do you want to delete  '{alternatorName}' ?", "",
                                                             MessageBoxButtons.YesNo)
-                    If dr = Windows.Forms.DialogResult.Yes Then
+                    If dr = System.Windows.Forms.DialogResult.Yes Then
                         'If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
                         '    BindGrid()
                         'Else
-                            MessageBox.Show(feedback)
+                        MessageBox.Show(feedback)
 
                         'End If
 
@@ -444,7 +444,7 @@ Public Class frmCombinedAlternators
 
         UserHitSave = True
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.Close()
     End Sub
 
@@ -464,20 +464,20 @@ Public Class frmCombinedAlternators
 
         'If UserHitCancel then bail
         If UserHitCancel Then
-            DialogResult = Windows.Forms.DialogResult.Cancel
+            DialogResult = System.Windows.Forms.DialogResult.Cancel
             UserHitCancel = False
             Return
         End If
 
         'UserHitSave
         If UserHitSave Then
-            DialogResult = Windows.Forms.DialogResult.Cancel
+            DialogResult = System.Windows.Forms.DialogResult.Cancel
             If Not combinedAlt.Save(aaltPath) Then
                 MessageBox.Show("Unable to save file, aborting.")
                 e.Cancel = True
             End If
             UserHitSave = False
-            DialogResult = Windows.Forms.DialogResult.OK
+            DialogResult = System.Windows.Forms.DialogResult.OK
             Return
         End If
 
@@ -502,12 +502,12 @@ Public Class frmCombinedAlternators
                 Case DialogResult.No
                     'just allow the form to close
                     'without saving
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                    Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
 
                 Case DialogResult.Cancel
                     'cancel the close
                     e.Cancel = True
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                    Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
 
             End Select
 

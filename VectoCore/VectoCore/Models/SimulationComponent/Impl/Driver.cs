@@ -30,9 +30,8 @@
 */
 
 using System;
-using System.Runtime.InteropServices;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -69,7 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DrivingAction DrivingAction { get; protected internal set; }
 
-		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
+		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			DriverData = driverData;
 			DriverStrategy = strategy;
@@ -131,9 +131,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("==== DRIVER Request (time) ====");
 			Log.Debug(
-				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
-				absTime, dt, targetVelocity, gradient, DataBus.MileageCounter.Distance, DataBus.VehicleInfo.VehicleSpeed, DataBus.GearboxInfo.Gear,
-				DataBus.VehicleInfo.VehicleStopped);
+				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, {6}: vehicle stopped: {7}",
+				absTime, dt, targetVelocity, gradient, DataBus.MileageCounter.Distance, DataBus.VehicleInfo.VehicleSpeed,
+				DataBus.GearboxesInfo.Select(x => $"Gear{x.AxleNumber.FormatAxleNumber()}: {x.Gear}").Join(), DataBus.VehicleInfo.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var limitedOperatingPoint = nextOperatingPoint;
-				if (!DataBus.ClutchInfo.ClutchClosed(absTime)) {
+				if (!DataBus.ClutchInfo().ClutchClosed(absTime)) {
 					limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
 						LimitationMode.LimitDecelerationDriver);
 					Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					case ResponseOverload _:
 						// deceleration is limited by driver model, operating point moves above full load (e.g., steep uphill)
 						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
-						if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+						if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 							Log.Info("AT Gearbox - Operating point resulted in an overload, searching again...");
 							// search again for operating point, transmission may have shifted inbetween
 							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
@@ -372,11 +372,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IterationStatistics.Increment(this, "Coast");
 			Log.Debug("DrivingAction Coast");
 
-			var gear = DataBus.GearboxInfo.Gear;
-			var tcLocked = DataBus.GearboxInfo.TCLocked;
+			var gear = DataBus.GearboxInfo().Gear;
+			var tcLocked = DataBus.GearboxInfo().TCLocked;
 			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
-			var gearChanged = !(DataBus.GearboxInfo.Gear == gear && DataBus.GearboxInfo.TCLocked == tcLocked);
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+			var gearChanged = !(DataBus.GearboxInfo().Gear == gear && DataBus.GearboxInfo().TCLocked == tcLocked);
+			if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()
 				&& gearChanged
 				&& (retVal is ResponseOverload || retVal is ResponseUnderload)) {
 				Log.Debug("Gear changed after a valid operating point was found - re-try coasting!");
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var tcOperatingPointSet = false;
-			if (searchedOperatingPoint == null && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (searchedOperatingPoint == null && DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 				// we end up here if no valid operating point for the engine and torque converter can be found.
 				// a likely reason is that the torque converter opereating point 'jumps' between two different operating points
 				// or that no valid operating point can be found by reverse calcualtion. This method is a kind of fal-back
@@ -771,14 +771,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			var engaged = DataBus.GearboxInfo.DisengageGearbox;
+			var engaged = DataBus.GearboxInfo().DisengageGearbox;
 			try {
 				operatingPoint = SearchBrakingPower(
 					absTime, operatingPoint.SimulationDistance, gradient,
 					operatingPoint.Acceleration, response);
 			} catch (VectoSearchAbortedException vsa) {
 				Log.Warn("Search braking power aborted {0}", vsa);
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 					operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint, response);
 				}
 			}
@@ -804,12 +804,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			DriverAcceleration = operatingPoint.Acceleration;
-			var gear = DataBus.GearboxInfo.Gear;
-			var tcLocked = DataBus.GearboxInfo.TCLocked;
+			var gear = DataBus.GearboxInfo().Gear;
+			var tcLocked = DataBus.GearboxInfo().TCLocked;
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
 				gradient, false);
-			var gearChanged = !(DataBus.GearboxInfo.Gear == gear && DataBus.GearboxInfo.TCLocked == tcLocked);
-			if ((DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null)
+			var gearChanged = !(DataBus.GearboxInfo().Gear == gear && DataBus.GearboxInfo().TCLocked == tcLocked);
+			if ((DataBus.GearboxInfo().GearboxType.AutomaticTransmission() || DataBus.HybridControllerInfo != null)
 				&& gearChanged
 				&& (retVal is ResponseOverload || retVal is ResponseUnderload)) {
 				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload");
@@ -826,7 +826,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						operatingPoint.Acceleration, response);
 				} catch (VectoSearchAbortedException vsa) {
 					Log.Warn("Search braking power aborted {0}", vsa);
-					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+					if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 						operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint, response);
 					}
 				}
@@ -846,7 +846,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (DataBus.HybridControllerInfo != null) {
 						DrivingAction = DrivingAction.Brake;
 					}
-					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() || DataBus.GearboxInfo.GearboxType == GearboxType.APTN) {
+					if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission() || DataBus.GearboxInfo().GearboxType == GearboxType.APTN) {
 						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 							operatingPoint.Acceleration, response);
 						DriverAcceleration = operatingPoint.Acceleration;
@@ -855,7 +855,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					break;
 				case ResponseOverload r:
-					if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+					if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 						// overload may happen because of gearshift between search and actual request, search again
 						var i = 5;
 						while (i-- > 0 && !(retVal is ResponseSuccess)) {
@@ -874,7 +874,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									operatingPoint.Acceleration, retVal);
 							} catch (VectoSearchAbortedException vsa) {
 								Log.Warn("Search braking power aborted {0}", vsa);
-								if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+								if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()) {
 									operatingPoint = SetTCOperatingPointATGbxBraking(absTime, gradient, operatingPoint,
 										response);
 								}
@@ -909,7 +909,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.SimulationDistance = ds;
 			retVal.Driver.OperatingPoint = operatingPoint;
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && engaged != DataBus.GearboxInfo.DisengageGearbox) {
+			if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission() && engaged != DataBus.GearboxInfo().DisengageGearbox) {
 				DataBus.GearboxCtl.DisengageGearbox = engaged;
 			}
 			return retVal;
@@ -935,7 +935,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var tcOp = DataBus.TorqueConverterInfo.CalculateOperatingPoint(DataBus.EngineInfo.EngineIdleSpeed * 1.01, response.Gearbox.InputSpeed);
 
 			//if (tcOp.Item2.IsBetween(dragTorque - inertiaTq - auxTqDemand, maxTorque - inertiaTq - auxTqDemand)) {
-				_previousGearboxDisengaged = DataBus.GearboxInfo.DisengageGearbox;
+				_previousGearboxDisengaged = DataBus.GearboxInfo().DisengageGearbox;
 				DataBus.GearboxCtl.DisengageGearbox = true;
 				operatingPoint = SearchBrakingPower(
 					absTime, operatingPoint.SimulationDistance, gradient,
@@ -1046,25 +1046,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					deltaPower = DataBus.PowertrainInfo.HasGearbox ? nextResp1.Gearbox.PowerRequest : nextResp1.ElectricMotor.PowerRequest;/* ?? nextResp1.ElectricMotor.PowerRequest;*/
 					break;
 				case ResponseUnderload r:
-					deltaPower = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime) ? r.Delta : r.Gearbox.PowerRequest;
+					deltaPower = DataBus.ClutchInfo().ClutchClosed(absTime) && DataBus.GearboxInfo().GearEngaged(absTime) ? r.Delta : r.Gearbox.PowerRequest;
 					break;
 				default:
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", initialResponse);
 			}
 
 			try {
-				var forceLineSearch = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked;
+				var forceLineSearch = DataBus.GearboxInfo().GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo().TCLocked;
 				// in case we search for a braking power but the driver action is to accelerate (and we are in converter gear)
 				// we do not need to search for an operating point at the ICE drag curve, take the first one where the ICE can operate
 				// (as we use line-search and go stepwise up, this is fine)
 				var takeFirstViableSolution =
 					DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && forceLineSearch;
 				DataBus.Brakes.BrakePower = SearchAlgorithm.Search(DataBus.Brakes.BrakePower, deltaPower,
-					deltaPower.Abs() * (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() ? 0.5 : 1),
+					deltaPower.Abs() * (DataBus.GearboxInfo().GearboxType.AutomaticTransmission() ? 0.5 : 1),
 					getYValue: result => {
 						var response = (ResponseDryRun)result;
-						return DataBus.ClutchInfo.ClutchClosed(absTime)
-								&& DataBus.GearboxInfo.GearEngaged(absTime) ? response.DeltaDragLoad : response.Gearbox.PowerRequest;
+						return DataBus.ClutchInfo().ClutchClosed(absTime)
+								&& DataBus.GearboxInfo().GearEngaged(absTime) ? response.DeltaDragLoad : response.Gearbox.PowerRequest;
 					},
 					evaluateFunction: x => {
 						DataBus.Brakes.BrakePower = x;
@@ -1087,7 +1087,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								return 0;
 							}
 						}
-						var delta = DataBus.ClutchInfo.ClutchClosed(absTime) && DataBus.GearboxInfo.GearEngaged(absTime)
+						var delta = DataBus.ClutchInfo().ClutchClosed(absTime) && DataBus.GearboxInfo().GearEngaged(absTime)
 							? response.DeltaDragLoad * (forceLineSearch ? 1.1 : 1.0) // in case LineSearch is used, increase criteria to force more precision on the solution
 							: response.Gearbox.PowerRequest;
 						return delta.Value();
@@ -1101,7 +1101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return false;
 						}
 
-						return DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
+						return DataBus.GearboxInfo().GearboxType.AutomaticTransmission() && response.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20);
 					},
 					forceLineSearch: forceLineSearch,
 					searcher: this);
@@ -1109,7 +1109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return operatingPoint;
 			} catch (VectoSearchFailedException vse) {
 				Log.Error("Failed to find operating point for braking power! absTime: {0}  {1}", absTime, vse);
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo.TCLocked) {
+				if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission() && !DataBus.GearboxInfo().TCLocked) {
 					// AT transmission in TC gear - maybe search failed because engine speed 'jumps' during
 					// search and cannot reach drag curve
 					// take an operating point that is 
@@ -1118,7 +1118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							DataBus.Brakes.BrakePower * 0.01,
 							getYValue: result => {
 								var response = (ResponseDryRun)result;
-								return DataBus.ClutchInfo.ClutchClosed(absTime)
+								return DataBus.ClutchInfo().ClutchClosed(absTime)
 									? response.DeltaDragLoad
 									: response.Gearbox.PowerRequest;
 							},
@@ -1134,7 +1134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							},
 							criterion: result => {
 								var response = (ResponseDryRun)result;
-								var delta = DataBus.ClutchInfo.ClutchClosed(absTime)
+								var delta = DataBus.ClutchInfo().ClutchClosed(absTime)
 									? response.DeltaDragLoad
 									: response.Gearbox.PowerRequest;
 								return Math.Min(delta.Value(), 0);
@@ -1163,7 +1163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
 
-			var actionRoll = !DataBus.ClutchInfo.ClutchClosed(absTime);
+			var actionRoll = !DataBus.ClutchInfo().ClutchClosed(absTime);
 
 			var origDelta = GetOrigDelta(initialResponse, coastingOrRoll, actionRoll);
 
@@ -1219,7 +1219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion:
 						(response, cnt) => {
 							var r = (ResponseDryRun)response;
-							if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+							if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()
 								&& r.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20)
 								&& coastingOrRoll
 								&& !actionRoll) {
@@ -1286,7 +1286,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									abortCriterion:
 									(response, cnt) => {
 										var r = (ResponseDryRun)response;
-										if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()
+										if (DataBus.GearboxInfo().GearboxType.AutomaticTransmission()
 											&& r.DeltaDragLoad.Value().IsSmallerOrEqual(-double.MaxValue / 20)
 											&& coastingOrRoll
 											&& !actionRoll) {
