@@ -1893,7 +1893,6 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
 			<xs:enumeration value="Overhead pantograph"/>
-			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
@@ -1904,7 +1903,6 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
-			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
@@ -1916,6 +1914,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
 			<xs:enumeration value="Overhead pantograph"/>
+			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
