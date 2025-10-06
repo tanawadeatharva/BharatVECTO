@@ -13,8 +13,8 @@ Imports System.IO
 Imports System.Text
 
 Public Module VECTO_Global
-	Public Const VECTOvers As String = "4"
-	Public COREvers As String = "NOT FOUND"
+    Public Const VECTOvers As String = "5"
+    Public COREvers As String = "NOT FOUND"
 
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	public InstallModeInstalled As Boolean = False
