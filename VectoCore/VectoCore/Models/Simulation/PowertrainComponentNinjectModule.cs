@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -17,6 +16,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
+using TUGraz.VectoCore.Ninject;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -612,7 +612,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		}
 	}
 
-	public class ComponentBindingNameHelper
+	public class ComponentBindingNameHelper : NinjectBindingNameHelperBase
 	{
 		private readonly string _prefix;
 
@@ -688,40 +688,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		public string IEPCName(bool singleSpeed) => $"{_prefix}_IEPC_{singleSpeed}";
 
-        // -----
-
-        protected string CheckArguments<T1>(object[] arguments, Func<T1, string> func, [CallerMemberName] string callerName = "")
-		{
-			if (arguments.Length == 1 && arguments[0] is T1 p1) {
-				return func(p1);
-			}
-			throw new ArgumentException($"exactly one argument expected for {callerName}: {typeof(T1).Name}");
-		}
-
-		protected string CheckArguments<T1, T2>(object[] arguments, Func<T1, T2, string> func, [CallerMemberName] string callerName = "")
-		{
-			if (arguments.Length == 2 && arguments[0] is T1 p1 && arguments[1] is T2 p2) {
-				return func(p1, p2);
-			}
-			throw new ArgumentException($"exactly two arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}");
-		}
-
-		protected string CheckArguments<T1, T2, T3>(object[] arguments, Func<T1, T2, T3, string> func, [CallerMemberName] string callerName = "")
-		{
-			if (arguments.Length == 3 && arguments[0] is T1 p1 && arguments[1] is T2 p2 && arguments[2] is T3 p3) {
-				return func(p1, p2, p3);
-			}
-			throw new ArgumentException($"exactly three arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name}");
-		}
-
-		protected string CheckArguments<T1, T2, T3, T4>(object[] arguments, Func<T1, T2, T3, T4, string> func, [CallerMemberName] string callerName = "")
-		{
-			if (arguments.Length == 4 && arguments[0] is T1 p1 && arguments[1] is T2 p2 && arguments[2] is T3 p3 && arguments[3] is T4 p4) {
-				return func(p1, p2, p3, p4);
-			}
-			throw new ArgumentException($"exactly four arguments expected for {callerName}: {typeof(T1).Name}, {typeof(T2).Name}, {typeof(T3).Name} {typeof(T4).Name}");
-		}
-
+       
     }
-
 }

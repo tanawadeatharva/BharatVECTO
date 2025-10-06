@@ -1,5 +1,7 @@
-﻿using Ninject.Extensions.Factory;
+﻿using System;
+using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Ninject;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.Utils.Ninject;
 
@@ -12,41 +14,72 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 
 		public override void Load()
 		{
-			Bind<IModalDataPostProcessorFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
+			var nameHelper = new PostprocessorBindingNameHelper();
+
+			//Bind<IModalDataPostProcessorFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
+			Bind<IModalDataPostProcessorFactory>().ToFactory(() => new CombineArgumentsToNameInstanceProvider(
+				new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+					combineToNameDelegate = nameHelper.CreatePostprocessorName,
+					skipArguments = 2,
+					takeArguments = 2,
+					methods = new [] {
+						typeof(IModalDataPostProcessorFactory).GetMethod(nameof(IModalDataPostProcessorFactory.GetPostProcessor))
+					}
+				}));
 
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.BatteryElectricVehicle.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.BatteryElectricVehicle, false));
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.IEPC_E.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IEPC_E, false));
 			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.Multiple_FCHV.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.Multiple_FCHV, false));
             Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-                .Named(VectoSimulationJobType.Multiple_PEV.ToString());
+                .Named(nameHelper.PostprocessorName(VectoSimulationJobType.Multiple_PEV, false));
             Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
-                .Named(VectoSimulationJobType.Multiple_SHEV.ToString());
+                .Named(nameHelper.PostprocessorName(VectoSimulationJobType.Multiple_SHEV, false));
             
             Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.SerialHybridVehicle.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.SerialHybridVehicle, false));
 			Bind<IModalDataPostProcessor>().To<SerialHybridModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.IEPC_S.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IEPC_S, false));
 
 			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
-				.Named(VectoSimulationJobType.FCHV.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.FCHV, false));
 			Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
-				.Named(VectoSimulationJobType.FCHV_IEPC.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.FCHV_IEPC, false));
 
 			Bind<IModalDataPostProcessor>().To<ParallelHybridModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.ParallelHybridVehicle.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.ParallelHybridVehicle, false));
 			Bind<IModalDataPostProcessor>().To<ParallelHybridModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.IHPC.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IHPC, false));
 
 			Bind<IModalDataPostProcessor>().To<EngineOnlyPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.EngineOnlySimulation.ToString());
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.EngineOnlySimulation, false));
 
 			Bind<IModalDataPostProcessor>().To<ConventionalModalDataPostprocessingCorrection>()
-				.Named(VectoSimulationJobType.ConventionalVehicle.ToString());
-		}
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.ConventionalVehicle, false));
+
+
+			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.SerialHybridVehicle, true));
+			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IEPC_S, true));
+			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.ParallelHybridVehicle, true));
+			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IHPC, true));
+        }
+
+		public class PostprocessorBindingNameHelper : NinjectBindingNameHelperBase
+		{
+			public string CreatePostprocessorName(object[] arguments) => CheckArguments<VectoSimulationJobType, bool>(arguments, PostprocessorName);
+
+			public string PostprocessorName(VectoSimulationJobType p1, bool p2)
+			{
+				return $"{p1.ToString()}{(p2 ? "_BO" : "")}";
+			}
+        }
 
 		#endregion
-	}
+    }
 }

@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>(), totalFuelConsumption: assumedFuelConsumption);
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>(), totalFuelConsumption: assumedFuelConsumption);
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 
@@ -351,7 +351,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>());
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 

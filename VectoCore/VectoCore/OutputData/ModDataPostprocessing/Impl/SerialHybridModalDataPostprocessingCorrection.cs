@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
     {
         #region Overrides of ModalDataPostprocessingCorrection
 
-        protected override CorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+        protected override ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
         {
             var r = base.DoApplyCorrection(modData, runData);
 

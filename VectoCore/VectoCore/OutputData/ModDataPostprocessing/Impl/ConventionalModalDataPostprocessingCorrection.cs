@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			return DoApplyCorrection(modData, runData);
 		}
 
-		protected virtual CorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		protected virtual ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
         {
             var essParams = runData.DriverData.EngineStopStart;
             var r = new CorrectedModalData(modData) {
