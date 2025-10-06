@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns:mrf0.9="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.9" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput V:\VectoCore\VectoCore\Resources\XSD/VectoOutputManufacturer.xsd">
-  <mrf:Data xsi:type="ConventionalPrimaryBusManufacturerOutputDataType" id="MRF-1f1f7c53983047509604">
+<mrf:VectoOutput xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mrf="urn:tugraz:ivt:VectoAPI:DeclarationOutput" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:v1.0">
+  <mrf:Data xsi:type="ConventionalPrimaryBusManufacturerOutputDataType" id="MRF-20880be025b34314940e">
     <Vehicle>
       <Manufacturer>Generic Truck Manufacturer</Manufacturer>
       <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -25,6 +25,7 @@
         <EngineTorqueLimit Gear="1" unit="%">117</EngineTorqueLimit>
         <EngineTorqueLimit Gear="12" unit="%">89</EngineTorqueLimit>
       </EngineTorqueLimitations>
+      <SimulationToolLicenseNumber>N/A</SimulationToolLicenseNumber>
       <Components>
         <Engine>
           <Model>Bus 6x2</Model>
@@ -260,8 +261,8 @@
             <MaxSpeed unit="km/h">68.1</MaxSpeed>
             <MaxDeceleration unit="m/s²">0.94</MaxDeceleration>
             <MaxAcceleration unit="m/s²">1.00</MaxAcceleration>
-            <FullLoadDrivingtimePercentage>3.66</FullLoadDrivingtimePercentage>
-            <GearshiftCount>1055</GearshiftCount>
+            <FullLoadDrivingtimePercentage>3.67</FullLoadDrivingtimePercentage>
+            <GearshiftCount>1054</GearshiftCount>
             <EngineSpeedDriving>
               <Min unit="rpm">600.0</Min>
               <Average unit="rpm">911.5</Average>
@@ -276,9 +277,9 @@
             <FuelConsumption unit="MJ/km">20.20</FuelConsumption>
             <FuelConsumption unit="MJ/p-km">0.2031</FuelConsumption>
             <FuelConsumption unit="l/100km">56.58</FuelConsumption>
-            <FuelConsumption unit="l/p-km">0.005690</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.005689</FuelConsumption>
           </Fuel>
-          <CO2 unit="g/km">1480.6</CO2>
+          <CO2 unit="g/km">1480.4</CO2>
           <CO2 unit="g/p-km">14.89</CO2>
         </Total>
       </Result>
@@ -558,31 +559,31 @@
         </SimulationParameters>
         <Total>
           <VehiclePerformance>
-            <AverageSpeed unit="km/h">17.2</AverageSpeed>
+            <AverageSpeed unit="km/h">17.1</AverageSpeed>
             <AverageDrivingSpeed unit="km/h">25.8</AverageDrivingSpeed>
             <MinSpeed unit="km/h">0.0</MinSpeed>
             <MaxSpeed unit="km/h">68.1</MaxSpeed>
             <MaxDeceleration unit="m/s²">0.94</MaxDeceleration>
             <MaxAcceleration unit="m/s²">1.00</MaxAcceleration>
-            <FullLoadDrivingtimePercentage>4.93</FullLoadDrivingtimePercentage>
-            <GearshiftCount>1040</GearshiftCount>
+            <FullLoadDrivingtimePercentage>4.82</FullLoadDrivingtimePercentage>
+            <GearshiftCount>1048</GearshiftCount>
             <EngineSpeedDriving>
               <Min unit="rpm">600.0</Min>
-              <Average unit="rpm">926.9</Average>
+              <Average unit="rpm">930.2</Average>
               <Max unit="rpm">1798.7</Max>
             </EngineSpeedDriving>
             <AverageGearboxEfficiency unit="%">96.83</AverageGearboxEfficiency>
-            <AverageAxlegearEfficiency unit="%">96.68</AverageAxlegearEfficiency>
+            <AverageAxlegearEfficiency unit="%">96.69</AverageAxlegearEfficiency>
           </VehiclePerformance>
           <Fuel type="Diesel CI">
-            <FuelConsumption unit="g/km">520.8</FuelConsumption>
-            <FuelConsumption unit="g/p-km">4.488</FuelConsumption>
+            <FuelConsumption unit="g/km">520.9</FuelConsumption>
+            <FuelConsumption unit="g/p-km">4.489</FuelConsumption>
             <FuelConsumption unit="MJ/km">22.24</FuelConsumption>
-            <FuelConsumption unit="MJ/p-km">0.1916</FuelConsumption>
-            <FuelConsumption unit="l/100km">62.30</FuelConsumption>
-            <FuelConsumption unit="l/p-km">0.005368</FuelConsumption>
+            <FuelConsumption unit="MJ/p-km">0.1917</FuelConsumption>
+            <FuelConsumption unit="l/100km">62.31</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.005369</FuelConsumption>
           </Fuel>
-          <CO2 unit="g/km">1630.1</CO2>
+          <CO2 unit="g/km">1630.4</CO2>
           <CO2 unit="g/p-km">14.05</CO2>
         </Total>
       </Result>
@@ -968,18 +969,18 @@
       </Result>
     </Results>
     <ApplicationInformation>
-      <SimulationToolVersion>0.11.1.3507-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
-      <Date>2024-08-08T12:38:31.9880566Z</Date>
+      <SimulationToolVersion>5.0.6-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+      <Date>2025-10-06T10:15:46.1191875Z</Date>
     </ApplicationInformation>
   </mrf:Data>
   <mrf:Signature>
-    <Reference URI="#MRF-1f1f7c53983047509604" xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <Reference URI="#MRF-20880be025b34314940e" xmlns="http://www.w3.org/2000/09/xmldsig#">
       <Transforms>
         <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
         <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
       </Transforms>
       <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-      <DigestValue>VLmtJezYGnFaK/y/yV9QDDwV1UUBux7x0HVJG/YA+7Y=</DigestValue>
+      <DigestValue>XoHJh5COvpSs6Q+682gb1O20hSbb2sNiKEM0xKkpUZU=</DigestValue>
     </Reference>
   </mrf:Signature>
 </mrf:VectoOutput>
