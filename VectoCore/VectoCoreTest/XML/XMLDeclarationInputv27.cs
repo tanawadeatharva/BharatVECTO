@@ -851,7 +851,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -918,7 +918,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -1186,7 +1186,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
