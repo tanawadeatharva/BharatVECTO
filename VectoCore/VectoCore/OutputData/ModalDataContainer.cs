@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData
 				postProcessorFactory =
 					new StandardKernel(new VectoNinjectModule()).Get<IModalDataPostProcessorFactory>();
 			}
-			PostProcessingCorrection = postProcessorFactory.GetPostProcessor(runData.JobType);
+			PostProcessingCorrection = postProcessorFactory.GetPostProcessor(runData.JobType, runData.BatteryOnlyHybridMode);
 
             if (runData.EngineData != null) {
 				

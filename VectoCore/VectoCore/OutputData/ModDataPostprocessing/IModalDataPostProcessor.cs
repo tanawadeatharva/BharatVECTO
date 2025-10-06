@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 
 	public interface IModalDataPostProcessorFactory
 	{
-		IModalDataPostProcessor GetPostProcessor(VectoSimulationJobType jobType);
+		IModalDataPostProcessor GetPostProcessor(VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 	}
 
 	

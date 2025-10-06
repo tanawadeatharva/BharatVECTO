@@ -152,6 +152,24 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		}
 	}
 
+	public class BatteryOnlyHybridCorrectedModalData : AbstractCorrectedModalData
+	{
+		public BatteryOnlyHybridCorrectedModalData(IModalDataContainer modData) : base(modData) { }
+
+		#region Overrides of AbstractCorrectedModalData
+
+		public override IFuelConsumptionCorrection FuelConsumptionCorrection(IFuelProperties fuel)
+		{
+			if (!FuelCorrection.ContainsKey(fuel.FuelType)) {
+				throw new VectoException("Invalid fuel {0}", fuel);
+			}
+
+			return FuelCorrection[fuel.FuelType];
+        }
+
+		#endregion
+	}
+
 	public class FCHVCorrectedModalData : AbstractCorrectedModalData
 	{
 		public FCHVCorrectedModalData(IModalDataContainer modData) : base(modData)

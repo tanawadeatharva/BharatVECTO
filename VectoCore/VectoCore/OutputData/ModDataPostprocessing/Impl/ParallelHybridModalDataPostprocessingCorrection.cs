@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
     {
         #region Overrides of ModalDataPostprocessingCorrection
 
-        protected override CorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+        protected override ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
         {
             var r = base.DoApplyCorrection(modData, runData);
 
@@ -30,4 +30,28 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
         #endregion
     }
+
+	public class BatteryOnlyHybridModalDataPostprocessingCorrection : BatteryElectricPostprocessingCorrection
+	{
+		#region Overrides of BatteryElectricPostprocessingCorrection
+
+        protected override ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		{
+			var r = base.DoApplyCorrection(modData, runData);
+			foreach (var fuel in modData.FuelData) {
+				if (r.FuelCorrection.ContainsKey(fuel.FuelType)) {
+                    continue;
+				}
+				r.FuelCorrection[fuel.FuelType] = new ZeroFuelConsumptionCorrection(fuel, modData.Distance, modData.Duration);
+			}
+			return r;
+		}
+
+		protected override AbstractCorrectedModalData GetModalDataCorrection(IModalDataContainer modData)
+		{
+			return new BatteryOnlyHybridCorrectedModalData(modData);
+		}
+
+		#endregion
+	}
 }
