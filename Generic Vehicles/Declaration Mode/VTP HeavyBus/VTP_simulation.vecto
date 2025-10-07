@@ -8,10 +8,10 @@
   "Body": {
     "SavedInDeclMode": true,
     "DeclarationVehicle": "primary_bus_group_P33_34_non_Smart_angledrive.xml",
-    "ManufacturerRecord": "primary_bus_group_P33_34_non_Smart_angledrive.RSLT_MANUFACTURER.xml",
-    "CustomerInformationFile": "Bus_34f_FM.RSLT_CUSTOMER.xml",
+    "ManufacturerRecord": "primary_bus_group_P33_34_non_Smart_angledrive.MANUFACTURER.xml",
+    "CustomerInformationFile": "Bus_34f_FM.CUSTOMER.xml",
     "CompletedVIF": "Bus_34f_FM.VIF_Report_1.xml",
-    "PrimaryVIF": "primary_bus_group_P33_34_non_Smart_angledrive.RSLT_VIF.xml",
+    "PrimaryVIF": "primary_bus_group_P33_34_non_Smart_angledrive.VIF.xml",
     "Mileage": 30000.0,
     "FanPowerCoefficients": [
       7.32,

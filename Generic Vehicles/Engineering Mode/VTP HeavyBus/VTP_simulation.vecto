@@ -8,8 +8,10 @@
   "Body": {
     "SavedInDeclMode": false,
     "DeclarationVehicle": "primary_heavyBus group P33_34_non_Smart.xml",
-    "ManufacturerRecord": "primary_heavyBus group P33_34_non_Smart.RSLT_MANUFACTURER.xml",
-	"CompletedVIF": "completed34f_VIF.VIF_Report_2.xml",
+    "ManufacturerRecord": "primary_heavyBus group P33_34_non_Smart.MANUFACTURER.xml",
+    "CustomerInformationFile": "completed34f.CUSTOMER.xml",
+    "PrimaryVIF": "primary_heavyBus group P33_34_non_Smart.VIF.xml",
+	  "CompletedVIF": "completed34f_VIF.VIF_Report_2.xml",
     "Mileage": 30000.0,
     "FanPowerCoefficients": [
       7.32,
