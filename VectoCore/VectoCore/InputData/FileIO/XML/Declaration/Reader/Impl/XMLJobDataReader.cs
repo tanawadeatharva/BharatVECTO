@@ -103,21 +103,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
                 }
             }
         }
-
-        protected void DisallowV27NonHydrogenFueledConventionalLorries(IXMLDeclarationVehicleData vehicle, string version)
-        {
-            var conventionalLorries = new string[2]
-            {
-                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_HeavyLorryDeclarationType",
-                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_MediumLorryDeclarationType"
-            };
-
-            if (!conventionalLorries.Contains(version))
-            {
-                return;
-            }
-        }
-
     }
 
 	// ---------------------------------------------------------------------------------------
@@ -144,8 +129,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
             vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
 			CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}
@@ -174,8 +157,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
             CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}
@@ -206,8 +187,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
 			CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}
