@@ -132,7 +132,8 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData VehicleInputData { get; }
 		IMultistepBusInputDataProvider MultistageJobInputData { get; }
 		bool SimulateResultingVIF { get; }
-	}
+        string MonitoringData { get; }
+    }
 }
 
 
