@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 			}
 			var output = _xmlInputDataReader.CreateDeclaration(
 				XmlReader.Create(CurrentStageOutputDataWriter.MultistageXmlReport.ToString().ToStream())) as IMultistepBusInputDataProvider;
-			var nextStageInput = new XMLDeclarationVIFInputData(output, null, true);
+            var nextStageInput = new XMLDeclarationVIFInputData(output, null, true, _originalInputData.VehicleInputData.VehicleMonitoringData);
 
 			return _simulatorFactoryFactory.Factory(ExecutionMode.Declaration, nextStageInput, CurrentStageOutputDataWriter, null, null,
 				_validate);

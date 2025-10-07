@@ -1340,8 +1340,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool SimulateResultingVIF => RunSimulation;
 
-		#endregion
-	}
+        public string MonitoringData => Vehicle.VehicleMonitoringData;
+
+        #endregion
+    }
 
 	// --------------------------
 

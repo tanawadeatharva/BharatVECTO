@@ -272,16 +272,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IVehicleDeclarationInputData vehicleInput) : this(multistageJobInputData, vehicleInput, false) { }
 
 		public XMLDeclarationVIFInputData(IMultistepBusInputDataProvider multistageJobInputData,
-		IVehicleDeclarationInputData vehicleInput, bool runSimulation)
+		IVehicleDeclarationInputData vehicleInput, bool runSimulation, string monitoringData = null)
 		{
 			_multistageJobInputData = multistageJobInputData;
 			_vehicleInput = vehicleInput;
 			_simulateResultingVif = runSimulation;
+			MonitoringData = monitoringData;
 		}
 
 		public IVehicleDeclarationInputData VehicleInputData => _vehicleInput;
 
 		public IMultistepBusInputDataProvider MultistageJobInputData => _multistageJobInputData;
+
+		public string MonitoringData {  get; private set; }
 
 		private readonly bool _simulateResultingVif;
 		bool IMultistageVIFInputData.SimulateResultingVIF => _simulateResultingVif;

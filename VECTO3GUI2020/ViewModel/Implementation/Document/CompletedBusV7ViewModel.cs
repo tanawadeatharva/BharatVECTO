@@ -80,6 +80,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
 		public bool SimulateResultingVIF => _inputData.SimulateResultingVIF;
 
-		#endregion
-	}
+        public string MonitoringData => _inputData.VehicleInputData.VehicleMonitoringData;
+
+        #endregion
+    }
 }

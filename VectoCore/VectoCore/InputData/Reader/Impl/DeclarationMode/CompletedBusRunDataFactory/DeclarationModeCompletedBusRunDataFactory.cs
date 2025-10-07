@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRun
 					VehicleDesignSpeed = _segment.DesignSpeed,
 					MaxChargingPower = PrimaryVehicle.MaxChargingPower ?? vehicleOperation.StationaryChargingMaxPwrInfrastructure,
                     OVCMode = ovcMode,
+					MultistageVifInputData = DataProvider
 				};
 
 				return simulationRunData;
