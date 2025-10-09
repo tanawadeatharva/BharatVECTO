@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 				var fullLoadPower = -response.ElectricMotor.MaxDriveTorque * response.ElectricMotor.AngularVelocity;
 				var reserve = 1 - response.ElectricMotor.PowerRequest / fullLoadPower;
-				if (reserve < 0) {
+				if (reserve < GearshiftParams.StartTorqueReserve / 2.0) {
 					continue;
 				}
 
