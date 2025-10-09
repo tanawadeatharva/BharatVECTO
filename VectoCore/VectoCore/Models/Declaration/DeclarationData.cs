@@ -1178,26 +1178,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 			
 				}
 				if (gearIdx >= gears.Count - 1) {
-					return new ShiftPolygon(TransformShiftPolygonEntries(downShift, emRatio, lossMap), TransformShiftPolygonEntries(upShift, emRatio, lossMap));
+					return new ShiftPolygon(TransformShiftPolygonEntries(downShift), TransformShiftPolygonEntries(upShift));
 				}
 			
 				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, VectoMath.Min(emMaxSpeedDt * 0.9, gbxMaxSpeed)));
 				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, VectoMath.Min(emMaxSpeedDt * 0.9, gbxMaxSpeed)));
-				return new ShiftPolygon(TransformShiftPolygonEntries(downShift, emRatio, lossMap), TransformShiftPolygonEntries(upShift, emRatio, lossMap));
+				return new ShiftPolygon(TransformShiftPolygonEntries(downShift), TransformShiftPolygonEntries(upShift));
 			}
 
 
 			/// <summary>
-			/// Transforms the shiftpolygons from em side to drivetrain side (= gearbox in), considering the ADC ratio and losses
+			/// Transforms the shiftpolygons. The shift polygons are calculated based on the EM,
+			/// to use them with gearbox input torque we need to invert the sign of the torque entries.
 			/// </summary>
 			/// <param name="entries"></param>
-			/// <param name="emRatio"></param>
-			/// <param name="lossMap"></param>
 			/// <returns></returns>
 			private static IList<ShiftPolygon.ShiftPolygonEntry> TransformShiftPolygonEntries(
-				IEnumerable<ShiftPolygon.ShiftPolygonEntry> entries, double emRatio, TransmissionLossMap lossMap)
+				IList<ShiftPolygon.ShiftPolygonEntry> entries)
 			{
-				return entries.ToList();
+				foreach (var entry in entries) {
+					entry.Torque = entry.Torque * (-1);
+				}
+
+				return entries.Reverse().ToList();
 			}
 
 			private static ElectricMotorFullLoadCurve TransformFullLoadCurve(ElectricMotorFullLoadCurve emFld,

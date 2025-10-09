@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Integration.GenericVehicles
 
 		[Category("Integration")]
 		[
-			TestCase(E2_JOB , "LongHaul", 155.2822),
+			TestCase(E2_JOB , "LongHaul", 155.2775),
 			TestCase(E2_JOB , "RegionalDelivery", 106.2029),
 			TestCase(E2_JOB, "UrbanDelivery", 85.2476),
 
