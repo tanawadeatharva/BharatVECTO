@@ -727,13 +727,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool IsBelowDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter inTorque, PerSecond emSpeed)
 		{
-			var emTorque = inTorque; //* (-1); 
 			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
-				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
+				if (!inTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
 				}
 
-				if (ShiftPolygon.IsLeftOf(emSpeed, emTorque, entry)) {
+				if (ShiftPolygon.IsLeftOf(emSpeed, inTorque, entry)) {
 
 					return true;
 				}
@@ -744,13 +743,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies
 
 		protected bool IsAboveDownshiftCurve(ShiftPolygon shiftPolygon, NewtonMeter inTorque, PerSecond emSpeed)
 		{
-			var emTorque = inTorque; //* (-1); 
 			foreach (var entry in shiftPolygon.Downshift.Pairwise()) {
-				if (!emTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
+				if (!inTorque.IsBetween(entry.Item1.Torque, entry.Item2.Torque)) {
 					continue;
 				}
 
-				if (ShiftPolygon.IsRightOf(emSpeed, emTorque, entry)) {
+				if (ShiftPolygon.IsRightOf(emSpeed, inTorque, entry)) {
 					return true;
 				}
 			}
