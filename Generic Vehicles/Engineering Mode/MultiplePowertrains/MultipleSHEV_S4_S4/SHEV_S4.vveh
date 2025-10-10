@@ -28,7 +28,7 @@
 			"Position": "E4",
 			"MotorFile": "GenericEM.vem",
 			"MechanicalEfficiency": 0.98
-		},
+		}
 	  },
 	  {
 	    "AxleNumber": 2,
