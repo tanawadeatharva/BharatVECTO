@@ -68,6 +68,16 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing
 				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.ParallelHybridVehicle, true));
 			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
 				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.IHPC, true));
+
+            Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
+                .Named(nameHelper.PostprocessorName(VectoSimulationJobType.FCHV, true));
+            Bind<IModalDataPostProcessor>().To<FCHVPostProcessingCorrection>()
+                .Named(nameHelper.PostprocessorName(VectoSimulationJobType.FCHV_IEPC, true));
+
+			Bind<IModalDataPostProcessor>().To<BatteryElectricPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.Multiple_FCHV, true));
+			Bind<IModalDataPostProcessor>().To<BatteryOnlyHybridModalDataPostprocessingCorrection>()
+				.Named(nameHelper.PostprocessorName(VectoSimulationJobType.Multiple_SHEV, true));
         }
 
 		public class PostprocessorBindingNameHelper : NinjectBindingNameHelperBase
