@@ -7,6 +7,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
+using System.Linq;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -60,8 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         protected override void DoNotEngageWhenBraking(NewtonMeter outTorque, Second absTime, Second dt, PerSecond outAngularVelocity)
         {
-            if ((DataBus.PowertrainInfo.ElectricMotorPositions[0] == PowertrainPosition.HybridP3 || 
-				DataBus.PowertrainInfo.ElectricMotorPositions[0] == PowertrainPosition.HybridP4)
+			var pos = DataBus.ElectricMotorsInfo.First(x => (x as VectoSimulationComponent).AxleNumber == AxleNumber).Position;
+
+			if (pos.IsOneOf(PowertrainPosition.HybridP3, PowertrainPosition.HybridP4)
 				&& (DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking)
 				&& Disengaged
 				&& ShouldNotEngage(outTorque, outAngularVelocity, dt)) {

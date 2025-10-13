@@ -43,7 +43,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {

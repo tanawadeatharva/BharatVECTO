@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public TorqueConverter(
 			IGearboxInfo gearbox, IShiftStrategy shiftStrategy, IVehicleContainer container,
-			TorqueConverterData tcData, VectoRunData runData) : base(container)
+			TorqueConverterData tcData, VectoRunData runData, int axleNumber) : 
+				base(container, axleNumber)
 		{
 			Gearbox = gearbox;
 			ShiftStrategy = shiftStrategy;
@@ -170,7 +171,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//retVal.TorqueConverterOperatingPoint = operatingPoint;
 			// check if shift is required
 			var ratio = Gearbox.GetGearData(Gearbox.Gear.Gear).TorqueConverterRatio;
-			if (!Gearbox.DisengageGearbox && absTime > DataBus.GearboxInfo.LastShift && retVal is ResponseSuccess) {
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			if (!Gearbox.DisengageGearbox && absTime > gearbox.LastShift && retVal is ResponseSuccess) {
 				var shiftRequired = ShiftStrategy?.ShiftRequired(
 					absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
 					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift, retVal) ?? false;
@@ -284,9 +286,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ResponseDryRun engineResponse, Watt previousPower)
 		{
 			try {
-				var emPower = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null
+				var notP1 = DataBus.ElectricMotorsInfo
+					.Where(x => (x as VectoSimulationComponent).AxleNumber == AxleNumber)
+					.Count(x => x.Position == PowertrainPosition.HybridP1) == 0;
+
+				var emPower = notP1
 					? 0.SI<Watt>()
 					: engineResponse.ElectricMotor.ElectricMotorPowerMech;
+
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.Engine.DragPower - engineResponse.Engine.AuxiliariesPowerDemand - emPower,
 					DataBus.EngineInfo.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
@@ -342,9 +349,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ResponseDryRun engineResponse, Watt previousPower)
 		{
 			try {
-				var emPower = DataBus.ElectricMotorInfo(PowertrainPosition.HybridP1) == null
+				var notP1 = DataBus.ElectricMotorsInfo
+					.Where(x => (x as VectoSimulationComponent).AxleNumber == AxleNumber)
+					.Count(x => x.Position == PowertrainPosition.HybridP1) == 0;
+
+				var emPower = notP1
 					? 0.SI<Watt>()
 					: engineResponse.ElectricMotor.ElectricMotorPowerMech;
+
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					(engineResponse.Engine.DynamicFullLoadPower - engineResponse.Engine.AuxiliariesPowerDemand - emPower),
 					DataBus.EngineInfo.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);

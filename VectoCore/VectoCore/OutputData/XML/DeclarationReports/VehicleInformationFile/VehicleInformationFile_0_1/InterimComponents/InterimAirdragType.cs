@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Xml;
+﻿using System.Linq;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;

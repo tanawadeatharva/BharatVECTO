@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Castle.Core.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -193,7 +192,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter HydrogenRange { get; }
 
-		double UtilityFactor { get; }
+        DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; }
+
+        DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; }
+
+        double UtilityFactor { get; }
 
 		IFuelProperties AuxHeaterFuel { get; set; }
 		KilogramPerMeter ZEV_FuelConsumption_AuxHtr { get; set; }

@@ -36,6 +36,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -44,7 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal ITnOutPort NextComponent;
 		private TorqueConverterData ModelData;
 
-		public CycleTorqueConverter(IVehicleContainer container, TorqueConverterData modelData) : base(container)
+		public CycleTorqueConverter(IVehicleContainer container, TorqueConverterData modelData) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			ModelData = modelData;
 		}

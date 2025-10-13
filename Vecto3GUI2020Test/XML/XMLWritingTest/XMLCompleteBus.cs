@@ -1,13 +1,8 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.VectoCore;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using VECTO3GUI2020.Ninject;
-using VECTO3GUI2020.Ninject.Factories;
 using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using Vecto3GUI2020Test.Utils;

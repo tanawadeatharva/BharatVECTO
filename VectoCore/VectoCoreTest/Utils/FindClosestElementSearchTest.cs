@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Infrastructure.Language;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils

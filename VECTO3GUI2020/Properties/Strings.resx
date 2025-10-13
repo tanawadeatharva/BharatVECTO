@@ -328,4 +328,7 @@
   <data name="VehicleTypeApprovalNumber" xml:space="preserve">
     <value>Vehicle Type Approval Number</value>
   </data>
+  <data name="VerificationToolLicenseNumber" xml:space="preserve">
+    <value>Simulation Tool License Number</value>
+  </data>
 </root>

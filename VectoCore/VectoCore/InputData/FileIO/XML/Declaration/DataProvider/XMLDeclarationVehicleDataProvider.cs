@@ -47,7 +47,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -85,14 +84,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 #endif
         }
-
-        protected XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, int dummy)
-			: base(xmlNode, sourceFile)
-		{
-			Job = jobData;
-			SourceType = DataSourceType.XMLEmbedded;
-		}
-
 
         public virtual XmlElement ComponentNode
 		{
@@ -135,6 +126,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual bool ExemptedVehicle => ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle);
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => null;
 
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
@@ -324,7 +317,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, 0)
+			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, true)
 		{
 #if PROHIBIT_OLD_XML
 			if (!allowDeprecated) {
@@ -332,10 +325,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 #endif
         }
-
-        protected XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, int dummy) :
-			base(jobData, xmlNode, sourceFile, dummy) {}
 
         protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
@@ -391,7 +380,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, 0)
+			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, true)
 		{
 #if PROHIBIT_OLD_XML
 			if (!allowDeprecated) {
@@ -571,6 +560,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         #region IXMLDeclarationVehicleData interface
 
         public string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => ElementExists(XMLNames.Vehicle_SimulationToolLicenseNumber) 
+			? GetString(XMLNames.Vehicle_SimulationToolLicenseNumber) : null;
 
 		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
 
@@ -1095,13 +1087,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
-		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-			base(jobData, xmlNode, sourceFile, 0) { }
+		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated = false) :
+			base(jobData, xmlNode, sourceFile, true) 
+		{
+#if PROHIBIT_OLD_XML
+            if (!allowDeprecated)
+            {
+                throw new VectoException("XML Jobs in version 2.4 are no longer supported!");
+            }
+#endif
+        }
 
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
+        #region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
+        public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
 		public override bool VocationalVehicle => GetBool(XMLNames.Vehicle_VocationalVehicle);
 
@@ -1207,7 +1207,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData,
 			XmlNode xmlNode,
 			string sourceFile)
-			: base(jobData, xmlNode, sourceFile)
+			: base(jobData, xmlNode, sourceFile, true)
 		{}
 
         public override string PowertrainPositionPrefix => null;

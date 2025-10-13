@@ -2,7 +2,9 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -53,8 +55,12 @@ namespace TUGraz.VectoCore.OutputData
 		public Meter ZeroCO2EmissionsRange { get; internal set; }
 
 		public Meter HydrogenRange { get; internal set; }
-		
-		public double UtilityFactor { get; internal set; }
+
+        public DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; internal set; }
+
+        public DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; internal set; }
+
+        public double UtilityFactor { get; internal set; }
 		
 		public IFuelProperties AuxHeaterFuel { get; set; }
 		

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.Vecto.UnitTests.Utils.MockComponents;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -13,7 +14,6 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
@@ -267,7 +267,7 @@ public class ATGearboxTests
 
 		container.Setup(c => c.RunData).Returns(runData);
 		var ci = new Mock<IClutchInfo>();
-		container.Setup(c => c.ClutchInfo).Returns(ci.Object);
+		container.Setup(c => c.ClutchInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(ci.Object);
 		ci.Setup(c => c.ClutchClosed(It.IsAny<Second>())).Returns(true);
 
 		var vi = new Mock<IVehicleInfo>();

@@ -43,6 +43,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -274,21 +275,33 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EnergyConsumptionTotal = data.CorrectedModalData.FuelEnergyConsumptionTotal;
 				ElectricEnergyConsumption = data.CorrectedModalData.ElectricEnergyConsumption_Final;
 
-				if (runData.JobType.IsBatteryElectric())
+				if (runData.JobType.IsBatteryElectric() || (runData.JobType == VectoSimulationJobType.Multiple_PEV))
 				{
 					var ranges = DeclarationData.CalculateElectricRangesPEV(runData, data);
 					ActualChargeDepletingRange = ranges.ActualChargeDepletingRange;
 					EquivalentAllElectricRange = ranges.EquivalentAllElectricRange;
 					ZeroCO2EmissionsRange = ranges.ZeroCO2EmissionsRange;
-					ElectricEnergyConsumption = ranges.ElectricEnergyConsumption;
-			
-					var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
+					
+                    BeginOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, BEGIN_OF_LIFE_DETERIORATION);
+                    EndOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, END_OF_LIFE_DETERIORATION);
+                    ElectricEnergyConsumption = (BeginOfLifeRanges.ElectricEnergyConsumption + EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+
+                    var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault();
                     if (fc != null)
                     {
                         ZEV_FuelConsumption_AuxHtr = fc.FC_AUXHTR_KM * Distance;
                         AuxHeaterFuel = fc.Fuel;
                     }
 				}
+
+				if ((runData.JobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) 
+					&& runData.VehicleData.OffVehicleCharging 
+					&& (runData.OVCMode == OvcHevMode.ChargeDepleting))
+				{
+                    BeginOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, BEGIN_OF_LIFE_DETERIORATION);
+                    EndOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, END_OF_LIFE_DETERIORATION);
+                    ElectricEnergyConsumption = (BeginOfLifeRanges.ElectricEnergyConsumption + EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+                }
 
 				if (runData.EngineData?.Fuels.Any(x => x.FuelData.FuelType.IsHydrogenFuel()) ?? false)
 				{
@@ -311,7 +324,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                     }
                 }
 
-				if (runData.JobType.IsFCHV())
+				if (runData.JobType.IsFCHV() || (runData.JobType == VectoSimulationJobType.Multiple_FCHV))
 				{
 					var totalFc = FuelConsumptionFinal(FuelType.H2FC)?.TotalFuelConsumptionCorrected;
 
@@ -322,8 +335,8 @@ namespace TUGraz.VectoCore.OutputData.XML
                     HydrogenRange = range;
                     ZeroCO2EmissionsRange = range;
 
-                    BeginOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, BEGIN_OF_LIFE_DETERIORATION);
-                    EndOfLifeRanges = DeclarationData.CalculateElectricRangesFCHV(runData, data, END_OF_LIFE_DETERIORATION);
+                    BeginOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, BEGIN_OF_LIFE_DETERIORATION);
+                    EndOfLifeRanges = DeclarationData.CalculateElectricRanges(runData, data, END_OF_LIFE_DETERIORATION);
                     ElectricEnergyConsumption = (BeginOfLifeRanges.ElectricEnergyConsumption + EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
 
                     var fc = data.CorrectedModalData.FuelCorrection.Values.FirstOrDefault(x => x.Fuel.FuelType != FuelType.H2FC);
@@ -339,14 +352,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 						? ModalResultField.P_retarder_in
 						: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
 					var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
-					var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+					var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, Constants.NOT_IN_AXLE_POWERTRAIN, x => x > 0);
 					AverageGearboxEfficiency = eGbxOut.Value() / eGbxIn.Value();
 				} else {
 					AverageGearboxEfficiency = double.NaN;
 				}
 
 				if (data.HasAxlegear) {
-					var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+					var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, Constants.NOT_IN_AXLE_POWERTRAIN, x => x > 0);
 					var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
 					AverageAxlegearEfficiency = eAxlOut == null || eAxlIn == null || eAxlIn.IsEqual(0) ? double.NaN : eAxlOut / eAxlIn;
 				} else {

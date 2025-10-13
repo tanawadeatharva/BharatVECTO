@@ -29,22 +29,17 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoHashing;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 
 namespace TUGraz.VectoCore.Models.Simulation

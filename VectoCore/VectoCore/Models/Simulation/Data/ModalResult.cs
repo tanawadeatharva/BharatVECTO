@@ -40,14 +40,13 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 // ReSharper disable InconsistentNaming
@@ -363,7 +362,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
-		protected internal List<PowertrainPosition> ElectricMotors = new List<PowertrainPosition>();
+		protected internal List<Tuple<PowertrainPosition, int>> ElectricMotors = new List<Tuple<PowertrainPosition, int>>();
+		protected internal List<int> Axlegears = new List<int>();
+		protected internal List<int> Retarders = new List<int>();
+		protected internal List<int> Angledrives = new List<int>();
 
 		protected internal List<string> FuelCellStringColumns = new List<string>();
 		protected internal List<string> FuelCellColumns = new List<string>(); //contains fuel cell ids as string
@@ -380,13 +382,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			//CreateColumns(CommonSignals);
 		}
 
-		protected internal void CreateColumns(ModalResultField[] columns, Func<ModalResultField, string> nameFunc = null, Func<ModalResultField, string> captionFunc = null)
+		protected internal void CreateColumns(
+			ModalResultField[] columns, 
+			Func<ModalResultField, string> nameFunc = null, 
+			Func<ModalResultField, string> captionFunc = null)
 		{
 			foreach (var value in columns) {
 				var colName = nameFunc != null ? nameFunc(value) : value.GetName();
 				if (Columns.Contains(colName)) {
 					continue;
 				}
+				
 				var col = new DataColumn(colName, value.GetAttribute().DataType)
 					{ Caption = captionFunc != null ? captionFunc(value) : value.GetCaption() };
 				col.ExtendedProperties[ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
@@ -442,19 +448,37 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					break;
 				case ITorqueConverter _: CreateColumns(TorqueConverterSignals);
 					break;
-				case IAngledrive _: CreateColumns(AngledriveSignals); break;
-				case IAxlegear _: CreateColumns(AxlegearSignals); break;
-				case Retarder _: CreateColumns(RetarderSignals); break;
+				case IAngledrive _: 
+					Angledrives.Add(component.AxleNumber);
+					CreateColumns(
+						AngledriveSignals,
+						nameFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber()),
+						captionFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber())); 
+					break;
+				case IAxlegear _:
+					Axlegears.Add(component.AxleNumber);
+					CreateColumns(
+						AxlegearSignals, 
+						nameFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber()),
+						captionFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber())); 
+					break;
+				case Retarder _:
+					Retarders.Add(component.AxleNumber);
+					CreateColumns(
+						RetarderSignals,
+						nameFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber()),
+						captionFunc: (x) => string.Format(x.GetAttribute().Caption, component.AxleNumber.FormatAxleNumber())); 
+					break;
 				case IWheels _: CreateColumns(WheelSignals); break;
 				case IBrakes _: CreateColumns(BrakeSignals); break;
 				case WheelEnd _: CreateColumns(WheelEndSignals); break;	
 				case IDriverInfo _: CreateColumns(DriverSignals); break;
 				case IVehicle _: CreateColumns(VehicleSignals); break;
 				case IElectricMotor c3 when c3.Position == PowertrainPosition.IEPC: 
-					CreateElectricMotorColumns(c3.Position, runData, IEPCSignals);
+					CreateElectricMotorColumns(c3.Position, component.AxleNumber, IEPCSignals);
 					break;
 				case IElectricMotor c4 when c4.Position != PowertrainPosition.IEPC:
-					CreateElectricMotorColumns(c4.Position, runData, ElectricMotorSignals);
+					CreateElectricMotorColumns(c4.Position, component.AxleNumber, ElectricMotorSignals);
 					break;
 				case IElectricEnergyStorage c5 when c5 is BatterySystem: CreateBatteryColumns(runData);
 					break;
@@ -510,12 +534,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 	
 
-		protected internal void CreateElectricMotorColumns(PowertrainPosition emPos, VectoRunData runData,
+		protected internal void CreateElectricMotorColumns(PowertrainPosition emPos, int axleNumber,
 			ModalResultField[] signals)
 		{
-			ElectricMotors.Add(emPos);
+			ElectricMotors.Add(new Tuple<PowertrainPosition, int>(emPos, axleNumber));
 			foreach (var entry in signals) {
-				var col = Columns.Add(string.Format(entry.GetAttribute().Caption, emPos.GetName()), typeof(SI));
+				var col = Columns.Add(string.Format(
+						entry.GetAttribute().Caption, 
+						emPos.GetName(),
+						axleNumber.FormatAxleNumber()), 
+					typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					entry.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
@@ -582,6 +610,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			FuelColumns.Clear();
 			ElectricMotors.Clear();
 			BatteryColumns.Clear();
+			Axlegears.Clear();
+			Retarders.Clear();
+			Angledrives.Clear();
 		}
 	}
 }

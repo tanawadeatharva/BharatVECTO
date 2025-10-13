@@ -768,7 +768,7 @@ Public Class GearboxForm
 
         OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
-        CmOpenFile.Show(Windows.Forms.Cursor.Position)
+        CmOpenFile.Show(System.Windows.Forms.Cursor.Position)
     End Sub
 
     Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -1009,8 +1009,8 @@ Public Class GearboxForm
         s.ChartType = SeriesChartType.FastLine
         s.BorderWidth = 2
         s.Color = Color.DarkBlue
-        s.Name = "Dirve Torque"
-        
+        s.Name = "Drive Torque"
+
         chart.Series.Add(s)
 
         s = New Series

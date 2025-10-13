@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -48,21 +49,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             HybridController = Container.HybridController as ISimpleHybridController;
             BatterySystem = container.BatteryInfo;
 
-            Clutch = Container.ClutchInfo as IClutch;
+            Clutch = Container.ClutchesInfo.FirstOrDefault() as IClutch;
             CombustionEngine = Container.EngineInfo as ITestpowertrainCombustionEngine;
             EngineAux = CombustionEngine?.GetEngineAux;
-            ElectricMotor = container.ElectricMotors.FirstOrDefault().Value as ITestpowertrainElectricMotor;
+            ElectricMotor = container.ElectricMotorsInfo.FirstOrDefault() as ITestpowertrainElectricMotor;
             Charger =
                 ((ElectricMotor?.GetElectricSystem as ITestpowertrainElectricSystem)?.Charger.FirstOrDefault(x =>
                     x is ITestpowertrainGensetChargerAdapter)) as ITestpowertrainGensetChargerAdapter;
-            foreach (var pos in container.ElectricMotorPositions) {
-                var em = container.ElectricMotors[pos] as ITestpowertrainElectricMotor;
+            foreach (var motor in container.ElectricMotorsInfo) {
+                var em = motor as ITestpowertrainElectricMotor;
+                var pos = motor.Position;
                 if (em != null) {
                     ElectricMotors[pos] = em;
                 }
                 if (pos == PowertrainPosition.HybridP1 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC ||
                     pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP3) {
-                    ElectricMotorsUpstreamTransmission[pos] = container.ElectricMotors[pos] as IElectricMotor;
+                    ElectricMotorsUpstreamTransmission[pos] = motor as IElectricMotor;
                 }
             }
 
@@ -107,10 +109,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         private IDataBus realContainer;
 
-        public MockDrivingCycle(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container)
-        {
-            realContainer = rcontainer;
-        }
+		public MockDrivingCycle(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
+		{
+			realContainer = rcontainer;
+		}
 
         #region Implementation of IDrivingCycleInfo
 
@@ -172,10 +174,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         private IDataBus realContainer;
 
-        public MockDriver(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container)
-        {
-            realContainer = rcontainer;
-        }
+		public MockDriver(ISimpleVehicleContainer container, IDataBus rcontainer) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
+		{
+			realContainer = rcontainer;
+		}
 
         #region Implementation of IDriverInfo
 

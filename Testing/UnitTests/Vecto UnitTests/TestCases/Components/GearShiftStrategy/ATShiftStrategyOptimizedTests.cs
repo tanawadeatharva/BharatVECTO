@@ -1,14 +1,6 @@
-﻿using System.ComponentModel;
-using System.Globalization;
-using System.Reflection.Metadata;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using TUGraz.Vecto.UnitTests.Utils.MockComponents;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -21,16 +13,13 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies.ShiftPolygonCalc;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
 
@@ -599,7 +588,7 @@ public class ATShiftStrategyOptimizedTests
 		
 		//AxleGearInfo
 		var axleGearInfo = new Mock<IAxlegearInfo>();
-		vehicleContainer.Setup(c => c.AxlegearInfo).Returns(axleGearInfo.Object);
+		vehicleContainer.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axleGearInfo.Object);
 		axleGearInfo.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
 
 		//WheelsInfo
@@ -824,7 +813,7 @@ public class ATShiftStrategyOptimizedTests
 		testGearbox = GetMockTestGearbox(runData.GearboxData.Gears);
 
 
-		simplePt.Setup(s => s.GearboxInfo).Returns(testGearbox.Object);
+		simplePt.Setup(s => s.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(testGearbox.Object);
 		simplePt.Setup(s => s.GearboxOutPort).Returns(testGearbox.Object);
 
 

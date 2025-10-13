@@ -35,7 +35,6 @@ using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -43,7 +42,6 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
@@ -90,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				throw new VectoException("Failed to cast to Engineering InputDataProvider");
 			}
 			
-            var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, PowertrainBuilder, DataAdapter);
+            var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, DataAdapter);
 			var runData = reader.NextRun().First();
 
 			var powerTrain = PowertrainBuilder.Build(runData, new MockModalDataContainer()) as VehicleContainer;
@@ -100,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
 			Assert.IsInstanceOf<CombustionEngine>(powerTrain.EngineInfo);
-			Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxInfo);
+			Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxesInfo.FirstOrDefault());
 			Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
 			Assert.IsInstanceOf<Vehicle>(powerTrain.VehicleInfo);
 		}
@@ -129,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
 				Assert.IsInstanceOf<CombustionEngine>(powerTrain.EngineInfo);
-				Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxInfo);
+				Assert.IsInstanceOf<AMTGearbox>(powerTrain.GearboxesInfo.FirstOrDefault());
 				Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
 				Assert.IsInstanceOf<Vehicle>(powerTrain.VehicleInfo);
 			} else {
@@ -148,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			{
 				throw new VectoException("Failed to cast to Engineering InputDataProvider");
 			}
-			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, PowertrainBuilder, DataAdapter);
+			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider, DataAdapter);
 			var runData = reader.NextRun().First();
 
 			var writer = new MockModalDataContainer();

@@ -1,33 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using CommunityToolkit.Mvvm.Input;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
-using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Ninject;
-using VECTO3GUI2020.Properties;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using ViewModelBase = VECTO3GUI2020.ViewModel.Implementation.Common.ViewModelBase;
-using XmlDocumentType = System.Xml.XmlDocumentType;
 
 namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 {

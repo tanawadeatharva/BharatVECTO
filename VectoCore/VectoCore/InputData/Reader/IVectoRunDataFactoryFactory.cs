@@ -1,5 +1,4 @@
 ﻿using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData

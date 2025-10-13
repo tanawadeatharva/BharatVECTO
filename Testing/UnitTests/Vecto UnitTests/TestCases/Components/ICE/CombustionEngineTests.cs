@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -139,7 +140,7 @@ public class CombustionEngineTests
 
 		gbx.Setup(g => g.Gear).Returns(new GearshiftPosition(0));
 
-		container.Setup(c => c.GearboxInfo).Returns(gbx.Object);
+		container.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gbx.Object);
 
 
 		return container.Object;

@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<cif:VectoCustomerInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cif="urn:tugraz:ivt:VectoAPI:CustomerOutput" xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v1.0">
+  <cif:Data xsi:type="Conventional_CompletedBusOutputType" id="CIF-02442fe3243a47a793fe">
+    <Vehicle xsi:type="Conventional_CompletedBusVehicleType">
+      <VIN>VEH-1234567890</VIN>
+      <VehicleCategory>M3</VehicleCategory>
+      <AxleConfiguration>6x2</AxleConfiguration>
+      <TechnicalPermissibleMaximumLadenMass unit="kg">25000</TechnicalPermissibleMaximumLadenMass>
+      <TotalPropulsionPower unit="kW">325</TotalPropulsionPower>
+      <VehicleGroup>34f</VehicleGroup>
+      <VehicleGroupCO2>34-DD</VehicleGroupCO2>
+      <Manufacturers>
+        <Step stepCount="1">
+          <Manufacturer>Generic Truck Manufacturer</Manufacturer>
+          <ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
+        </Step>
+        <Step stepCount="2">
+          <Manufacturer>Some Manufacturer</Manufacturer>
+          <ManufacturerAddress>Infinite Loop 1</ManufacturerAddress>
+        </Step>
+      </Manufacturers>
+      <Model>Sample Bus Model</Model>
+      <CorrectedActualMass unit="kg">19400</CorrectedActualMass>
+      <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+      <HybridElectricHDV>false</HybridElectricHDV>
+      <WasteHeatRecovery>false</WasteHeatRecovery>
+      <DualFuelVehicle>false</DualFuelVehicle>
+      <ClassBus>II+III</ClassBus>
+      <TotalNumberOfPassengers>72</TotalNumberOfPassengers>
+      <VehicleTypeApprovalNumber>1234</VehicleTypeApprovalNumber>
+      <ADAS>
+        <EngineStopStart>true</EngineStopStart>
+        <EcoRollWithoutEngineStopStart>false</EcoRollWithoutEngineStopStart>
+        <EcoRollWithEngineStopStart>false</EcoRollWithEngineStopStart>
+        <PredictiveCruiseControl>false</PredictiveCruiseControl>
+      </ADAS>
+      <EngineRatedPower unit="kW">325</EngineRatedPower>
+      <EngineCapacity unit="ltr">12.7</EngineCapacity>
+      <FuelTypes>
+        <FuelType>Diesel CI</FuelType>
+      </FuelTypes>
+      <TransmissionValues>Standard values</TransmissionValues>
+      <TransmissionType>AMT</TransmissionType>
+      <NrOfGears>12</NrOfGears>
+      <Retarder>true</Retarder>
+      <AxleRatio>2.590</AxleRatio>
+      <AverageRRC>0.0059</AverageRRC>
+      <Axle axleNumber="1">
+        <TyreDimension>315/70 R22.5</TyreDimension>
+        <FuelEfficiencyClass />
+        <TyreCertificationNumber>e12*0815/8051*2017/05E0000*00</TyreCertificationNumber>
+      </Axle>
+      <Axle axleNumber="2">
+        <TyreDimension>315/70 R22.5</TyreDimension>
+        <FuelEfficiencyClass />
+        <TyreCertificationNumber>e12*0815/8051*2017/05E0000*00</TyreCertificationNumber>
+      </Axle>
+      <Axle axleNumber="3">
+        <TyreDimension>315/70 R22.5</TyreDimension>
+        <FuelEfficiencyClass />
+        <TyreCertificationNumber>e12*0815/8051*2017/05E0000*00</TyreCertificationNumber>
+      </Axle>
+      <SteeringPump>
+        <Technology>Variable displacement elec. controlled</Technology>
+      </SteeringPump>
+      <ElectricSystem>
+        <AlternatorTechnology>conventional</AlternatorTechnology>
+      </ElectricSystem>
+      <PneumaticSystem>
+        <SmartCompressionSystem>false</SmartCompressionSystem>
+        <SmartRegenerationSystem>false</SmartRegenerationSystem>
+      </PneumaticSystem>
+      <HVAC>
+        <SystemConfiguration>6</SystemConfiguration>
+        <AuxiliaryHeaterPower unit="kW">30</AuxiliaryHeaterPower>
+        <DoubleGlazing>true</DoubleGlazing>
+      </HVAC>
+    </Vehicle>
+    <InputDataSignaturePrimaryVehicle>
+      <Reference URI="#VEH-PrimaryBus_nonSmart" xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <Transforms>
+          <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>80eCcMntTCaHX1L64gSjHgh7f9p64ksFLt8qTcHn5v4=</DigestValue>
+      </Reference>
+    </InputDataSignaturePrimaryVehicle>
+    <ManufacturerRecordSignaturePrimaryVehicle>
+      <Reference URI="#MRF-51dafa0d4b8d40f2a547" xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <Transforms>
+          <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>JiZ0ZwgAeIEfU9fGFLRCmeOvamCqbqwUSAUrNoEnr0o=</DigestValue>
+      </Reference>
+    </ManufacturerRecordSignaturePrimaryVehicle>
+    <InputDataSignature>
+      <Reference URI="#MST-04cbe86e1ac3440b8a8b" xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <Transforms>
+          <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>vqdXmZZmw51r7CJu3YY9E6JIeZ6yGLU72L5q2+X2Qsg=</DigestValue>
+      </Reference>
+    </InputDataSignature>
+    <ManufacturerRecordSignature>
+      <Reference URI="#MRF-d9b31d3f206745f194ae" xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <Transforms>
+          <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>Nv7RT30oI3WhFdTI0DP8sHnL5U0yFzSbT5HOpTDAyAw=</DigestValue>
+      </Reference>
+    </ManufacturerRecordSignature>
+    <Results>
+      <Status>success</Status>
+      <Result status="success" xsi:type="ResultSuccessConventionalType">
+        <Mission>Interurban</Mission>
+        <SimulationParameters>
+          <TotalVehicleMass unit="kg">21123</TotalVehicleMass>
+          <MassPassengers unit="kg">1723</MassPassengers>
+          <PassengerCount>24.27</PassengerCount>
+        </SimulationParameters>
+        <Total>
+          <AverageSpeed unit="km/h">34.1</AverageSpeed>
+          <Fuel type="Diesel CI">
+            <FuelConsumption unit="g/km">334.9</FuelConsumption>
+            <FuelConsumption unit="g/p-km">13.80</FuelConsumption>
+            <FuelConsumption unit="MJ/km">14.30</FuelConsumption>
+            <FuelConsumption unit="MJ/p-km">0.5893</FuelConsumption>
+            <FuelConsumption unit="l/100km">40.06</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.01651</FuelConsumption>
+          </Fuel>
+          <CO2 unit="g/km">1048.3</CO2>
+          <CO2 unit="g/p-km">43.20</CO2>
+        </Total>
+      </Result>
+      <Result status="success" xsi:type="ResultSuccessConventionalType">
+        <Mission>Interurban</Mission>
+        <SimulationParameters>
+          <TotalVehicleMass unit="kg">24512</TotalVehicleMass>
+          <MassPassengers unit="kg">5112</MassPassengers>
+          <PassengerCount>72.00</PassengerCount>
+        </SimulationParameters>
+        <Total>
+          <AverageSpeed unit="km/h">33.9</AverageSpeed>
+          <Fuel type="Diesel CI">
+            <FuelConsumption unit="g/km">370.1</FuelConsumption>
+            <FuelConsumption unit="g/p-km">5.140</FuelConsumption>
+            <FuelConsumption unit="MJ/km">15.80</FuelConsumption>
+            <FuelConsumption unit="MJ/p-km">0.2195</FuelConsumption>
+            <FuelConsumption unit="l/100km">44.27</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.006148</FuelConsumption>
+          </Fuel>
+          <CO2 unit="g/km">1158.4</CO2>
+          <CO2 unit="g/p-km">16.09</CO2>
+        </Total>
+      </Result>
+      <Result status="success" xsi:type="ResultSuccessConventionalType">
+        <Mission>Coach</Mission>
+        <SimulationParameters>
+          <TotalVehicleMass unit="kg">21238</TotalVehicleMass>
+          <MassPassengers unit="kg">1838</MassPassengers>
+          <PassengerCount>25.89</PassengerCount>
+        </SimulationParameters>
+        <Total>
+          <AverageSpeed unit="km/h">63.7</AverageSpeed>
+          <Fuel type="Diesel CI">
+            <FuelConsumption unit="g/km">261.5</FuelConsumption>
+            <FuelConsumption unit="g/p-km">10.10</FuelConsumption>
+            <FuelConsumption unit="MJ/km">11.17</FuelConsumption>
+            <FuelConsumption unit="MJ/p-km">0.4314</FuelConsumption>
+            <FuelConsumption unit="l/100km">31.28</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.01208</FuelConsumption>
+          </Fuel>
+          <CO2 unit="g/km">818.6</CO2>
+          <CO2 unit="g/p-km">31.62</CO2>
+        </Total>
+      </Result>
+      <Result status="success" xsi:type="ResultSuccessConventionalType">
+        <Mission>Coach</Mission>
+        <SimulationParameters>
+          <TotalVehicleMass unit="kg">23995</TotalVehicleMass>
+          <MassPassengers unit="kg">4595</MassPassengers>
+          <PassengerCount>64.72</PassengerCount>
+        </SimulationParameters>
+        <Total>
+          <AverageSpeed unit="km/h">63.3</AverageSpeed>
+          <Fuel type="Diesel CI">
+            <FuelConsumption unit="g/km">277.1</FuelConsumption>
+            <FuelConsumption unit="g/p-km">4.281</FuelConsumption>
+            <FuelConsumption unit="MJ/km">11.83</FuelConsumption>
+            <FuelConsumption unit="MJ/p-km">0.1828</FuelConsumption>
+            <FuelConsumption unit="l/100km">33.14</FuelConsumption>
+            <FuelConsumption unit="l/p-km">0.005121</FuelConsumption>
+          </Fuel>
+          <CO2 unit="g/km">867.3</CO2>
+          <CO2 unit="g/p-km">13.40</CO2>
+        </Total>
+      </Result>
+      <Summary xsi:type="ResultSummaryConventionalType">
+        <Vocational>false</Vocational>
+        <AveragePassengerCount>49.47</AveragePassengerCount>
+        <Fuel type="Diesel CI">
+          <FuelConsumption unit="g/km">279.2</FuelConsumption>
+          <FuelConsumption unit="g/p-km">5.644</FuelConsumption>
+          <FuelConsumption unit="MJ/km">11.92</FuelConsumption>
+          <FuelConsumption unit="MJ/p-km">0.2410</FuelConsumption>
+          <FuelConsumption unit="l/100km">33.40</FuelConsumption>
+          <FuelConsumption unit="l/p-km">0.006751</FuelConsumption>
+        </Fuel>
+        <CO2 unit="g/km">873.8</CO2>
+        <CO2 unit="g/p-km">17.66</CO2>
+      </Summary>
+    </Results>
+    <ApplicationInformation>
+      <SimulationToolVersion>5.0.6-DEV !!NOT FOR CERTIFICATION!!</SimulationToolVersion>
+      <Date>2025-10-06T13:07:00.2330299Z</Date>
+    </ApplicationInformation>
+  </cif:Data>
+  <cif:Signature>
+    <Reference URI="#CIF-02442fe3243a47a793fe" xmlns="http://www.w3.org/2000/09/xmldsig#">
+      <Transforms>
+        <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </Transforms>
+      <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <DigestValue>keElHOS81LeFC1JfobpyoA5Ujf+ZCXyfB0/DUirtyxo=</DigestValue>
+    </Reference>
+  </cif:Signature>
+</cif:VectoCustomerInformation>

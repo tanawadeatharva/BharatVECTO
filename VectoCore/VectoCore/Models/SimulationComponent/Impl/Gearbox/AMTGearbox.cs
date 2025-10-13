@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Linq;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Simulation;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox

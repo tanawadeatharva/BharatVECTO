@@ -1,7 +1,6 @@
 ﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -21,5 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool EmOffPrev { get; }
 		bool? EmOffCurr { get; }
 		bool DeRatingActive { get; }
+
+		int AxleNumber { get; }
 	}
 }

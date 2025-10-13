@@ -1,4 +1,4 @@
-﻿/*
+/*
 * This file is part of VECTO.
 *
 * Copyright © 2012-2019 European Union
@@ -47,6 +47,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly List<ShiftPolygonEntry> _upShiftPolygon;
 		private readonly List<ShiftPolygonEntry> _downShiftPolygon;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="downshift">Entries must be ordered clockwise</param>
+		/// <param name="upShift">Entries must be ordered clockwise</param>
 		internal ShiftPolygon(IList<ShiftPolygonEntry> downshift, IList<ShiftPolygonEntry> upShift)
 		{
 			_upShiftPolygon = upShift.ToList();

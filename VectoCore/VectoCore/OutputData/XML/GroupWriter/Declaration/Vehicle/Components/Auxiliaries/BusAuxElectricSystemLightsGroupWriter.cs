@@ -6,9 +6,9 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.Components.Auxiliaries
 {
-    class BusAuxElectricSystemLightsGroupWriter_v2_4 : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
+    class BusAuxElectricSystemLightsGroupWriter : GroupWriter, IBusAuxiliariesDeclarationGroupWriter
     {
-		public BusAuxElectricSystemLightsGroupWriter_v2_4(XNamespace writerNamespace) : base(writerNamespace) { }
+		public BusAuxElectricSystemLightsGroupWriter(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		#region Overrides of GroupWriter
 

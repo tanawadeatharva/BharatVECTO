@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -11,7 +10,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData

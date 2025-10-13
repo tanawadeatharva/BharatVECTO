@@ -37,9 +37,7 @@ using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -54,7 +52,6 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using DummyDriverInfo = TUGraz.VectoCore.Tests.Utils.DummyDriverInfo;
 using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 

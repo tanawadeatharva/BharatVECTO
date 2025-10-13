@@ -18,7 +18,6 @@
                     <!--custom:LabledTextBoxAutomatic Content="{Binding Efficiency}" DockPanel.Dock="Top"/-->
                     <custom:LabledTextBoxAutomatic Content="{Binding Ratio}" DockPanel.Dock="Top"/>
                     <custom:ComboParameter Content="{Binding LineType}" DockPanel.Dock="Top"/>
-                    <custom:ScatterPlot Height="300" MyDataTable="{Binding LossMapDT}" DockPanel.Dock="Top"></custom:ScatterPlot>
                 </DockPanel>
             </ScrollViewer>
         </DockPanel>

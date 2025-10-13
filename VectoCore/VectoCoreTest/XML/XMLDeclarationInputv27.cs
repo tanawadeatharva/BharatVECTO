@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
@@ -14,7 +11,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -855,7 +851,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -922,7 +918,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -1190,7 +1186,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);

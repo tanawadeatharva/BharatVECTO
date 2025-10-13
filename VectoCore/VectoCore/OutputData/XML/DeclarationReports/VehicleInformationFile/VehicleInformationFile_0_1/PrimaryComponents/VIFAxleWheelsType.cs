@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -62,6 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			var retVal = XElement.Load(xmlTyre.GetXmlNode.CreateNavigator().ReadSubtree());
+			retVal.Name = _v20 + retVal.Name.LocalName;
 			var ptr = retVal.DescendantNodes().OfType<XElement>().First().FirstAttribute;
 			while (ptr != null) {
 				if (!ptr.IsNamespaceDeclaration && ptr.Name.LocalName == "type" && ptr.Name.Namespace == _xsi && ptr.Value.Contains(':')) {

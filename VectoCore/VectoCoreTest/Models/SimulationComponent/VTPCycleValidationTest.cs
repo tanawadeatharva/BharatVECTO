@@ -35,7 +35,6 @@ using System.Linq;
 using System.Threading;
 using NLog;
 using NLog.Config;
-using NLog.Fluent;
 using NLog.Targets;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;

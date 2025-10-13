@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 	public class DummyVehicleInfo : VectoSimulationComponent, IVehicleInfo
 	{
-		public DummyVehicleInfo(IVehicleContainer container) : base(container)
+		public DummyVehicleInfo(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			
 		}

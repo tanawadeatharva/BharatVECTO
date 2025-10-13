@@ -4,9 +4,9 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -19,7 +19,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.Vecto.IntegrationTests.Utils.DummyRun;
 
@@ -144,7 +143,7 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
         var gi = new Mock<IGearboxInfo>();
         retVal.Setup(c => c.MileageCounter).Returns(mc.Object);
         retVal.Setup(c => c.VehicleInfo).Returns(vi.Object);
-        retVal.Setup(c => c.GearboxInfo).Returns(gi.Object);
+        retVal.Setup(c => c.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(gi.Object);
         retVal.Setup(c => c.ModalData).Returns(modData);
         retVal.Setup(c => c.RunData).Returns(runData);
         retVal.SetupProperty(c => c.RunStatus);
@@ -210,7 +209,7 @@ public class DummyRunPowertrainComponentFactory : IPowertrainComponentFactory
 		throw new NotImplementedException();
 	}
 
-	public IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio)
+	public IRetarder CreateRetarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio, int axleNumber)
 	{
 		throw new NotImplementedException();
 	}

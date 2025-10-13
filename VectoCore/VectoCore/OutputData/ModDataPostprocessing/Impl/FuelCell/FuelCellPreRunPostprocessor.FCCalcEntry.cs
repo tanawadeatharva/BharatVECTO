@@ -1,6 +1,4 @@
-﻿using System;
-using Ninject.Planning.Bindings.Resolvers;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 {

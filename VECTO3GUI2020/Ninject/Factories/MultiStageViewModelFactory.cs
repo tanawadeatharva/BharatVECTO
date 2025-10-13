@@ -1,19 +1,8 @@
-﻿using Ninject;
-using TUGraz.VectoCommon.Exceptions;
+﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Utils;
-using VECTO3GUI2020.ViewModel.Implementation;
-using VECTO3GUI2020.ViewModel.Implementation.Common;
-using VECTO3GUI2020.ViewModel.Implementation.Document;
-using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 

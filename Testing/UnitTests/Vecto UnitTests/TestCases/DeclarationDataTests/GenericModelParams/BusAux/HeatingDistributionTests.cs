@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.Vecto.UnitTests.TestCases.DeclarationDataTests.GenericModelParams.BusAux;

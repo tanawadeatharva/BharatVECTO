@@ -52,6 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
 
 		#region Implementation of IGearboxInfo
 
+		public int AxleNumber => _impl.AxleNumber;
+
 		public GearboxType GearboxType => _impl.GearboxType;
 
 		public GearshiftPosition Gear => _impl.Gear;

@@ -1,4 +1,5 @@
 ﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -9,7 +10,7 @@ namespace TUGraz.VectoCore.Tests.Utils;
 
 public class MockEngine : VectoSimulationComponent, IEngineInfo, IEngineControl
 {
-	public MockEngine(IVehicleContainer container) : base(container) { }
+	public MockEngine(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN) { }
 
 	public PerSecond EngineSpeed { get; set; }
 	public NewtonMeter EngineTorque { get; set; }

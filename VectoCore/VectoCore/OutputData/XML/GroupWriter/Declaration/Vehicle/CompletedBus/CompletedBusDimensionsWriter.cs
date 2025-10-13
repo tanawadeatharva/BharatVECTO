@@ -6,9 +6,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.GroupWriter.Declaration.Vehicle.CompletedBus
 {
-    class CompletedBusDimensionsWriter_V2_4 : GroupWriter, IVehicleDeclarationGroupWriter
+    class CompletedBusDimensionsWriter : GroupWriter, IVehicleDeclarationGroupWriter
     {
-		public CompletedBusDimensionsWriter_V2_4(XNamespace writerNamespace) : base(writerNamespace) { }
+		public CompletedBusDimensionsWriter(XNamespace writerNamespace) : base(writerNamespace) { }
 
 		public static XElement[] GetGroupElements(IVehicleDeclarationInputData vehicle, XNamespace writerNamespace)
 		{

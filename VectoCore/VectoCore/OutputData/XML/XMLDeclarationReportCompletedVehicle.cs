@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -295,8 +294,7 @@ namespace TUGraz.VectoCore.OutputData.XML
                 result.ZeroCO2EmissionsRange = range;
             }
 
-            if (generic.VectoRunData.JobType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-                    VectoSimulationJobType.IEPC_E))
+            if (generic.VectoRunData.JobType.IsBatteryElectric())
             {
                 var elRanges = DeclarationData.CalculateElectricRangesPEVCompletedBus(batteryData: result.BatteryData,
                     result.ElectricEnergyConsumption, result.Distance);
@@ -304,6 +302,39 @@ namespace TUGraz.VectoCore.OutputData.XML
                 result.EquivalentAllElectricRange = elRanges.EquivalentAllElectricRange;
                 result.ActualChargeDepletingRange = elRanges.ActualChargeDepletingRange;
                 result.ZeroCO2EmissionsRange = elRanges.ZeroCO2EmissionsRange;
+
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+
+                result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.END_OF_LIFE_DETERIORATION);
+
+                result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
+            }
+
+            if ((result.VectoRunData.JobType.GetPowertrainArchitectureType() == VectoSimulationJobTypeHelper.Hybrid) 
+                && result.VectoRunData.VehicleData.OffVehicleCharging
+                && (result.VectoRunData.OVCMode == OvcHevMode.ChargeDepleting))
+            {
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
+
+                result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
+                    result.ElectricEnergyConsumption,
+                    result.Distance,
+                    result.VectoRunData,
+                    ResultEntry.END_OF_LIFE_DETERIORATION);
+
+                result.ElectricEnergyConsumption = (result.BeginOfLifeRanges.ElectricEnergyConsumption + result.EndOfLifeRanges.ElectricEnergyConsumption) / 2.0;
             }
 
             if (result.VectoRunData.JobType.IsFCHV())
@@ -323,13 +354,13 @@ namespace TUGraz.VectoCore.OutputData.XML
                 result.HydrogenRange = range;
                 result.ZeroCO2EmissionsRange = range;
 
-                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesFCHVCompletedBus(
+                result.BeginOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
 					result.ElectricEnergyConsumption, 
 					result.Distance, 
 					result.VectoRunData, 
 					ResultEntry.BEGIN_OF_LIFE_DETERIORATION);
                 
-				result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesFCHVCompletedBus(
+				result.EndOfLifeRanges = DeclarationData.CalculateElectricRangesCompletedBus(
 					result.ElectricEnergyConsumption, 
 					result.Distance, 
 					result.VectoRunData, 

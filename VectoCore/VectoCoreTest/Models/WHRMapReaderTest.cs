@@ -12,10 +12,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -367,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
-			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, PowertrainBuilder, DataAdapter);
+			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, DataAdapter);
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);

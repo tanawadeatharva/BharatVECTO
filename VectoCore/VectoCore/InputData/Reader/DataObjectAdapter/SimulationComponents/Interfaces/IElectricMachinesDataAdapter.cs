@@ -4,7 +4,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces
 {
@@ -14,7 +13,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
             IElectricMachinesDeclarationInputData electricMachines,
             IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits, Volt averageVoltage, GearList gearlist = null);
 
-		List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc,
+        Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
+            ElectricMachineEntry<IElectricMotorDeclarationInputData> em,
+            IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
+            Volt averageVoltage, 
+            int axleNumber);
+
+        List<Tuple<PowertrainPosition, ElectricMotorData>> CreateIEPCElectricMachines(IIEPCDeclarationInputData iepc,
 			Volt averageVoltage);
 	}
 }

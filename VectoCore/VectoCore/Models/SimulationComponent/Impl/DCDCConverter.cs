@@ -2,11 +2,9 @@
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -15,14 +13,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
         public double Efficiency { get; protected set; }
 
-        public DCDCConverter(IVehicleContainer container, double efficiency) : base(container)
-        {
-            Efficiency = efficiency;
-            PreviousState.ConsumedEnergy = 0.SI<WattSecond>();
-            CurrentState.ConsumedEnergy = 0.SI<WattSecond>();
-            PreviousState.stateCount = 0;
-            CurrentState.stateCount = 1;
-        }
+		public DCDCConverter(IVehicleContainer container, double efficiency) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
+		{
+			Efficiency = efficiency;
+			PreviousState.ConsumedEnergy = 0.SI<WattSecond>();
+			CurrentState.ConsumedEnergy = 0.SI<WattSecond>();
+			PreviousState.stateCount = 0;
+			CurrentState.stateCount = 1;
+		}
 
 
         #region Implementation of IElectricAuxPort

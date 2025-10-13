@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -12,17 +13,14 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Range = System.Range;
 
 // ReSharper disable InconsistentNaming
 
@@ -521,11 +519,8 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 
 			//EmInfo
 			var em = GetElectricMotor(container.Object, runData.ElectricMachinesData.Single().Item2);
-			container.Setup(c => c.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2))
+			container.Setup(c => c.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2, Constants.NOT_IN_AXLE_POWERTRAIN))
 				.Returns(em);
-			container.Setup(c => c.PowertrainInfo.ElectricMotorPositions).Returns(new[] {
-				PowertrainPosition.BatteryElectricE2
-			});
 			
 			// container.Setup(r => r.GetElectricMotors()).Returns(new List<IElectricMotorInfo>(){em});
 			
@@ -659,7 +654,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			var emDict = new Dictionary<PowertrainPosition, IElectricMotorInfo>() {
 				{ PowertrainPosition.BatteryElectricE2, em },
 			};
-			simplePt.Setup(r => r.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2))
+			simplePt.Setup(r => r.ElectricMotorInfo(PowertrainPosition.BatteryElectricE2, Constants.NOT_IN_AXLE_POWERTRAIN))
 				.Returns(em);
 
 			//BatteryInfo
@@ -674,7 +669,7 @@ namespace TUGraz.Vecto.UnitTests.TestCases.Components.GearShiftStrategy
 			testGbx = GetTestGearbox(simplePt.Object, em, runData.GearboxData.Gears);
 			
 			simplePt.Setup(s => s.GearboxCtl).Returns(testGbx.Object);
-			simplePt.Setup(s => s.GearboxInfo).Returns(testGbx.Object);
+			simplePt.Setup(s => s.GearboxInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(testGbx.Object);
 			simplePt.Setup(s => s.GearboxOutPort).Returns(testGbx.Object);
 			
 			simplePt.Setup(s => s.SimulationComponents()).Returns(components);

@@ -1,8 +1,8 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
     {
 		public double Efficiency { get; }
 
-		public WHRCharger(IVehicleContainer container, double efficiency) : base(container)
+		public WHRCharger(IVehicleContainer container, double efficiency) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Efficiency = efficiency;
 			PreviousState.GeneratedEnergy = 0.SI<WattSecond>();

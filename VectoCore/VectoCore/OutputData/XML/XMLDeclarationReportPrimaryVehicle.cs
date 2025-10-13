@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -7,7 +6,6 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1;
-using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {

@@ -41,7 +41,6 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -100,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
             }
             LastShift = -double.MaxValue.SI<Second>();
             TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
-                container.RunData);
+                container.RunData, AxleNumber);
             EngineInertia = container.RunData.EngineData.Inertia;
         }
 

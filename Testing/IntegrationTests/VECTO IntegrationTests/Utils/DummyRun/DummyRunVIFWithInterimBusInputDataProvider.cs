@@ -64,5 +64,7 @@ public class DummyRunVIFWithInterimBusInputDataProvider : IMultistageVIFInputDat
 
     public XDocument VIF { get; }
 
+    public string MonitoringData => throw new NotImplementedException();
+
     #endregion
 }

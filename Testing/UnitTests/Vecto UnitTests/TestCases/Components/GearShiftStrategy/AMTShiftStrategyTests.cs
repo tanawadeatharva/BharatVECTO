@@ -16,7 +16,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 // using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = NUnit.Framework.Assert;
@@ -450,7 +449,7 @@ TestCase(8, 4, 15000, 200, true),]
 		container.Setup(c => c.WheelsInfo).Returns(wi.Object);
 		wi.Setup(w => w.ReducedMassWheels).Returns(0.SI<Kilogram>());
 		var axli = new Mock<IAxlegearInfo>();
-		container.Setup(c => c.AxlegearInfo).Returns(axli.Object);
+		container.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axli.Object);
 		axli.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
         return container;
     }

@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {

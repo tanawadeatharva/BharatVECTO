@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -23,7 +22,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<string, Func<PerSecond, Second, Second, bool, NewtonMeter>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Second, Second, bool, NewtonMeter>>();
 
-		public PEVPtoTransm(IVehicleContainer container) : base(container)
+		public PEVPtoTransm(IVehicleContainer container, int axleNumber) : base(container, axleNumber)
 		{
 			
 		}
@@ -59,10 +58,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var torqueLoss = 0.SI<NewtonMeter>();
 			var alwaysConsiderPTOTransmLoss = false; //<---- debugging only //TODO: REMOVE
-			var gearEngaged = !DataBus.GearboxInfo.GearEngaged(absTime);
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			var gearEngaged = !gearbox.GearEngaged(absTime);
 			////Always consider PTO_Transm_loss
 
-			if (!DataBus.GearboxInfo.GearEngaged(absTime) && !alwaysConsiderPTOTransmLoss)
+			if (!gearbox.GearEngaged(absTime) && !alwaysConsiderPTOTransmLoss)
             {
                 SetZeroPowerDemand(dryRun);
             }

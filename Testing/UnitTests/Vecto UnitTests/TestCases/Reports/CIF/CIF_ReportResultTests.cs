@@ -1,17 +1,12 @@
 ﻿using System.Xml.Linq;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common;
@@ -148,9 +143,9 @@ public class CIF_ReportResultTests
 			resultEntry.FuelData.Add(fcfuel);
 			resultEntry.CorrectedFinalFuelConsumption[FuelType.H2FC] = new FuelCellFuelConsumptionCorrection(fcfuel, 0.SI<KilogramPerWattSecond>(), 1.SI<Kilogram>(), 0.SI<Kilogram>(), modData.Duration, modData.Distance);
 			if (ovc) {
-                resultEntries.Clear();
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
                 var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);
@@ -269,6 +264,7 @@ public class CIF_ReportResultTests
 			if (ovc) {
 				var run2 = ReportResultTestUtils.GetMockRunData(vehicleCategory, jobType, true, exempted, OvcHevMode.ChargeSustaining, fuels);
 				run2.InputData = ReportResultTestUtils.GetMockInputData(amdm);
+				run2.Iteration = 1;
 				var res2 = ReportResultTestUtils.GetResultEntry(run2);
 				res2.SetResultData(run2, modData, 1);
 				resultEntries.Add(res2);

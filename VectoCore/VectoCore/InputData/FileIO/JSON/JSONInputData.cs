@@ -951,7 +951,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 			_manufacturerResults = new ManufacturerResults(xmlDoc.SelectSingleNode("//*[local-name() = 'Results']"));
 
-			// todo amogoda: does this apply to all VTP reports? lorries et all?
 			_coolingFanTech = xmlDoc.SelectSingleNode("//*[local-name() = 'Auxiliaries']//*[local-name()='CoolingFanTechnology']")?.InnerText 
 				?? throw new ArgumentException("Auxiliary fan technology is missing. Please provide a Primary Manufacturer Report file.");
 
@@ -1341,8 +1340,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool SimulateResultingVIF => RunSimulation;
 
-		#endregion
-	}
+        public string MonitoringData => Vehicle.VehicleMonitoringData;
+
+        #endregion
+    }
 
 	// --------------------------
 
@@ -1483,9 +1484,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV16_MultiplePowertrains(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing)
 		{
 			VehicleData = ReadVehicle();
+
+			if (Body[JsonKeys.Vehicle_EngineFile] != null)
+			{
+				Engine = ReadEngine();
+			}
 		}
 
-		public override VectoSimulationJobType JobType => base.JobType;
+		public override VectoSimulationJobType JobType => VehicleData.VehicleType;
+		
+		public override IHybridStrategyParameters HybridStrategyParameters =>
+			(Body[JsonKeys.Vehicle_HybridStrategyParams] == null)
+			? null 
+			: JSONInputDataFactory.ReadHybridStrategyParameters(
+					Path.Combine(BasePath, Body.GetEx<string>(JsonKeys.Vehicle_HybridStrategyParams)), 
+					false);
 	}
 
 

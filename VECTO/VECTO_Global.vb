@@ -13,192 +13,192 @@ Imports System.IO
 Imports System.Text
 
 Public Module VECTO_Global
-	Public Const VECTOvers As String = "4"
-	Public COREvers As String = "NOT FOUND"
+    Public Const VECTOvers As String = "5"
+    Public COREvers As String = "NOT FOUND"
 
-	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
-	public InstallModeInstalled As Boolean = False
-	Public MyAppPath As String
-	Public MyConfPath As String
-	public MyLogPath As String
+    Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
+    Public InstallModeInstalled As Boolean = False
+    Public MyAppPath As String
+    Public MyConfPath As String
+    Public MyLogPath As String
 
-	public Const CONFIG_JOBLIST_FILE As string =  "joblist.txt"
-	public const CONFIG_CYCLELIST_FILE As string = "cyclelist.txt"
-    public Const FILE_HISTORY_DIR_FILE As string = "Directories.txt"
-
-
-	Public LogFile As FileLogger
-
-	'to ensure correct format for backgroundworker thread
-	Public VectoWorkerV3 As BackgroundWorker
-
-	Public Cfg As Configuration
-
-	Public ReadOnly FileFormat As Encoding = Encoding.UTF8
+    Public Const CONFIG_JOBLIST_FILE As String = "joblist.txt"
+    Public Const CONFIG_CYCLELIST_FILE As String = "cyclelist.txt"
+    Public Const FILE_HISTORY_DIR_FILE As String = "Directories.txt"
 
 
-	Public ProgBarCtrl As ProgressbarControl
+    Public LogFile As FileLogger
+
+    'to ensure correct format for backgroundworker thread
+    Public VectoWorkerV3 As BackgroundWorker
+
+    Public Cfg As Configuration
+
+    Public ReadOnly FileFormat As Encoding = Encoding.UTF8
 
 
-	Public Class FileLogger
-		Private _logStream As StreamWriter
-
-		Const LOG_FILENAME As string = "LOG.txt"
-		Const BACKUP_LOG_FILENAME As String = "LOG_backup.txt"
-
-		Private logPath as string
-		Private logFile As string
-
-		public sub New()
-			logPath = MyAppPath
-			If (InstallModeInstalled) Then
-				logPath = MyLogPath
-			End If
-			logFile = path.Combine(logPath, LOG_FILENAME)
-		End sub
+    Public ProgBarCtrl As ProgressbarControl
 
 
-		Public Function StartLog() As Boolean
-			Try
-				_logStream = My.Computer.FileSystem.OpenTextFileWriter(logFile, True, FileFormat)
-				_logStream.AutoFlush = True
-				WriteToLog(MessageType.Normal, "Starting Session " & Now)
-				WriteToLog(MessageType.Normal, "VECTO " & VECTOvers)
-			Catch ex As Exception
-				Return False
-			End Try
+    Public Class FileLogger
+        Private _logStream As StreamWriter
 
-			Return True
-		End Function
+        Const LOG_FILENAME As String = "LOG.txt"
+        Const BACKUP_LOG_FILENAME As String = "LOG_backup.txt"
 
-		Public Function SizeCheck() As Boolean
+        Private logPath As String
+        Private logFile As String
 
-			'Start new log if file size limit reached
-			If File.Exists(logFile) Then
-
-				'File size check
-				Dim logfDetail As FileInfo = My.Computer.FileSystem.GetFileInfo(logFile)
-
-				'If Log too large: Delete
-				If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
-
-					WriteToLog(MessageType.Normal, "Starting new logfile")
-					_logStream.Close()
-
-					Dim backUpError As Boolean = False
-
-					Try
-						If File.Exists(path.Combine(logPath, BACKUP_LOG_FILENAME)) Then File.Delete(path.Combine(logPath, BACKUP_LOG_FILENAME))
-						File.Move(logFile, path.Combine(logPath, BACKUP_LOG_FILENAME))
-					Catch ex As Exception
-						backUpError = True
-					End Try
-
-					If Not StartLog() Then Return False
-
-					If backUpError Then
-						WriteToLog(MessageType.Err, "Failed to backup logfile! (" & Path.Combine(logPath, BACKUP_LOG_FILENAME) & ")")
-					Else
-						WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to " & BACKUP_LOG_FILENAME)
-					End If
-
-				End If
-
-			End If
-
-			Return True
-		End Function
-
-		Public Function CloseLog() As Boolean
-			Try
-				WriteToLog(MessageType.Normal, "Closing Session " & Now)
-				_logStream.Close()
-			Catch ex As Exception
-				Return False
-			End Try
-
-			Return True
-		End Function
+        Public Sub New()
+            logPath = MyAppPath
+            If (InstallModeInstalled) Then
+                logPath = MyLogPath
+            End If
+            logFile = Path.Combine(logPath, LOG_FILENAME)
+        End Sub
 
 
-		Public Function WriteToLog(msgType As MessageType, msg As String) As Boolean
-			Dim msgTypeStr As String
+        Public Function StartLog() As Boolean
+            Try
+                _logStream = My.Computer.FileSystem.OpenTextFileWriter(logFile, True, FileFormat)
+                _logStream.AutoFlush = True
+                WriteToLog(MessageType.Normal, "Starting Session " & Now)
+                WriteToLog(MessageType.Normal, "VECTO " & VECTOvers)
+            Catch ex As Exception
+                Return False
+            End Try
 
-			Select Case msgType
-				Case MessageType.Err
-					msgTypeStr = "Error"
-				Case MessageType.Warn
-					msgTypeStr = "Warning"
-				Case Else
-					msgTypeStr = "-"
-			End Select
+            Return True
+        End Function
 
-			Try
-				_logStream.WriteLine(Now.ToString("yyyy/MM/dd-HH:mm:ss") & vbTab & msgTypeStr & vbTab & msg)
-				Return True
-			Catch ex As Exception
-				Return False
-			End Try
-		End Function
-	End Class
+        Public Function SizeCheck() As Boolean
+
+            'Start new log if file size limit reached
+            If File.Exists(logFile) Then
+
+                'File size check
+                Dim logfDetail As FileInfo = My.Computer.FileSystem.GetFileInfo(logFile)
+
+                'If Log too large: Delete
+                If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
+
+                    WriteToLog(MessageType.Normal, "Starting new logfile")
+                    _logStream.Close()
+
+                    Dim backUpError As Boolean = False
+
+                    Try
+                        If File.Exists(Path.Combine(logPath, BACKUP_LOG_FILENAME)) Then File.Delete(Path.Combine(logPath, BACKUP_LOG_FILENAME))
+                        File.Move(logFile, Path.Combine(logPath, BACKUP_LOG_FILENAME))
+                    Catch ex As Exception
+                        backUpError = True
+                    End Try
+
+                    If Not StartLog() Then Return False
+
+                    If backUpError Then
+                        WriteToLog(MessageType.Err, "Failed to backup logfile! (" & Path.Combine(logPath, BACKUP_LOG_FILENAME) & ")")
+                    Else
+                        WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to " & BACKUP_LOG_FILENAME)
+                    End If
+
+                End If
+
+            End If
+
+            Return True
+        End Function
+
+        Public Function CloseLog() As Boolean
+            Try
+                WriteToLog(MessageType.Normal, "Closing Session " & Now)
+                _logStream.Close()
+            Catch ex As Exception
+                Return False
+            End Try
+
+            Return True
+        End Function
+
+
+        Public Function WriteToLog(msgType As MessageType, msg As String) As Boolean
+            Dim msgTypeStr As String
+
+            Select Case msgType
+                Case MessageType.Err
+                    msgTypeStr = "Error"
+                Case MessageType.Warn
+                    msgTypeStr = "Warning"
+                Case Else
+                    msgTypeStr = "-"
+            End Select
+
+            Try
+                _logStream.WriteLine(Now.ToString("yyyy/MM/dd-HH:mm:ss") & vbTab & msgTypeStr & vbTab & msg)
+                Return True
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+    End Class
 
 #Region "File path functions"
 
-	'When no path is specified, then insert either HomeDir or MainDir   Special-folders
-	Public Function FileRepl(file As String, Optional ByVal mainDir As String = "") As String
+    'When no path is specified, then insert either HomeDir or MainDir   Special-folders
+    Public Function FileRepl(file As String, Optional ByVal mainDir As String = "") As String
 
-		Dim replPath As String
+        Dim replPath As String
 
-		'Trim Path
-		file = Trim(file)
+        'Trim Path
+        file = Trim(file)
 
-		'If empty file => Abort
-		If file = "" Then Return ""
+        'If empty file => Abort
+        If file = "" Then Return ""
 
-		'Replace sKeys
-		file = Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
-						CompareMethod.Text)
-		file = Replace(file, HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
+        'Replace sKeys
+        file = Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
+                        CompareMethod.Text)
+        file = Replace(file, HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
-		'Replace - Determine folder
-		If mainDir = "" Then
-			replPath = MyAppPath
-		Else
-			replPath = mainDir
-		End If
+        'Replace - Determine folder
+        If mainDir = "" Then
+            replPath = MyAppPath
+        Else
+            replPath = mainDir
+        End If
 
-		' "..\" => One folder-level up
-		Do While replPath.Length > 0 AndAlso Left(file, 3) = "..\"
-			replPath = PathUp(replPath)
-			file = file.Substring(3)
-		Loop
+        ' "..\" => One folder-level up
+        Do While replPath.Length > 0 AndAlso Left(file, 3) = "..\"
+            replPath = PathUp(replPath)
+            file = file.Substring(3)
+        Loop
 
 
-		'Supplement Path, if not available
-		If GetPath(file) = "" Then
+        'Supplement Path, if not available
+        If GetPath(file) = "" Then
 
-			Return replPath & file
+            Return replPath & file
 
-		Else
-			Return file
-		End If
-	End Function
+        Else
+            Return file
+        End If
+    End Function
 
-	'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
-	Private Function PathUp(pfad As String) As String
-		Dim x As Integer
+    'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
+    Private Function PathUp(pfad As String) As String
+        Dim x As Integer
 
-		pfad = pfad.Substring(0, pfad.Length - 1)
+        pfad = pfad.Substring(0, pfad.Length - 1)
 
-		x = pfad.LastIndexOf("\", StringComparison.Ordinal)
+        x = pfad.LastIndexOf("\", StringComparison.Ordinal)
 
-		If x = -1 Then Return ""
+        If x = -1 Then Return ""
 
-		Return pfad.Substring(0, x + 1)
-	End Function
+        Return pfad.Substring(0, x + 1)
+    End Function
 
-	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
-	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String _
+    'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+    Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String _
 'GetFilenameWithoutPath
 		Dim x As Integer
 		x = file.LastIndexOf("\", StringComparison.Ordinal) + 1

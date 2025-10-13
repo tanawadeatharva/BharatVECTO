@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -67,7 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = totalTorqueDemand;
 
 			CurrentState.FullDragTorque = ModelData.FullLoadCurves[0].DragLoadStationaryTorque(avgEngineSpeed);
-			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			var gearbox = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber);
+			var stationaryFullLoadTorque = ModelData.FullLoadCurves[gearbox.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
 			CurrentState.StationaryFullLoadTorque = stationaryFullLoadTorque;
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;

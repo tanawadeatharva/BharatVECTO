@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -103,7 +102,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool ExemptedVehicle { get; }
 
 		string VIN { get; }
-
+		
 		LegislativeClass? LegislativeClass { get; }
 
 		/// <summary>
@@ -554,6 +553,8 @@ namespace TUGraz.VectoCommon.InputData
         bool Steered { get; }
 
 		NewtonMeter WheelEndFriction { get; }
+
+		string WheelEndCertificationNumber {  get; }
 	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData

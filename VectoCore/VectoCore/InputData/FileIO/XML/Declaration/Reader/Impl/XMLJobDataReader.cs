@@ -29,10 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
-#define PROHIBIT_V27_XML
-#endif
-
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -41,7 +37,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
@@ -108,28 +103,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
                 }
             }
         }
-
-        protected void DisallowV27NonHydrogenFueledConventionalLorries(IXMLDeclarationVehicleData vehicle, string version)
-        {
-            var conventionalLorries = new string[2]
-            {
-                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_HeavyLorryDeclarationType",
-                "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7:Vehicle_Conventional_MediumLorryDeclarationType"
-            };
-
-            if (!conventionalLorries.Contains(version))
-            {
-                return;
-            }
-
-            if (!vehicle.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Any(y => y.FuelType.IsHydrogenFuel())))
-            {
-#if PROHIBIT_V27_XML
-                throw new VectoException("This v2.7 vehicle is not supported yet. It is not fuelled by hydrogen.");
-#endif
-            }
-        }
-
     }
 
 	// ---------------------------------------------------------------------------------------
@@ -156,8 +129,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
             vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
 			CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}
@@ -186,8 +157,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
             CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}
@@ -218,8 +187,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.MonitoringReader = (vehicle.MonitoringNode == null) ? null : GetReader(vehicle, vehicle.MonitoringNode, Factory.CreateMonitoringReader);
 
 			CheckH2Properties(vehicle);
-
-            DisallowV27NonHydrogenFueledConventionalLorries(vehicle, version);
 
             return vehicle;
 		}

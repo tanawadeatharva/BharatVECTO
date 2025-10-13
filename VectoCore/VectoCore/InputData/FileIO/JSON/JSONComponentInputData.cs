@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -43,7 +42,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -166,7 +164,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public CertificationMethod CertificationMethod { get; private set; }
 		public string CertificationNumber { get; private set; }
 		public DigestData DigestValue { get; private set; }
-		public string SimulationToolLicenseNumber { get; private set; }
         public Kilogram H2StorageUsableCapacity { get; private set; }
         public HydrogenStorageTechnology? HydrogenStorageTechnology { get; private set; }
 		public bool BatteryOnlyMode { get; private set; }
@@ -194,6 +191,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool ExemptedVehicle => false;
 
 		public string VIN => VehicleData.VIN;
+
+		public string SimulationToolLicenseNumber => VehicleData.SimulationToolLicenseNumber;
 
 		public LegislativeClass? LegislativeClass => VehicleData.LegislativeClass;
 
@@ -241,7 +240,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
-		public IIEPCDeclarationInputData IEPC => IEPCData;
+		public ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering => null;
+
+        public IIEPCDeclarationInputData IEPC => IEPCData;
 
 		IElectricStorageSystemDeclarationInputData IVehicleComponentsDeclaration.ElectricStorage => 
 			new JSONElectricStorageSystemEngineeringInputData(new List<IElectricStorageEngineeringInputData>() {

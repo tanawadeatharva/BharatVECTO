@@ -2,8 +2,8 @@
   <PropertyGroup>
     <RootNamespace>TUGraz.VectoCore.Tests</RootNamespace>
     <AssemblyName>VectoCoreTest</AssemblyName>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
 	<!--uncomment to add windows forms an enable plotting of diagrams in some testcases-->
 	<!--<DefineConstants>$(DefineConstants);TRACE</DefineConstants>-->
 	<!--<UseWindowsForms>true</UseWindowsForms>-->
@@ -26,9 +26,6 @@
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Ninject" Version="3.3.6" />
-    <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="ScottPlot" Version="4.1.68" />
   </ItemGroup>
 

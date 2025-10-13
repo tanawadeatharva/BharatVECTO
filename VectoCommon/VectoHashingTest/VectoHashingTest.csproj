@@ -2,12 +2,11 @@
   <PropertyGroup>
     <RootNamespace>VectoHashingTest</RootNamespace>
     <AssemblyName>VectoHashingTest</AssemblyName>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.6" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
@@ -24,7 +23,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="TestData\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

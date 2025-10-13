@@ -30,8 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -168,13 +166,15 @@ namespace TUGraz.VectoCommon.InputData
 		IFuelCellSystemEngineeringInputData FuelCellSystemInputData { get; }
 
 		IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
+
+		ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering {  get; }
 	}
 
 	public interface IAxlePowertrainEngineeringInputData
 	{
 		int AxleNumber { get; }
 
-		VectoSimulationJobType Type { get; }
+		ArchitectureID Architecture { get; }
 
 		IGearboxEngineeringInputData GearboxInputData { get; }
 
@@ -191,6 +191,8 @@ namespace TUGraz.VectoCommon.InputData
 		IGearshiftEngineeringInputData GearshiftInputData { get; }
 
 		ElectricMachineEntry<IElectricMotorEngineeringInputData> ElectricMotor { get; }
+
+		IIEPCEngineeringInputData IEPCEngineeringInputData { get; }
 	}
 
 	public interface IAxlesEngineeringInputData

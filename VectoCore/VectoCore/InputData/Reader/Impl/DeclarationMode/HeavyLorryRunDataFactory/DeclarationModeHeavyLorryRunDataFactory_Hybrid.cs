@@ -4,7 +4,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -13,11 +12,9 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.IterativeRunStrategies;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory
 {
@@ -234,11 +231,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 						"Vehicles with a battery dominant mode are required to have electrically powered auxiliaries");
 				}
 
-			    CreateGearboxAndGearshiftData(runData);
+			    var gearboxType = InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType();
 
-                runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
-					Vehicle.Components.ElectricMachines, Vehicle.ElectricMotorTorqueLimits,
-					runData.BatteryData.CalculateVoltageCenterSoc(), InputDataProvider.JobInputData.Vehicle.Components.GetGearboxType() == GearboxType.IHPC ? runData.GearboxData.GearList : null);
+				var gearlist = gearboxType == GearboxType.IHPC
+					? new GearList(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Gears
+						.Select(x => new GearshiftPosition((uint)x.Gear)).ToArray())
+					: null;
+				
+				runData.ElectricMachinesData = DataAdapter.CreateElectricMachines(
+						Vehicle.Components.ElectricMachines,
+						Vehicle.ElectricMotorTorqueLimits,
+						runData.BatteryData.CalculateVoltageCenterSoc(),
+						gearlist);
+
+                CreateGearboxAndGearshiftData(runData);
+                
 
                 runData.HybridStrategyParameters =
 					DataAdapter.CreateHybridStrategy(runData.BatteryData,
@@ -537,70 +544,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDa
 
 				runData.OVCMode = ovcMode;
 				runData.ModFileSuffix += "_pre";
-				runData.IterativeRunStrategy = SetUpFuelCellIterativeRunStrategy(runData, fcBatteries);
+				runData.IterativeRunStrategy = DeclarationFuelCellIterativeStrategy.SetUpFuelCellIterativeRunStrategy(runData, DataAdapter, InputDataProvider, FuelCellJobType, fcBatteries);
 				runData.BatteryData.Batteries.ForEach(t => t.Item2.ChargeDepletingBattery = true);
 
 				return runData;
-			}
-
-			private FCHEVIterativeRunStrategy SetUpFuelCellIterativeRunStrategy(VectoRunData runData, Tuple<int, BatteryData> fcBatteries)
-			{
-				var iterativeRunStrategy = SetUpFCHEVIterativeRunStrategy();
-
-				iterativeRunStrategy.Update = (modData, iterationRunData) =>
-				{
-					var fchvDataAdapter = new FCHVDeclarationDataAdapter(DataProvider.DataSource);
-					var fuelCellSystemData = DataAdapter.CreateFuelCells(Vehicle.Components.FuelCellSystem).ConvertToEngineeringData();
-
-					runData.BatteryData.Batteries = runData.BatteryData.Batteries
-						.Where(b => b.Item1 != fcBatteries.Item1)
-						.ToList();
-
-					iterationRunData.JobType = FuelCellJobType;
-					iterationRunData.ModFileSuffix = string.Empty;
-					iterationRunData.FuelCellSystemData = fuelCellSystemData;
-					iterationRunData.OVCMode = runData.OVCMode == OvcHevMode.NotApplicable 
-						? OvcHevMode.NotApplicable : OvcHevMode.ChargeSustaining;
-					
-					modData.PostProcessingCorrection = new FCHVPostProcessingCorrection();
-
-					iterationRunData.FuelCellSystemData.FuelCellPowerMap =
-						fchvDataAdapter.CreateFuelCellPowerMap(modData, iterationRunData.FuelCellSystemData, iterationRunData.BatteryData);
-					iterationRunData.FuelCellSystemData.FuelCellShareMap =
-						fchvDataAdapter.CreateFuelCellShareMap(fuelCellSystemData);
-
-
-					/// Comment from [1]: In the real run we don't use a charge sustaining battery
-					runData.BatteryData.ChargeSustainingBatterySystem = false;
-					runData.ModFileSuffix += runData.Loading;
-					runData.Iteration++;
-				};
-
-				return iterativeRunStrategy;
-			}
-
-			private FCHEVIterativeRunStrategy SetUpFCHEVIterativeRunStrategy()
-			{
-				return new FCHEVIterativeRunStrategy(
-						new[]
-						{
-							// Pre-run, iteration 0.
-							new PreRunOptions()
-							{
-								WriteModAndSumData = true,
-//#if TRACE_FC
-//								WriteModAndSumData = true,
-//#else
-//								WriteModAndSumData = false
-//#endif
-							},
-
-							// Real run, iteration 1.
-							new PreRunOptions()
-							{
-								WriteModAndSumData = true
-							}
-						});
 			}
 
 			protected override bool AxleGearRequired()

@@ -1,17 +1,10 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
-using Moq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using VECTO3GUI2020.ViewModel.Implementation;
-using VECTO3GUI2020.ViewModel.Interfaces;
-using VECTO3GUI2020.ViewModel.Interfaces.Document;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using Vecto3GUI2020Test.Utils;

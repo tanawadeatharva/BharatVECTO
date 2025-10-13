@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;

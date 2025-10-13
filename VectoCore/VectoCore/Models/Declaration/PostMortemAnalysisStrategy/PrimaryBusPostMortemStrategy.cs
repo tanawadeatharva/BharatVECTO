@@ -7,10 +7,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
@@ -105,6 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration.PostMortemAnalysisStrategy
 				var gbx = testPowertrain.Gearbox;
 				gbx.SetGear = testPowertrain.Container.RunData.GearboxData.GearList.First();
 			}
+			
 			vehicle.Initialize(0.KMPHtoMeterPerSecond(), gradient);
 
 			var architecture = testPowertrain.Container.VehicleArchitecutre;

@@ -59,8 +59,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Batter
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using Point = TUGraz.VectoCommon.Utils.Point;
-using NLog.Fluent;
-using System.Diagnostics;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using ElectricSystem = TUGraz.VectoCore.Models.Declaration.Auxiliaries.ElectricSystem;
 
@@ -234,11 +232,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static SegmentLookup GetTruckSegment(IVehicleDeclarationInputData vehicle, bool batteryElectric = false, bool throwException = true)
 		{
-				var allowVocational = true;
+			var allowVocational = true;
 			var ng = vehicle.ExemptedVehicle ? false : vehicle.Components.EngineInputData?.EngineModes.Any(e =>
 				e.Fuels.Any(f => f.FuelType.IsOneOf(FuelType.LPGPI, FuelType.NGCI, FuelType.NGPI))) ?? false;
 			var ovcHev = vehicle.ExemptedVehicle ? false : vehicle.OVC;
-			Segment segment;
+			Segment segment = new Segment();
 			try {
 				segment = DeclarationData.TruckSegments.Lookup(
 					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
@@ -246,10 +244,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					vehicle.VocationalVehicle, ng, ovcHev);
 			} catch (VectoException) {
 				allowVocational = false;
-				segment = DeclarationData.TruckSegments.Lookup(
+				try
+				{
+					segment = DeclarationData.TruckSegments.Lookup(
 					vehicle.VehicleCategory, batteryElectric, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating,
 					vehicle.CurbMassChassis,
 					false, ng, ovcHev);
+				}
+				catch (VectoException) { }
 			}
 
 			if (!segment.Found && allowVocational)
@@ -1176,26 +1178,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 			
 				}
 				if (gearIdx >= gears.Count - 1) {
-					return new ShiftPolygon(TransformShiftPolygonEntries(downShift, emRatio, lossMap), TransformShiftPolygonEntries(upShift, emRatio, lossMap));
+					return new ShiftPolygon(TransformShiftPolygonEntries(downShift), TransformShiftPolygonEntries(upShift));
 				}
 			
 				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxGenerationTorque * 1.1, VectoMath.Min(emMaxSpeedDt * 0.9, gbxMaxSpeed)));
 				upShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDriveTorque * 1.1, VectoMath.Min(emMaxSpeedDt * 0.9, gbxMaxSpeed)));
-				return new ShiftPolygon(TransformShiftPolygonEntries(downShift, emRatio, lossMap), TransformShiftPolygonEntries(upShift, emRatio, lossMap));
+				return new ShiftPolygon(TransformShiftPolygonEntries(downShift), TransformShiftPolygonEntries(upShift));
 			}
 
 
 			/// <summary>
-			/// Transforms the shiftpolygons from em side to drivetrain side (= gearbox in), considering the ADC ratio and losses
+			/// Transforms the shiftpolygons. The shift polygons are calculated based on the EM,
+			/// to use them with gearbox input torque we need to invert the sign of the torque entries.
 			/// </summary>
 			/// <param name="entries"></param>
-			/// <param name="emRatio"></param>
-			/// <param name="lossMap"></param>
 			/// <returns></returns>
 			private static IList<ShiftPolygon.ShiftPolygonEntry> TransformShiftPolygonEntries(
-				IEnumerable<ShiftPolygon.ShiftPolygonEntry> entries, double emRatio, TransmissionLossMap lossMap)
+				IList<ShiftPolygon.ShiftPolygonEntry> entries)
 			{
-				return entries.ToList();
+				foreach (var entry in entries) {
+					entry.Torque = entry.Torque * (-1);
+				}
+
+				return entries.Reverse().ToList();
 			}
 
 			private static ElectricMotorFullLoadCurve TransformFullLoadCurve(ElectricMotorFullLoadCurve emFld,
@@ -2066,7 +2071,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				FuelConsumption = D53_fuelConsumptionWeighted,
 				CO2PerMeter = (D38_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D38_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
 				FuelConsumptionPerMeter = fcPerMeter,
-
+				BeginOfLifeRanges = cdResult.BeginOfLifeRanges,
+				EndOfLifeRanges = cdResult.EndOfLifeRanges,
+				
 				AuxHeaterFuel = cdResult.AuxHeaterFuel,
 				ZEV_CO2 =
 					cdResult.AuxHeaterFuel != null && cdResult.ZEV_CO2 != null &&
@@ -2165,6 +2172,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				ElectricEnergyConsumption = D36_electricEnergyConsumptionWeighted,
 				FuelConsumption = D37_fuelConsumptionWeighted,
 				FuelConsumptionPerMeter = fcPerMeter,
+				BeginOfLifeRanges = cdResult.BeginOfLifeRanges,
+				EndOfLifeRanges = cdResult.EndOfLifeRanges,
 
                 CO2PerMeter = (D32_utilityFactor * (cdResult.CO2Total / cdResult.Distance)) + ((1 - D32_utilityFactor) * (csResult.CO2Total / csResult.Distance)),
 
@@ -2389,9 +2398,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 				EquivalentAllElectricRange = entries.All(e => e.EquivalentAllElectricRange != null) ? entries.Sum(e => e.EquivalentAllElectricRange * e.WeightingFactor) : null,
 				ZeroCO2EmissionsRange = entries.All(e => e.ZeroCO2EmissionsRange != null) ? entries.Sum(e => e.ZeroCO2EmissionsRange * e.WeightingFactor) : null,
                 HydrogenRange = entries.All(e => e.HydrogenRange != null) ? entries.Sum(e => e.HydrogenRange * e.WeightingFactor) : null,
+				BeginOfLifeRanges = new ElectricRangesPEV() {
+					ActualChargeDepletingRange = entries.All(e => e.BeginOfLifeRanges.ActualChargeDepletingRange != null) 
+						? entries.Sum(e => e.BeginOfLifeRanges.ActualChargeDepletingRange * e.WeightingFactor) 
+						: null,
+					EquivalentAllElectricRange = entries.All(e => e.BeginOfLifeRanges.EquivalentAllElectricRange != null)
+                        ? entries.Sum(e => e.BeginOfLifeRanges.EquivalentAllElectricRange * e.WeightingFactor)
+                        : null,
+					ZeroCO2EmissionsRange = entries.All(e => e.BeginOfLifeRanges.ZeroCO2EmissionsRange != null)
+                        ? entries.Sum(e => e.BeginOfLifeRanges.ZeroCO2EmissionsRange * e.WeightingFactor)
+                        : null,
+					ElectricEnergyConsumption = entries.All(e => e.BeginOfLifeRanges.ElectricEnergyConsumption != null)
+                        ? entries.Sum(e => e.BeginOfLifeRanges.ElectricEnergyConsumption * e.WeightingFactor)
+                        : null,
+                },
+				EndOfLifeRanges = new ElectricRangesPEV()
+                {
+                    ActualChargeDepletingRange = entries.All(e => e.EndOfLifeRanges.ActualChargeDepletingRange != null)
+                        ? entries.Sum(e => e.EndOfLifeRanges.ActualChargeDepletingRange * e.WeightingFactor)
+                        : null,
+                    EquivalentAllElectricRange = entries.All(e => e.EndOfLifeRanges.EquivalentAllElectricRange != null)
+                        ? entries.Sum(e => e.EndOfLifeRanges.EquivalentAllElectricRange * e.WeightingFactor)
+                        : null,
+                    ZeroCO2EmissionsRange = entries.All(e => e.EndOfLifeRanges.ZeroCO2EmissionsRange != null)
+                        ? entries.Sum(e => e.EndOfLifeRanges.ZeroCO2EmissionsRange * e.WeightingFactor)
+                        : null,
+                    ElectricEnergyConsumption = entries.All(e => e.EndOfLifeRanges.ElectricEnergyConsumption != null)
+                        ? entries.Sum(e => e.EndOfLifeRanges.ElectricEnergyConsumption * e.WeightingFactor)
+                        : null,
+                },
                 UtilityFactor = double.NaN,
 
-				AuxHeaterFuel = entries.First().AuxHeaterFuel,
+                AuxHeaterFuel = entries.First().AuxHeaterFuel,
 				ZEV_CO2 = entries.Sum(e => ((e?.ZEV_CO2 ?? 0.SI<Kilogram>()) / e.Distance) * e.WeightingFactor),
 				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => ((e?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<Kilogram>()) / e.Distance) * e.WeightingFactor),
 			};
@@ -2434,19 +2472,41 @@ namespace TUGraz.VectoCore.Models.Declaration
 				EquivalentAllElectricRange = entries.Sum(e => e.Weighted.EquivalentAllElectricRange * e.ChargeDepletingResult.WeightingFactor),
 				ZeroCO2EmissionsRange = entries.Where(e => e.Weighted.ZeroCO2EmissionsRange != null).Sum(e => e.Weighted.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
 				HydrogenRange = entries.Where(e => e.Weighted.HydrogenRange != null).Sum(e => e.Weighted.HydrogenRange * e.ChargeDepletingResult.WeightingFactor),
-				UtilityFactor = double.NaN,
+                BeginOfLifeRanges = new ElectricRangesPEV()
+                {
+                    ActualChargeDepletingRange = entries.Where(e => e.Weighted.BeginOfLifeRanges.ActualChargeDepletingRange != null)
+                        .Sum(e => e.Weighted.BeginOfLifeRanges.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),
+                    EquivalentAllElectricRange = entries.Where(e => e.Weighted.BeginOfLifeRanges.EquivalentAllElectricRange != null)
+                        .Sum(e => e.Weighted.BeginOfLifeRanges.EquivalentAllElectricRange * e.ChargeDepletingResult.WeightingFactor),
+                    ZeroCO2EmissionsRange = entries.Where(e => e.Weighted.BeginOfLifeRanges.ZeroCO2EmissionsRange != null)
+                        .Sum(e => e.Weighted.BeginOfLifeRanges.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
+                    ElectricEnergyConsumption = entries.Where(e => e.Weighted.BeginOfLifeRanges.ElectricEnergyConsumption != null)
+                        .Sum(e => e.Weighted.BeginOfLifeRanges.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
+                },
+                EndOfLifeRanges = new ElectricRangesPEV()
+                {
+                    ActualChargeDepletingRange = entries.Where(e => e.Weighted.EndOfLifeRanges.ActualChargeDepletingRange != null)
+                        .Sum(e => e.Weighted.EndOfLifeRanges.ActualChargeDepletingRange * e.ChargeDepletingResult.WeightingFactor),
+                    EquivalentAllElectricRange = entries.Where(e => e.Weighted.EndOfLifeRanges.EquivalentAllElectricRange != null)
+                        .Sum(e => e.Weighted.EndOfLifeRanges.EquivalentAllElectricRange * e.ChargeDepletingResult.WeightingFactor),
+                    ZeroCO2EmissionsRange = entries.Where(e => e.Weighted.EndOfLifeRanges.ZeroCO2EmissionsRange != null)
+                        .Sum(e => e.Weighted.EndOfLifeRanges.ZeroCO2EmissionsRange * e.ChargeDepletingResult.WeightingFactor),
+                    ElectricEnergyConsumption = entries.Where(e => e.Weighted.EndOfLifeRanges.ElectricEnergyConsumption != null)
+                        .Sum(e => e.Weighted.EndOfLifeRanges.ElectricEnergyConsumption * e.ChargeDepletingResult.WeightingFactor),
+                },
+                UtilityFactor = double.NaN,
 
-				AuxHeaterFuel = entries.First().ChargeDepletingResult.AuxHeaterFuel,
+                AuxHeaterFuel = entries.First().ChargeDepletingResult.AuxHeaterFuel,
 				ZEV_CO2 = entries.Sum(e => (e?.Weighted?.ZEV_CO2 ?? 0.SI<KilogramPerMeter>()) * e.ChargeDepletingResult.WeightingFactor),
 				ZEV_FuelConsumption_AuxHtr = entries.Sum(e => (e?.Weighted?.ZEV_FuelConsumption_AuxHtr ?? 0.SI<KilogramPerMeter>()) * e.ChargeDepletingResult.WeightingFactor),
 			};
 		}
 
-        public static ElectricRangesPEV CalculateElectricRangesFCHV(VectoRunData runData, IModalDataContainer data, double deterioration)
+        public static ElectricRangesPEV CalculateElectricRanges(VectoRunData runData, IModalDataContainer data, double deterioration)
         {
             return runData.InMotionCharging
-                ? DoCalculateElectricRangesIMCFCHV(data, runData, deterioration)
-                : DoCalculateElectricRangesFCHV(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
+                ? DoCalculateElectricRangesIMCWithDeterioration(data, runData, deterioration)
+                : DoCalculateElectricRangesWithDeterioration(data.CorrectedModalData.ElectricEnergyConsumption_SoC_Corr,
                     data.Distance, CalculateChargingEfficiencyPEV(runData), runData, deterioration);
         }
 
@@ -2465,17 +2525,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 				distance: distance, chargingEfficiencyBattery: 1, batteryData);
 		}
 
-		public static ElectricRangesPEV CalculateElectricRangesFCHVCompletedBus(
+		public static ElectricRangesPEV CalculateElectricRangesCompletedBus(
             WattSecond ElectricEnergyConsumptionSoc, 
 			Meter distance,
 			VectoRunData runData, 
 			double deterioration)
 		{
-            return DoCalculateElectricRangesFCHV(ElectricEnergyConsumptionSoc,
+            return DoCalculateElectricRangesWithDeterioration(ElectricEnergyConsumptionSoc,
                     distance, chargingEfficiencyBattery: 1, runData, deterioration);
         }
 
-        private static ElectricRangesPEV DoCalculateElectricRangesFCHV(
+        private static ElectricRangesPEV DoCalculateElectricRangesWithDeterioration(
 			WattSecond electricEnergyConsumptionSoCCorr, 
 			Meter distance, 
 			double chargingEfficiencyBattery, 
@@ -2489,7 +2549,7 @@ namespace TUGraz.VectoCore.Models.Declaration
             var batteryData = new ElectricStorageAdapter().CreateBatteryData(
                 vehicle.Components.ElectricStorage, 
 				runData.JobType, 
-				runData.VehicleData.OffVehicleCharging, 
+				vehicle.OVC || runData.VehicleData.OffVehicleCharging, 
 				deterioration);
 
             return DoCalculateElectricRangesPEV(electricEnergyConsumptionSoCCorr, distance, chargingEfficiencyBattery, batteryData);
@@ -2521,7 +2581,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 
-        internal static ElectricRangesPEV DoCalculateElectricRangesIMCFCHV(IModalDataContainer modData, VectoRunData runData, double deterioration)
+        internal static ElectricRangesPEV DoCalculateElectricRangesIMCWithDeterioration(IModalDataContainer modData, VectoRunData runData, double deterioration)
 		{
 			var batteryData = new ElectricStorageAdapter().CreateBatteryData(
                 runData.InputData.JobInputData.Vehicle.Components.ElectricStorage,

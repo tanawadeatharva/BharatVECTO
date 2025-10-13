@@ -3,11 +3,9 @@ using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 {
@@ -16,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
         
         public AbstractXMLDeclarationExemptedVehicleDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-            base(jobData, xmlNode, sourceFile)
+            base(jobData, xmlNode, sourceFile, true)
         {}
 
         public override string SimulationToolLicenseNumber => GetString("SimulationToolLicenseNumber");

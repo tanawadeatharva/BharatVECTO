@@ -1092,6 +1092,8 @@ Public Class Vehicle
             Return Nothing
         End Get
     End Property
+
+    Public ReadOnly Property GeneratorEngineering As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) Implements IVehicleComponentsEngineering.GeneratorEngineering
 End Class
 
 Public Class IEPCWrapper

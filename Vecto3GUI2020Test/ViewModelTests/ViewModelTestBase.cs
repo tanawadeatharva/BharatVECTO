@@ -1,20 +1,8 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using Moq;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.VectoCore;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using VECTO3GUI2020.Helper;
-using VECTO3GUI2020.Ninject;
-using VECTO3GUI2020.Ninject.Vehicle;
-using VECTO3GUI2020.ViewModel.Interfaces;
 using VECTO3GUI2020.ViewModel.Interfaces.Document;
 using VECTO3GUI2020.ViewModel.MultiStage.Implementation;
-using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
 using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test

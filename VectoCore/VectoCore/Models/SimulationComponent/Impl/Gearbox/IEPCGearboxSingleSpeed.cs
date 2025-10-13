@@ -3,9 +3,9 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox
         }
 
         protected IEPCGearboxSingleSpeed(IVehicleContainer container, IShiftStrategy strategy, bool dummy) : base(container,
-            container.RunData.GearboxData.Gears.First().Value)
+            container.RunData.GearboxData.Gears.First().Value, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			var modelData = container.RunData.GearboxData;
             GearboxType = modelData.Type;

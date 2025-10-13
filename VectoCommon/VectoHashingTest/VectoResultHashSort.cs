@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Xml.Xsl;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
-using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
-using TUGraz.VectoHashing.Util;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoHashing.Impl;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoHashingTest

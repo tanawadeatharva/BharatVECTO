@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -97,9 +98,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Initialize()
 		{
-			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxCtl != null)) {
-				DataBus.GearboxCtl.GearShiftTriggered -= GearShiftTriggered;
-				DataBus.GearboxCtl.GearShiftTriggered += GearShiftTriggered;
+			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxesCtl.Count() > 0)) {
+				DataBus.GearboxesCtl.First().GearShiftTriggered -= GearShiftTriggered;
+				DataBus.GearboxesCtl.First().GearShiftTriggered += GearShiftTriggered;
             }
 
 			if (FirstRun) {
@@ -209,7 +210,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverBehavior = DrivingBehavior.Braking;
 			}
 			else {
-				DrivingAction = DataBus.GearboxInfo.GearEngaged(DataBus.AbsTime) ? DrivingAction.Accelerate : DrivingAction.Roll;
+				DrivingAction = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber).GearEngaged(DataBus.AbsTime) 
+					? DrivingAction.Accelerate 
+					: DrivingAction.Roll;
+
 				DriverBehavior = DrivingBehavior.Driving;
 			}
 		}

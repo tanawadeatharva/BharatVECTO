@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-#if(MOCKUP)
+#if (MOCKUP)
 using System.IO;
 using System.Reflection;
 #endif

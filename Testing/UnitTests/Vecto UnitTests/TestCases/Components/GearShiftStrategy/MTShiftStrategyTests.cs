@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -453,7 +448,7 @@ public class MTShiftStrategyTests
 
         //AxlegearInfo
         var axleGearInfo = new Mock<IAxlegearInfo>();
-		vehicleContainer.Setup(c => c.AxlegearInfo).Returns(axleGearInfo.Object);
+		vehicleContainer.Setup(c => c.AxlegearInfo(Constants.NOT_IN_AXLE_POWERTRAIN)).Returns(axleGearInfo.Object);
 		axleGearInfo.Setup(a => a.AxlegearLoss()).Returns(0.SI<Watt>());
 
         //Powertrain Info

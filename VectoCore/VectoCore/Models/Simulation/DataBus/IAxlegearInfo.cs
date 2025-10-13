@@ -41,10 +41,14 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
 		
 		double Ratio { get; }
+
+		int AxleNumber { get; }
 	}
 
 	public interface IAngledriveInfo
 	{
 		double Ratio { get; }
+
+		int AxleNumber { get; }
 	}
 }
