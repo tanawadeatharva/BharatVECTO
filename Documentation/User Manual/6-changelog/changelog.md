@@ -2,6 +2,36 @@
 
 
 
+**VECTO v5.0.7 Official Release (13-10-2025)**
+
+
+- Bug Fixes
+
+    * CodeEU n.a.: Release notes link in GUI dialog (vecto/vecto!480)
+    * CodeEU n.a.: Battery only mode for IHPC (vecto/vecto!481)
+    * CodeEU #1180, #1183: Add System.Data.SqlClient to VECTO.vbproj (vecto/vecto!482)
+    * CodeEU #1188: Treat 'not applicable' as 'none' in HeatPumpTypeDriverCompartmentType (vecto/vecto!483)
+    * CodeEU #1189: Correct parsing of fuel cell in interim file (vecto/vecto!484)
+    * CodeEU #1185: Proper mapping for ADC loss-map in XML (vecto/vecto!485)
+    * CodeEU #1190, #1193: Improved error message for missing battery SoC bounds (vecto/vecto!486)
+    * CodeEU n.a.: VETO main version in dialogs (vecto/vecto!488)
+    * CodeEU n.a.: Corrected XSD dynamic charging types (vecto/vecto!491)
+    * CodeEU #1184: Introduce new mod data postprocessing for BO-HEV (vecto/vecto!489)
+    * CodeEU n.a.: Copy monitoring data from input (for completed vehicles) (vecto/vecto!494)
+    * CodeEU n.a.: Generic vehicles engineering mode VTP files (vecto/vecto!492)
+    * CodeEU #1195: Surround post-mortem analysis with try/catch block (vecto/vecto!495)
+    * CodeEU #1181: Iepc gearshift (vecto/vecto!487)
+    * CodeEU n.a.: Iepc gearshift torque reserve (post MR !487) (vecto/vecto!496)
+    * CodeEU #1196: Corrected name for Tyre in VIF (vecto/vecto!497)
+    * CodeEU n.a.: Corrected json sample file (vecto/vecto!498)
+    * CodeEU n.a.: Added missing bindings for mod-data post processing (vecto/vecto!499)
+
+- Refact
+
+    * CodeEU n.a.: Remove redundant code (vecto/vecto!493)
+
+
+
 **VECTO v5.0.6-RC (22-09-2025)**
 
 
