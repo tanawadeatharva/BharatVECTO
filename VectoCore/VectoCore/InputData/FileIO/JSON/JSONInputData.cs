@@ -641,7 +641,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				VectoPrimaryVIFHash = Body["PrimaryVIF"] != null ? VectoHash.Load(vifPath) : null;
 				VectoCompletedVIFHash = Body["CompletedVIF"] != null ? VectoHash.Load(completedVifPath) : null;
 				
-				_completeVifInputData = (IXMLMultistageInputDataProvider)_xmlInputReader.CreateDeclaration(completedVifPath);
+				_completeVifInputData = (IXMLMultistageInputDataProvider)_xmlInputReader.CreateDeclaration(completedVifPath, true);
 			}
 
 			VectoJobHash = VectoHash.Load(declPath);

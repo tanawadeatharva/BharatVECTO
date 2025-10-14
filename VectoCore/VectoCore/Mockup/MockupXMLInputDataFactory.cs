@@ -18,9 +18,9 @@ namespace TUGraz.VectoMockup
 		#region Overrides of XMLInputDataFactory
 
 
-		protected override IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		protected override IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source, bool allowDeprecated)
 		{
-			var ret =  base.ReadMultistageDeclarationJob(xmlDoc, source);
+			var ret =  base.ReadMultistageDeclarationJob(xmlDoc, source, allowDeprecated);
 
 			return ret;
 		}

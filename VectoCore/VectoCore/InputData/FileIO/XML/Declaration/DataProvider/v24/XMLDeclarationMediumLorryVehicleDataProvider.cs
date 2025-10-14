@@ -16,7 +16,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 	public abstract class AbstractXMLDeclarationMediumLorryVehicleDataProviderV24 : AbstractXMLVehicleDataProviderV24
 	{
-		public AbstractXMLDeclarationMediumLorryVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public AbstractXMLDeclarationMediumLorryVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -71,8 +72,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationConventionalMediumLorryVehicleDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode,
-			sourceFile) { }
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) : 
+				base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of AbstractXMLVehicleDataProviderV24
 
@@ -90,8 +91,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHevPxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevPxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ParallelHybridVehicle;
 
@@ -134,8 +135,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		#endregion
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.SerialHybridVehicle;
-		public XMLDeclarationHevSxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevSxMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
@@ -166,8 +167,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 
-		public XMLDeclarationPevMediumLorryExDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPevMediumLorryExDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -196,8 +197,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 
-		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationIepcMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.IEPC_E;
 
@@ -234,8 +235,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationHeviepcsMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHeviepcsMediumLorryDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
