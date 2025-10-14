@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 	{
 
 		public AbstractXMLDeclarationPrimaryBusVehicleDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, allowDeprecated)
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 
@@ -77,7 +77,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationConventionalPrimaryBusVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationConventionalPrimaryBusVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of AbstractXMLResource
 
@@ -112,8 +113,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevPxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 
 
@@ -144,8 +145,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationHevSxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevSxPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
@@ -169,8 +170,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationPevPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPevPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -193,8 +194,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new const string XSD_TYPE = "Vehicle_IEPC_PrimaryBusDeclarationType";
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationIepcPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationIepcPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
@@ -225,8 +226,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 
 		#endregion
 
-		public XMLDeclarationHeviepcsPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHeviepcsPrimaryBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
