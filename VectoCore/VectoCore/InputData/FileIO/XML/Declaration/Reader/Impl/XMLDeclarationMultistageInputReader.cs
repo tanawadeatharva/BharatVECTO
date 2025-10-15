@@ -214,22 +214,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected readonly IXMLMultistageEntryInputDataProvider _multistageData;
 		protected IApplicationInformation _applicationInformation;
 		protected IVehicleDeclarationInputData _vehicle;
+		private readonly bool _allowDeprecated;
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLMultistageEntryReaderV01(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node) : base(
+		public XMLMultistageEntryReaderV01(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node, bool allowDeprecated) : base(
 			multistageData, node)
 		{
 			JobNode = node;
 			_multistageData = multistageData;
+            _allowDeprecated = allowDeprecated;
 		}
 
 		public IVehicleDeclarationInputData Vehicle => _vehicle ?? (_vehicle = CreateComponent(XMLNames.Tag_Vehicle, VehicleCreator));
 
 		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode node, string arg3)
 		{
-			var vehicle = Factory.CreateVehicleData(version, null, node, arg3, false);
+			var vehicle = Factory.CreateVehicleData(version, null, node, arg3, _allowDeprecated);
 
 			if (vehicle.ComponentNode != null)
 				vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
@@ -261,7 +263,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLMultistageEntryReaderV11(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node) : base(multistageData, node)
+		public XMLMultistageEntryReaderV11(IXMLMultistageEntryInputDataProvider multistageData, XmlNode node, bool allowDeprecated) 
+			: base(multistageData, node, allowDeprecated)
 		{ }
     }
 

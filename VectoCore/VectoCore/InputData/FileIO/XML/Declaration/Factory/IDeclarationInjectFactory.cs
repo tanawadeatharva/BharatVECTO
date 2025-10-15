@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLPrimaryVehicleBusInputData CreatePrimaryVehicleBusInputProvider(string version, XmlDocument xmlDoc, string fileName);
 
 		IXMLMultistageInputDataProvider CreateMultistageInputProvider(string version, XmlDocument xmlDoc,
-			string fileName);
+			string fileName, bool allowDeprecated);
 
 		IXMLDeclarationJobInputData CreateJobData(
 			string version, XmlNode node, IXMLDeclarationInputData inputProvider, string fileName);
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 			string version, IXMLPrimaryVehicleBusInputData inputData, XmlNode baseNode);
 
 		IXMLDeclarationMultistageVehicleInputDataReader CreateMultistageInputReader(string version,
-			IXMLMultistageInputDataProvider inputData, XmlNode baseNode);
+			IXMLMultistageInputDataProvider inputData, XmlNode baseNode, bool allowDeprecated);
 
 
 		IXMLJobDataReader CreateJobReader(

@@ -1,5 +1,5 @@
 
-## VECTO v5.0.7 Official Release (13-10-2025)
+## VECTO v5.0.7 Official Release (14-10-2025)
 
 
 ### Bug Fixes
@@ -22,7 +22,10 @@
 - Corrected name for Tyre in VIF (vecto/vecto!497)
 - Corrected json sample file (vecto/vecto!498)
 - Added missing bindings for mod-data post processing (vecto/vecto!499)
+- Allow VTP with v2.4 vehicles. (vecto/vecto!503)
+- Updated some sample vehicles to v2.7  (vecto/vecto!504)
 
 ### Refactor
 
 - Remove redundant code (vecto/vecto!493)
+
