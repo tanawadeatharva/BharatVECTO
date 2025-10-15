@@ -46,7 +46,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineOnlyVectoRunDataFactory : EngineeringModeVectoRunDataFactory
 	{
-		internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder) : base(dataProvider, ptBuilder) {}
+		public const string Name = "EngineOnlyRunDataFactory";
+
+
+        internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider, IPowertrainBuilder ptBuilder, IEngineeringDataAdapter dataAdapter) : base(dataProvider, dataAdapter) {}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{
@@ -54,13 +57,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Log.Warn("No valid data provider given");
 				yield break;
 			}
-			var dao = new EngineeringDataAdapter();
 			for (var modeIdx = 0; modeIdx < InputDataProvider.JobInputData.EngineOnly.EngineModes.Count; modeIdx++) {
 				var mode = InputDataProvider.JobInputData.EngineOnly.EngineModes[modeIdx];
 				foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 					var simulationRunData = new VectoRunData {
 						JobName = InputDataProvider.JobInputData.JobName,
-						EngineData = dao.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, mode),
+						EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, mode),
 						Cycle = new DrivingCycleProxy(
 							DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false), cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,

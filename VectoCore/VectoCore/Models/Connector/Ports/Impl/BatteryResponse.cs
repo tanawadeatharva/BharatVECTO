@@ -145,4 +145,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public ElectricSystemDryRunResponse(object source) : base(source) { }
 
 	}
+
+	public class ElectricSystemNotReadyResponse : AbstractElectricSystemResponse
+	{
+		public ElectricSystemNotReadyResponse(object source) : base(source) { }
+	}
 }

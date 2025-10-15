@@ -13,9 +13,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		protected readonly IVIFReportInterimFactory _vifReportFactory;
 
-		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
-		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
-		protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+		protected XNamespace _vif = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
+		protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
+        protected XNamespace _xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		protected InterimVehicleWriter(IVIFReportInterimFactory vifReportFactory)
 		{
@@ -44,26 +44,30 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var vehicleInput = inputData.VehicleInputData;
 			var ngTankSystem = vehicleInput.TankSystem.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_NgTankSystem, vehicleInput.TankSystem.ToString())
+				? new XElement(_v27 + XMLNames.Vehicle_NgTankSystem, vehicleInput.TankSystem.ToString())
 				: null;
 			var bodyworkCode = vehicleInput.VehicleCode.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
+				? new XElement(_v27 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
 				: null;
 			var lowEntry = vehicleInput.LowEntry.HasValue
-				? new XElement(_v24 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
+				? new XElement(_v27 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
 				: null;
 			var doordriveTechnology = vehicleInput.DoorDriveTechnology.HasValue
-				? new XElement(_v24 + XMLNames.Bus_DoorDriveTechnology,
+				? new XElement(_v27 + XMLNames.Bus_DoorDriveTechnology,
 					vehicleInput.DoorDriveTechnology.ToXMLFormat())
 				: null;
 			var vehicleTypeApprovalNumber = string.IsNullOrWhiteSpace(vehicleInput.VehicleTypeApprovalNumber)
 				? null
-				: new XElement(_v24 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
+				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
+
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var h2PropertiesVehicle = (vehicleInput.H2StorageUsableCapacity != null) ? vehicleInput : primaryVehicle;
+			var isH2ICE = h2PropertiesVehicle.H2StorageUsableCapacity != null;
 
 			return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
 				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_Conventional_CompletedBusDeclarationType"),
-				new XAttribute("xmlns", _v24),
+				new XAttribute("xmlns", _v27),
 				//new XAttribute(XNamespace.Xmlns + "xsi", _xsi),
 				_vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
 				_vifReportFactory.GetCompletedBusParametersGroup().GetElements(inputData),
@@ -73,11 +77,13 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				lowEntry,
 				_vifReportFactory.GetCompletedBusDimensionsGroup().GetElements(inputData),
 				doordriveTechnology,
-				new XElement(_v24 + XMLNames.Bus_VehicleDeclarationType,
+				new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
 				_vifReportFactory.GetConventionalInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
-				_vifReportFactory.GetConventionalInterimComponentsType().GetElement(inputData)
+				isH2ICE ? new XElement(_v27 + "H2StorageUsableCapacity", h2PropertiesVehicle.H2StorageUsableCapacity.ToXMLFormat(1)) : null,
+                isH2ICE ? new XElement(_v27 + "HydrogenStorageTechnology", h2PropertiesVehicle.HydrogenStorageTechnology?.ToXMLFormat()) : null,
+                _vifReportFactory.GetConventionalInterimComponentsType().GetElement(inputData)
 			);
 		}
 
@@ -88,32 +94,39 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public HEVInterimVehicleType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of InterimVehicleWriter
+        protected virtual string VehicleTypeXSD => "Vehicle_HEV_CompletedBusDeclarationType";
 
-		public override XElement GetElement(IMultistageVIFInputData inputData)
+        public override XElement GetElement(IMultistageVIFInputData inputData)
 		{
 			var vehicleInput = inputData.VehicleInputData;
 			var ngTankSystem = vehicleInput.TankSystem.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_NgTankSystem, vehicleInput.TankSystem.ToString())
+				? new XElement(_v27 + XMLNames.Vehicle_NgTankSystem, vehicleInput.TankSystem.ToString())
 				: null;
 			var bodyworkCode = vehicleInput.VehicleCode.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
+				? new XElement(_v27 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
 				: null;
 			var lowEntry = vehicleInput.LowEntry.HasValue
-				? new XElement(_v24 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
+				? new XElement(_v27 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
 				: null;
 			var doordriveTechnology = vehicleInput.DoorDriveTechnology.HasValue
-				? new XElement(_v24 + XMLNames.Bus_DoorDriveTechnology,
+				? new XElement(_v27 + XMLNames.Bus_DoorDriveTechnology,
 					vehicleInput.DoorDriveTechnology.ToXMLFormat())
 				: null;
 			var vehicleTypeApprovalNumber = string.IsNullOrWhiteSpace(vehicleInput.VehicleTypeApprovalNumber)
 				? null
-				: new XElement(_v24 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
+				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			return new XElement(_vif + XMLNames.Component_Vehicle,
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var IMCPropertyVehicle = (vehicleInput.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicleInput : primaryVehicle;
+
+            var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+                ? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
+                : null;
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_HEV_CompletedBusDeclarationType"),
-				new XAttribute("xmlns", _v24),
+				new XAttribute(_xsi + XMLNames.XSIType, VehicleTypeXSD),
+				new XAttribute("xmlns", _v27),
 				//new XAttribute(XNamespace.Xmlns + "xsi", _xsi),
 				_vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
 				_vifReportFactory.GetCompletedBusParametersGroup().GetElements(inputData),
@@ -123,44 +136,50 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				lowEntry,
 				_vifReportFactory.GetCompletedBusDimensionsGroup().GetElements(inputData),
 				doordriveTechnology,
-				new XElement(_v24 + XMLNames.Bus_VehicleDeclarationType,
+				new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
-				_vifReportFactory.GetHEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
+                dynamicChargingTechnology,
+                _vifReportFactory.GetHEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
 				_vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
 			);
 		}
-
-		#endregion
 	}
 
 	public class PEVInterimVehicleType : InterimVehicleWriter
 	{
 		public PEVInterimVehicleType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of InterimVehicleWriter
+        protected virtual string VehicleTypeXSD => "Vehicle_PEV_CompletedBusDeclarationType";
 
-		public override XElement GetElement(IMultistageVIFInputData inputData)
+        public override XElement GetElement(IMultistageVIFInputData inputData)
 		{
 			var vehicleInput = inputData.VehicleInputData;
 			var bodyworkCode = vehicleInput.VehicleCode.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
+				? new XElement(_v27 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
 				: null;
 			var lowEntry = vehicleInput.LowEntry.HasValue
-				? new XElement(_v24 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
+				? new XElement(_v27 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
 				: null;
 			var doordriveTechnology = vehicleInput.DoorDriveTechnology.HasValue
-				? new XElement(_v24 + XMLNames.Bus_DoorDriveTechnology,
+				? new XElement(_v27 + XMLNames.Bus_DoorDriveTechnology,
 					vehicleInput.DoorDriveTechnology.ToXMLFormat())
 				: null;
 			var vehicleTypeApprovalNumber = string.IsNullOrWhiteSpace(vehicleInput.VehicleTypeApprovalNumber)
 				? null
-				: new XElement(_v24 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
+				: new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			return new XElement(_vif + XMLNames.Component_Vehicle,
+            var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var IMCPropertyVehicle = (vehicleInput.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicleInput : primaryVehicle;
+            
+			var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+                ? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
+                : null;
+
+            return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_PEV_CompletedBusDeclarationType"),
-				new XAttribute("xmlns", _v24),
+				new XAttribute(_xsi + XMLNames.XSIType, VehicleTypeXSD),
+				new XAttribute("xmlns", _v27),
 				//new XAttribute(XNamespace.Xmlns + "xsi", _xsi),
 				_vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
 				_vifReportFactory.GetCompletedBusParametersGroup().GetElements(inputData),
@@ -169,64 +188,83 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				lowEntry,
 				_vifReportFactory.GetCompletedBusDimensionsGroup().GetElements(inputData),
 				doordriveTechnology,
-				new XElement(_v24 + XMLNames.Bus_VehicleDeclarationType,
+				new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
 					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
 				vehicleTypeApprovalNumber,
-				_vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
+                dynamicChargingTechnology,
+                _vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
 				_vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
 			);
 		}
-
-		#endregion
 	}
 
-	public class IEPCInterimVehicleType : InterimVehicleWriter
+	public class FCHV_InterimVehicleType : InterimVehicleWriter
 	{
-		public IEPCInterimVehicleType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
+        public FCHV_InterimVehicleType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of InterimVehicleWriter
+		protected virtual string VehicleTypeXSD => "Vehicle_FCHV_CompletedBusDeclarationType";
 
-		public override XElement GetElement(IMultistageVIFInputData inputData)
-		{
-			var vehicleInput = inputData.VehicleInputData;
-			var bodyworkCode = vehicleInput.VehicleCode.HasValue
-				? new XElement(_v24 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
+        public override XElement GetElement(IMultistageVIFInputData inputData)
+        {
+            var vehicle = inputData.VehicleInputData;
+
+            var bodyworkCode = vehicle.VehicleCode.HasValue
+                ? new XElement(_v27 + XMLNames.Vehicle_BodyworkCode, vehicle.VehicleCode.ToXMLFormat())
+                : null;
+
+            var lowEntry = vehicle.LowEntry.HasValue
+                ? new XElement(_v27 + XMLNames.Bus_LowEntry, vehicle.LowEntry)
+                : null;
+
+            var doordriveTechnology = vehicle.DoorDriveTechnology.HasValue
+                ? new XElement(_v27 + XMLNames.Bus_DoorDriveTechnology,
+                    vehicle.DoorDriveTechnology.ToXMLFormat())
+                : null;
+
+            var vehicleTypeApprovalNumber = string.IsNullOrWhiteSpace(vehicle.VehicleTypeApprovalNumber)
+                ? null
+                : new XElement(_v27 + XMLNames.VehicleTypeApprovalNumber, vehicle.VehicleTypeApprovalNumber);
+
+			var primaryVehicle = inputData.MultistageJobInputData.JobInputData.PrimaryVehicle.Vehicle;
+            var h2PropertiesVehicle = (vehicle.H2StorageUsableCapacity != null) ? vehicle : primaryVehicle;
+			var IMCPropertyVehicle = (vehicle.DynamicChargingTechnology != DynamicChargingTechnology.None) ? vehicle : primaryVehicle;
+
+			var h2StorageUsableCapacity = (h2PropertiesVehicle.H2StorageUsableCapacity != null)
+				? new XElement(_v27 + "H2StorageUsableCapacity", h2PropertiesVehicle.H2StorageUsableCapacity.ToXMLFormat(1))
+                : null;
+
+			var hydrogenStorageTechnology = (h2PropertiesVehicle.HydrogenStorageTechnology != null)
+				? new XElement(_v27 + "HydrogenStorageTechnology", h2PropertiesVehicle.HydrogenStorageTechnology?.ToXMLFormat())
 				: null;
-			var lowEntry = vehicleInput.LowEntry.HasValue
-				? new XElement(_v24 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry)
+
+			var dynamicChargingTechnology = (IMCPropertyVehicle.DynamicChargingTechnology != DynamicChargingTechnology.None)
+				? new XElement(_v27 + "DynamicChargingTechnology", IMCPropertyVehicle.DynamicChargingTechnology.ToXMLFormat())
 				: null;
-			var doordriveTechnology = vehicleInput.DoorDriveTechnology.HasValue
-				? new XElement(_v24 + XMLNames.Bus_DoorDriveTechnology,
-					vehicleInput.DoorDriveTechnology.ToXMLFormat())
-				: null;
-			var vehicleTypeApprovalNumber = string.IsNullOrWhiteSpace(vehicleInput.VehicleTypeApprovalNumber)
-				? null
-				: new XElement(_v24 + XMLNames.VehicleTypeApprovalNumber, vehicleInput.VehicleTypeApprovalNumber);
 
-			return new XElement(_vif + XMLNames.Component_Vehicle,
-				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
-				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_IEPC_CompletedBusDeclarationType"),
-				new XAttribute("xmlns", _v24),
-				//new XAttribute(XNamespace.Xmlns + "xsi", _xsi),
-				_vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
-				_vifReportFactory.GetCompletedBusParametersGroup().GetElements(inputData),
-				_vifReportFactory.GetCompletedBusPassengerCountGroup().GetElements(inputData),
-				bodyworkCode,
-				lowEntry,
-				_vifReportFactory.GetCompletedBusDimensionsGroup().GetElements(inputData),
-				doordriveTechnology,
-				new XElement(_v24 + XMLNames.Bus_VehicleDeclarationType,
-					inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
-				vehicleTypeApprovalNumber,
-				_vifReportFactory.GetIEPCInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
-				_vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
-			);
-		}
+            return new XElement(_vif + XMLNames.Component_Vehicle,
+                new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
+                new XAttribute(_xsi + XMLNames.XSIType, VehicleTypeXSD),
+                new XAttribute("xmlns", _v27),
+                _vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
+                _vifReportFactory.GetCompletedBusParametersGroup().GetElements(inputData),
+                _vifReportFactory.GetCompletedBusPassengerCountGroup().GetElements(inputData),
+                bodyworkCode,
+                lowEntry,
+                _vifReportFactory.GetCompletedBusDimensionsGroup().GetElements(inputData),
+                doordriveTechnology,
+                new XElement(_v27 + XMLNames.Bus_VehicleDeclarationType,
+                    inputData.VehicleInputData.VehicleDeclarationType.GetLabel()),
+                vehicleTypeApprovalNumber,
+                h2StorageUsableCapacity,
+                hydrogenStorageTechnology,
+                dynamicChargingTechnology,
+				_vifReportFactory.GetPEVInterimADASType().GetXmlType(inputData.VehicleInputData.ADAS),
+                _vifReportFactory.GetxEVInterimComponentsType().GetElement(inputData)
+            );
+        }
+    }
 
-		#endregion
-	}
-
-	public class ExemptedInterimVehicleType : InterimVehicleWriter
+    public class ExemptedInterimVehicleType : InterimVehicleWriter
 	{
 		public ExemptedInterimVehicleType(IVIFReportInterimFactory vifReportFactory) : base(vifReportFactory) { }
 
@@ -238,28 +276,28 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, GetVehicleID()),
 				new XAttribute(_xsi + XMLNames.XSIType, "Vehicle_Exempted_CompletedBusDeclarationType"),
-				new XAttribute("xmlns", _v24),
+				new XAttribute("xmlns", _v27),
 				_vifReportFactory.GetCompletedBusGeneralParametersGroup().GetElements(inputData),
 				vehicleInput.Model != null
-					? new XElement(_v24 + XMLNames.Component_Model, vehicleInput.Model) : null,
+					? new XElement(_v27 + XMLNames.Component_Model, vehicleInput.Model) : null,
 				vehicleInput.LegislativeClass != null
-					? new XElement(_v24 + XMLNames.Vehicle_LegislativeCategory, vehicleInput.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(_v27 + XMLNames.Vehicle_LegislativeCategory, vehicleInput.LegislativeClass.ToXMLFormat()) : null,
 				vehicleInput.CurbMassChassis != null
-					? new XElement(_v24 + XMLNames.CorrectedActualMass, vehicleInput.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(_v27 + XMLNames.CorrectedActualMass, vehicleInput.CurbMassChassis.ToXMLFormat(0)) : null,
 				vehicleInput.GrossVehicleMassRating != null
-					? new XElement(_v24 + XMLNames.TPMLM, vehicleInput.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+					? new XElement(_v27 + XMLNames.TPMLM, vehicleInput.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				vehicleInput.AirdragModifiedMultistep != null ?
-					new XElement(_v24 + XMLNames.Bus_AirdragModifiedMultistep, vehicleInput.AirdragModifiedMultistep) : null,
+					new XElement(_v27 + XMLNames.Bus_AirdragModifiedMultistep, vehicleInput.AirdragModifiedMultistep) : null,
 				vehicleInput.RegisteredClass != null && vehicleInput.RegisteredClass != RegistrationClass.unknown
-					? new XElement(_v24 + XMLNames.Vehicle_RegisteredClass, vehicleInput.RegisteredClass.ToXMLFormat()) : null,
+					? new XElement(_v27 + XMLNames.Vehicle_RegisteredClass, vehicleInput.RegisteredClass.ToXMLFormat()) : null,
 				_vifReportFactory.GetCompletedBusPassengerCountGroup().GetElements(inputData),
 				vehicleInput.VehicleCode.HasValue
-					? new XElement(_v24 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
+					? new XElement(_v27 + XMLNames.Vehicle_BodyworkCode, vehicleInput.VehicleCode.ToXMLFormat())
 					: null,
 				vehicleInput.LowEntry != null
-					? new XElement(_v24 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry) : null,
+					? new XElement(_v27 + XMLNames.Bus_LowEntry, vehicleInput.LowEntry) : null,
 				vehicleInput.Height != null
-					? new XElement(_v24 + XMLNames.Bus_HeightIntegratedBody, vehicleInput.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
+					? new XElement(_v27 + XMLNames.Bus_HeightIntegratedBody, vehicleInput.Height.ConvertToMilliMeter().ToXMLFormat(0)) : null
 
 			);
 		}

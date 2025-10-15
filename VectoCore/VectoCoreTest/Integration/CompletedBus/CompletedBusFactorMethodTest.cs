@@ -6,7 +6,6 @@ using System.Xml;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using Ninject;
-using NLog.LayoutRenderers;
 using NUnit.Framework;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -21,8 +20,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -1231,6 +1228,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(JobGrp32b, 3, 20, 5, 17, 9, 49.572, TestName = "CompleteBus PassengerCount IU generic RL"),
 		TestCase(JobGrp32b, 6, 20, 5, 17, 9, 37, TestName = "CompleteBus PassengerCount CO specific RL"),
 		TestCase(JobGrp32b, 7, 20, 5, 17, 9, 38.556, TestName = "CompleteBus PassengerCount CO generic RL"),
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestPassengerCountAllocationCompletedBus(string jobName, int runIdx, int pSeatsLower, int pStdLower, int pSeatsUpper, int pStdUpper,  double expectedPassengers)
 		{

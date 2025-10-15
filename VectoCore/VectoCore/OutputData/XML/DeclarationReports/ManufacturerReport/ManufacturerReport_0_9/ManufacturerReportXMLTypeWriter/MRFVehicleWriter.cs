@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -687,6 +686,27 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
+	public class FCHVCompletedBusVehicleTypeWriter : VehicleTypeWriter
+	{
+        public FCHVCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
+
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var multistageInputdata = inputData as IMultistepBusInputDataProvider;
+            if (multistageInputdata == null)
+            {
+                throw new ArgumentException($"inputdata must implement {nameof(IMultistepBusInputDataProvider)}");
+            }
+
+			return new XElement(_mrf + XMLNames.Component_Vehicle,
+                _mrfFactory.GetHEVCompletedBusGeneralVehicleOutputGroup().GetElements(inputData),
+                _mrfFactory.GetPEVADASType().GetXmlType(multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.ADAS),
+                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.ConsolidateManufacturingStage.Vehicle.SimulationToolLicenseNumber ?? "N/A"),
+                _mrfFactory.GetPEV_CompletedBusComponentsType().GetElement(inputData)
+            );
+        }
+    }
+
 	public class ExemptedCompletedBusVehicleTypeWriter : VehicleTypeWriter
 	{
 		public ExemptedCompletedBusVehicleTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
@@ -726,7 +746,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 					consolidatedVehicleData.NumberPassengersStandingLowerDeck),
 				new XElement(_mrf + XMLNames.Vehicle_BodyworkCode, consolidatedVehicleData.VehicleCode.ToXMLFormat()),
 				new XElement(_mrf + XMLNames.Bus_LowEntry, consolidatedVehicleData.LowEntry),
-                new XElement(_mrf + "SimulationToolLicenseNumber", multistageInputdata.JobInputData.PrimaryVehicle.Vehicle.SimulationToolLicenseNumber ?? "N/A")
+                new XElement(_mrf + "SimulationToolLicenseNumber", consolidatedVehicleData.SimulationToolLicenseNumber ?? "N/A")
                 );
 			//result.Add(_mrfFactory.GetCompletedBusSequenceGroup().GetElements(consolidatedVehicleData));
 			return result;

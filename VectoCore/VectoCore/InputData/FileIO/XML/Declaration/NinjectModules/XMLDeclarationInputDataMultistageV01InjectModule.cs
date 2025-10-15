@@ -1,5 +1,4 @@
 ﻿using Ninject.Modules;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
@@ -21,7 +20,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationMultistageVehicleInputDataReader>().To<XMLDeclarationMultistageInputReaderV01>()
 				.Named(XMLDeclarationMultistageInputReaderV01.QUALIFIED_XSD_TYPE);
-
 
 			Bind<IXMLMultistageJobReader>().To<XMLMultistageJobReaderV01>()
 				.Named(XMLMultistageJobReaderV01.QUALIFIED_XSD_TYPE);
@@ -48,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationPrimaryVehicleBusInputDataReader>().To<XMLMultistagePrimaryVehicleReaderV01>()
 				.Named(XMLMultistagePrimaryVehicleReaderV01.QUALIFIED_XSD_TYPE);
-			
+
 			Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01>()
 				.Named(XMLDeclarationMultistage_Conventional_PrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
@@ -68,9 +66,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 				.Named(XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLPrimaryVehicleBusJobInputData>().To<XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01>()
-                .Named(XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
+				.Named(XMLDeclarationMultistageExemptedPrimaryVehicleBusJobInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLJobDataReader>().To<XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01>()
+			Bind<IXMLJobDataReader>().To<XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01>()
 				.Named(XMLJobDataMultistage_Conventional_PrimaryVehicleReaderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLJobDataReader>().To<XMLJobDataMultistage_HEV_Px_PrimaryVehicleReaderV01>()
@@ -111,6 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01>()
 				.Named(XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01.QUALIFIED_XSD_TYPE);
+
 			// -----------------------------------
 
 			Bind<IXMLComponentReader>().To<XMLMultistagePrimaryVehicleBus_Conventional_ComponentReaderV01>()
@@ -166,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLBatteryPackDeclarationInputData>().To<XMLBatteryPackDeclarationInputDataStandardV01>()
 				.Named(XMLBatteryPackDeclarationInputDataStandardV01.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV01>()
+			Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV01>()
 				.Named(XMLSuperCapDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
 
 			//Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV23>()
@@ -224,7 +223,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 
 			Bind<IXMLGearData>().To<XMLMultistagePrimaryVehicleBusTransmissionDataV01>()
 				.Named(XMLMultistagePrimaryVehicleBusTransmissionDataV01.QUALIFIED_XSD_TYPE);
-			
+
 			Bind<IXMLAngledriveInputData>().To<XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleBusAngledriveDataProviderV01.QUALIFIED_XSD_TYPE);
 
@@ -244,14 +243,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLResultsInputData>().To<XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01>()
 				.Named(XMLDeclarationMultistagePrimaryVehicleBusResultsInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLElectricMachinesDeclarationInputData>().To<XMLDeclarationElectricMachinesDataProviderV01>().Named(
-                XMLDeclarationElectricMachinesDataProviderV01.QUALIFIED_XSD_TYPE);
+			Bind<IXMLElectricMachinesDeclarationInputData>().To<XMLDeclarationElectricMachinesDataProviderV01>().Named(
+				XMLDeclarationElectricMachinesDataProviderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLElectricMachinesDeclarationInputData>().To<XMLDeclarationElectricMachinesDataProviderV01>().Named(
 				XMLDeclarationElectricMachinesDataProviderV01.QUALIFIED_GEN_XSD_TYPE);
 
 			Bind<IXMLElectricMotorDeclarationInputData>().To<XMLElectricMotorDeclarationInputDataProviderV01>()
-                .Named(XMLElectricMotorDeclarationInputDataProviderV01.QUALIFIED_XSD_TYPE);
+				.Named(XMLElectricMotorDeclarationInputDataProviderV01.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV01>()
 				.Named(XMLElectricMotorIEPCIInputDataProviderV01.QUALIFIED_XSD_TYPE);
@@ -259,17 +258,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLADCDeclarationInputData>().To<XMLADCDeclarationInputDataV01>()
 				.Named(XMLADCDeclarationInputDataV01.QUALIFIED_XSD_TYPE);
 
+			// -----------------------------------
 
-
-            // -----------------------------------
-
-            Bind<IXMLMultistageEntryInputDataProvider>().To<XMLDeclarationMultistageTypeInputDataV01>()
+			Bind<IXMLMultistageEntryInputDataProvider>().To<XMLDeclarationMultistageTypeInputDataV01>()
 				.Named(XMLDeclarationMultistageTypeInputDataV01.QUALIFIED_XSD_TYPE);
-
 
 			Bind<IXMLMultistageReader>().To<XMLMultistageEntryReaderV01>()
 				.Named(XMLMultistageEntryReaderV01.QUALIFIED_XSD_TYPE);
-
 		}
+
 	}
 }

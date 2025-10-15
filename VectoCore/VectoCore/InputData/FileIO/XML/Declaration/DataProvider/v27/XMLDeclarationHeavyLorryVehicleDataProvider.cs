@@ -1,9 +1,12 @@
-﻿using System;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_NEW_XML
+#endif
+
+//#define PROHIBIT_NEW_XML
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Xml;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -25,11 +28,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             : base(jobData, xmlNode, sourceFile) 
         {}
 
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            //Allow here all conventionals and disallow non-H2 fueled at job level.
-        }
-
         public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
     }
 
@@ -44,14 +42,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             if (!OVC && BatteryOnlyMode)
             {
                 throw new VectoException("For PHEV vehicles, BatteryOnlyMode should be false if OVC is false.");
-            }
-        }
-
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
-            {
-                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
             }
         }
 
@@ -82,14 +72,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 
         public XMLDeclaration_SHEV_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile) { }
-
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
-            {
-                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
-            }
-        }
 
         public override IList<ITorqueLimitInputData> TorqueLimits => null;
 
@@ -140,14 +122,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
             }
         }
 
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            if (DynamicChargingTechnology == DynamicChargingTechnology.None)
-            {
-                base.CheckVehicleAllowed("Vehicle does not have in-motion charging.");
-            }
-        }
-
         public override string PowertrainPositionPrefix => "E";
 
         public override bool OVC => GetBool("OVC");
@@ -188,11 +162,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 			: base(jobData, xmlNode, sourceFile)
 		{}
 
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            //Do nothing -> Vehicle Allowed
-        }
-
         public override bool OVC => GetBool("OVC");
 
         public override bool BatteryOnlyMode => GetBool("BatteryOnlyMode");
@@ -227,7 +196,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
     {
         public XMLDeclaration_Multiple_HeavyLorry_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile)
-        { }
+        {
+#if PROHIBIT_NEW_XML
+            throw new VectoException("XML Jobs for multiple powertrain vehicles are not yet supported!");
+#endif
+        }
 
         public override string PowertrainPositionPrefix => null;
 

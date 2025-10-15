@@ -1,5 +1,4 @@
-﻿using Castle.Core.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -32,8 +31,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var electricUserInputs = CreateElectricsUserInputsConfig(
 				primaryVehicle, completedVehicle, mission, actuations, runData.VehicleData.VehicleClass);
 
-			var pneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(primaryVehicle, completedVehicle);
-			var pneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
+            var retarderType = (runData.AxlePowertrainsData?.Count() > 0)
+                ? (runData.AxlePowertrainsData.FirstOrDefault(x => x.Retarder.Type != RetarderType.None)?.Retarder.Type ?? RetarderType.None)
+                : runData.Retarder.Type;
+
+            var pneumaticUserInputsConfig = CreatePneumaticUserInputsConfig(primaryVehicle, completedVehicle);
+			var pneumaticAuxiliariesConfig = CreatePneumaticAuxConfig(retarderType);
 
 			if (primaryVehicle.Components.BusAuxiliaries.PneumaticSupply.CompressorDrive == CompressorDrive.electrically) {
 				var auxConfig = new AuxiliaryConfig {
@@ -161,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			{
 				CompressorMap = DeclarationData.BusAuxiliaries.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-				CompressorGearRatio = primaryVehicle.ArchitectureID.IsBatteryElectricVehicle()
+				CompressorGearRatio = (primaryVehicle.ArchitectureID.IsBatteryElectricVehicle() || primaryVehicle.ArchitectureID.IsFuelCellVehicle())
 					? 0 : primaryBusAuxiliaries.PneumaticSupply.Ratio,
 				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
@@ -473,7 +476,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 				Current = spPower / Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
 			};
 
-			if (!primaryVehicle.ArchitectureID.IsBatteryElectricVehicle()) {
+			if (!primaryVehicle.ArchitectureID.IsBatteryElectricVehicle() && 
+				!primaryVehicle.ArchitectureID.IsFuelCellVehicle()) 
+			{
 				var fanPower = DeclarationData.Fan.LookupElectricalPowerDemand(
 					vehicleClass, mission.MissionType, busAuxPrimary.FanTechnology);
 				retVal[Constants.Auxiliaries.IDs.Fan] = new ElectricConsumerEntry {
@@ -501,7 +506,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var retVal = GetDefaultElectricalUserConfig();
 
 			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
-			retVal.AlternatorType = primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)
+			retVal.AlternatorType = primaryVehicle.VehicleType.IsOneOf(
+				VectoSimulationJobType.BatteryElectricVehicle, 
+				VectoSimulationJobType.IEPC_E,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC,
+				VectoSimulationJobType.Multiple_FCHV,
+				VectoSimulationJobType.Multiple_PEV)
 				? AlternatorType.None
 				: primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
 			//primaryBusAuxiliaries.ElectricSupply.AlternatorTechnology;
@@ -522,8 +533,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			retVal.MaxAlternatorPower = CalculateMaxAlternatorPower(primaryBusAuxiliaries);
 			retVal.ElectricStorageCapacity = CalculateBatteryCapacity(primaryBusAuxiliaries.ElectricSupply.ElectricStorage);
 
-            if (primaryVehicle.VehicleType.IsOneOf(VectoSimulationJobType.BatteryElectricVehicle,
-					VectoSimulationJobType.IEPC_E))
+            if (primaryVehicle.VehicleType.IsOneOf(
+				VectoSimulationJobType.BatteryElectricVehicle,
+				VectoSimulationJobType.IEPC_E,
+				VectoSimulationJobType.FCHV,
+				VectoSimulationJobType.FCHV_IEPC))
 			{
 				retVal.ConnectESToREESS = true;
 			}

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Tests.Integration.DriverStrategy;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -20,7 +18,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_DriveTorqueBelowEM()
 		{
 			var emFld = new [] {
@@ -42,7 +41,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_DriveTorqueIntersects1()
 		{
 			var emFld = new[] {
@@ -65,7 +65,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_GenTorqueIntersects1()
 		{
 			var emFld = new[] {
@@ -87,7 +88,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			TestIntersectEmMaxTorque(emFld, maxTq, expected);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_DifferentGridpoints1()
 		{
 			var emFld = new[] {
@@ -112,7 +114,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			TestIntersectEmMaxTorque(emFld, maxTq, expected);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_Complex1()
 		{
 			var emFld = new[] {
@@ -154,7 +157,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			TestIntersectEmMaxTorque(emFld, maxTq, expected);
 		}
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestEmTorqueLimit_Complex2()
 		{
 			var emFld = new[] {

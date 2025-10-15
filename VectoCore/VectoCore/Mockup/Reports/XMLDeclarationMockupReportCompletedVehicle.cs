@@ -1,11 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCommon.BusAuxiliaries;
+﻿using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
@@ -17,10 +12,10 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.
 namespace TUGraz.VectoMockup.Reports
 {
 
-	/// <summary>
-	/// Create VIF of an interim (or the complete(d) step
-	/// </summary>
-	public class XMLDeclarationMockupReportInterimVehicle : XMLDeclarationReportInterimVehicle
+    /// <summary>
+    /// Create VIF of an interim (or the complete(d) step
+    /// </summary>
+    public class XMLDeclarationMockupReportInterimVehicle : XMLDeclarationReportInterimVehicle
 	{
 		private readonly bool _exempted;
 

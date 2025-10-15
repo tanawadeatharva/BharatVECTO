@@ -41,15 +41,21 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
-	/// </summary>
-	public class PowertrainDrivingCycle :
+	public interface IPowertrainDrivingCycle : ITnInProvider
+	{
+
+	}
+
+    /// <summary>
+    /// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
+    /// </summary>
+    public class PowertrainDrivingCycle :
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
-		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
+		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort, IPowertrainDrivingCycle
 	{
 		internal readonly IDrivingCycleData Data;
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
@@ -65,7 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		public PowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
+		public PowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Data = cycle;
 			CycleIterator = new DrivingCycleEnumerator(Data);

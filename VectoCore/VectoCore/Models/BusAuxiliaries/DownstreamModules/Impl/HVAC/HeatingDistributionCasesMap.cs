@@ -36,7 +36,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
             {
                 var hasElectricHeater = electricHeater != HeaterType.None;
                 var otherHeater = ElectricHeater == hasElectricHeater;
-                return HeatPumpType == heatPump && otherHeater && FuelHeater == fuelHeater;
+                var heatPumpType = (heatPump == HeatPumpType.not_applicable) ? HeatPumpType.none : heatPump;
+
+                return HeatPumpType == heatPumpType && otherHeater && FuelHeater == fuelHeater;
             }
         }
     }

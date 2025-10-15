@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFTorqueConverterType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFTorqueConverterType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFTorqueConverterType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.TorqueConverterInputData);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.TorqueConverterInputData);
+        }
+
+        private XElement GetElement(ITorqueConverterDeclarationInputData torque)
 		{
-			var torque = inputData.JobInputData.Vehicle.Components.TorqueConverterInputData;
 			if (torque == null)
 				return null;
 
@@ -40,6 +43,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				));
 		}
 
-		#endregion
+		
 	}
 }

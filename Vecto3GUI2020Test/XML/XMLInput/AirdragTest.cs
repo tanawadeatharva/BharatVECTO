@@ -1,12 +1,9 @@
 ﻿using System.IO;
-using System.Runtime.Intrinsics;
 using Ninject;
-using Ninject.Injection;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using Vecto3GUI2020Test.Utils;
 
 namespace Vecto3GUI2020Test.XML.XMLInput;

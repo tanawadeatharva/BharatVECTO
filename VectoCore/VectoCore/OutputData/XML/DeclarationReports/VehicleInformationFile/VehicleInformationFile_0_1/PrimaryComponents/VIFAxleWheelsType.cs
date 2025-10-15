@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -62,6 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			var retVal = XElement.Load(xmlTyre.GetXmlNode.CreateNavigator().ReadSubtree());
+			retVal.Name = _v20 + retVal.Name.LocalName;
 			var ptr = retVal.DescendantNodes().OfType<XElement>().First().FirstAttribute;
 			while (ptr != null) {
 				if (!ptr.IsNamespaceDeclaration && ptr.Name.LocalName == "type" && ptr.Name.Namespace == _xsi && ptr.Value.Contains(':')) {
@@ -82,24 +82,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			return retVal;
-			//var currentTyre = 
-			//	new XElement(_v20 + XMLNames.ComponentDataWrapper,
-			//		new XAttribute(_xsi + XMLNames.XSIType, "TyreDataDeclarationType"),
-			//		new XAttribute("id", tyre.DigestValue.Reference),
-			//		new XElement(XMLNames.Component_Manufacturer, tyre.Manufacturer),
-			//		new XElement(XMLNames.Component_Model, tyre.Model),
-			//		new XElement(XMLNames.Component_CertificationNumber, tyre.CertificationNumber),
-			//		new XElement(XMLNames.Component_Date, XmlConvert.ToString(tyre.Date, XmlDateTimeSerializationMode.Utc)),
-			//		new XElement(XMLNames.Component_AppVersion, tyre.Date),
-			//		new XElement(XMLNames.AxleWheels_Axles_Axle_Dimension, tyre.Dimension),
-			//		new XElement(XMLNames.AxleWheels_Axles_Axle_RRCDeclared, tyre.RollResistanceCoefficient.ToXMLFormat(4)),
-			//		new XElement(XMLNames.AxleWheels_Axles_Axle_FzISO, tyre.TyreTestLoad.ToXMLFormat())
-			//);
-
-			//return new XElement(_v20 + XMLNames.AxleWheels_Axles_Axle_Tyre,
-			//	currentTyre,
-			//	GetSignature(tyre.DigestValue)
-			//);
 		}
 		
 		#endregion

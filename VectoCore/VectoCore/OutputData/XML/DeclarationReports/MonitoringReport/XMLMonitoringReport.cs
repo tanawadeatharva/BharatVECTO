@@ -38,6 +38,7 @@ using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9;
@@ -660,19 +661,32 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             );
         }
 
+        private bool IsCompletedVehicle()
+        {
+            return GetOutputType().IsOneOf(
+                OutputType.ConventionalCompletedBusDataType,
+                OutputType.ExemptedCompletedBusDataType,
+                OutputType.FCHVCompletedBusDataType,
+                OutputType.HEVCompletedBusDataType,
+                OutputType.PEVCompletedBusDataType
+            );
+        }
+
         protected void CreateChildNodes()
         {
-            var vehicle = (_modelData.InputData is IMultistepBusInputDataProvider multistage)
-                ? multistage.JobInputData.PrimaryVehicle.Vehicle
-                : _modelData.InputData.JobInputData.Vehicle;
+            var vehicleMonitoringData = (_modelData.InputData is IMultistepBusInputDataProvider multistage)
+                ? IsCompletedVehicle() 
+                    ? _modelData.MultistageVifInputData?.MonitoringData 
+                    : multistage.JobInputData.PrimaryVehicle.Vehicle?.VehicleMonitoringData
+                : _modelData.InputData.JobInputData.Vehicle?.VehicleMonitoringData;
 
-            if (vehicle?.VehicleMonitoringData == null)
+            if (vehicleMonitoringData == null)
             {
                 _additionalDataWriters[GetOutputType()].Invoke();
             }
             else
             {
-                CopyMonitoringDataFromInput(vehicle);
+                CopyMonitoringDataFromInput(vehicleMonitoringData);
             }
 
             Report.Root.Add(
@@ -683,9 +697,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             );
         }
 
-        private void CopyMonitoringDataFromInput(IVehicleDeclarationInputData vehicle)
+        private void CopyMonitoringDataFromInput(string vehicleMonitoringData)
         {
-            var document = XDocument.Parse(vehicle.VehicleMonitoringData);
+            var document = XDocument.Parse(vehicleMonitoringData);
 
             foreach (var node in document.Root.Descendants())
             {
@@ -703,7 +717,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.MonitoringReport
             var mrfData = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data"));
             string dataType = mrfData.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;
 
-            if (dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV") || dataType.Contains("HEV-Sx"))
+            if ((dataType.Contains("PEV-Ex-IEPC") || dataType.Contains("FCHV") || dataType.Contains("HEV-Sx")) && !dataType.Contains("Completed"))
             {
                 var mrfComponents = _manufacturerReport.Report.XPathSelectElement(XMLHelper.QueryLocalName("Data", "Components"));
                 string componentsType = mrfComponents.Attributes().First(x => x.Name.LocalName == XMLDefinitions.XSI_TYPE_LOCALNAME).Value;

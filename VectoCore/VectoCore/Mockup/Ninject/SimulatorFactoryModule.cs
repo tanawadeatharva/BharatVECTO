@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoMockup.Simulation.SimulatorFactory;
 
 namespace TUGraz.VectoMockup.Ninject

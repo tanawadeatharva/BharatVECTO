@@ -6,9 +6,7 @@ using System.Diagnostics;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -17,7 +15,6 @@ using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Helper;
 using VECTO3GUI2020.Properties;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 using VECTO3GUI2020.ViewModel.MultiStage.Interfaces;
@@ -67,7 +64,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 	{
 		public static readonly Type INPUTPROVIDERTYPE = typeof(XMLDeclarationConventionalCompletedBusDataProviderV24);
 		public static readonly Type INPUTPROVIDERTYPEEXEMPTED = typeof(XMLDeclarationExemptedCompletedBusDataProviderV24);
-		public static string VERSION = INPUTPROVIDERTYPE.ToString();
+		public static string VERSION { get; set; } = INPUTPROVIDERTYPE.ToString();
 		public static string VERSION_EXEMPTED = INPUTPROVIDERTYPEEXEMPTED.ToString();
 
 		public abstract CompletedBusArchitecture Architecture { get; }
@@ -119,18 +116,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public HydrogenStorageTechnology? HydrogenStorageTechnology {  get; }
 
-		public string SimulationToolLicenseNumber { get; }
-
 		protected bool _exemptedVehicle;
 
 		public string Name => "Vehicle";
 
 		public bool IsPresent => true;
 
-		public DataSource DataSource => new DataSource() {
-			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24,
-			Type = XMLType
-		};
+		public abstract DataSource DataSource { get; }
 
 		public abstract string XMLType { get; }
 
@@ -274,6 +266,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 				nameof(Manufacturer),
 				nameof(ManufacturerAddress),
 				nameof(VIN),
+				nameof(SimulationToolLicenseNumber),
 				nameof(Model),
 				nameof(LegislativeClass),
 				nameof(CurbMassChassis),
@@ -404,6 +397,8 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			_parameterViewModels[nameof(ManufacturerAddress)].EditingEnabled = true;
 			_parameterViewModels[nameof(VIN)].Mandatory = true;
 			_parameterViewModels[nameof(VIN)].EditingEnabled = true;
+			_parameterViewModels[nameof(SimulationToolLicenseNumber)].Mandatory = true;
+			_parameterViewModels[nameof(SimulationToolLicenseNumber)].EditingEnabled = true;
 		}
 
         #region Overrides of ViewModelBase
@@ -444,6 +439,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
 			VIN = vehicleInputData.VIN;
+			SimulationToolLicenseNumber = vehicleInputData.SimulationToolLicenseNumber;
 			Model = vehicleInputData.Model;
 			LegislativeClass = vehicleInputData.LegislativeClass;
 			CurbMassChassis = vehicleInputData.CurbMassChassis;
@@ -490,6 +486,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			Identifier = vehicleInputData.Identifier;
 			ManufacturerAddress = vehicleInputData.ManufacturerAddress;
 			VIN = vehicleInputData.VIN;
+			SimulationToolLicenseNumber = vehicleInputData.SimulationToolLicenseNumber;
 			Model = vehicleInputData.Model;
 			LegislativeClass = vehicleInputData.LegislativeClass;
 			CurbMassChassis = vehicleInputData.CurbMassChassis;
@@ -508,6 +505,7 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		private string _manufacturer;
 		private string _model;
 		private string _vin;
+		private string _toolLicenseNumber;
 		private string _manufacturerAddress;
 
 		private bool _measurementsGroupEditingEnabled = false;
@@ -552,6 +550,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 		{
 			get { return _vin; }
 			set { SetProperty(ref _vin, value); }
+		}
+
+		public string SimulationToolLicenseNumber 
+		{
+			get { return _toolLicenseNumber; }
+			set { SetProperty(ref _toolLicenseNumber, value); }
 		}
 
 		public string ManufacturerAddress
@@ -1229,6 +1233,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 							result = "VIN must not be empty";
 						}
 						break;
+					case nameof(SimulationToolLicenseNumber):
+						if (string.IsNullOrEmpty(SimulationToolLicenseNumber))
+						{
+							result = "Verification Tool License Number must not be empty";
+						}
+						break;
 					case nameof(AirdragModifiedEnum):
 						if (AirdragModifiedMultistepEditingEnabled && (AirdragModifiedEnum == AIRDRAGMODIFIED.UNKNOWN)) {
 							result = "Air drag modified has to be set";
@@ -1281,7 +1291,6 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 			!string.IsNullOrEmpty(Error) || 
 			(MultistageAuxiliariesViewModel != null && MultistageAuxiliariesViewModel.HasErrors);
 
-		// todo amogoda: tbd (?)
 		public IFuelCellSystemDeclarationInputData FuelCellSystem => throw new NotImplementedException();
 
 		public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData => throw new NotImplementedException();
@@ -1314,6 +1323,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override string XMLType => XMLTypes.Vehicle_Conventional_CompletedBusDeclarationType;
 
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+
 		#endregion
 	}
 	
@@ -1336,6 +1351,12 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         public override CompletedBusArchitecture Architecture =>
 			CompletedBusArchitecture.Exempted;
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
 
 		#endregion
 	}
@@ -1365,9 +1386,14 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
         public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
-
         public override string XMLType => XMLTypes.Vehicle_Hev_CompletedBusDeclarationType;
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+	}
 
 	public class InterimStagePevBusVehicleViewModel : InterimStageBusVehicleViewModel
 	{
@@ -1406,10 +1432,57 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
 
-
 		public override string XMLType => XMLTypes.Vehicle_Pev_CompletedBusDeclarationType;
-        #endregion
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+		#endregion
+	}
+
+	public class InterimStageFCHVBusVehicleViewModel : InterimStageBusVehicleViewModel
+	{
+		public InterimStageFCHVBusVehicleViewModel(
+			IVehicleDeclarationInputData consolidatedVehicleData,
+			IVehicleDeclarationInputData vehicleInput,
+			IMultiStageViewModelFactory multistepViewModelFactory) 
+			: base(consolidatedVehicleData, vehicleInput, multistepViewModelFactory) 
+		{ 
+		}
+
+		public InterimStageFCHVBusVehicleViewModel(IMultiStageViewModelFactory multiStageViewModelFactory) 
+			: base(multiStageViewModelFactory)
+		{ 
+		}
+
+		#region Overrides of InterimStageBusVehicleViewModel
+
+		public override CompletedBusArchitecture Architecture => CompletedBusArchitecture.FCHV;
+
+		public override bool TankSystemEnabled => false;
+
+		public override bool EcoRollEnabled => false;
+
+		public override EcoRollType? EcoRollTypeNullable { get; set; } = EcoRollType.None;
+
+		public override bool EngineStopStartEnabled => false;
+
+		public override bool? EngineStopStartNullable { get; set; } = false;
+
+		public override bool ATEcoRollReleaseLockupClutchEnabled => false;
+
+		public override string XMLType => XMLTypes.Vehicle_FCHV_CompletedBusDeclarationType;
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+
+		#endregion
+	}
 
 	public class InterimStageIEPCBusVehicleViewModel : InterimStageBusVehicleViewModel
 	{
@@ -1446,7 +1519,13 @@ namespace VECTO3GUI2020.ViewModel.MultiStage.Implementation
 
 
         public override string XMLType => XMLTypes.Vehicle_Iepc_CompletedBusDeclarationType;
-        #endregion
-    }
+
+		public override DataSource DataSource => new DataSource()
+		{
+			TypeVersion = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			Type = XMLType
+		};
+		#endregion
+	}
 
 }

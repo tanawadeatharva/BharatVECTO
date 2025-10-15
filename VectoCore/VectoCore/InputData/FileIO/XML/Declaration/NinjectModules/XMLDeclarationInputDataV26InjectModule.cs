@@ -1,13 +1,7 @@
 using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 {
@@ -24,9 +18,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
             Bind<IXMLSuperCapDeclarationInputData>().To<XMLSuperCapDeclarationInputDataV26>()
                 .Named(XMLSuperCapDeclarationInputDataV26.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCIInputDataProviderV26>().Named(XMLElectricMotorIEPCIInputDataProviderV26.QUALIFIED_XSD_TYPE);
+            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCInputDataProviderV26>().Named(XMLElectricMotorIEPCInputDataProviderV26.QUALIFIED_XSD_TYPE);
 
-            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIepciStandardInputDataProviderV26>().Named(XMLElectricMotorIepciStandardInputDataProviderV26.QUALIFIED_XSD_TYPE);
+            Bind<IXMLIEPCInputData>().To<XMLElectricMotorIEPCStandardInputDataProviderV26>().Named(XMLElectricMotorIEPCStandardInputDataProviderV26.QUALIFIED_XSD_TYPE);
 
             Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV26>().Named(XMLDeclarationEngineDataProviderV26.QUALIFIED_XSD_TYPE);
 

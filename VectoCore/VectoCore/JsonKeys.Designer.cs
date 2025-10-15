@@ -1465,11 +1465,64 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CompletedCIF.
+        /// </summary>
+        internal static string VTP_CompletedCIF {
+            get {
+                return ResourceManager.GetString("VTP_CompletedCIF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CompletedVIF.
         /// </summary>
         internal static string VTP_CompletedVIF {
             get {
                 return ResourceManager.GetString("VTP_CompletedVIF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CustomerInformationFile.
+        /// </summary>
+        internal static string VTP_CustomerInformationFile {
+            get {
+                return ResourceManager.GetString("VTP_CustomerInformationFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PrimaryVIF.
+        /// </summary>
+        internal static string VTP_PrimaryVIF
+        {
+            get
+            {
+                return ResourceManager.GetString("VTP_PrimaryVIF", resourceCulture);
+            }
+        }
+        
+        internal static string Vehicle_EM_Count
+        {
+            get
+            {
+                return ResourceManager.GetString("Vehicle_EM_Count", resourceCulture);
+            }
+        }
+
+		internal static string Vehicle_IEPC
+		{
+			get
+			{
+				return ResourceManager.GetString("Vehicle_IEPC", resourceCulture);
+			}
+		}
+
+        internal static string Vehicle_HybridStrategyParams
+        {
+            get 
+            {
+                return ResourceManager.GetString("Vehicle_HybridStrategyParams", resourceCulture);
             }
         }
     }

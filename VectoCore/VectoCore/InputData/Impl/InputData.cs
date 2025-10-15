@@ -33,11 +33,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 [assembly: InternalsVisibleTo("VECTO3GUI2020")]
 
@@ -117,7 +115,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public NewtonMeter WheelEndFriction { get; internal set; }
 
-		public double AxleWeightShare { get; internal set; }
+		public string WheelEndCertificationNumber { get; internal set; }
+
+        public double AxleWeightShare { get; internal set; }
 
 		public DataSource DataSource { get; internal set; }
 	}

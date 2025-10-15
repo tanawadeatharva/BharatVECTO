@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoMockup
 {
@@ -86,10 +87,10 @@ namespace TUGraz.VectoMockup
 			set => _modalDataContainerImplementation[key, fuel] = value;
 		}
 
-		public object this[ModalResultField key, PowertrainPosition pos]
+		public object this[ModalResultField key, PowertrainPosition pos, int axleNumber]
 		{
-			get => _modalDataContainerImplementation[key, pos];
-			set => _modalDataContainerImplementation[key, pos] = value;
+			get => _modalDataContainerImplementation[key, pos, axleNumber];
+			set => _modalDataContainerImplementation[key, pos, axleNumber] = value;
 		}
 
 		public object this[ModalResultField key, int? idx]
@@ -140,24 +141,19 @@ namespace TUGraz.VectoMockup
 
 		public Dictionary<string, DataColumn> Auxiliaries => _modalDataContainerImplementation.Auxiliaries;
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
+		public T TimeIntegral<T>(ModalResultField field, int axleNumber, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
+			return _modalDataContainerImplementation.TimeIntegral<T>(field, axleNumber, filter);
+		}
+
+        public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
+        {
+            return _modalDataContainerImplementation.TimeIntegral<T>(field, filter);
+        }
+
+        public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
 			return _modalDataContainerImplementation.TimeIntegral<T>(field, filter);
-		}
-
-		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
-		{
-			return _modalDataContainerImplementation.TimeIntegral<T>(field, filter);
-		}
-
-		public T TimeIntegral<T>(ModalResultField field, params object[] formatArgs) where T : SIBase<T>
-		{
-			throw new NotImplementedException();
-		}
-
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter, object[] formatArgs) where T : SIBase<T>
-		{
-			throw new NotImplementedException();
 		}
 
 		public void SetDataValue(string fieldName, object value)
@@ -194,9 +190,9 @@ namespace TUGraz.VectoMockup
 			
 		}
 
-		public string GetColumnName(PowertrainPosition pos, ModalResultField mrf)
+		public string GetColumnName(PowertrainPosition pos, int axleNumber, ModalResultField mrf)
 		{
-			return _modalDataContainerImplementation.GetColumnName(pos, mrf);
+			return _modalDataContainerImplementation.GetColumnName(pos, axleNumber, mrf);
 		}
 
 		public void Reset()
@@ -236,69 +232,69 @@ namespace TUGraz.VectoMockup
 		public bool HasGearbox { get; }
 		public bool HasAxlegear { get; }
 
-		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos)
+		public WattSecond TotalElectricMotorWorkDrive(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.TotalElectricMotorWorkDrive(emPos);
+			return _modalDataContainerImplementation.TotalElectricMotorWorkDrive(emPos, axleNumber);
 		}
 
-		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos)
+		public WattSecond TotalElectricMotorWorkRecuperate(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.TotalElectricMotorWorkRecuperate(emPos);
+			return _modalDataContainerImplementation.TotalElectricMotorWorkRecuperate(emPos, axleNumber);
 		}
 
-		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos)
+		public WattSecond TotalElectricMotorMotWorkDrive(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.TotalElectricMotorMotWorkDrive(emPos);
+			return _modalDataContainerImplementation.TotalElectricMotorMotWorkDrive(emPos, axleNumber);
 		}
 
-		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos)
+		public WattSecond TotalElectricMotorMotWorkRecuperate(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.TotalElectricMotorMotWorkRecuperate(emPos);
+			return _modalDataContainerImplementation.TotalElectricMotorMotWorkRecuperate(emPos, axleNumber);
 		}
 
-		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos)
+		public PerSecond ElectricMotorAverageSpeed(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorAverageSpeed(emPos);
+			return _modalDataContainerImplementation.ElectricMotorAverageSpeed(emPos, axleNumber);
 		}
 
-		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos)
+		public double ElectricMotorEfficiencyDrive(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorEfficiencyDrive(emPos);
+			return _modalDataContainerImplementation.ElectricMotorEfficiencyDrive(emPos, axleNumber);
 		}
 
-		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos)
+		public double ElectricMotorEfficiencyGenerate(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorEfficiencyGenerate(emPos);
+			return _modalDataContainerImplementation.ElectricMotorEfficiencyGenerate(emPos, axleNumber);
 		}
 
-		public double ElectricMotorMotEfficiencyDrive(PowertrainPosition emPos)
+		public double ElectricMotorMotEfficiencyDrive(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorMotEfficiencyDrive(emPos);
+			return _modalDataContainerImplementation.ElectricMotorMotEfficiencyDrive(emPos, axleNumber);
 		}
 
-		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos)
+		public double ElectricMotorMotEfficiencyGenerate(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorMotEfficiencyGenerate(emPos);
+			return _modalDataContainerImplementation.ElectricMotorMotEfficiencyGenerate(emPos, axleNumber);
 		}
 
-		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos)
+		public WattSecond ElectricMotorOffLosses(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorOffLosses(emPos);
+			return _modalDataContainerImplementation.ElectricMotorOffLosses(emPos, axleNumber);
 		}
 
-		public WattSecond ElectricMotorLosses(PowertrainPosition emPos)
+		public WattSecond ElectricMotorLosses(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorLosses(emPos);
+			return _modalDataContainerImplementation.ElectricMotorLosses(emPos, axleNumber);
 		}
 
-		public WattSecond ElectricMotorMotLosses(PowertrainPosition emPos)
+		public WattSecond ElectricMotorMotLosses(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorMotLosses(emPos);
+			return _modalDataContainerImplementation.ElectricMotorMotLosses(emPos, axleNumber);
 		}
 
-		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos)
+		public WattSecond ElectricMotorTransmissionLosses(PowertrainPosition emPos, int axleNumber)
 		{
-			return _modalDataContainerImplementation.ElectricMotorTransmissionLosses(emPos);
+			return _modalDataContainerImplementation.ElectricMotorTransmissionLosses(emPos, axleNumber);
 		}
 
 		public double REESSStartSoC()

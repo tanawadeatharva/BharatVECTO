@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Reflection.Metadata.Ecma335;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -38,19 +37,21 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort, IMileageCounter
+    public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort, IMileageCounter
 	{
 		internal MeterPerSecond MyVehicleSpeed;
 		internal IFvOutPort NextComponent;
 
 		internal RequestData LastRequest = new RequestData();
 
-		public MockVehicle(IVehicleContainer cockpit) : base(cockpit)
+		public MockVehicle(IVehicleContainer cockpit) : base(cockpit, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 		}
 

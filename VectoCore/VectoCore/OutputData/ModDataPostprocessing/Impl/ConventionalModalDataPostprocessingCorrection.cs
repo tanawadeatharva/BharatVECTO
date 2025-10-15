@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -10,11 +11,13 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
-	public abstract class ModalDataPostProcessingCorrectionBase : IModalDataPostProcessor
+    public abstract class ModalDataPostProcessingCorrectionBase : IModalDataPostProcessor
 	{
 		#region Implementation of IModalDataPostProcessor
 
@@ -37,14 +40,15 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                 (current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
                     fuel.LowerHeatingValueVecto);
             var emLossEnergy = 0.SI<Joule>();
-            //if (runData.ElectricMachinesData.Count > 0) {
-            foreach (var em in runData.ElectricMachinesData)
+            
+            foreach (var em in runData.GetEMData())
             {
-                var emPos = em.Item1; //runData.ElectricMachinesData.First().Item1;
-                var colName = modData.GetColumnName(emPos, ModalResultField.P_EM_electricMotorLoss_);
+                var emPos = em.Item1.Position;
+                var axleNumber = em.Item1.AxleNumber;
+                var colName = modData.GetColumnName(emPos, axleNumber, ModalResultField.P_EM_electricMotorLoss_);
                 if (emPos == PowertrainPosition.IEPC)
                 {
-                    colName = modData.GetColumnName(emPos, ModalResultField.P_IEPC_electricMotorLoss_);
+                    colName = modData.GetColumnName(emPos, axleNumber, ModalResultField.P_IEPC_electricMotorLoss_);
                 }
                 emLossEnergy += modData.TimeIntegral<WattSecond>(colName).Cast<Joule>();
             }
@@ -74,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 			return DoApplyCorrection(modData, runData);
 		}
 
-		protected virtual CorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		protected virtual ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
         {
             var essParams = runData.DriverData.EngineStopStart;
             var r = new CorrectedModalData(modData) {
@@ -140,29 +144,46 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
         protected virtual void SetReesCorrectionDemand(IModalDataContainer modData, VectoRunData runData,
             CorrectedModalData r)
         {
-            var em = runData.ElectricMachinesData?.FirstOrDefault(x => x.Item1 != PowertrainPosition.GEN);
+            if (runData.OVCMode == OvcHevMode.ChargeDepleting)
+            {
+				r.DeltaEReessMech = 0.SI<WattSecond>();
+                return;
+			}
 
-            if (em != null && runData.OVCMode != OvcHevMode.ChargeDepleting) {
+            var ems = runData.GetEMData().Where(x => x.Item1.Position != PowertrainPosition.GEN);
+
+            if (ems.Any())
+            {
                 var deltaEReess = modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) - r.WorkBusAux_elPS_SoC_Corr;
                 var startSoc = modData.REESSStartSoC();
                 var endSoc = modData.REESSEndSoC();
-                var emEff = 0.0;
-                if (endSoc < startSoc) {
-                    var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1);
-                    var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal_ES().Value();
-                    emEff = 1.0 / (etaEmChg * etaReessChg);
-                }
-                if (endSoc > startSoc) {
-                    var etaEmDischg = modData.ElectricMotorEfficiencyDrive(em.Item1);
-                    var etaReessDischg = modData.WorkREESSDischargeTerminal_ES().Value() / modData.WorkREESSDischargeInternal().Value();
-                    emEff = etaEmDischg * etaReessDischg;
-                }
 
-                r.DeltaEReessMech = double.IsNaN(emEff) ? 0.SI<WattSecond>() : -deltaEReess * emEff;
-            } else {
+                var avgEmEff = ems.Average(em =>
+                {
+                    var emEff = 0.0;
+                    if (endSoc < startSoc)
+                    {
+                        var etaEmChg = modData.ElectricMotorEfficiencyGenerate(em.Item1.Position, em.Item1.AxleNumber);
+                        var etaReessChg = modData.WorkREESSChargeInternal().Value() / modData.WorkREESSChargeTerminal_ES().Value();
+                        emEff = 1.0 / (etaEmChg * etaReessChg);
+                    }
+                    if (endSoc > startSoc)
+                    {
+                        var etaEmDischg = modData.ElectricMotorEfficiencyDrive(em.Item1.Position, em.Item1.AxleNumber);
+                        var etaReessDischg = modData.WorkREESSDischargeTerminal_ES().Value() / modData.WorkREESSDischargeInternal().Value();
+                        emEff = etaEmDischg * etaReessDischg;
+                    }
+
+                    return emEff;
+                });
+
+                r.DeltaEReessMech = double.IsNaN(avgEmEff) ? 0.SI<WattSecond>() : -deltaEReess * avgEmEff;
+            }
+            else
+            {
                 r.DeltaEReessMech = 0.SI<WattSecond>();
             }
-        }
+		}
 
         protected virtual FuelConsumptionCorrection SetFuelConsumptionCorrection(IModalDataContainer modData, VectoRunData runData,
             CorrectedModalData r, IFuelProperties fuel)
@@ -234,14 +255,21 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             }
             //if (runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
             // case C3a
-            if (runData.ElectricMachinesData.Count != 1) {
+            if (runData.ElectricMachinesData.Count != 1) 
+            {
                 throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
                     runData.ElectricMachinesData.Count,
                     runData.ElectricMachinesData.Select(x => x.Item1.ToString()).Join());
             }
 
-            var emPos = runData.ElectricMachinesData.First().Item1;
-            var averageEmEfficiencyCharging = modData.ElectricMotorEfficiencyGenerate(emPos);
+			var averageEmEfficiencyCharging = runData.JobType.IsMultiplePowertrains()
+                ? runData.GetEMData()
+                    .Where(x => x.Item1.Position == PowertrainPosition.GEN)
+                    .Average(x => modData.ElectricMotorEfficiencyGenerate(x.Item1.Position, x.Item1.AxleNumber))
+                : modData.ElectricMotorEfficiencyGenerate(
+                    runData.ElectricMachinesData.First().Item1, 
+                    Constants.NOT_IN_AXLE_POWERTRAIN);
+            
             r.EnergyDCDCMissing = missingDCDCEnergy /
                                 runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency /
                                 averageEmEfficiencyCharging;
@@ -384,17 +412,20 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
             if (runData.BusAuxiliaries != null) {
                 if (runData.BusAuxiliaries.ElectricalUserInputsConfig.ConnectESToREESS &&
                     runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorType == AlternatorType.Smart) {
-                    // case C3a
-                    if (runData.ElectricMachinesData.Count != 1) {
-                        throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
+					// case C3a
+					if (runData.ElectricMachinesData.Count != 1)
+					{
+						throw new VectoException("exactly 1 electric machine is required. got {0} ({1})",
                             runData.ElectricMachinesData.Count,
                             runData.ElectricMachinesData.Select(x => x.Item1.ToString()).Join());
                     }
 
-                    var emPos = runData.ElectricMachinesData.First().Item1;
-                    altEff = modData.ElectricMotorEfficiencyGenerate(emPos) * runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency;
-
-                } else {
+					var emEffGen = runData.GetEMData()
+                        .Average(x => modData.ElectricMotorEfficiencyGenerate(x.Item1.Position, x.Item1.AxleNumber));
+					
+                    altEff = emEffGen * runData.BusAuxiliaries.ElectricalUserInputsConfig.DCDCEfficiency;
+                } 
+                else {
                     altEff = runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(
                         0.RPMtoRad(), 0.SI<Ampere>());
                 }

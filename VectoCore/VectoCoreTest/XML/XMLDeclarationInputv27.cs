@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
@@ -14,7 +11,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -181,12 +177,6 @@ namespace TUGraz.VectoCore.Tests.XML
             TestCase(@"PEV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_PEV_CompletedBus_requiredOnly"),
             TestCase(@"FCHV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_FCHV_CompletedBus"),
             TestCase(@"FCHV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_FCHV_CompletedBus_requiredOnly"),
-            TestCase(@"Multiple_SHEV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Multiple_SHEV_CompletedBus"),
-            TestCase(@"Multiple_SHEV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Multiple_SHEV_CompletedBus_requiredOnly"),
-            TestCase(@"Multiple_PEV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Multiple_PEV_CompletedBus"),
-            TestCase(@"Multiple_PEV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Multiple_PEV_CompletedBus_requiredOnly"),
-            TestCase(@"Multiple_FCHV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Multiple_FCHV_CompletedBus"),
-            TestCase(@"Multiple_FCHV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Multiple_FCHV_CompletedBus_requiredOnly"),
         ]
         public void TestVehicleInput(string jobfile, string testDir)
         {
@@ -861,7 +851,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -928,7 +918,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -1196,7 +1186,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
             Assert.AreEqual(true, vehicle.OVC);
             Assert.AreEqual(true, vehicle.BatteryOnlyMode);
-            Assert.AreEqual(DynamicChargingTechnology.OverheadTrolley, vehicle.DynamicChargingTechnology);
+            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
             Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
             Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
@@ -5590,7 +5580,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.UNKNOWN, vehicle.ArchitectureID);
@@ -5669,7 +5658,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.UNKNOWN, vehicle.ArchitectureID);
@@ -5802,7 +5790,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F2, vehicle.ArchitectureID);
@@ -5870,7 +5857,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F2, vehicle.ArchitectureID);
@@ -5937,7 +5923,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F3, vehicle.ArchitectureID);
@@ -6005,7 +5990,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F3, vehicle.ArchitectureID);
@@ -6071,7 +6055,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F4, vehicle.ArchitectureID);
@@ -6139,7 +6122,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F4, vehicle.ArchitectureID);
@@ -6206,7 +6188,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F_IEPC, vehicle.ArchitectureID);
@@ -6273,7 +6254,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.F_IEPC, vehicle.ArchitectureID);
@@ -6341,7 +6321,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.UNKNOWN, vehicle.ArchitectureID);
@@ -6486,7 +6465,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
@@ -6568,7 +6546,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.P2, vehicle.ArchitectureID);
@@ -6642,7 +6619,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E2, vehicle.ArchitectureID);
@@ -6708,7 +6684,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E2, vehicle.ArchitectureID);
@@ -6773,7 +6748,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E3, vehicle.ArchitectureID);
@@ -6838,7 +6812,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E3, vehicle.ArchitectureID);
@@ -6902,7 +6875,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E4, vehicle.ArchitectureID);
@@ -6967,7 +6939,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E4, vehicle.ArchitectureID);
@@ -7032,7 +7003,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
@@ -7097,7 +7067,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Components.PTOTransmissionInputData);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
             Assert.AreEqual(false, vehicle.VocationalVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(false, vehicle.SleeperCab);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(ArchitectureID.E_IEPC, vehicle.ArchitectureID);
@@ -8363,7 +8332,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.SeparateAngledrive, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S2, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S_IEPC, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8451,7 +8419,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S2, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S_IEPC, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8538,7 +8505,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S3, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S4, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8631,7 +8597,6 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(AngledriveType.None, axlePt1.AngledriveInputData.Type);
             Assert.AreEqual(AngledriveType.None, axlePt2.AngledriveInputData.Type);
             Assert.AreEqual(true, vehicle.ZeroEmissionVehicle);
-            Assert.AreEqual(null, vehicle.TankSystem);
             Assert.AreEqual(ArchitectureID.S3, vehicle.ArchitectureID);
             Assert.AreEqual(ArchitectureID.S4, vehicle.ArchitectureIDPwt2);
             Assert.AreEqual(true, vehicle.OVC);
@@ -8784,7 +8749,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Width);
             Assert.AreEqual(null, vehicle.EntranceHeight);
             Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
+            Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(null, vehicle.ADAS);
             Assert.AreEqual(null, vehicle.H2StorageUsableCapacity);
@@ -8914,7 +8879,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(BusHVACSystemConfiguration.Configuration6, vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingDriverCompartment);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.non_R_744_3_stage, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
+            Assert.AreEqual(HeatPumpType.R_744, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingPassengerCompartment);
             Assert.AreEqual(50000, vehicle.Components.BusAuxiliaries.HVACAux.AuxHeaterPower.Value());
             Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.DoubleGlazing);
@@ -8963,7 +8928,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Width);
             Assert.AreEqual(null, vehicle.EntranceHeight);
             Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
+            Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(null, vehicle.ADAS);
@@ -9026,7 +8991,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(BusHVACSystemConfiguration.Configuration6, vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingDriverCompartment);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.non_R_744_3_stage, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
+            Assert.AreEqual(HeatPumpType.R_744, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
             Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingPassengerCompartment);
             Assert.AreEqual(50000, vehicle.Components.BusAuxiliaries.HVACAux.AuxHeaterPower.Value());
             Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.DoubleGlazing);
@@ -9075,7 +9040,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Width);
             Assert.AreEqual(null, vehicle.EntranceHeight);
             Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
+            Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(null, vehicle.ADAS);
@@ -9189,347 +9154,7 @@ namespace TUGraz.VectoCore.Tests.XML
             Assert.AreEqual(null, vehicle.Width);
             Assert.AreEqual(null, vehicle.EntranceHeight);
             Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(null, vehicle.ADAS);
-            Assert.AreEqual(null, vehicle.H2StorageUsableCapacity);
-            Assert.AreEqual(null, vehicle.HydrogenStorageTechnology);
-
-            Assert.IsNull(vehicle.Components);
-
-            Assert.IsNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_SHEV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_SHEV_CompletedBus")]
-        public void TestReaderMultipleSHEVCompletedBus(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual("Sample Bus Model", vehicle.Model);
-            Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
-            Assert.AreEqual(500.SI<Kilogram>(), vehicle.CurbMassChassis);
-            Assert.AreEqual(3500.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(true, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);
-            Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
-            Assert.AreEqual(1, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(10, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(11, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(2, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
-            Assert.AreEqual(true, vehicle.LowEntry);
-            Assert.AreEqual(2.5, vehicle.Height.Value());
-            Assert.AreEqual(9.5, vehicle.Length.Value());
-            Assert.AreEqual(2.5, vehicle.Width.Value());
-            Assert.AreEqual(2.0, vehicle.EntranceHeight.Value());
-            Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(true, vehicle.ADAS.EngineStopStart);
-            Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
-            Assert.AreEqual(PredictiveCruiseControlType.None, vehicle.ADAS.PredictiveCruiseControl);
-            Assert.AreEqual(1, vehicle.H2StorageUsableCapacity.Value());
-            Assert.AreEqual(HydrogenStorageTechnology.Compressed, vehicle.HydrogenStorageTechnology);
-
-            Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.InteriorLightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.DayrunninglightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.PositionlightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.BrakelightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.HeadlightsLED);
-            Assert.AreEqual(BusHVACSystemConfiguration.Configuration6, vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.non_R_744_3_stage, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingPassengerCompartment);
-            Assert.AreEqual(50000, vehicle.Components.BusAuxiliaries.HVACAux.AuxHeaterPower.Value());
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.DoubleGlazing);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AdjustableAuxiliaryHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.WaterElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AirElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.OtherHeatingTechnology);
-            Assert.IsNotNull(vehicle.Components.AirdragInputData);
-
-            Assert.IsNotNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_SHEV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_SHEV_CompletedBus_requiredOnly")]
-        public void TestReaderMultipleSHEVCompletedBusRequiredOnly(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual(null, vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual(null, vehicle.Model);
-            Assert.AreEqual(null, vehicle.LegislativeClass);
-            Assert.AreEqual(null, vehicle.CurbMassChassis);
-            Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(null, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(null, vehicle.RegisteredClass);
-            Assert.AreEqual(null, vehicle.TankSystem);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(null, vehicle.VehicleCode);
-            Assert.AreEqual(null, vehicle.LowEntry);
-            Assert.AreEqual(null, vehicle.Height);
-            Assert.AreEqual(null, vehicle.Length);
-            Assert.AreEqual(null, vehicle.Width);
-            Assert.AreEqual(null, vehicle.EntranceHeight);
-            Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(null, vehicle.ADAS);
-            Assert.AreEqual(null, vehicle.H2StorageUsableCapacity);
-            Assert.AreEqual(null, vehicle.HydrogenStorageTechnology);
-
-            Assert.IsNull(vehicle.Components);
-
-            Assert.IsNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_PEV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_PEV_CompletedBus")]
-        public void TestReaderMultiplePEVCompletedBus(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual("Sample Bus Model", vehicle.Model);
-            Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
-            Assert.AreEqual(500.SI<Kilogram>(), vehicle.CurbMassChassis);
-            Assert.AreEqual(3500.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(true, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);
-            Assert.AreEqual(null, vehicle.TankSystem);
-            Assert.AreEqual(1, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(10, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(11, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(2, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
-            Assert.AreEqual(true, vehicle.LowEntry);
-            Assert.AreEqual(2.5, vehicle.Height.Value());
-            Assert.AreEqual(9.5, vehicle.Length.Value());
-            Assert.AreEqual(2.5, vehicle.Width.Value());
-            Assert.AreEqual(2.0, vehicle.EntranceHeight.Value());
-            Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(false, vehicle.ADAS.EngineStopStart);
-            Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
-            Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
-
-            Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.InteriorLightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.DayrunninglightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.PositionlightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.BrakelightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.HeadlightsLED);
-            Assert.AreEqual(BusHVACSystemConfiguration.Configuration6, vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.non_R_744_3_stage, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingPassengerCompartment);
-            Assert.AreEqual(50000, vehicle.Components.BusAuxiliaries.HVACAux.AuxHeaterPower.Value());
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.DoubleGlazing);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AdjustableAuxiliaryHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.WaterElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AirElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.OtherHeatingTechnology);
-            Assert.IsNotNull(vehicle.Components.AirdragInputData);
-
-            Assert.IsNotNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_PEV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_PEV_CompletedBus_requiredOnly")]
-        public void TestReaderMultiplePEVCompletedBusRequiredOnly(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual(null, vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual(null, vehicle.Model);
-            Assert.AreEqual(null, vehicle.LegislativeClass);
-            Assert.AreEqual(null, vehicle.CurbMassChassis);
-            Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(null, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(null, vehicle.RegisteredClass);
-            Assert.AreEqual(null, vehicle.TankSystem);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(null, vehicle.VehicleCode);
-            Assert.AreEqual(null, vehicle.LowEntry);
-            Assert.AreEqual(null, vehicle.Height);
-            Assert.AreEqual(null, vehicle.Length);
-            Assert.AreEqual(null, vehicle.Width);
-            Assert.AreEqual(null, vehicle.EntranceHeight);
-            Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(null, vehicle.ADAS);
-            Assert.AreEqual(null, vehicle.H2StorageUsableCapacity);
-            Assert.AreEqual(null, vehicle.HydrogenStorageTechnology);
-
-            Assert.IsNull(vehicle.Components);
-
-            Assert.IsNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_FCHV_CompletedBus.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_FCHV_CompletedBus")]
-        public void TestReaderMultipleFCHVCompletedBus(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual("x", vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual("Sample Bus Model", vehicle.Model);
-            Assert.AreEqual(LegislativeClass.M3, vehicle.LegislativeClass);
-            Assert.AreEqual(500.SI<Kilogram>(), vehicle.CurbMassChassis);
-            Assert.AreEqual(3500.SI<Kilogram>(), vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(true, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(RegistrationClass.II_III, vehicle.RegisteredClass);
-            Assert.AreEqual(null, vehicle.TankSystem);
-            Assert.AreEqual(1, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(10, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(11, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(2, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(VehicleCode.CB, vehicle.VehicleCode);
-            Assert.AreEqual(true, vehicle.LowEntry);
-            Assert.AreEqual(2.5, vehicle.Height.Value());
-            Assert.AreEqual(9.5, vehicle.Length.Value());
-            Assert.AreEqual(2.5, vehicle.Width.Value());
-            Assert.AreEqual(2.0, vehicle.EntranceHeight.Value());
-            Assert.AreEqual(ConsumerTechnology.Electrically, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
-            Assert.AreEqual("ASDF", vehicle.VehicleTypeApprovalNumber);
-            Assert.AreEqual(1, vehicle.H2StorageUsableCapacity.Value());
-            Assert.AreEqual(HydrogenStorageTechnology.Compressed, vehicle.HydrogenStorageTechnology);
-            Assert.AreEqual(DynamicChargingTechnology.Wireless, vehicle.DynamicChargingTechnology);
-            Assert.AreEqual(false, vehicle.ADAS.EngineStopStart);
-            Assert.AreEqual(EcoRollType.None, vehicle.ADAS.EcoRoll);
-            Assert.AreEqual(PredictiveCruiseControlType.Option_1_2_3, vehicle.ADAS.PredictiveCruiseControl);
-
-            Assert.IsNotNull(vehicle.Components.BusAuxiliaries);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.InteriorLightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.DayrunninglightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.PositionlightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.BrakelightsLED);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.ElectricConsumers.HeadlightsLED);
-            Assert.AreEqual(BusHVACSystemConfiguration.Configuration6, vehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingDriverCompartment);
-            Assert.AreEqual(HeatPumpType.non_R_744_3_stage, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeCoolingPassengerCompartment);
-            Assert.AreEqual(HeatPumpType.none, vehicle.Components.BusAuxiliaries.HVACAux.HeatPumpTypeHeatingPassengerCompartment);
-            Assert.AreEqual(50000, vehicle.Components.BusAuxiliaries.HVACAux.AuxHeaterPower.Value());
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.DoubleGlazing);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AdjustableAuxiliaryHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.SeparateAirDistributionDucts);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.WaterElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.AirElectricHeater);
-            Assert.AreEqual(true, vehicle.Components.BusAuxiliaries.HVACAux.OtherHeatingTechnology);
-            Assert.IsNotNull(vehicle.Components.AirdragInputData);
-
-            Assert.IsNotNull(vehicle.VehicleMonitoringData);
-        }
-
-        [TestCase(@"Multiple_FCHV_CompletedBus_requiredOnly.xml", COMPLETEDBUSES, TestName = "v27_Reader_Multiple_FCHV_CompletedBus_requiredOnly")]
-        public void TestReaderMultipleFCHVCompletedBusRequiredOnly(string jobfile, string testDir)
-        {
-            var filename = Path.Combine(testDir, jobfile);
-            var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-
-            Assert.NotNull(dataProvider);
-            Assert.NotNull(dataProvider.JobInputData);
-
-            var vehicle = dataProvider.JobInputData.Vehicle;
-            Assert.NotNull(vehicle);
-
-            Assert.AreEqual("Some Manufacturer", vehicle.Manufacturer);
-            Assert.AreEqual("Some Manufacturer Address", vehicle.ManufacturerAddress);
-            Assert.AreEqual("VEH-1234567890", vehicle.VIN);
-            Assert.AreEqual("2021-06-30T22:00:00Z", vehicle.Date.ToXmlFormat());
-            Assert.AreEqual(null, vehicle.SimulationToolLicenseNumber);
-            Assert.AreEqual(null, vehicle.Model);
-            Assert.AreEqual(null, vehicle.LegislativeClass);
-            Assert.AreEqual(null, vehicle.CurbMassChassis);
-            Assert.AreEqual(null, vehicle.GrossVehicleMassRating);
-            Assert.AreEqual(null, vehicle.AirdragModifiedMultistep);
-            Assert.AreEqual(null, vehicle.RegisteredClass);
-            Assert.AreEqual(null, vehicle.TankSystem);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingLowerDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengerSeatsUpperDeck);
-            Assert.AreEqual(null, vehicle.NumberPassengersStandingUpperDeck);
-            Assert.AreEqual(null, vehicle.VehicleCode);
-            Assert.AreEqual(null, vehicle.LowEntry);
-            Assert.AreEqual(null, vehicle.Height);
-            Assert.AreEqual(null, vehicle.Length);
-            Assert.AreEqual(null, vehicle.Width);
-            Assert.AreEqual(null, vehicle.EntranceHeight);
-            Assert.AreEqual(null, vehicle.DoorDriveTechnology);
-            Assert.AreEqual(VehicleDeclarationType.final, vehicle.VehicleDeclarationType);
+            Assert.AreEqual(VehicleDeclarationType.interim, vehicle.VehicleDeclarationType);
             Assert.AreEqual(null, vehicle.VehicleTypeApprovalNumber);
             Assert.AreEqual(DynamicChargingTechnology.None, vehicle.DynamicChargingTechnology);
             Assert.AreEqual(null, vehicle.ADAS);

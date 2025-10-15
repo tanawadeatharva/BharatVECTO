@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -47,8 +48,8 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-		
-	public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo, IUpdateable
+
+    public class MockVehicleContainer : IVehicleContainer, IEngineInfo, IEngineControl, IVehicleInfo, IClutchInfo, IBrakes, IAxlegearInfo, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IMileageCounter, IGearboxInfo, IGearboxControl, IPowertainInfo, IUpdateable
 	{
 		// only CycleData Lookup is set / accessed...
 
@@ -56,15 +57,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private Watt _axlegearLoss = 0.SI<Watt>();
 		private bool _clutchClosed = true;
 
-		public IAxlegearInfo AxlegearInfo => this;
+		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition position, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
 
-		public IEngineInfo EngineInfo { get; set; }
+        public IAxlegearInfo AxlegearInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
+
+		public IAngledriveInfo AngledriveInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => null;
+
+        public IEngineInfo EngineInfo { get; set; }
 
 		public IEngineControl EngineCtl => this;
 
 		public IVehicleInfo VehicleInfo => this;
-
-		public IClutchInfo ClutchInfo => this;
 
 		public IBrakes Brakes => this;
 
@@ -83,6 +86,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Second TractionInterruption => 1.SI<Second>();
 
 		public uint NumGears { get; set; }
+		public bool Disengaged { get; }
 
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
@@ -94,7 +98,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IMileageCounter MileageCounter => this;
 
-		public IGearboxInfo GearboxInfo => this;
+		public IGearboxInfo GearboxInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
+
+        public IClutchInfo ClutchInfo(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN) => this;
 
 		public IShiftStrategy Strategy => null;
 
@@ -102,10 +108,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IGearboxControl GearboxCtl => this;
 
-		public IElectricMotorInfo ElectricMotorInfo(PowertrainPosition pos)
-		{
-			return null;
-		}
+		public IList<IElectricMotorInfo> ElectricMotorsInfo => null;
+
+		public IList<IGearboxInfo> GearboxesInfo => null;
+
+		public IList<IGearboxControl> GearboxesCtl => null;
+
+		public IList<IAngledriveInfo> AngledrivesInfo => null;
+
+		public IList<IClutchInfo> ClutchesInfo => null;
+
+		public IList<IAxlegearInfo> AxlegearsInfo => null;
+
+		public int AxleNumber {  get; private set; }
 
 		public IRESSInfo BatteryInfo
 		{
@@ -115,7 +130,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IElectricSystemInfo ElectricSystemInfo { get; }
 
-		public ITorqueConverterInfo TorqueConverterInfo => null;
+		public IElectricSystemInfo JunctionBox { get; }
+
+        public ITorqueConverterInfo TorqueConverterInfo => null;
 
 		public ITorqueConverterControl TorqueConverterCtl => null;
 
@@ -123,9 +140,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IHybridControllerInfo HybridControllerInfo { get; }
 		public IHybridControllerCtl HybridControllerCtl { get; }
-		public IAngledriveInfo AngledriveInfo { get; }
 		public IDCDCConverter DCDCConverter { get; }
-		public WHRCharger WHRCharger { get; }
+		public IWHRCharger WHRCharger { get; }
 
 		public bool IsTestPowertrain => false;
 
@@ -373,7 +389,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			get; set;
 		}
-		public PowertrainPosition[] ElectricMotorPositions { get; set; }
+		
 		public VectoSimulationJobType VehicleArchitecutre { get; }
 
 		#endregion
@@ -382,6 +398,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool UpdateFrom(object other) {
 			return false;
+		}
+
+		#endregion
+
+		#region Implementation of ITnInProvider
+
+		public ITnInPort InPort()
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of ITnOutProvider
+
+		public ITnOutPort OutPort()
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

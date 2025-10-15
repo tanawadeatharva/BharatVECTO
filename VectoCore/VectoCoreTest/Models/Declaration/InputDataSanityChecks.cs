@@ -7,7 +7,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
@@ -45,7 +44,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(PrimaryBusConventional, 1, "Fixed displacement"),
 			TestCase(PrimaryBusConventional, 2, "Fixed displacement", "Dual displacement"),
 			TestCase(PrimaryBusConventional, 2, "Full electric steering gear", "Electric driven pump"),
-			TestCase(PrimaryBusConventional, 1, "Full electric steering gear")
+			TestCase(PrimaryBusConventional, 1, "Full electric steering gear"),
+			Category(Definitions.TESTCASE_MIGRATED),
 		]
 		public void TestCorrectNumberSteeredAxles(string jobFile, int numStreeredAxles, params string[] steeringPumpTechnologies)
 		{
@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(PrimaryBusConventional, 1, "Fixed displacement", "Dual displacement"),
 			TestCase(PrimaryBusConventional, 1, "Full electric steering gear", "Electric driven pump"),
 			TestCase(PrimaryBusConventional, 1, "Fixed displacement", "Dual displacement", "Full electric steering gear"),
+			Category(Definitions.TESTCASE_MIGRATED),
 		]
 		public void TestWrongNumberSteeredAxles(string jobFile, int numStreeredAxles, params string[] steeringPumpTechnologies)
 		{

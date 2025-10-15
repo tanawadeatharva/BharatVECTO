@@ -43,7 +43,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
-using static TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.FuelConsumptionMap;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -53,10 +52,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public VectoRunData RunData { get; protected set; }
 
-        public VTPCombustionEngine(IVehicleContainer container, VectoRunData runData, bool pt1Disabled = false) : base(container, runData.EngineData, pt1Disabled) 
+        public VTPCombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(container, modelData, pt1Disabled) 
 		{
-			RunData = runData;
+			RunData = container.RunData;
 		}
+
+		#region Overrides of CombustionEngine
+
+		protected override IIdleController CreateIdleController()
+		{
+			return new CombustionEngineNoDoubleClutchIdleController(this, DataBus);
+
+		}
+
+		#endregion
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -65,12 +74,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var auxDemand = EngineAux == null ? 0.SI<NewtonMeter>() : EngineAux.Initialize(outTorque, outAngularVelocity);
 			if (firstInit) {
+				var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
 				PreviousState = new EngineState {
 					EngineSpeed = outAngularVelocity,
 					dt = 1.SI<Second>(),
 					InertiaTorqueLoss = 0.SI<NewtonMeter>(),
-					StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(outAngularVelocity),
-					FullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(outAngularVelocity),
+					StationaryFullLoadTorque = ModelData.FullLoadCurves[gearbox.Gear.Gear].FullLoadStationaryTorque(outAngularVelocity),
+					FullDragTorque = ModelData.FullLoadCurves[gearbox.Gear.Gear].DragLoadStationaryTorque(outAngularVelocity),
 					EngineTorque = outTorque + auxDemand,
 					EnginePower = (outTorque + auxDemand) * outAngularVelocity,
 				};
@@ -109,15 +119,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 			var torqueOut = powerDemand / avgEngineSpeed;
 
-
-			var fullDragTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
-			var fullLoadTorque = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
-
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			var fullDragTorque = ModelData.FullLoadCurves[gearbox.Gear.Gear].DragLoadStationaryTorque(avgEngineSpeed);
+			var fullLoadTorque = ModelData.FullLoadCurves[gearbox.Gear.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			
 			if (fullLoadTorque < 0)
 			{
 				fullLoadTorque = 0.SI<NewtonMeter>();
 			}
-
+			
 			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
 				avgEngineSpeed;
@@ -316,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuelData.FuelType.GetLabel());
 				}
-				var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo.Gear.Gear].PT1(avgEngineSpeed);
+				var pt1 = ModelData.FullLoadCurves[DataBus.GearboxInfo(AxleNumber).Gear.Gear].PT1(avgEngineSpeed);
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated)
 				{
 					Log.Error(

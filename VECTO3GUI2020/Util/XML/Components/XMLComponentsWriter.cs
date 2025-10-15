@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TUGraz.IVT.VectoXML.Writer;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 using VECTO3GUI2020.Resources.XML;
-using VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components;
-using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
-using EnvironmentVariableTarget = System.EnvironmentVariableTarget;
 
 namespace VECTO3GUI2020.Util.XML.Components
 {
@@ -58,11 +46,13 @@ namespace VECTO3GUI2020.Util.XML.Components
 	{
 
 		public static (XNamespace ns, string xsdType) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_xEV_CompletedBusType);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27,
+			XMLTypes.Components_xEV_CompletedBusType);
 
 
 
-		public XMLCompletedBusComponentsWriter_xEV(IXMLWriterFactory writerFactory) : base(writerFactory) { }
+		public XMLCompletedBusComponentsWriter_xEV(IXMLWriterFactory writerFactory) 
+			: base(writerFactory) { }
 
 		#region Overrides of XMLCompletedBusComponentsWriter
 
@@ -100,7 +90,7 @@ namespace VECTO3GUI2020.Util.XML.Components
 	public class XMLCompletedBusComponentWriter_Conventional : XMLCompletedBusComponentsWriter
 	{
 		public static (XNamespace ns, string xsdType) VERSION = (
-			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.Components_Conventional_CompletedBusType);
+			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, XMLTypes.Components_Conventional_CompletedBusType);
 
 		public XMLCompletedBusComponentWriter_Conventional(IXMLWriterFactory writerFactory) : base(writerFactory) { }
 

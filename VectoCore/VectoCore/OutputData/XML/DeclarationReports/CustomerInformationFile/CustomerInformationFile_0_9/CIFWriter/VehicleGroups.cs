@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter;
 using TUGraz.VectoCore.Utils;
@@ -133,30 +131,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 			return new List<XElement>()
 			{
 				// todo amogoda: 2.9 - fill fc commmon components data
-			};
-		}
-
-		#endregion
-	}
-
-	public class ConventionalCompletedBusVehicleSequenceGroupCIF : AbstractCIFGroupWriter
-	{
-		public ConventionalCompletedBusVehicleSequenceGroupCIF(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
-
-		#region Overrides of AbstractCIFGroupWriter
-
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
-		{
-			var multistep = inputData as IMultistepBusInputDataProvider;
-			if (multistep == null) {
-				throw new VectoException("Completed Bus CIF requires bus input data");
-			}
-			var vehicleData = multistep.JobInputData.PrimaryVehicle.Vehicle;
-			var dualFuel = vehicleData.Components.EngineInputData.EngineModes.Any(x => x.Fuels.Count > 1);
-			return new List<XElement>() {
-				new XElement(_cif + "WasteHeatRecovery",
-					vehicleData.Components.EngineInputData.WHRType != WHRType.None),
-				new XElement(_cif + XMLNames.Vehicle_DualFuelVehicle, dualFuel)
 			};
 		}
 
@@ -347,6 +321,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 		#endregion
 	}
 
+	public class FCHV_CompletedBusVehicleSequenceGroupWriter : AbstractCIFGroupWriter
+	{
+        public FCHV_CompletedBusVehicleSequenceGroupWriter(ICustomerInformationFileFactory cifFactory) : base(cifFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var multistep = inputData as IMultistepBusInputDataProvider;
+            if (multistep == null)
+            {
+                throw new VectoException("Completed Bus CIF requires bus input data");
+            }
+
+            var result = new List<XElement>();
+            
+            result.AddRange(new List<XElement>() {
+                new XElement(_cif + "FCHVArchitecture",  multistep.JobInputData.PrimaryVehicle.Vehicle.ArchitectureID.GetLabel()),
+                new XElement(_cif + "OffVehicleChargingCapability", multistep.JobInputData.PrimaryVehicle.Vehicle.OVC),
+                new XElement(_cif + "DynamicChargingTechnology", multistep.JobInputData.PrimaryVehicle.Vehicle.DynamicChargingTechnology.ToXMLFormat())
+            });
+
+            return result;
+        }
+
+    }
+
 	public class CompletedBusVehicleTypeGroup : AbstractCIFGroupWriter
 	{
 		private XElement GetManufacturerAndAddress(string manufacturer, string manufacturerAddress, int stepCount)
@@ -508,7 +507,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 
 	}
 
-
+	[ExcludeFromCodeCoverage] // not used for official calculations - no reports needed
 	public class SingleBusVehicleTypeGroup : AbstractCIFGroupWriter
 	{
 		private XElement GetManufacturerAndAddress(string manufacturer, string manufacturerAddress, int stepCount)

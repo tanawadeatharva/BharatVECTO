@@ -8,7 +8,6 @@ using System.Xml.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -17,7 +16,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 {
 	public abstract class AbstractVehicleInformationFileCompleted : IXMLMultistepIntermediateReport
 	{
-		protected XNamespace VIF = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
+		protected XNamespace VIF = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
 
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
@@ -179,6 +178,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected abstract XElement GetVehicleElement();
 
+		// Handles old VIFs, where the default namespace is other than the current one.
+		protected void SetVehicleNamespaceToPrimaryVehicleNamespace(XElement vehicle)
+		{
+            vehicle.Name = _primaryVehicle.GetDefaultNamespace().GetName(vehicle.Name.LocalName);
+        }
+
 		private XElement GetHashPreviousStepElement()
 		{
 			DigestData digitData;
@@ -231,7 +236,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected override XElement GetVehicleElement()
 		{
-            return _vifFactory.GetConventionalVehicleType().GetElement(_inputData);
+            var vehicle = _vifFactory.GetConventionalVehicleType().GetElement(_inputData);
+			SetVehicleNamespaceToPrimaryVehicleNamespace(vehicle);
+			return vehicle;
 		}
 
 		#endregion
@@ -248,8 +255,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected override XElement GetVehicleElement()
 		{
-			return _vifFactory.GetHEVVehicleType().GetElement(_inputData);
-		}
+			var vehicle = _vifFactory.GetHEVVehicleType().GetElement(_inputData);
+            SetVehicleNamespaceToPrimaryVehicleNamespace(vehicle);
+			return vehicle;
+        }
 
 		#endregion
 	}
@@ -265,32 +274,31 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected override XElement GetVehicleElement()
 		{
-			return _vifFactory.GetPEVVehicleType().GetElement(_inputData);
-		}
+			var vehicle = _vifFactory.GetPEVVehicleType().GetElement(_inputData);
+            SetVehicleNamespaceToPrimaryVehicleNamespace(vehicle);
+			return vehicle;
+        }
 
 		#endregion
 	}
 
 	// ----------------------------------
 
-	internal class IEPC_CompletedBus_VIF : VehicleInformationFile_InterimStep
+	internal class FCHV_CompletedBus_VIF : VehicleInformationFile_InterimStep
 	{
-		public IEPC_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
+        public FCHV_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
 
+        protected override XElement GetVehicleElement()
+        {
+            var vehicle = _vifFactory.Get_FCHV_VehicleType().GetElement(_inputData);
+            SetVehicleNamespaceToPrimaryVehicleNamespace(vehicle);
+			return vehicle;
+        }
+    }
 
-		#region Overrides of VehicleInformationFile_InterimStep
+    // ----------------------------------
 
-		protected override XElement GetVehicleElement()
-		{
-			return _vifFactory.GetIEPCVehicleType().GetElement(_inputData);
-		}
-
-		#endregion
-	}
-
-	// ----------------------------------
-
-	internal class Exempted_CompletedBus_VIF : VehicleInformationFile_InterimStep
+    internal class Exempted_CompletedBus_VIF : VehicleInformationFile_InterimStep
 	{
 		public Exempted_CompletedBus_VIF(IVIFReportInterimFactory vifFactory) : base(vifFactory) { }
 
@@ -299,8 +307,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 
 		protected override XElement GetVehicleElement()
 		{
-			return _vifFactory.GetExemptedVehicleType().GetElement(_inputData);
-		}
+			var vehicle = _vifFactory.GetExemptedVehicleType().GetElement(_inputData);
+            SetVehicleNamespaceToPrimaryVehicleNamespace(vehicle);
+			return vehicle;
+        }
 
 		#endregion
 	}

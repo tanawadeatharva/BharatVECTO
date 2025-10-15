@@ -23,9 +23,16 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
         private NewtonMeter _wheelEndFriction;
 
+        private string _wheelEndCertificationNumber;
+
         public bool TwinTyres { get => _twinTyres; set => SetProperty(ref _twinTyres, value); }
 
         public NewtonMeter WheelEndFriction { get => _wheelEndFriction; set => SetProperty(ref _wheelEndFriction, value); }
+
+        public string WheelEndCertificationNumber { 
+            get => _wheelEndCertificationNumber; 
+            set => SetProperty(ref _wheelEndCertificationNumber, value); 
+        }
 
         private AxleType _axleType;
         public AxleType AxleType { get => _axleType; set => SetProperty(ref _axleType, value); }

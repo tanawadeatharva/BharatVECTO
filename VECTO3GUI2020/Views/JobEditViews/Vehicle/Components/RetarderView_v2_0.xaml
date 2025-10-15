@@ -16,7 +16,6 @@
                     <ContentControl DockPanel.Dock="Top" Content="{Binding CommonComponentViewModel}"/>
                     <custom:LabledTextBoxAutomatic DockPanel.Dock="Top" Content="{Binding Ratio}"></custom:LabledTextBoxAutomatic>
                     <custom:ComboParameter IsEnabled="False" DockPanel.Dock="Top" Content="{Binding Type }"></custom:ComboParameter>
-                    <custom:ScatterPlot Content="{Binding LossMap}"></custom:ScatterPlot>
                     <DataGrid ItemsSource="{Binding LossMapDataView}"   
                           IsReadOnly="True" />
                 </DockPanel>

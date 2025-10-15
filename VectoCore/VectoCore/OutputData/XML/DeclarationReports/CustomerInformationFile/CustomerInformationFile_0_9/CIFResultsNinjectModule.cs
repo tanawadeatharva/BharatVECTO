@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Xml.Linq;
 using Ninject.Activation;
 using Ninject.Extensions.Factory;
@@ -164,9 +163,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformation
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusHEVNonOVCSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<BusHEVOVCCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusHEVOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusFCHVNonOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusFCHVNonOVC_CIF_ResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusFCHVNonOVCSuccessResultWriter(null, XNamespace.None));
-			Bind<IResultGroupWriter>().To<BusFCHVOVCResultWriter>().When(AccessedViaCIFResultsWriterFactory)
+			Bind<IResultGroupWriter>().To<BusFCHVOVC_CIF_ResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusFCHVOVCSuccessResultWriter(null, XNamespace.None));
 			Bind<IResultGroupWriter>().To<BusPEVCIFResultWriter>().When(AccessedViaCIFResultsWriterFactory)
 				.NamedLikeFactoryMethod((ICIFResultsWriterFactory c) => c.GetBusPEVSuccessResultWriter(null, XNamespace.None));

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -21,10 +17,10 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 
-	/// <summary>
-	/// Container Class for Auxiliaries which are connected to the DCDC system.
-	/// </summary>
-	public class ElectricAuxiliaries : VectoSimulationComponent, IElectricAuxPort
+    /// <summary>
+    /// Container Class for Auxiliaries which are connected to the DCDC system.
+    /// </summary>
+    public class ElectricAuxiliaries : VectoSimulationComponent, IElectricAuxPort
 	{
 		private IDictionary<string, Func<IDataBus, Watt>> _auxData = new Dictionary<string, Func<IDataBus, Watt>>();
 		private IDictionary<string, string> _auxColumnName = new Dictionary<string, string>();
@@ -39,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#region Implementation of IElectricAuxPort
 
 
-		public ElectricAuxiliaries(IVehicleContainer container) : base(container)// : base(container)
+		public ElectricAuxiliaries(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			
 			VehicleContainer = container;

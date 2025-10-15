@@ -9,6 +9,7 @@
     "SavedInDeclMode": false,
     "DeclarationVehicle": "vehicle_sampleSingleModeDualFuel.xml",
     "ManufacturerRecord": "vehicle_sampleSingleModeDualFuel.MANUFACTURER.xml",
+    "CustomerInformationFile": "vehicle_sampleSingleModeDualFuel.CUSTOMER.xml",
     "Mileage": 30000.0,
     "FanPowerCoefficients": [
       0.0,

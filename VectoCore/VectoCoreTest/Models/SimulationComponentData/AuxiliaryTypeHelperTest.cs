@@ -32,7 +32,6 @@
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -41,7 +40,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[Parallelizable(ParallelScope.All)]
 	public class AuxiliaryTypeHelperTest
 	{
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestParseAuxiliaryType()
 		{
 			Assert.AreEqual(AuxiliaryType.Fan, AuxiliaryTypeHelper.Parse("Fan"));
@@ -51,7 +51,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestToString()
 		{
 			Assert.AreEqual(Constants.Auxiliaries.Names.Fan, AuxiliaryTypeHelper.ToString(AuxiliaryType.Fan));

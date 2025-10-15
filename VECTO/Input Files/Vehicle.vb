@@ -30,6 +30,7 @@ Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
+Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 Imports TUGraz.VectoCore.Utils.Ninject
 Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry
@@ -114,6 +115,7 @@ Public Class Vehicle
     Public ElectricMotorPerGearRatios As Double()
     Public IEPCFile As SubPath
 
+    Private _maxWindowsSize As Meter
 
     Public Sub New()
         _path = ""
@@ -320,6 +322,16 @@ Public Class Vehicle
 #End Region
 
 #Region "IInputData"
+
+    Public Property EngineeringMaxWindowsSize As Meter
+        Get
+            Return _maxWindowsSize
+        End Get
+
+        Set
+            _maxWindowsSize = Value
+        End Set
+    End Property
 
     Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
         Get
@@ -1080,6 +1092,8 @@ Public Class Vehicle
             Return Nothing
         End Get
     End Property
+
+    Public ReadOnly Property GeneratorEngineering As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) Implements IVehicleComponentsEngineering.GeneratorEngineering
 End Class
 
 Public Class IEPCWrapper
@@ -1204,22 +1218,23 @@ End Class
 Public Class FuelCellSystemWrapper
 	Implements IFuelCellSystemEngineeringInputData
 
-	Protected Vehicle As Vehicle
-	Public Sub New(veh As Vehicle)
-		Vehicle = veh
-	End Sub
+    Protected Vehicle As Vehicle
 
-	Public ReadOnly Property MaxWindowSize As Meter Implements IFuelCellSystemEngineeringInputData.MaxWindowSize
-		Get
-			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
-				Return Nothing
-			End If
+    Public Sub New(veh As Vehicle)
+        Vehicle = veh
+    End Sub
 
-			Return Vehicle.FuelCellSystemInputData.MaxWindowSize
-		End Get
-	End Property
+    Public ReadOnly Property MaxWindowSize As Meter Implements IFuelCellSystemEngineeringInputData.MaxWindowSize
+        Get
+            If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
+                Return Nothing
+            End If
 
-	Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
+            Return Vehicle.EngineeringMaxWindowsSize
+        End Get
+    End Property
+
+    Public ReadOnly Property FuelCellStrings As IList(Of FuelCellStringEntry(Of IFuelCellComponentEngineeringInputData)) Implements IFuelCellSystemEngineeringInputData.FuelCellStrings
 		Get
 			If (Vehicle.VehicleType <> VectoSimulationJobType.FCHV AndAlso Vehicle.VehicleType <> VectoSimulationJobType.FCHV_IEPC) Then
 				Return Nothing

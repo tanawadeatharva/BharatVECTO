@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using Moq;
-using NUnit;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -20,8 +17,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;
 public class AuxiliaryDataAdapterTest
 {
 	[TestCase("Small", false, false, TestName = "S_HEV Pass 1")]
-	[TestCase("Small + AMS + elec. driven", true, false, TestName = "S_HEV Pass 1")]
-	[TestCase("Small", false, false, TestName = "S_HEV Pass 1")]
+	[TestCase("Small + AMS + elec. driven", true, false, TestName = "S_HEV Pass 2")]
+	[TestCase("Small", false, false, TestName = "S_HEV Pass 3"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void SHEVPneumaticSystemTest(string psTechnology, bool fullyElectric, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -29,7 +27,7 @@ public class AuxiliaryDataAdapterTest
 		var auxInput = CreateAuxInput(psTechnology, "Default", "Standard technology", "Crankshaft mounted - Electronically controlled visco clutch", "Electric driven pump");
 
 		var auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, MissionType.LongHaul, VehicleClass.Class2,
-			8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle);
+			8.SI<Meter>(), 1, VectoSimulationJobType.SerialHybridVehicle, false);
 
 		var ps = auxData.Single(data => data.ID == Constants.Auxiliaries.IDs.PneumaticSystem);
 
@@ -40,7 +38,8 @@ public class AuxiliaryDataAdapterTest
 	[TestCase("Small + AMS", "", true, 0.0f, true, TestName = "PEV Fail 2")]
 	[TestCase("Small + ESS", "", true, 0.0f, true, TestName = "PEV Fail 3")]
 	[TestCase("Small + AMS + elec. driven", "Electrically driven - Electronically controlled", true, 0.0f, true, TestName = "PEV Fail 1")]
-	[TestCase("Small + AMS + elec. driven", "", true, 675, false, TestName = "PEV Pass 1")]
+	[TestCase("Small + AMS + elec. driven", "", true, 675, false, TestName = "PEV Pass 1"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PEVPneumaticSystemTest(string psTechnology, string fanTech, bool fullyElectric, double expectedElectric,
 		bool fail)
 	{
@@ -60,7 +59,8 @@ public class AuxiliaryDataAdapterTest
 
 	[TestCase("Small", false, 1400, false, TestName = "Conventional Pass 1")]
 	[TestCase("Small + AMS + elec. driven", true, 357, false, TestName = "Conventional Pass 2")]
-	[TestCase("Small + AMS + elec. xyz", true, 357, true, TestName = "Conventional Fail 1")]
+	[TestCase("Small + AMS + elec. xyz", true, 357, true, TestName = "Conventional Fail 1"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void ConventionalPneumaticSystemTest(string psTechnology, bool fullyElectric, double expectedMechanic, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -78,7 +78,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Electrically driven - Electronically controlled", true, false, TestName = "HEV Pass 1")]
-	[TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "HEV Pass 2")]
+	[TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "HEV Pass 2"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void HEVCoolingFanTest(string fanTech, bool isFullyElectric, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -97,7 +98,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Electrically driven - Electronically controlled", true, false, TestName = "Conv Pass 1")]
-	[TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "Conv Pass 2")]
+	[TestCase("Crankshaft mounted - On/off clutch", false, false, TestName = "Conv Pass 2"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void ConventionalCoolingFanTest(string fanTech, bool isFullyElectric, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -116,7 +118,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Standard technology", false)]
-	[TestCase("asdf", true)]
+	[TestCase("asdf", true),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void ConventionalESTest(string esTechnology, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -129,7 +132,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Standard technology", false)]
-	[TestCase("asdf", true)]
+	[TestCase("asdf", true),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PHEVEsTest(string esTechnology, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -142,7 +146,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Standard technology", false)]
-	[TestCase("asdf", true)]
+	[TestCase("asdf", true),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void SHEVEsTest(string esTechnology, bool fail)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -155,7 +160,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase("Standard technology", false)]
-	[TestCase("asdf", true)]
+	[TestCase("asdf", true),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PEVEsTest(string esTechnology, bool fail)
 	{
 		var dataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
@@ -167,7 +173,8 @@ public class AuxiliaryDataAdapterTest
 		Assert.IsTrue(es.ConnectToREESS);
 	}
 
-	[Test]
+	[Test,
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void ConventionalHVACTest([Values(VectoSimulationJobType.ConventionalVehicle)] VectoSimulationJobType jobType)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -178,7 +185,8 @@ public class AuxiliaryDataAdapterTest
 		Assert.IsFalse(es.ConnectToREESS, "Connected to REESS");
 	}
 
-	[Test]
+	[Test,
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PEVHVACTest([Values(VectoSimulationJobType.BatteryElectricVehicle, VectoSimulationJobType.IEPC_E)] VectoSimulationJobType jobType)
 	{
 		var dataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
@@ -189,7 +197,8 @@ public class AuxiliaryDataAdapterTest
 		Assert.IsTrue(es.ConnectToREESS);
 	}
 
-	[Test]
+	[Test,
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void HEVHVACTest([Values(VectoSimulationJobType.SerialHybridVehicle, VectoSimulationJobType.ParallelHybridVehicle, VectoSimulationJobType.IEPC_S, VectoSimulationJobType.IHPC)] VectoSimulationJobType jobType)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -200,9 +209,10 @@ public class AuxiliaryDataAdapterTest
 		Assert.IsTrue(es.ConnectToREESS);
 	}
 
-	[TestCase(2, false, "Fixed displacement", "Electric driven pump", TestName="Conventional PASS mixed technologies")]
-	[TestCase(2, false, "Fixed displacement", "Fixed displacement", TestName = "Conventional PASS")]
-	[TestCase(1, true, "Fixed displacement", "Electric driven pump", TestName="Conventional Fail")]
+	[TestCase(2, false, "Fixed displacement", "Electric driven pump", TestName= "Conventional SteeringPump PASS mixed technologies")]
+	[TestCase(2, false, "Fixed displacement", "Fixed displacement", TestName = "Conventional SteeringPump PASS")]
+	[TestCase(1, true, "Fixed displacement", "Electric driven pump", TestName= "Conventional SteeringPump Fail"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void ConventionalSteeringPumpTest(int steeredAxles, bool fail, string sp1 = null, string sp2 = null, string sp3 = null, string sp4 = null)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -223,7 +233,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase(2, false, "Electric driven pump", "Full electric steering gear", TestName="SHEV_Pass")]
-	[TestCase(2, true, "Fixed displacement", "Full electric steering gear", TestName="SHEV_Fail_mixed")]
+	[TestCase(2, true, "Fixed displacement", "Full electric steering gear", TestName="SHEV_Fail_mixed"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void SHEVSteeringPumpTest(int steeredAxles, bool fail, string sp1 = null, string sp2 = null, string sp3 = null, string sp4 = null)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -245,7 +256,8 @@ public class AuxiliaryDataAdapterTest
 
 	[TestCase(2, true, false, false, "Electric driven pump", "Full electric steering gear", TestName = "PHEV_Electric")]
 	[TestCase(2, true, true,false, "Fixed displacement", "Full electric steering gear", TestName = "PHEV_Mixed")]
-	[TestCase(2, false, true, false, "Fixed displacement", "Dual displacement", TestName = "PHEV_Mechanical")]
+	[TestCase(2, false, true, false, "Fixed displacement", "Dual displacement", TestName = "PHEV_Mechanical"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PHEVSteeringPumpTest(int steeredAxles, bool hasElectric, bool hasMechanic, bool fail, string sp1 = null, string sp2 = null, string sp3 = null, string sp4 = null)
 	{
 		var dataAdapter = new HeavyLorryAuxiliaryDataAdapter();
@@ -287,7 +299,8 @@ public class AuxiliaryDataAdapterTest
 	}
 
 	[TestCase(2, false, "Electric driven pump", "Full electric steering gear", TestName = "PEV_Pass")]
-	[TestCase(2, true, "Fixed displacement", "Full electric steering gear", TestName = "PEV_Fail_mixed")]
+	[TestCase(2, true, "Fixed displacement", "Full electric steering gear", TestName = "PEV_Fail_mixed"),
+	Category(Definitions.TESTCASE_MIGRATED)]
 	public void PEVSteeringPumpTest(int steeredAxles, bool fail, string sp1 = null, string sp2 = null, string sp3 = null, string sp4 = null)
 	{
 		var dataAdapter = new HeavyLorryPEVAuxiliaryDataAdapter();
@@ -313,7 +326,7 @@ public class AuxiliaryDataAdapterTest
 		IList<VectoRunData.AuxData> auxData = null;
 		try {
 			auxData = dataAdapter.CreateAuxiliaryData(auxInput.Object, null, missionType, vehicleClass,
-				vehicleLength, numSteeredAxles, vectoSimulationJobType);
+				vehicleLength, numSteeredAxles, vectoSimulationJobType, false);
 		} catch (VectoException ex) {
 			if (fail) {
 				Assert.Pass(ex.Message);

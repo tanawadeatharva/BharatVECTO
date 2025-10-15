@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
+#define PROHIBIT_NEW_XML
+#endif
+
+//#define PROHIBIT_NEW_XML
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -26,11 +31,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
-
-        protected override void CheckVehicleAllowed(string extraMessage = "")
-        {
-            base.CheckVehicleAllowed("Buses not supported yet.");
-        }
 
         #region Overrides of XMLDeclarationVehicleDataProviderV10
 
@@ -217,7 +217,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
     {
         public XMLDeclaration_Multiple_PrimaryBus_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
             : base(jobData, xmlNode, sourceFile)
-        { }
+        {
+#if PROHIBIT_NEW_XML
+            throw new VectoException("XML Jobs for multiple powertrain vehicles are not yet supported!");
+#endif
+        }
 
         public override string PowertrainPositionPrefix => null;
 

@@ -6,7 +6,6 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportGroupWriter.CompletedBus;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoMockup.Reports;
 
 namespace TUGraz.VectoMockup.Ninject
@@ -207,7 +206,12 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPEV_CompletedBusVehicleType();
         }
 
-		public IXmlTypeWriter GetExempted_CompletedBusVehicleType()
+        public IXmlTypeWriter GetFCHV_CompletedBusVehicleType()
+        {
+            return _manufacturerReportFactoryImplementation.GetFCHV_CompletedBusVehicleType();
+        }
+
+        public IXmlTypeWriter GetExempted_CompletedBusVehicleType()
 		{
 			return _manufacturerReportFactoryImplementation.GetExempted_CompletedBusVehicleType();
 		}
@@ -642,12 +646,7 @@ namespace TUGraz.VectoMockup.Ninject
             return _manufacturerReportFactoryImplementation.GetPrimaryBusHVACSystemType_Conventional_HEV();
         }
 
-        public IMRFBusAuxiliariesType GetPrimaryBusHVACSystemType_PEV()
-        {
-            return _manufacturerReportFactoryImplementation.GetPrimaryBusHVACSystemType_PEV();
-        }
-
-        public IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType()
+		public IMRFBusAuxiliariesType GetConventionalCompletedBusAuxType()
         {
             return _manufacturerReportFactoryImplementation.GetConventionalCompletedBusAuxType();
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using TUGraz.VectoCommon.InputData;
+﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.Interfaces

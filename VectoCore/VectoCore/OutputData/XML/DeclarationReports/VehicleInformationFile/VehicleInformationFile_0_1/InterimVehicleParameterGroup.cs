@@ -6,14 +6,15 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1
 {
 	public abstract class AbstractInterimVIFGroupWriter : IReportMultistepCompletedBusOutputGroup
 	{
 		protected readonly IVIFReportInterimFactory _vifReportFactory;
-		protected XNamespace _vif = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1";
-		protected XNamespace _v24 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.4";
+		protected XNamespace _vif = XMLDefinitions.VEHICLE_INTERIM_FILE_TARGET_VERSION;
+		protected XNamespace _v27 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.7";
 
 		protected AbstractInterimVIFGroupWriter(IVIFReportInterimFactory vifReportFactory)
 		{
@@ -37,12 +38,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		{
 			var vehicleInputData = multiStageInputDataProvider.VehicleInputData;
 			return new[] {
-				new XElement(_v24 + XMLNames.Component_Manufacturer, vehicleInputData.Manufacturer),
-				new XElement(_v24 + XMLNames.Component_ManufacturerAddress, vehicleInputData.ManufacturerAddress),
-				new XElement(_v24 + XMLNames.Vehicle_VIN, vehicleInputData.VIN),
-				new XElement(_v24 + XMLNames.Component_Date,
+				new XElement(_v27 + XMLNames.Component_Manufacturer, vehicleInputData.Manufacturer),
+				new XElement(_v27 + XMLNames.Component_ManufacturerAddress, vehicleInputData.ManufacturerAddress),
+				new XElement(_v27 + XMLNames.Vehicle_VIN, vehicleInputData.VIN),
+				new XElement(_v27 + XMLNames.Component_Date,
 					XmlConvert.ToString(vehicleInputData.Date, XmlDateTimeSerializationMode.Utc)),
-
+				new XElement(_v27 + "SimulationToolLicenseNumber", vehicleInputData.SimulationToolLicenseNumber ?? "N/A"),
 			};
 		}
 
@@ -60,16 +61,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			var vehicleInputData = multiStageInputDataProvider.VehicleInputData;
 			return new [] {
 				vehicleInputData.Model != null
-					? new XElement(_v24 + XMLNames.Component_Model, vehicleInputData.Model) : null,
+					? new XElement(_v27 + XMLNames.Component_Model, vehicleInputData.Model) : null,
 				vehicleInputData.LegislativeClass != null
-					? new XElement(_v24 + XMLNames.Vehicle_LegislativeCategory, vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
+					? new XElement(_v27 + XMLNames.Vehicle_LegislativeCategory, vehicleInputData.LegislativeClass.ToXMLFormat()) : null,
 				vehicleInputData.CurbMassChassis != null
-					? new XElement(_v24 + XMLNames.CorrectedActualMass, vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
+					? new XElement(_v27 + XMLNames.CorrectedActualMass, vehicleInputData.CurbMassChassis.ToXMLFormat(0)) : null,
 				vehicleInputData.GrossVehicleMassRating != null
-					? new XElement(_v24 + XMLNames.TPMLM, vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
+					? new XElement(_v27 + XMLNames.TPMLM, vehicleInputData.GrossVehicleMassRating.ToXMLFormat(0)) : null,
 				GetAirdragModifiedMultistageEntry(multiStageInputDataProvider),
 				vehicleInputData.RegisteredClass != null
-					? new XElement(_v24 + XMLNames.Vehicle_RegisteredClass, vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
+					? new XElement(_v27 + XMLNames.Vehicle_RegisteredClass, vehicleInputData.RegisteredClass.ToXMLFormat()) : null,
 			};
 		}
 
@@ -85,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 				case null:
 					throw new VectoException("AirdragModifiedMultistage must be set if an airdrag component has been set in previous stages.");
 				default:
-					return new XElement(_v24 + XMLNames.Bus_AirdragModifiedMultistep, vehicleInputData.AirdragModifiedMultistep);
+					return new XElement(_v27 + XMLNames.Bus_AirdragModifiedMultistep, vehicleInputData.AirdragModifiedMultistep);
 			}
 		}
 		#endregion
@@ -109,10 +110,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			return new [] { 
-				new XElement(_v24 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, vehicleInputData.NumberPassengerSeatsLowerDeck),
-				new XElement(_v24 + XMLNames.Bus_NumberPassengersStandingLowerDeck, vehicleInputData.NumberPassengersStandingLowerDeck),
-				new XElement(_v24 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, vehicleInputData.NumberPassengerSeatsUpperDeck),
-				new XElement(_v24 + XMLNames.Bus_NumberPassengersStandingUpperDeck, vehicleInputData.NumberPassengersStandingUpperDeck),
+				new XElement(_v27 + XMLNames.Bus_NumberPassengerSeatsLowerDeck, vehicleInputData.NumberPassengerSeatsLowerDeck),
+				new XElement(_v27 + XMLNames.Bus_NumberPassengersStandingLowerDeck, vehicleInputData.NumberPassengersStandingLowerDeck),
+				new XElement(_v27 + XMLNames.Bus_NumberPassengerSeatsUpperDeck, vehicleInputData.NumberPassengerSeatsUpperDeck),
+				new XElement(_v27 + XMLNames.Bus_NumberPassengersStandingUpperDeck, vehicleInputData.NumberPassengersStandingUpperDeck),
 			};
 		}
 
@@ -135,10 +136,10 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			}
 
 			return new[] {
-				new XElement(_v24 + XMLNames.Bus_HeightIntegratedBody, vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)),
-				new XElement(_v24 + XMLNames.Bus_VehicleLength, vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)),
-				new XElement(_v24 + XMLNames.Bus_VehicleWidth, vehicleInputData.Width.ConvertToMilliMeter().ToXMLFormat(0)),
-				new XElement(_v24 + XMLNames.Bus_EntranceHeight, vehicleInputData.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(_v27 + XMLNames.Bus_HeightIntegratedBody, vehicleInputData.Height.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(_v27 + XMLNames.Bus_VehicleLength, vehicleInputData.Length.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(_v27 + XMLNames.Bus_VehicleWidth, vehicleInputData.Width.ConvertToMilliMeter().ToXMLFormat(0)),
+				new XElement(_v27 + XMLNames.Bus_EntranceHeight, vehicleInputData.EntranceHeight.ConvertToMilliMeter().ToXMLFormat(0)),
 			};
 		}
 

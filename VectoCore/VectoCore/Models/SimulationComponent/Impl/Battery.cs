@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -13,11 +12,11 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
+    public class Battery : StatefulVectoSimulationComponent<Battery.State>, IElectricEnergyStorage, IElectricEnergyStoragePort, IUpdateable
 	{
 		protected readonly BatteryData ModelData;
 
-		public Battery(IVehicleContainer container, BatteryData modelData) : base(container)
+		public Battery(IVehicleContainer container, BatteryData modelData) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			ModelData = modelData;
 			CurrentState.PulseDuration = 0.SI<Second>();

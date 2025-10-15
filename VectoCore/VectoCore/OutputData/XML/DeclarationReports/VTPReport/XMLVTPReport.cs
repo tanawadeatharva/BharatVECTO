@@ -37,12 +37,12 @@ using System.Xml;
 using System.Xml.Linq;
 using NLog.Config;
 using NLog.Targets;
-using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -57,9 +57,9 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
-using static TUGraz.VectoCore.Models.Simulation.Data.VectoRunData;
-using static TUGraz.VectoCore.Models.Declaration.PT1;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using Castle.Core.Internal;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	internal class XMLVTPReport : DeclarationReport<XMLVTPReport.ResultEntry>, IVTPReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.21";
+		public const string CURRENT_SCHEMA_VERSION = "0.3";
 
 		private const string VTPReportTartetName = "VTPReportTarget";
 		
@@ -88,8 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected VehicleClass VehicleClass = VehicleClass.Unknown;
 		protected VehicleCode? VehicleCode = VectoCommon.Models.VehicleCode.NOT_APPLICABLE;
 
-		//protected XNamespace di;
-		//private bool allSuccess = true;
+		private VTPOBFCMData OBFCMData;
 
 		public class ResultEntry : XMLDeclarationReport.ResultEntry
 		{
@@ -299,7 +298,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var selectedMission = GetSelectedMission();
 			
-			var vtpFcMeasured = vtpResult.VTPFcMeasured.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos)).ToDictionary(x => x.Item1, x => x.Item2);
+			var vtpFcMeasured = vtpResult.VTPFcMeasured
+				.Select(x => Tuple.Create(x.Key, x.Value / vtpResult.VTPWorkPWheelPos))
+				.ToDictionary(x => x.Item1, x => x.Item2);
 			
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured
 				.Select(x =>
@@ -370,7 +371,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				CreateCO2Element(cVtp, CO2Measured, CO2MeasuredCorrected, CO2Simulated, 
 					CO2MeasuredPerFuel, CO2MeasuredCorrectedPerFuel, CO2SimulatedPerFuel),
 				new XElement(tns + "C_VTP", cVtp.ToXMLFormat(4)),
-				CreatePollutantsElement(vtpResult, CO2MeasuredCorrected));
+				CreatePollutantsElement(vtpResult, CO2MeasuredCorrected),
+				CreateOBFCMElement());
 
 			var threshold = Constants.SimulationSettings.VTPEngineWorkDeviationThreshold;
 
@@ -585,6 +587,159 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return pollutantsElement;
 		}
 
+		private XElement CreateOBFCMElement()
+		{
+			var obfcmFcPart = GenerateOBFCMFuelConsumptionSection();
+			var totalFcPart = GenerateOBFCMTotalFuelConsumptionSection();
+			
+			var mileagePart = OBFCMData.StartMileage != null || OBFCMData.EndMileage != null
+				? new XElement(tns + "Mileage",
+					new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMData.StartMileage, "km", 2)),
+					new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMData.EndMileage, "km", 2)))
+				: null;
+			
+			var averageMassPart = OBFCMData.AverageMass != null 
+				? new XElement(tns + "TotalAverageMass", XMLHelper.ValueAsUnit(OBFCMData.AverageMass, "kg", 2)) 
+				: null;
+
+			if (mileagePart == null && 
+				averageMassPart == null && 
+				obfcmFcPart.IsNullOrEmpty() && 
+				totalFcPart.IsNullOrEmpty())
+			{
+				return null;
+			}
+
+			bool isOdometerAvailable = OBFCMDeclarationInputData.OdometerReading != null;
+			bool isLifeFCAvailableMass = !OBFCMDeclarationInputData.LifetimeFuelConsumptionMass.IsNullOrEmpty();
+			bool isLifeFCAvailableVolume = !OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume.IsNullOrEmpty();
+
+			return new XElement(
+				tns + "OBFCM",
+				mileagePart,
+				averageMassPart,
+				OBFCMData.IsOBFCM ? (isOdometerAvailable ? new XElement(tns + "OdometerReadingEnd", XMLHelper.ValueAsUnit( OBFCMDeclarationInputData.OdometerReading , "km", 2)) : NotApplyElement("OdometerReadingEnd", "km")) : null,
+				!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty()
+					? new XElement(tns + "LifetimeFuelConsumption",
+						isLifeFCAvailableMass ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassStart"], "kg", 2)) : NotApplyElement("Start", "kg"),
+						isLifeFCAvailableMass ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionMass["LifetimeFuelConsumptionMassEnd"], "kg", 2)) : NotApplyElement("End", "kg"),
+						isLifeFCAvailableVolume ? new XElement(tns + "Start", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolStart"].Cast<CubicMeter>(), "l", 2)) : NotApplyElement("Start", "l"),
+						isLifeFCAvailableVolume ? new XElement(tns + "End", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.LifetimeFuelConsumptionVolume["LifetimeFuelConsumptionVolEnd"].Cast<CubicMeter>(), "l", 2)) : NotApplyElement("End", "l"))
+					: null,
+				obfcmFcPart,
+				totalFcPart,
+				GenerateFuelConsumptionDeltasSection(OBFCMDeclarationInputData, OBFCMData)
+			);
+		}
+
+		private XElement[] GenerateOBFCMFuelConsumptionSection()
+		{
+			var r = new List<XElement>();
+
+			if (!OBFCMData.CumulativeFuelConsumptionMass.IsNullOrEmpty())
+			{
+				foreach (var fuelType in OBFCMData.MeasuredConsumptionMass.Keys)
+				{
+					var measuredVolumeConsumption = OBFCMData.MeasuredConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.MeasuredConsumptionVolume[fuelType] : null;
+					var cumulativeVolumeConsumption = OBFCMData.CumulativeFuelConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.CumulativeFuelConsumptionVolume[fuelType] : null;
+
+					r.Add(new XElement(tns + "FuelConsumption",
+						new XAttribute("fuelType", fuelType),
+						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
+						NotApplyElement("Measured", "l"),
+						new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.CumulativeFuelConsumptionMass[fuelType], "kg", 2)),
+						cumulativeVolumeConsumption != null ? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(cumulativeVolumeConsumption.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("OBFCM", "l")));
+				}
+			}
+			else if (OBFCMData.IsOBFCM)
+			{
+				foreach (var fuelType in OBFCMData.MeasuredConsumptionMass.Keys)
+				{
+					var measuredVolumeConsumption = OBFCMData.MeasuredConsumptionVolume?.ContainsKey(fuelType) ?? false
+						? OBFCMData.MeasuredConsumptionVolume[fuelType] : null;
+
+					r.Add(new XElement(tns + "FuelConsumption",
+						new XAttribute("fuelType", fuelType),
+						new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.MeasuredConsumptionMass[fuelType], "kg", 2)),
+						NotApplyElement("Measured", "l")));
+				}
+			}
+
+			return !r.IsNullOrEmpty() ? r.ToArray() : null;
+		}
+
+		private XElement[] GenerateOBFCMTotalFuelConsumptionSection()
+		{
+			var r = new List<XElement>();
+			if (OBFCMData.IsOBFCM)
+			{
+				r.AddRange(new List<XElement>()
+				{
+					new XElement(tns + "Measured", XMLHelper.ValueAsUnit(OBFCMData.TotalMeasuredConsumptionMass, "kg", 2)),
+					NotApplyElement("Measured", "l")
+				});
+			}
+
+			if (OBFCMData.TotalCumulativeFuelConsumptionMass != null)
+			{
+				r.AddRange(new List<XElement>()
+				{
+					OBFCMData.TotalCumulativeFuelConsumptionMass != null
+						? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionMass, "kg", 2)) : null,
+					OBFCMData.TotalCumulativeFuelConsumptionVolume != null
+						? new XElement(tns + "OBFCM", XMLHelper.ValueAsUnit(OBFCMData.TotalCumulativeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : NotApplyElement("OBFCM", "l"),
+					OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass != null
+						? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionMass, "kg", 2)) : null,
+					OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume != null
+						? new XElement(tns + "Lifetime", XMLHelper.ValueAsUnit(OBFCMDeclarationInputData.TotalLifetimeFuelConsumptionVolume.Cast<CubicMeter>(), "l", 2)) : null
+				});
+			}
+			
+			return !r.IsNullOrEmpty() ? new List<XElement>() { new XElement(tns + "TotalFuelConsumption", r) }.ToArray() : null;
+		}
+
+		private XElement GenerateFuelConsumptionDeltasSection(VTPOBFCMDeclarationData jsonObfcmData, VTPOBFCMData vdriObfcmData)
+		{
+			bool isLifetimeFcAvailable = jsonObfcmData.TotalLifetimeFuelConsumptionMass != null;
+			bool isMeasuredFcAvailable = vdriObfcmData.TotalMeasuredConsumptionMass != null;
+			bool isOBFCMFcAvailable = vdriObfcmData.TotalCumulativeFuelConsumptionMass != null;
+
+			var deltas = new List<XElement>();
+			if (isLifetimeFcAvailable && isOBFCMFcAvailable)
+			{
+				var delta1 = (jsonObfcmData.TotalLifetimeFuelConsumptionMass - vdriObfcmData.TotalCumulativeFuelConsumptionMass) / jsonObfcmData.TotalLifetimeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassLifetimeVSobfcm", XMLHelper.ValueAsUnit(delta1, "%", 2)));
+			}
+
+			if(isLifetimeFcAvailable && isMeasuredFcAvailable)
+			{
+				var delta2 = (jsonObfcmData.TotalLifetimeFuelConsumptionMass - vdriObfcmData.TotalMeasuredConsumptionMass) / jsonObfcmData.TotalLifetimeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassLifetimeVSmeasured", XMLHelper.ValueAsUnit(delta2, "%", 2)));
+			}
+
+			if (isOBFCMFcAvailable && isMeasuredFcAvailable)
+			{
+				var delta3 = (vdriObfcmData.TotalCumulativeFuelConsumptionMass - vdriObfcmData.TotalMeasuredConsumptionMass) / vdriObfcmData.TotalCumulativeFuelConsumptionMass;
+				deltas.Add(new XElement(tns + "MassObfcmVSmeasured", XMLHelper.ValueAsUnit(delta3, "%", 2)));
+			}
+
+			if (deltas.IsNullOrEmpty())
+			{
+				return null;
+			}
+
+			return isOBFCMFcAvailable ? new XElement(tns + "TotalFuelConsumptionDelta", deltas) : null ;
+		}
+
+		private XElement NotApplyElement(string name, string unit = null)
+		{
+			return new XElement(tns + name, 
+				!unit.IsNullOrEmpty() ? new XAttribute("unit", unit) : null,
+				"N/A");
+		}
+
 		private XDocument GenerateReport()
 		{
 
@@ -636,7 +791,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleMass.ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Vehicle_TechnicalPermissibleMaximumLadenMass, modelData.VehicleData.InputData.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbMass.ToXMLFormat(0)),
 				modelData.Retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, modelData.Retarder.Ratio.ToXMLFormat(3))
@@ -654,7 +809,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						GetAngledriveDescription(modelData.AngledriveData),
 						GetAirDragDescription(modelData.AirdragData),
 						GetAxleWheelsDescription(modelData.VehicleData),
-						GetAuxiliariesDescription(modelData.Aux)
+						GetAuxiliariesDescription(modelData)
 					));
 			} else {
 				VehiclePart.Add(
@@ -669,7 +824,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						GetAxlegearDescription(modelData.AxleGearData),
 						GetAirDragDescription(modelData.AirdragData),
 						GetAxleWheelsDescription(modelData.VehicleData),
-						GetAuxiliariesDescription(modelData.Aux)
+						GetAuxiliariesDescription(modelData)
 					));
 			}
 
@@ -684,7 +839,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			var componentChecks = ComponentIntegrityChecks(ref allSuccess);
 			var jobIntegrity = JobIntegrityChecks(ref allSuccess);
-			var manufacturerReportIntegrity = ManufacturerReportIntegrityChecks(ref allSuccess);
+			var manufacturerReportIntegrity = ReportIntegrityChecks(ManufacturerRecordHash, "ManufacturerReport", ref allSuccess, "ManufacturerRecord");
+			var customerInfoFileIntegrity   = ReportIntegrityChecks(CustomerFileHash, "CustomerInformationFile", ref allSuccess);
+			var primaryVIFIntegrity   = PrimaryVIFHash != null ? ReportIntegrityChecks(PrimaryVIFHash, "PrimaryVIF", ref allSuccess) : null;
+			var completedVIFIntegrity = CompletedVIFHash != null ? ReportIntegrityChecks(CompletedVIFHash, "CompletedVIF", ref allSuccess) : null;
 
 			DataIntegrityPart.Add(
 				new XAttribute("status", allSuccess ? XMLNames.Report_Results_Status_Success_Val : "failed"),
@@ -693,8 +851,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 					componentChecks.ToArray()
 				),
 				manufacturerReportIntegrity,
-				jobIntegrity
+				jobIntegrity,
+				customerInfoFileIntegrity,
+				primaryVIFIntegrity
 			);
+
+			OBFCMData = new VTPOBFCMData(modelData);
 		}
 
 		private List<object> ComponentIntegrityChecks(ref bool allSuccess)
@@ -755,33 +917,38 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		private XElement ManufacturerReportIntegrityChecks(ref bool allSuccess)
+		private XElement ReportIntegrityChecks(IVectoHash reportHash, string xmlReportParameter, ref bool allSuccess, string sourceParameter = null)
 		{
-			bool mrStatus;
-			XElement manufacturerReportIntegrity;
-			try {
-				var mrHashRead = ManufacturerRecordHash.ReadHash();
-				var mrHashRecomputed = ManufacturerRecordHash.ComputeHash();
-				mrStatus = ManufacturerRecordHash.ValidateHash();
-				manufacturerReportIntegrity = new XElement(
-					tns + "ManufacturerReport",
-					new XAttribute("status", mrStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
-					new XElement(tns + "DigestValueRecomputed", mrHashRecomputed),
+			bool hashStatus;
+			XElement reportIntegrity;
+
+			try
+			{
+				var sourceDigestValueParam = sourceParameter == null ? xmlReportParameter : sourceParameter;
+				var readHash = reportHash.ReadHash();
+				var computedHash = reportHash.ComputeHash();
+				hashStatus = reportHash.ValidateHash();
+				reportIntegrity = new XElement(
+					tns + xmlReportParameter,
+					new XAttribute("status", hashStatus ? XMLNames.Report_Results_Status_Success_Val : "failed"),
+					new XElement(tns + "DigestValueRecomputed", computedHash),
 					new XElement(
 						tns + "DigestValueRead",
-						new XAttribute("source", "ManufacturerRecord"), mrHashRead)
-				);
-			} catch (Exception e) {
-				mrStatus = false;
-				var mrError = e.Message;
-				manufacturerReportIntegrity = new XElement(
-					tns + "ManufacturerReport",
-					new XAttribute("status", "failed"),
-					new XElement(tns + "Error", mrError)
+						new XAttribute("source", sourceDigestValueParam), readHash)
 				);
 			}
-			allSuccess = allSuccess && mrStatus;
-			return manufacturerReportIntegrity;
+			catch (Exception e)
+			{
+				hashStatus = false;
+				reportIntegrity = new XElement(
+					tns + xmlReportParameter,
+					new XAttribute("status", "failed"),
+					new XElement(tns + "Error", e.Message)
+				);
+			}
+
+			allSuccess = allSuccess && hashStatus;
+			return reportIntegrity;
 		}
 
 		private XElement JobIntegrityChecks(ref bool allSuccess)
@@ -958,27 +1125,118 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axle.TwinTyres));
 		}
 
-		private XElement GetAuxiliariesDescription(IEnumerable<VectoRunData.AuxData> aux)
+		private XElement GetAuxiliariesDescription(VectoRunData modelData)
 		{
-			var auxData = aux.ToDictionary(a => a.ID);
-			var auxList = new[] {
-				AuxiliaryType.Fan, AuxiliaryType.SteeringPump, AuxiliaryType.ElectricSystem, AuxiliaryType.PneumaticSystem,
-				AuxiliaryType.HVAC
-			};
+			var auxList = modelData.VehicleData.VehicleCategory.IsBus() ?
+				new[]
+				{
+					AuxiliaryType.Fan,
+					AuxiliaryType.SteeringPump,
+					AuxiliaryType.PneumaticSystem,
+					AuxiliaryType.ElectricSystem,
+					AuxiliaryType.HVAC
+				} : 
+				new[] 
+				{
+					AuxiliaryType.Fan,
+					AuxiliaryType.SteeringPump,
+					AuxiliaryType.ElectricSystem,
+					AuxiliaryType.PneumaticSystem,
+					AuxiliaryType.HVAC
+				};
+
+			var auxData = modelData.Aux.ToDictionary(a => a.ID);
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
-			foreach (var auxId in auxList) {
+			foreach (var auxId in auxList)
+			{
+				if (modelData.VehicleData.VehicleCategory.IsBus() && auxId == AuxiliaryType.ElectricSystem && modelData.BusAuxiliaries.InputData.ElectricConsumers != null)
+				{
+					retVal.Add(GetElectricSystemGroupElements(modelData.BusAuxiliaries.InputData));
+					continue;
+				}
+
+				if (modelData.VehicleData.VehicleCategory.IsBus() && auxId == AuxiliaryType.HVAC && modelData.BusAuxiliaries.InputData.HVACAux != null)
+				{
+					retVal.Add(GetHVACBusAuxiliaryDescription(modelData.BusAuxiliaries.InputData));
+					continue;
+				}
+
 				if (auxData.TryGetValue(auxId.Key(), out var auxValue)) {
 					foreach (var entry in auxValue.Technology) {
 						retVal.Add(new XElement(tns + GetTagName(auxId), entry));
 					}
 				}
 			}
+
 			return retVal;
 		}
 
 		private string GetTagName(AuxiliaryType auxId)
 		{
 			return auxId + "Technology";
+		}
+
+		private XElement GetHVACBusAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			bool isHVACxEV = aux.HVACAux.WaterElectricHeater.HasValue || aux.HVACAux.AirElectricHeater.HasValue || aux.HVACAux.OtherHeatingTechnology.HasValue;
+			
+			return isHVACxEV ? GetEVHVACBusAuxiliaryDescription(aux) : GetConventionalBusHVACAuxiliaryDescription(aux);
+		}
+
+		public XElement GetElectricSystemGroupElements(IBusAuxiliariesDeclarationData aux)
+		{
+			var elements = new XElement[] {
+				new XElement(tns + XMLNames.Bus_Interiorlights, aux.ElectricConsumers.InteriorLightsLED),
+				new XElement(tns + XMLNames.Bus_Dayrunninglights, aux.ElectricConsumers.DayrunninglightsLED),
+				new XElement(tns + XMLNames.Bus_Positionlights, aux.ElectricConsumers.PositionlightsLED),
+				new XElement(tns + XMLNames.Bus_Brakelights, aux.ElectricConsumers.BrakelightsLED),
+				new XElement(tns + XMLNames.Bus_Headlights, aux.ElectricConsumers.HeadlightsLED),
+			};
+
+			var nonEmptyElements = elements.Where(xel => !xel.Value.IsNullOrEmpty()).ToArray();
+			var electricSystemElement = new XElement(tns + XMLNames.BusAux_ElectricSystem, new XElement(tns + "LEDLights"), nonEmptyElements);
+
+			return new XElement(
+					tns + XMLNames.BusAux_ElectricSystem,
+					new XElement(tns + "LEDLights", nonEmptyElements));
+		}
+
+		private XElement GetConventionalBusHVACAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			XElement GetLabelElement(string xmlName, string value)
+			{
+				return value != "~null~" ? new XElement(tns + xmlName, value) : null;
+			}
+
+			var groupElements = new XElement[] {
+				new XElement(tns + XMLNames.Bus_SystemConfiguration, aux.HVACAux.SystemConfiguration?.ToXmlFormat()),
+				new XElement(tns + XMLNames.Bus_HeatPumpTypeDriver,
+					GetLabelElement(XMLNames.BusHVACHeatPumpCooling, aux.HVACAux.HeatPumpTypeCoolingDriverCompartment.GetLabel()),
+					GetLabelElement(XMLNames.BusHVACHeatPumpHeating, aux.HVACAux.HeatPumpTypeHeatingDriverCompartment.GetLabel())),
+				new XElement(tns + XMLNames.Bus_HeatPumpTypePassenger,
+					GetLabelElement(XMLNames.BusHVACHeatPumpCooling, aux.HVACAux.HeatPumpTypeCoolingPassengerCompartment.GetLabel()),
+					GetLabelElement(XMLNames.BusHVACHeatPumpHeating, aux.HVACAux.HeatPumpTypeHeatingPassengerCompartment.GetLabel())),
+			};
+			
+			var elements = new List<XElement>();
+			elements.AddRange(groupElements);
+			elements.Add(new XElement(tns + XMLNames.Bus_AuxiliaryHeaterPower, aux.HVACAux.AuxHeaterPower?.ToXMLFormat(0)));
+			elements.Add(new XElement(tns + XMLNames.Bus_DoubleGlazing, aux.HVACAux.DoubleGlazing));
+			elements.Add(new XElement(tns + XMLNames.Bus_AdjustableAuxiliaryHeater, aux.HVACAux.AdjustableAuxiliaryHeater));
+			elements.Add(new XElement(tns + XMLNames.Bus_SeparateAirDistributionDucts, aux.HVACAux.SeparateAirDistributionDucts));
+
+			return new XElement(tns + "HVAC", elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray());
+		}
+
+		public XElement GetEVHVACBusAuxiliaryDescription(IBusAuxiliariesDeclarationData aux)
+		{
+			var elements = new List<XElement>() {
+				new XElement(tns + XMLNames.Bus_WaterElectricHeater, aux.HVACAux.WaterElectricHeater),
+				new XElement(tns + XMLNames.Bus_AirElectricHeater, aux.HVACAux.AirElectricHeater),
+				new XElement(tns + XMLNames.Bus_OtherHeatingTechnology, aux.HVACAux.OtherHeatingTechnology)
+			};
+
+			return new XElement(tns + "HVAC", elements.Where(xEl => !xEl.Value.IsNullOrEmpty()).ToArray());
 		}
 
 		private object[] GetCommonDescription(CombustionEngineData data)
@@ -1012,6 +1270,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public IManufacturerReport ManufacturerRecord { protected get; set; }
 
 		public IVectoHash ManufacturerRecordHash { protected get; set; }
+
+		public IVectoHash CustomerFileHash { protected get; set; }
+
+		public IVectoHash PrimaryVIFHash { protected get; set; }
+		
+		public IVectoHash CompletedVIFHash { protected get; set; }
+		
+		public VTPOBFCMDeclarationData OBFCMDeclarationInputData { protected get; set; }
 
 		#endregion
 	}

@@ -35,7 +35,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
@@ -46,23 +45,72 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV14_MultiplePowertrains : JSONVehicleDataV9
+	public class JSONVehicleDataV14_MultiplePowertrains : JSONVehicleData_EV
 	{
 		private IList<IAxlePowertrainEngineeringInputData> _axlePowertrains;
+		private JSONElectricStorageSystemEngineeringInputData _batteries;
+		private ElectricMachineEntry<IElectricMotorEngineeringInputData> _generator;
+        private IFuelCellSystemEngineeringInputData _fuelCellSystem;
 
-		public JSONVehicleDataV14_MultiplePowertrains(
+        public JSONVehicleDataV14_MultiplePowertrains(
 			JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) :
 				base(json, filename, job, tolerateMissing)
-		{}
+		{
+			if (!VehicleType.IsMultiplePowertrains())
+			{
+				throw new VectoException($"PowertrainConfiguration must be one of: " +
+					$"{VectoSimulationJobType.Multiple_PEV}, {VectoSimulationJobType.Multiple_FCHV}, {VectoSimulationJobType.Multiple_SHEV}");
+			}
+		}
 
 		public override VectoSimulationJobType VehicleType => Body.GetEx<string>("PowertrainConfiguration").ParseEnum<VectoSimulationJobType>();
 
-		public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData =>
+        public override IFuelCellSystemEngineeringInputData FuelCellSystemInputData =>
+            _fuelCellSystem ?? (_fuelCellSystem = (Body[JsonKeys.FuelCell_FuelCellSystem] != null)  ? JSONVehicleData_FCHV.ReadFuelCellSystem(Body, BasePath) : null);
+
+        public override IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => 
 			_axlePowertrains ?? (_axlePowertrains = GetAxlePowertrains());
+
+		public override ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering =>
+			_generator ?? (_generator = GetGenerator());
+
+		private ElectricMachineEntry<IElectricMotorEngineeringInputData> GetGenerator()
+		{
+			var generator = Body["Generator"];
+
+			return (generator == null)
+				? null
+				: new ElectricMachineEntry<IElectricMotorEngineeringInputData>
+				{
+					Position = PowertrainPositionHelper.Parse(generator.GetEx<string>(JsonKeys.Vehicle_EM_Position)),
+					RatioADC = generator.GetEx<double>(JsonKeys.Vehicle_EM_Ratio),
+					MechanicalTransmissionLossMap = ReadTable(generator, JsonKeys.Vehicle_EM_MechTransLossMap, JTokenBase.TableType.EM_ADC_LossMap),
+					Count = generator.GetEx<int>(JsonKeys.Vehicle_EM_Count),
+
+					RatioPerGear = (generator[JsonKeys.Vehicle_EM_RatioPerGear] != null)
+									? generator[JsonKeys.Vehicle_EM_RatioPerGear].Select(x => x.Value<double>()).ToArray()
+									: new double[] { },
+
+					MechanicalTransmissionEfficiency = (generator[JsonKeys.Vehicle_EM_MechEff] != null)
+									? generator.GetEx<double>(JsonKeys.Vehicle_EM_MechEff)
+									: double.NaN,
+
+					ElectricMachine = JSONInputDataFactory.ReadElectricMotorData(
+							Path.Combine(BasePath, generator.GetEx<string>(JsonKeys.Vehicle_EM_MotorFile)), false)
+				};
+		}
+
+		protected TableData ReadTable(JToken token, string fieldName, JTokenBase.TableType tableType)
+		{
+			var tableFile = token?[fieldName]?.Value<string>();
+
+			return string.IsNullOrWhiteSpace(tableFile)
+				? null
+				: ReadTableData(tableFile, tableType.ToString().Replace("_", " "));
+		}
 
 		private IList<IAxlePowertrainEngineeringInputData> GetAxlePowertrains()
 		{
@@ -80,6 +128,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 
 			return axlePowertrains;
+		}
+
+		protected override IElectricStorageSystemEngineeringInputData GetElectricStorage()
+		{
+			return _batteries ?? (_batteries = ReadBatteries());
 		}
 
 	}
@@ -145,6 +198,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public JSONVehicleDataV12_FCHV(JObject json, string filename, IJSONVehicleComponents job, bool tolerateMissing) : base(json, filename, job, tolerateMissing) {
 
+		}
+
+		public override ArchitectureID ArchitectureID
+		{
+			get
+			{
+				return VehicleType.GetArchitectureID(GetElectricMachines().Entries.First(e => e.Position != PowertrainPosition.GEN).Position);
+			}
 		}
 
 		#region Overrides of JSONVehicleDataV7
@@ -265,8 +326,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
         #endregion
     }
 
-	public class JSONVehicleDataV10_HEV_BEV :  JSONVehicleDataV9, IVehicleEngineeringInputData
+	public class JSONVehicleData_EV : JSONVehicleDataV9
 	{
+		public JSONVehicleData_EV(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
+			base(data, fileName, job, tolerateMissing)
+		{ }
+
+		public override double InitialSOC => Body.GetEx<double>("InitialSoC") / 100.0;
+
+		protected virtual JSONElectricStorageSystemEngineeringInputData ReadBatteries()
+		{
+			var entries = new List<IElectricStorageEngineeringInputData>();
+			if (Body["Batteries"] != null)
+			{
+				foreach (var entry in Body["Batteries"])
+				{
+					entries.Add(new JSONElectricStorageEngineeringInputData
+					{
+						Count = entry.GetEx<int>("NumPacks"),
+						StringId = entry.GetEx<int>("StreamId"),
+						REESSPack = JSONInputDataFactory.ReadREESSData(
+							Path.Combine(BasePath, entry.GetEx<string>("BatteryFile")), false)
+					});
+				}
+			}
+			else
+			{
+				entries.Add(new JSONElectricStorageEngineeringInputData
+				{
+					Count = Body["Battery"].GetEx<int>("NumPacks"),
+					StringId = 0,
+					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
+				});
+			}
+
+			return new JSONElectricStorageSystemEngineeringInputData(entries);
+		}
+	}
+
+	public class JSONVehicleDataV10_HEV_BEV : JSONVehicleData_EV, IVehicleEngineeringInputData
+    {
 		private JSONElectricStorageSystemEngineeringInputData _batteries;
 		private JSONElectricMotors _electricMotors;
 
@@ -305,9 +404,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public override VectoSimulationJobType VehicleType => ParsePowertrainType(Body, "PowertrainConfiguration");
+        public override VectoSimulationJobType VehicleType
+        {
+            get
+            {
+                switch (Body.GetEx<String>("PowertrainConfiguration"))
+                {
+                    case "ParallelHybrid": return VectoSimulationJobType.ParallelHybridVehicle;
+                    case "BatteryElectric": return VectoSimulationJobType.BatteryElectricVehicle;
+                    case "SerialHybrid": return VectoSimulationJobType.SerialHybridVehicle;
+                    case "IEPC_E":
+                    case "IEPC": return VectoSimulationJobType.IEPC_E;
+                    case "IEPC_S":
+                    case "IEPC-S": return VectoSimulationJobType.IEPC_S;
+                    case "IHPC": return VectoSimulationJobType.IHPC;
+                    default: throw new VectoException("Invalid parameter value {0}", Body.GetEx<String>("PowertrainConfiguration"));
+                }
+            }
+        }
 
-		protected virtual JSONElectricMotors ReadMotors()
+        protected virtual JSONElectricMotors ReadMotors()
 		{
 			var retVal = new List<ElectricMachineEntry<IElectricMotorEngineeringInputData>>();
 			if (Body["ElectricMotors"] != null) {
@@ -361,30 +477,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
                 default:
 					return base.GetADAS();
 			}
-		}
-
-
-		protected virtual JSONElectricStorageSystemEngineeringInputData ReadBatteries()
-		{
-			var entries = new List<IElectricStorageEngineeringInputData>();
-			if (Body["Batteries"] != null) {
-				foreach (var entry in Body["Batteries"]) {
-					entries.Add(new JSONElectricStorageEngineeringInputData {
-						Count = entry.GetEx<int>("NumPacks"),
-						StringId = entry.GetEx<int>("StreamId"),
-						REESSPack = JSONInputDataFactory.ReadREESSData(
-							Path.Combine(BasePath, entry.GetEx<string>("BatteryFile")), false)
-					});
-				}
-			} else {
-				entries.Add(new JSONElectricStorageEngineeringInputData {
-					Count = Body["Battery"].GetEx<int>("NumPacks"),
-					StringId = 0,
-					REESSPack = JSONInputDataFactory.ReadREESSData(Path.Combine(BasePath, Body["Battery"].GetEx<string>("BatteryFile")), false)
-				});
-			}
-
-			return new JSONElectricStorageSystemEngineeringInputData(entries);
 		}
 
 		//public override Dictionary<PowertrainPosition, List<Tuple<Volt, TableData>>> ElectricMotorTorqueLimits =>
@@ -539,6 +631,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string VIN => Constants.NOT_AVAILABLE;
 
+		public string VerificationToolLicenseNumber => Constants.NOT_AVAILABLE;
+
 		public virtual LegislativeClass? LegislativeClass =>
 			Body["LegislativeClass"]?.Value<string>().ParseEnum<LegislativeClass>() ?? VectoCommon.Models.LegislativeClass.Unknown;
 
@@ -617,6 +711,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double InitialSOC => double.NaN;
 
 		public virtual IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData => null;
+
+		public virtual ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering => null;
 
 		public virtual IVehicleInMotionChargingDeclaration InMotionCharging => GetIMC(); //GetInMotionCharging();
 
@@ -729,7 +825,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         public IList<IAxlePowertrainDeclarationInputData> AxlePowertrainInputData { get; }
 
-        public ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
+        public virtual ElectricMachineEntry<IElectricMotorDeclarationInputData> Generator { get; }
 
         IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels => this;
 
@@ -878,7 +974,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual DynamicChargingTechnology DynamicChargingTechnology => (Body["DynamicChargingTechnology"] != null)
 			? DynamicChargingTechnologyHelper.Parse(Body.GetEx<string>("DynamicChargingTechnology"))
 			: DynamicChargingTechnology.None;
-    }
+	}
 
 
 

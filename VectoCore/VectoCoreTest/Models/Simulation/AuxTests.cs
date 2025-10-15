@@ -33,12 +33,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -53,7 +52,8 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using DummyDriverInfo = TUGraz.VectoCore.Tests.Utils.DummyDriverInfo;
+using MockDrivingCycle = TUGraz.VectoCore.Tests.Utils.MockDrivingCycle;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -125,11 +125,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						Technology = new[] {"Default"}.ToList(),
 						PowerDemandMech = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand
 					},
-				}
-        };
-			var modData = new ModalDataContainer(runData, fileWriter, null) {
-				WriteModalResults = true,
-			};
+				},
+				ExecutionMode = ExecutionMode.Engineering,
+            };
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			var modData = kernel.Get<IModalDataFactory>().CreateModDataContainer(runData, fileWriter, null, null) as ModalDataContainer;
+			Assert.NotNull(modData);
+			modData.WriteModalResults = true;
 			modData.Data.CreateColumns(ModalResults.DistanceCycleSignals);
 			
 			modData.Data.CreateCombustionEngineColumns(runData);
@@ -180,7 +182,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxWriteModFileSumFile.vsum");
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -213,7 +216,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();

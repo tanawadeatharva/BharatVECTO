@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoMockup
 {
@@ -23,16 +18,11 @@ namespace TUGraz.VectoMockup
 		#region Overrides of XMLInputDataFactory
 
 
-		protected override IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source)
+		protected override IMultistepBusInputDataProvider ReadMultistageDeclarationJob(XmlDocument xmlDoc, string source, bool allowDeprecated)
 		{
-			var ret =  base.ReadMultistageDeclarationJob(xmlDoc, source);
+			var ret =  base.ReadMultistageDeclarationJob(xmlDoc, source, allowDeprecated);
 
 			return ret;
-		}
-
-		protected override IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
-		{
-			throw new VectoException("Engineering Mode is not supported in Mockup Vecto");
 		}
 
 		protected override IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, bool allowDeprecated)

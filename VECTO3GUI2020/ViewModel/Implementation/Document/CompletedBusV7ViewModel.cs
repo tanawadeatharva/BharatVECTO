@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
@@ -84,6 +80,8 @@ namespace VECTO3GUI2020.ViewModel.Implementation.Document
 
 		public bool SimulateResultingVIF => _inputData.SimulateResultingVIF;
 
-		#endregion
-	}
+        public string MonitoringData => _inputData.VehicleInputData.VehicleMonitoringData;
+
+        #endregion
+    }
 }

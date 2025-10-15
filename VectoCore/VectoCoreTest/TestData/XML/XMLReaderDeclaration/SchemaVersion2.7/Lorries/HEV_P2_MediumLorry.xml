@@ -34,7 +34,7 @@
 		<ArchitectureID>P2</ArchitectureID>
 		<OVC>true</OVC>
 		<BatteryOnlyMode>true</BatteryOnlyMode>
-		<DynamicChargingTechnology>Overhead trolley</DynamicChargingTechnology>
+		<DynamicChargingTechnology>Wireless</DynamicChargingTechnology>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
 			<PredictiveCruiseControl>1,2,3</PredictiveCruiseControl>

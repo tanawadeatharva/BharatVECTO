@@ -14,15 +14,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
-			IBusAuxiliariesDeclarationData busAuxData, 
-			MissionType mission, 
-			VehicleClass hvdClass, 
+			IBusAuxiliariesDeclarationData busAuxData,
+			MissionType mission,
+			VehicleClass hvdClass,
 			Meter vehicleLength,
-			int? numSteeredAxles, 
-			VectoSimulationJobType jobType)
+			int? numSteeredAxles,
+			VectoSimulationJobType jobType, bool batteryOnlyHybridMode)
 		{
 			CheckDeclarationMode(auxInputData, "AuxiliariesData");
-			return DoCreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength, numSteeredAxles, jobType);
+			return DoCreateAuxiliaryData(auxInputData, busAuxData, mission, hvdClass, vehicleLength, numSteeredAxles, jobType, batteryOnlyHybridMode);
 		}
 
 		public abstract AuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData primaryVehicle, VectoRunData runData);
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 		protected abstract IList<VectoRunData.AuxData> DoCreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData,
 			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hdvClass, Meter vehicleLength,
-			int? numSteeredAxles, VectoSimulationJobType jobType);
+			int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
 
 		protected static bool CreateConditioningAux(VectoSimulationJobType jobType)
 		{

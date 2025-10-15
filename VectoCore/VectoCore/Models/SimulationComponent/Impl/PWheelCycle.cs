@@ -33,19 +33,26 @@ using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public interface IPWheelCycle : IDriverInfo, IVehicleInfo, ITnInProvider
+    {
+
+	}
+
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IVehicleInfo
+	public class PWheelCycle : PowertrainDrivingCycle, IPWheelCycle
 	{
 		protected bool FirstRun = true;
 		protected readonly VectoRunData RunData;
@@ -91,9 +98,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Initialize()
 		{
-			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxCtl != null)) {
-				DataBus.GearboxCtl.GearShiftTriggered -= GearShiftTriggered;
-				DataBus.GearboxCtl.GearShiftTriggered += GearShiftTriggered;
+			if ((RunData.JobType == VectoSimulationJobType.BatteryElectricVehicle) && (DataBus.GearboxesCtl.Count() > 0)) {
+				DataBus.GearboxesCtl.First().GearShiftTriggered -= GearShiftTriggered;
+				DataBus.GearboxesCtl.First().GearShiftTriggered += GearShiftTriggered;
             }
 
 			if (FirstRun) {
@@ -203,7 +210,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverBehavior = DrivingBehavior.Braking;
 			}
 			else {
-				DrivingAction = DataBus.GearboxInfo.GearEngaged(DataBus.AbsTime) ? DrivingAction.Accelerate : DrivingAction.Roll;
+				DrivingAction = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber).GearEngaged(DataBus.AbsTime) 
+					? DrivingAction.Accelerate 
+					: DrivingAction.Roll;
+
 				DriverBehavior = DrivingBehavior.Driving;
 			}
 		}

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Extensions.Factory;
-using Ninject.Modules;
+﻿using Ninject.Extensions.Factory;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -12,8 +7,6 @@ using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunData
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.HeavyLorryRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.SingleBus;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.Reader
@@ -23,6 +16,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private VehicleTypeAndArchitectureStringHelperRundata _vehicleStringHelper = new VehicleTypeAndArchitectureStringHelperRundata();
 
+		private UseFirstArgumentStringHelper _useFirstArgHelper = new UseFirstArgumentStringHelper();
 
 		#region Overrides of NinjectModule
 
@@ -32,30 +26,69 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 
 			Bind<IInternalRunDataFactoryFactory>().ToFactory(
-					() => new CombineArgumentsToNameInstanceProvider(
-							new CombineArgumentsToNameInstanceProvider.MethodSettings() {
-								combineToNameDelegate = _vehicleStringHelper.CreateName,
-								methods = new [] { 
-									typeof(IInternalRunDataFactoryFactory)
-										.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationRunDataFactory)), 
-									typeof(IInternalRunDataFactoryFactory)
-										.GetMethod(nameof(IInternalRunDataFactoryFactory
-											.CreateDeclarationCompletedBusRunDataFactory)),
-									typeof(IInternalRunDataFactoryFactory)
-									.GetMethod(nameof(IInternalRunDataFactoryFactory
-									.CreateSingleBusRunDataFactory))
-								},
-								skipArguments = 1,
-								takeArguments = 1,
-							}
-						)).InSingletonScope();
+				() => new CombineArgumentsToNameInstanceProvider(
+					new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+						combineToNameDelegate = _vehicleStringHelper.CreateName,
+						methods = new[] {
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory
+									.CreateDeclarationRunDataFactory)),
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory
+									.CreateDeclarationCompletedBusRunDataFactory)),
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory
+									.CreateSingleBusRunDataFactory)),
+						},
+						skipArguments = 1,
+						takeArguments = 1,
+					},
+					new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+						combineToNameDelegate = _useFirstArgHelper.CreateName,
+						methods = new[] {
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory.CreateEngineeringRunDataFactory)),
+							typeof(IInternalRunDataFactoryFactory).GetMethod(nameof(IInternalRunDataFactoryFactory
+								.CreateEngineOnlyRunDataFactory))
+						},
+						skipArguments = 1,
+						takeArguments = 1,
+					},
+					new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+						combineToNameDelegate = CreateVtpRunDataFactoryNameDecl,
+						methods = new[] {
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory.CreateDeclarationVTPRunDataFactory)),
+						},
+						skipArguments = 1,
+						takeArguments = 1,
+					},
+					new CombineArgumentsToNameInstanceProvider.MethodSettings() {
+						combineToNameDelegate = CreateVtpRunDataFactoryNameEng,
+						methods = new[] {
+							typeof(IInternalRunDataFactoryFactory)
+								.GetMethod(nameof(IInternalRunDataFactoryFactory.CreateEngineeringVTPRunDataFactory)),
+						},
+						skipArguments = 1,
+						takeArguments = 1,
+					}
+				)).InSingletonScope();
+
+			#region EngineeringMode
+
+			Bind<IVectoRunDataFactory>().To<EngineeringModeVectoRunDataFactory>().Named(EngineeringModeVectoRunDataFactory.Name);
+			Bind<IVectoRunDataFactory>().To<EngineOnlyVectoRunDataFactory>().Named(EngineOnlyVectoRunDataFactory.Name);
+
+			// the actual vehicle category is currently not relevant, the only differentiation is lorry vs bus
+            Bind<IVectoRunDataFactory>().To<EngineeringVTPModeVectoRunDataFactoryLorries>().Named(VtpRunDataFactoryName(ExecutionMode.Engineering, VehicleCategory.RigidTruck));
+			Bind<IVectoRunDataFactory>().To<EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary>().Named(VtpRunDataFactoryName(ExecutionMode.Engineering, VehicleCategory.HeavyBusPrimaryVehicle));
+
+            #endregion
+
+            #region Lorries
 
 
-			#region Lorries
-
-			
-			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.Conventional>().Named(
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.Conventional>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ConventionalVehicle));
 
 			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_S2>().Named(
@@ -90,7 +123,43 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.FCHV_IEPC,
 				ArchitectureID.F_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_P1>().Named(
+			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E2));
+            
+			Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeHeavyLorryRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.Lorry, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P1));
 
@@ -168,7 +237,43 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.FCHV_IEPC,
 					ArchitectureID.F_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P1>().Named(
+			Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultiplePEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_PEV, ArchitectureID.E_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleFCHV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_FCHV, ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S2));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S3));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S4));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.MultipleSHEV>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.Multiple_SHEV, ArchitectureID.S_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModePrimaryBusRunDataFactory.HEV_P1>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.PrimaryBus, VectoSimulationJobType.ParallelHybridVehicle,
 					ArchitectureID.P1));
 
@@ -260,7 +365,22 @@ namespace TUGraz.VectoCore.InputData.Reader
 			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.PEV_E_IEPC>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
-			Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.Exempted>().Named(
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F2>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F2));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F3>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F3));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_F4>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV,
+                    ArchitectureID.F4));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.FCHV_IEPC>().Named(
+                _vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, VectoSimulationJobType.FCHV_IEPC,
+                    ArchitectureID.F_IEPC));
+
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeCompletedBusRunDataFactory.Exempted>().Named(
 				_vehicleStringHelper.GetName(VehicleCategoryHelper.CompletedBus, true));
 			#endregion
 
@@ -313,11 +433,61 @@ namespace TUGraz.VectoCore.InputData.Reader
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.IEPC_E,
 					ArchitectureID.E_IEPC));
 
-			Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F2>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+					ArchitectureID.F2));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F3>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+                    ArchitectureID.F3));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_F4>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV,
+                    ArchitectureID.F4));
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.FCHV_IEPC>().Named(
+                _vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.FCHV_IEPC,
+                    ArchitectureID.F_IEPC));
+
+            Bind<IVectoRunDataFactory>().To<DeclarationModeSingleBusRunDataFactory.Exempted>().Named(
 				_vehicleStringHelper.GetSingleBusName(VectoSimulationJobType.ConventionalVehicle,
 					ArchitectureID.UNKNOWN, true));
-            #endregion
+
+			#endregion
+
+			#region VTP
+
+			// the actual vehicle category is currently not relevant, the only differentiation is lorry vs bus
+
+			Bind<IVectoRunDataFactory>().To<DeclarationVTPModeVectoRunDataFactoryLorries>()
+				.Named(VtpRunDataFactoryName(ExecutionMode.Declaration, VehicleCategory.RigidTruck));
+
+			Bind<IVectoRunDataFactory>().To<DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary>()
+				.Named(VtpRunDataFactoryName(ExecutionMode.Declaration, VehicleCategory.HeavyBusPrimaryVehicle));
+
+			#endregion
+		}
+
+		private string CreateVtpRunDataFactoryNameDecl(object[] arguments)
+		{
+			if (arguments.Length == 1 && arguments[0] is VehicleCategory vcat) {
+				return VtpRunDataFactoryName(ExecutionMode.Declaration, vcat);
+			}
+
+			throw new VectoException("Unknown argument for VTP RunDataFactory Name");
+		}
+
+		private string CreateVtpRunDataFactoryNameEng(object[] arguments)
+		{
+			if (arguments.Length == 1 && arguments[0] is VehicleCategory vcat) {
+				return VtpRunDataFactoryName(ExecutionMode.Engineering, vcat);
+			}
+
+			throw new VectoException("Unknown argument for VTP RunDataFactory Name");
+		}
+
+        private string VtpRunDataFactoryName(ExecutionMode mode, VehicleCategory vcat)
+		{
+			return $"{mode}_{(vcat.IsLorry() ? "VTPLorry" : "VTPBus")}";
         }
+
 		#endregion
 
 

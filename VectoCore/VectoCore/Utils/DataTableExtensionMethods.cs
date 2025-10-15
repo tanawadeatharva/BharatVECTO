@@ -37,6 +37,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -51,6 +52,21 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 			return defaultValue;
+		}
+
+		public static bool TryParseDouble(this DataRow row, string columnName, out double output)
+		{
+			if (row.Table.Columns.Contains(columnName))
+			{
+				if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+				{
+					output = result;
+					return true;
+				}
+			}
+
+			output = default;
+			return false;
 		}
 
 		public static IEnumerable<DataRow> Where(this DataTable self, Func<DataRow, bool> predicate) =>
@@ -156,6 +172,11 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return source;
+		}
+
+		public static string FormatAxleNumber(this int axleNumber)
+		{
+			return (axleNumber == Constants.NOT_IN_AXLE_POWERTRAIN) ? "" : $"_axl{axleNumber}";
 		}
 	}
 }

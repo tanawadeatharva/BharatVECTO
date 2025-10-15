@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -258,6 +258,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 
 	}
+	
+	public class DeratedVoltageLevelData : ElectricMotorVoltageLevelData
+	{
+		public DeratedVoltageLevelData(PerSecond maxSpeed)
+		{
+			_maxSpeed = maxSpeed;
+		}
+		
+		#region Overrides of ElectricMotorVoltageLevelData
+		public override EfficiencyMap.EfficiencyResult LookupElectricPower(PerSecond avgSpeed, NewtonMeter torque, uint gear, bool allowExtrapolation)
+		{
+			throw new NotImplementedException();
+		}
+		public override NewtonMeter LookupTorque(Watt electricPower, PerSecond avgSpeed, NewtonMeter maxEmTorque, uint gear)
+		{
+			throw new NotImplementedException();
+		}
+		public override NewtonMeter FullLoadDriveTorque(PerSecond avgSpeed, uint gear)
+		{
+			throw new NotImplementedException();
+		}
+		public override NewtonMeter FullGenerationTorque(PerSecond avgSpeed, uint gear)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+	}
+
+	
 
 	public class OverloadData
 	{

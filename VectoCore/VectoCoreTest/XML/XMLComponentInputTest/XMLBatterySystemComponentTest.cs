@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -19,9 +12,8 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
@@ -49,6 +41,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 
 		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName ="XMLBatterySystemData InternalResistance Measured")]
 		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+		[Category(Definitions.TESTCASE_MIGRATED)]
         public void BatterySystemInternalResistanceTest(string fileName, Type expectedType)
 		{
 			var path = GetFullPath(BASEDIRComponent, fileName);
@@ -72,8 +65,9 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 
 		}
 
-		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName = "XMLBatterySystemData InternalResistance Measured")]
-		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData InternalResistance StandardValues")]
+		[TestCase("BatterySystem_1.xml", typeof(XMLBatteryPackDeclarationInputDataMeasuredV23), TestName = "XMLBatterySystemData MaxCurrent Measured")]
+		[TestCase("BatterySystem_StdValues.xml", typeof(XMLBatteryPackDeclarationInputDataStandardV23), TestName = "XMLBatterySystemData MaxCurrent StandardValues")]
+		[Category(Definitions.TESTCASE_MIGRATED)]
 		public void BatterySystemMaxCurrentTest(string fileName, Type expectedType)
 		{
 			var path = GetFullPath(BASEDIRComponent, fileName);
@@ -192,6 +186,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 		[TestCase(XMLBatteryPackDeclarationInputDataStandardV23.XSD_TYPE,
 			XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23,
 			typeof(XMLBatteryPackDeclarationInputDataStandardV23))]
+		[Category(Definitions.TESTCASE_MIGRATED)]
         public void FactoryTest(string type, string ns, Type expType)
 		{
 			XNamespace nameSpace = ns;
@@ -201,6 +196,7 @@ namespace TUGraz.VectoCore.Tests.XML.XMLComponentInputTest
 			Assert.NotNull(provider);
 
 		}
+
 		[DebuggerStepThrough]
 		public string GetFullPath(string baseDir, string fileName)
 		{

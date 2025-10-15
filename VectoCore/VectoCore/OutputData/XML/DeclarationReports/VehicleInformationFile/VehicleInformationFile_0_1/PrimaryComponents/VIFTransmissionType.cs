@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -14,15 +10,22 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFTransmissionType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFTransmissionType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFTransmissionType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.GearboxInputData);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.GearboxInputData);
+        }
+
+        public XElement GetElement(IGearboxDeclarationInputData transmission)
 		{
-			var transmission = inputData.JobInputData.Vehicle.Components.GearboxInputData;
 			if (transmission == null)
 				return null;
 
@@ -60,7 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			);
 		}
 
-		#endregion
+		
 	}
 
 

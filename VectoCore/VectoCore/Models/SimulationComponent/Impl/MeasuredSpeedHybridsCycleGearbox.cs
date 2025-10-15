@@ -1,15 +1,16 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class MeasuredSpeedHybridsCycleGearbox : CycleGearbox, IHybridControlledGearbox
     {
-        public MeasuredSpeedHybridsCycleGearbox(IVehicleContainer container, VectoRunData runData) : base(container, runData)
+        public MeasuredSpeedHybridsCycleGearbox(IVehicleContainer container) : base(container)
         {
             LastDownshift = -double.MaxValue.SI<Second>();
             LastUpshift = -double.MaxValue.SI<Second>();
@@ -23,7 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public bool SwitchToNeutral
 		{
-			set => Disengaged = value ? DataBus.AbsTime : null;
+			set => DisengagedTstmp = value ? DataBus.AbsTime : null;
 		}
 
         protected override PerSecond CalculateInAngularSpeed(PerSecond outAngularVelocity)
@@ -35,7 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected override IResponse EngineIdleRequest(Second absTime, Second dt)
         {
             //For EM positions: P2.5, P2, IHPC, the next component is the electric motor, so we use the EM speed in the request.
-            var pos = DataBus.PowertrainInfo.ElectricMotorPositions[0];
+            var em = DataBus.ElectricMotorsInfo.First(x => (x as VectoSimulationComponent).AxleNumber == AxleNumber);
+
+			var pos = em.Position;
             var useEMSpeed = (pos == PowertrainPosition.HybridP2_5 || pos == PowertrainPosition.HybridP2 || pos == PowertrainPosition.IHPC);
             
             return NextComponent.Request(
@@ -43,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 dt, 
                 0.SI<NewtonMeter>(), 
                 useEMSpeed 
-                    ? DataBus.ElectricMotorInfo(pos).ElectricMotorSpeed * ((NextGear.Gear == 0) ? 0 : ModelData.Gears[NextGear.Gear].Ratio)
+                    ? em.ElectricMotorSpeed * ((NextGear.Gear == 0) ? 0 : ModelData.Gears[NextGear.Gear].Ratio)
                     : DataBus.EngineInfo.EngineIdleSpeed, 
                 false);
         }

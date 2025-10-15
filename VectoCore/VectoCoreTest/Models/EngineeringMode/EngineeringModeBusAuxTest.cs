@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using Ninject;
@@ -14,9 +13,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
@@ -34,19 +30,16 @@ using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
-using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricSystem;
 
 namespace TUGraz.VectoCore.Tests.Models.EngineeringMode
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class EngineeringModeBusAuxTest
 	{

@@ -33,6 +33,11 @@
 	27-05-2025: Making new fields of completed buses optional (multiple OEMs can be involved in completed buses).
 	17-06-2025: Removed NgTankSystem from multiple-SHEV Primary Bus.
 	17-06-2025: Removed Retarder from components of X4 architectures.
+	17-06-2025: Set correct RetarderType for multiple powertrains retarder type.
+	15-07-2025: Removed redundant types: Vehicle_Multiple_SHEV_CompletedBusDeclarationType, Vehicle_Multiple_PEV_CompletedBusDeclarationType,
+		Vehicle_Multiple_FCHV_CompletedBusDeclarationType.
+	23-07-2025: FCHV Completed Bus: H2 properties appear both or not at all.
+	04-08-2025: Added missing type: AirDragModifiedUseStandardValueType.
 	-->
 
 	<!--                      JOB                           -->
@@ -1549,29 +1554,16 @@
 							<xs:documentation>P352 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType" minOccurs="0" />
-					<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType" minOccurs="0" />
+					<xs:sequence minOccurs="0">
+						<xs:element name="H2StorageUsableCapacity" type="H2StorageUsableCapacityType"/>
+						<xs:element name="HydrogenStorageTechnology" type="HydrogenStorageTechnologyType"/>
+					</xs:sequence>
 					<xs:element name="DynamicChargingTechnology" type="DynamicChargingTechnologyHeavyBusType" minOccurs="0" />
 					<xs:element name="ADAS" type="ADAS_PEV_Type" minOccurs="0"/>
 					<xs:element name="Components" type="Components_xEV_CompletedBusType" minOccurs="0"/>
 					<xs:element name="MonitoringData" type="Completed_DataType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_SHEV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_HEV_CompletedBusDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_PEV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_PEV_CompletedBusDeclarationType"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Vehicle_Multiple_FCHV_CompletedBusDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="Vehicle_FCHV_CompletedBusDeclarationType"/>
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -1901,7 +1893,6 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
 			<xs:enumeration value="Overhead pantograph"/>
-			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
@@ -1912,7 +1903,6 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
-			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
@@ -1924,6 +1914,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="None"/>
 			<xs:enumeration value="Overhead pantograph"/>
+			<xs:enumeration value="Overhead trolley"/>
 			<xs:enumeration value="Ground rail"/>
 			<xs:enumeration value="Wireless"/>
 		</xs:restriction>
@@ -2016,7 +2007,7 @@
 	</xs:complexType>
 	<xs:complexType name="RetarderOnAxleTypeType">
 		<xs:simpleContent>
-			<xs:extension base="v1.0:RetarderTypeType">
+			<xs:extension base="v2.4:RetarderTypeType">
 				<xs:attribute name="axleNumber" use="required">
 					<xs:simpleType>
 						<xs:restriction base="xs:int">
@@ -3228,7 +3219,12 @@
 			<xs:element name="ADC" type="v2.3:ADCComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-
+	<xs:complexType name="AirDragModifiedUseStandardValueType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractAirdragDataDeclarationType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<!--                   AUXILIARIES                      -->
 	<!-- Lorry -->
 	<xs:complexType name="AUX_Component_Conventional_Lorry_Type">

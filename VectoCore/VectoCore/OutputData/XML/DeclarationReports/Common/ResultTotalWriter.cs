@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile.CustomerInformationFile_0_9.ResultWriter;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 {
@@ -114,6 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.Common
 
         #region Overrides of AbstractResultWriter
 
+        [ExcludeFromCodeCoverage()] // OVC writing class is never used for writing non-OVC
         public override XElement GetElement(IResultEntry entry)
         {
             throw new NotImplementedException();

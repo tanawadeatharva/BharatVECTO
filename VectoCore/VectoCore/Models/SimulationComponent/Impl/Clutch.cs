@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -47,7 +48,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch, 
+    public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch, 
 		ITnOutPort, ITnInPort, IUpdateable
 	{
 		protected readonly PerSecond _idleSpeed;
@@ -71,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly SI _clutchSpeedSlippingFactor;
 		private IIdleController _idleController;
 
-		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
+		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			_engineFullLoadCurves = engineData.FullLoadCurves;
 			_idleSpeed = engineData.IdleSpeed;
@@ -117,7 +118,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			firstInitialize = false;
-			if ((!DataBus.ClutchInfo.ClutchClosed(absTime) || !DataBus.GearboxInfo.GearEngaged(absTime)) && !dryRun) {
+			if ((!DataBus.ClutchInfo(AxleNumber).ClutchClosed(absTime) 
+					|| !DataBus.GearboxInfo(AxleNumber).GearEngaged(absTime)) 
+				&& !dryRun) 
+			{
 				return HandleClutchOpen(absTime, dt, outTorque, outAngularVelocity, false);
 			}
 
@@ -183,8 +187,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual IResponse HandleClutchClosed(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			var startClutch = DataBus.VehicleInfo.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0, 1e-3) || (outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineSpeed, 1e-3) && !DataBus.EngineInfo.EngineOn); // || (PreviousState.ClutchLoss.IsEqual(0) && outAngularVelocity.IsSmaller(DataBus.EngineInfo.EngineIdleSpeed));
-			var slippingClutchWhenDriving = (DataBus.GearboxInfo.Gear.Gear <= 2 && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Braking);
-			var slippingClutchDuringBraking = DataBus.GearboxInfo.Gear.Gear == 1 && DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.Brakes?.BrakePower == 0.SI<Watt>();
+			var gearbox = DataBus.GearboxInfo(AxleNumber);
+
+			var slippingClutchWhenDriving = (gearbox.Gear.Gear <= 2 && DataBus.DriverInfo.DriverBehavior != DrivingBehavior.Braking);
+			var slippingClutchDuringBraking = gearbox.Gear.Gear == 1 && DataBus.DriverInfo.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.Brakes?.BrakePower == 0.SI<Watt>();
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
 			AddClutchLoss(outTorque, outAngularVelocity,
 				slippingClutchWhenDriving || slippingClutchDuringBraking || startClutch || outAngularVelocity.IsEqual(0),
@@ -198,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var prevInAngularVelocity = iceOn ? DataBus.EngineInfo.EngineSpeed : PreviousState.InAngularVelocity;
 			var avgInAngularVelocity = (prevInAngularVelocity + angularVelocityIn) / 2.0;
 			var clutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
-			if (!startClutch && !clutchLoss.IsEqual(0) && (DataBus.GearboxInfo.Gear.Gear != 1 || clutchLoss.IsSmaller(0))) {
+			if (!startClutch && !clutchLoss.IsEqual(0) && (gearbox.Gear.Gear != 1 || clutchLoss.IsSmaller(0))) {
 				// we don't want to have negative clutch losses, so adapt input torque to match the average output power
 				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
 			}
@@ -238,11 +244,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             if ((DataBus.DrivingCycleInfo.RoadGradient != null) && (DataBus.WheelsInfo != null))
 			{
-				var slipGear = Math.Min(Math.Max(DataBus.GearboxInfo?.Gear?.Gear ?? 1, 1), 2);
-				var ratioGB = DataBus.GearboxInfo?.GetGearData(slipGear)?.Ratio ?? 1.0;
-				var ratioAxl = DataBus.AxlegearInfo?.Ratio ?? 1.0;
-				var axlegearlossP = DataBus.AxlegearInfo?.AxlegearLoss() ?? 0.0.SI<Watt>();
-				var gearboxlossP = DataBus.GearboxInfo?.GearboxLoss() ?? 0.0.SI<Watt>();
+				var gearbox = DataBus.GearboxesInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber);
+				var slipGear = Math.Min(Math.Max(gearbox?.Gear?.Gear ?? 1, 1), 2);
+				var ratioGB = gearbox?.GetGearData(slipGear)?.Ratio ?? 1.0;
+				var ratioAxl = DataBus.AxlegearsInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber)?.Ratio ?? 1.0;
+				var axlegearlossP = DataBus.AxlegearsInfo.FirstOrDefault(x => x.AxleNumber == AxleNumber)?.AxlegearLoss() ?? 0.0.SI<Watt>();
+				var gearboxlossP = gearbox?.GearboxLoss() ?? 0.0.SI<Watt>();
 
 				var fWheel = DataBus.VehicleInfo.RollingResistance(DataBus.DrivingCycleInfo.RoadGradient)
                     + DataBus.VehicleInfo.SlopeResistance(DataBus.DrivingCycleInfo.RoadGradient)
@@ -329,7 +336,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual bool ClutchClosed(Second absTime)
 		{
-			return DataBus.GearboxInfo.GearEngaged(absTime);
+			return DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber).GearEngaged(absTime);
 		}
 
 		public Watt ClutchLosses => PreviousState.ClutchLoss;

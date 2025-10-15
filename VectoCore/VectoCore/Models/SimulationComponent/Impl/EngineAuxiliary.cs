@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -42,11 +41,10 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Container Class for Auxiliaries which are connected to the Engine.
-	/// </summary>
-	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
-		IAuxPort
+    /// <summary>
+    /// Container Class for Auxiliaries which are connected to the Engine.
+    /// </summary>
+    public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IEngineAuxiliary
 	{
 		protected readonly Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Second, Second, bool, Watt>>();
@@ -54,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected double EngineStopStartUtilityFactor;
 		private bool _writePTO;
 
-		public EngineAuxiliary(IVehicleContainer container) : base(container)
+		public EngineAuxiliary(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			EngineStopStartUtilityFactor = 1; // container.RunData?.DriverData?.EngineStopStart?.UtilityFactorStandstill ?? double.NaN;
 			_writePTO = container.RunData?.PTO?.ConsumerType == PTOConsumerType.mechanical;

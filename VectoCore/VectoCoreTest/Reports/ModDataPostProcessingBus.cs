@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Moq;
@@ -12,7 +11,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
@@ -33,7 +31,7 @@ using TUGraz.VectoCore.Tests.Models.Declaration.BusAux;
 namespace TUGraz.VectoCore.Tests.Reports
 {
 
-	[TestFixture]
+    [TestFixture]
 	public class ModDataPostProcessingBus
 	{
 		private const OvcHevMode CD_Mode = OvcHevMode.ChargeDepleting;
@@ -106,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>(), totalFuelConsumption: assumedFuelConsumption);
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 
@@ -257,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>(), totalFuelConsumption: assumedFuelConsumption);
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 
@@ -353,7 +351,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var mockModData = GetMockModData(runData, cycleDuration: cycleDuration.SI<Second>());
 
 			var postProcessor = _kernel.Get<IModalDataPostProcessorFactory>()
-				.GetPostProcessor(runData.JobType);
+				.GetPostProcessor(runData.JobType, false);
 
 			var corrected = postProcessor.ApplyCorrection(mockModData, runData);
 
@@ -640,19 +638,20 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			if (!runData.JobType.IsOneOf(VectoSimulationJobType.ConventionalVehicle,
 					VectoSimulationJobType.EngineOnlySimulation)
-				&& !runData.ElectricMachinesData.Any()) {
+				&& !runData.GetEMData().Any()) {
 				throw new VectoException("hybrid vehicle requires electric machine");
 			}
 
-			if (runData.ElectricMachinesData.Any(x => x.Item1 != PowertrainPosition.GEN)) {
-				m.Setup(x => x.GetColumnName(It.IsAny<PowertrainPosition>(), It.IsAny<ModalResultField>()))
+			if (runData.GetEMData().Any(x => x.Item1.Position != PowertrainPosition.GEN)) {
+				m.Setup(x => x.GetColumnName(It.IsAny<PowertrainPosition>(), It.IsAny<int>(), It.IsAny<ModalResultField>()))
 					.Returns<PowertrainPosition, ModalResultField>((pos, mrf) =>
 						string.Format(mrf.GetCaption(), pos.GetName()));
-				var emPos = runData.ElectricMachinesData.First(x => x.Item1 != PowertrainPosition.GEN).Item1;
-				SetupMockEMotorValues(emLoss, m, emPos, runData.OVCMode);
+				var emPlacement = runData.GetEMData().First(x => x.Item1.Position != PowertrainPosition.GEN).Item1;
+				SetupMockEMotorValues(emLoss, m, emPlacement.Position, emPlacement.AxleNumber, runData.OVCMode);
 
-				if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.GEN)) {
-					SetupMockEMotorValues(genLoss, m, PowertrainPosition.GEN, runData.OVCMode);
+				var emGen = runData.GetEMData().FirstOrDefault(x => x.Item1.Position == PowertrainPosition.GEN);
+				if (emGen != null) {
+					SetupMockEMotorValues(genLoss, m, emGen.Item1.Position, emGen.Item1.AxleNumber, runData.OVCMode);
 				}
 			}
 
@@ -685,17 +684,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 		private static void SetupMockEMotorValues(WattSecond emLoss, Mock<IModalDataContainer> m,
-			PowertrainPosition emPos, OvcHevMode ovcMode)
+			PowertrainPosition emPos, int axleNumber, OvcHevMode ovcMode)
 		{
-			var colName = m.Object.GetColumnName(emPos, ModalResultField.P_EM_electricMotorLoss_);
+			var colName = m.Object.GetColumnName(emPos, axleNumber, ModalResultField.P_EM_electricMotorLoss_);
 			if (emPos == PowertrainPosition.IEPC) {
-				colName = m.Object.GetColumnName(emPos, ModalResultField.P_IEPC_electricMotorLoss_);
+				colName = m.Object.GetColumnName(emPos, axleNumber, ModalResultField.P_IEPC_electricMotorLoss_);
 			}
 
 			m.Setup(x => x.TimeIntegral<WattSecond>(It.Is<string>(c => colName.Equals(c)), null))
 				.Returns(emLoss ?? 0.SI<WattSecond>());
-			m.Setup(x => x.ElectricMotorEfficiencyDrive(emPos)).Returns(0.94);
-			m.Setup(x => x.ElectricMotorEfficiencyGenerate(emPos)).Returns(0.92);
+			m.Setup(x => x.ElectricMotorEfficiencyDrive(emPos, axleNumber)).Returns(0.94);
+			m.Setup(x => x.ElectricMotorEfficiencyGenerate(emPos, axleNumber)).Returns(0.92);
 			SetupMockBatteryValues(m, ovcMode);
 		}
 

@@ -3,24 +3,19 @@
 //#define singlethreaded
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Moq;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -28,7 +23,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -36,11 +30,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
-using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.TestUtils;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -232,7 +224,7 @@ public class LorrySimulation
 
 		var columnsWithoutUnitHashSet = new HashSet<string>();
 		foreach (var col in columnsWithoutUnit) {
-			var emPositions = run.GetContainer().PowertrainInfo.ElectricMotorPositions;
+			var emPositions = run.GetContainer().ElectricMotorsInfo.Select(x => x.Position);
 			foreach (var emPosition in emPositions) {
 				columnsWithoutUnitHashSet.Add(string.Format(col, emPosition.GetLabel()));
 			}
@@ -844,6 +836,7 @@ public class LorrySimulation
 
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 413.75, -1396.825, -61756.61)]
 	[TestCase(@"HeavyLorry/PEV/Group5_ PEV_IEPC_E-EffCorrection.xml", 827.50, 161.085, 13679.79)]
+	[Category(Definitions.TESTCASE_MIGRATED)]
     public void TestIEPC_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
@@ -887,6 +880,7 @@ public class LorrySimulation
 
 	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 25, -1050, -2804.993)]
 	[TestCase(@"HeavyLorry/P-HEV/Group5_HEV_P2_EM-EffCorrection.xml", 255, 1050, 27477.94)]
+	[Category(Definitions.TESTCASE_MIGRATED)]
 	public void TestEM_EfficiencyCorrection(string jobFile, double rpm, double tq, double expectedPel)
 	{
 		var jobContainer = GetJobContainer(jobFile, null, out var fileWriter, out var runs, out var sumDataContainer,
@@ -1407,7 +1401,7 @@ public class LorrySimulation
 	//runs.First().GetContainer().PowertrainInfo.ElectricMotorPositions;
 	public void AssertSHEV_PEV_Conditioning(DataRow modDataRow, IVectoRun run)
 	{
-		var electricMotorPositions = run.GetContainer().PowertrainInfo.ElectricMotorPositions;
+		var electricMotorPositions = run.GetContainer().ElectricMotorsInfo.Select(x => x.Position);
 		var position = electricMotorPositions.Single(e => e != PowertrainPosition.GEN);
 
 		var hasGen = electricMotorPositions.Any(e => e == PowertrainPosition.GEN);

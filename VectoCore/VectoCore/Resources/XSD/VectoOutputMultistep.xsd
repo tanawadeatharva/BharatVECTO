@@ -9,5 +9,6 @@
 >
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v0.1" schemaLocation="VectoOutputMultistep.0.1.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v1.0" schemaLocation="VectoOutputMultistep.1.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:VehicleInterimFile:v1.1" schemaLocation="VectoOutputMultistep.1.1.xsd"/>
 
 </xs:schema>

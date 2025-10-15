@@ -3,8 +3,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>LicenceHeader</RootNamespace>
     <AssemblyName>LicenceHeader</AssemblyName>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
   </PropertyGroup>
   <ItemGroup>
     <None Update="header.txt">

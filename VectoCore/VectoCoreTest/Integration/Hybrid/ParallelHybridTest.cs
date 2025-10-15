@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using Moq;
 using Ninject;
 using NUnit.Framework;
@@ -11,6 +12,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -24,17 +27,20 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Shiftstrategies;
 using TUGraz.VectoCore.Models.SimulationComponent.Strategies;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Tests.Utils.Ninject;
 using TUGraz.VectoCore.Utils;
-using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.ElectricSystem;
+using ElectricSystem = TUGraz.VectoCore.Models.SimulationComponent.Impl.ElectricSystem;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 {
-	[TestFixture]
+    [TestFixture]
 	[Parallelizable(ParallelScope.All)]
 	public class ParallelHybridTest
 	{
@@ -67,6 +73,20 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 
 			_kernel = new StandardKernel(new VectoNinjectModule());
+
+			_kernel.UpdateBinding<IXMLDeclarationVehicleData>(XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV01.QUALIFIED_XSD_TYPE,
+				ctx => {
+					var mock = new Mock<XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV01>(
+						(IXMLPrimaryVehicleBusJobInputData)ctx.Parameters.ToList()[0].GetValue(ctx, ctx.Request.Target),
+						(XmlNode)ctx.Parameters.ToList()[1].GetValue(ctx, ctx.Request.Target),
+						(string)ctx.Parameters.ToList()[2].GetValue(ctx, ctx.Request.Target)
+					);
+					mock.CallBase = true;
+					mock.Setup(m => m.BatteryOnlyMode).Returns(true);
+					return mock.Object;
+				});
+
+
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_powertrainBuilder = _kernel.Get<IPowertrainBuilder>();
 			//InitGraphWriter();
@@ -1031,31 +1051,34 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 		]
 		public void P2HybridGroup2_5DriveCycle(string jobFile, int cycleIdx)
-		{ RunHybridJob(jobFile, cycleIdx); }
-
-
-		public void RunHybridJob(string jobFile, int cycleIdx, int? startDistance = null, ExecutionMode mode = ExecutionMode.Engineering)
 		{
-			var inputProvider = Path.GetExtension(jobFile) == ".xml"
-				? xmlInputReader.CreateDeclaration(jobFile)
-				: JSONInputDataFactory.ReadJsonJob(jobFile);
-			
+			RunHybridJob(jobFile, cycleIdx);
+
+		}
+
+
+		public void RunHybridJob(IInputDataProvider inputProvider, string jobFile, int cycleIdx,
+			int? startDistance = null,
+			ExecutionMode mode = ExecutionMode.Engineering)
+		{
 			var writer = new FileOutputWriter(jobFile);
 			var factory = SimulatorFactory.CreateSimulatorFactory(mode, inputProvider, writer);
 			factory.Validate = false;
 			factory.WriteModalResults = true;
+			factory.SerializeVectoRunData = true;
 
 			var sumContainer = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumContainer);
 
 			factory.SumData = sumContainer;
 
-			var run = factory.SimulationRuns().ToArray()[cycleIdx];
+			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[cycleIdx];
 
 			if (startDistance != null) {
 				//(run.GetContainer().BatteryInfo as Battery).PreviousState.StateOfCharge = 0.317781;
 				(run.GetContainer().RunData.Cycle as DrivingCycleProxy).Entries = run.GetContainer().RunData.Cycle
-					.Entries.Where(x => x.Distance >= startDistance.Value ).ToList();
+					.Entries.Where(x => x.Distance >= startDistance.Value).ToList();
 				//run.GetContainer().MileageCounter.Distance = startDistance;
 				//run.GetContainer().DrivingCycleInfo.CycleStartDistance = startDistance;
 			}
@@ -1073,9 +1096,53 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			//jobContainer.Execute();
 			//jobContainer.WaitFinished();
 			//Assert.IsTrue(jobContainer.GetProgress().All(x => x.Value.Success));
+        }
+
+        public void RunHybridJob(string jobFile, int cycleIdx, int? startDistance = null, ExecutionMode mode = ExecutionMode.Engineering)
+		{
+			var inputProvider = Path.GetExtension(jobFile) == ".xml"
+				? xmlInputReader.CreateDeclaration(jobFile)
+				: JSONInputDataFactory.ReadJsonJob(jobFile);
+			
+			RunHybridJob(inputProvider, jobFile, cycleIdx, startDistance, mode);
 		}
 
-		[
+		public void RunAllDeclarationJob(IInputDataProvider inputData, string jobName)
+		{
+			var writer = new FileOutputWriter(jobName);
+            if (inputData is IMultistepBusInputDataProvider vif) {
+				inputData = new XMLDeclarationVIFInputData(vif, null);
+			}
+			
+			var factory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Declaration, inputData, writer, null, null, true);
+			factory.WriteModalResults = true;
+			//factory.ActualModalData = true;
+			factory.Validate = false;
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+        }
+
+
+        public void RunAllDeclarationJob(string jobName)
+		{
+			//var relativeJobPath = GetFullJobPath(jobName);
+			
+			var inputData = Path.GetExtension(jobName) == ".xml"
+				? xmlInputReader.CreateDeclaration(jobName)
+				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
+				: JSONInputDataFactory.ReadJsonJob(jobName);
+			
+			RunAllDeclarationJob(inputData, jobName);
+		}
+
+        [
 			TestCase(80, 0, TestName = "Conventional DriveOff 80km/h  level"),
 		]
 		public void ConventionalVehicleDriveOff(double vmax, double slope)
@@ -1591,9 +1658,88 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			RunHybridJob(jobfile, 0);
 		}
 
-		// =================================================
 
-		public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P4_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P2_Grp9_BO-Mode.xml", 16)] // MU Low loading
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/HEV_P3_Grp9_BO-Mode.xml", 16)] // MU Low loading
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_P2_HEV_AMT_Conv.xml", 0)]
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group2_HEV_S2_BO-Mode_ovc.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/Group9_HEV_S2_BO-Mode_ovc.xml", 16)] // MU Low loading
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_S2_Base_AMT.xml", 0)]
+
+        public void TestHybridBatteryDominantMode(string jobFile, int cycleIdx)
+		{
+			if (cycleIdx < 0) {
+				RunAllDeclarationJob(jobFile);
+			} else {
+				RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
+			}
+		}
+
+		[TestCase("PrimaryCoach_E2_PEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 0)]
+		[TestCase("PrimaryCoach_E2_PEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 1)]
+		[TestCase("PrimaryCoach_P2_HEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 2)] // generic
+		[TestCase("PrimaryCoach_P2_HEV_AMT_Conv.RSLT_VIF.xml", "HEV_completedBus_2.xml", 3)] // specific
+		[TestCase("PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", "HEV_completedBus_2.xml", 2)] // specific
+		[TestCase("PrimaryCoach_S2_Base_AMT.RSLT_VIF.xml", "HEV_completedBus_2.xml", 3)] // specific
+		public void TestHybridBatteryDominantModeCompletedBus(string vif, string complete, int cycleIdx)
+		{
+			const string basePath = "TestData/Integration/HEV-BatteryDominantMode";
+
+            var completeFile = Path.Combine(basePath, complete);
+			var vifFile = Path.Combine(basePath, vif);
+			
+			var vifInput = xmlInputReader.CreateDeclaration(vifFile);
+			var completeInput = xmlInputReader.CreateDeclaration(completeFile);
+			var inputData = new XMLDeclarationVIFInputData(vifInput as IMultistepBusInputDataProvider,completeInput.JobInputData.Vehicle, false);
+
+			RunAllDeclarationJob(inputData, completeFile);
+
+			var completeVIF = completeFile.Replace(".xml", ".VIF_Report_2.xml");
+			var completeVifInput = xmlInputReader.CreateDeclaration(completeVIF);
+
+			var inputDataVif = new XMLDeclarationVIFInputData(completeVifInput as IMultistepBusInputDataProvider, null);
+			
+			RunHybridJob(inputDataVif, completeVIF, cycleIdx, mode:ExecutionMode.Declaration);
+
+		}
+
+		// these testcases are only to compare P-HEV battery only mode with PEV
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E2_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", 0)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E3_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E4_Grp5_BO-Mode.xml", -1)]
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PEV_E2_Grp9_BO-Mode.xml", 4)]
+
+		[TestCase("TestData/Integration/HEV-BatteryDominantMode/PrimaryCoach_E2_PEV_AMT_Conv.xml", 0)]
+        public void TestHybridBatteryDominantMode_PEV(string jobFile, int cycleIdx)
+		{
+			if (cycleIdx < 0) {
+				RunAllDeclarationJob(jobFile);
+			} else {
+				RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
+			}
+		}
+
+		[TestCase(@"E:\QUAM\Downloads\job_1108190_not_Working (2)\DECL_Mode\IEPC-S_Gbx3Speed+Axle\IEPC-S__Gbx3Axl.vecto", 0)]
+		public void TestMergeRequest396(string jobFile, int cycleIdx)
+		{
+			RunHybridJob(jobFile, cycleIdx, mode: ExecutionMode.Declaration);
+		}
+
+        // =================================================
+
+        public static JobContainer CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			double initialSoc, PowertrainPosition pos, double ratio, bool largeMotor = false, double pAuxEl = 0,
 			Kilogram payload = null, GearboxType gearboxType = GearboxType.NoGearbox,
 			NewtonMeter maxGearboxTorque = null, NewtonMeter boostingLimit = null, NewtonMeter topTorque = null)
@@ -1712,8 +1858,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 
 			var engine = new StopStartCombustionEngine(container, runData.EngineData);
 			var gearbox = gearboxType.AutomaticTransmission()
-				? (IHybridControlledGearbox)new ATGearbox(container, ctl.ShiftStrategy)
-				: new Gearbox(container, ctl.ShiftStrategy);
+				? (IHybridControlledGearbox)new APTGearbox(container, ctl.ShiftStrategy)
+				: new AMTGearbox(container, ctl.ShiftStrategy);
 			//var hybridStrategy = new DelegateParallelHybridStrategy();
 			ctl.Gearbox = gearbox;
 
@@ -1747,10 +1893,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(clutch)
 				.AddComponent(GetElectricMachine(PowertrainPosition.HybridP1, runData.ElectricMachinesData, container, es, ctl))
 				.AddComponent(engine, idleController);
-			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
+			//AddAuxiliaries(engine, container, runData);
 
 			if (runData.ElectricMachinesData.Any(x => x.Item1 == PowertrainPosition.HybridP1)) {
-				if (gearbox is ATGearbox atGbx) {
+				if (gearbox is IAPTGearbox atGbx) {
 					atGbx.IdleController = idleController;
 					new ATClutchInfo(container);
 				}
@@ -1843,12 +1989,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				.AddComponent(runData.AngledriveData != null ? new Angledrive(container, runData.AngledriveData) : null)
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionOutputRetarder ? new Retarder(container, 
 					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
-				.AddComponent(new Gearbox(container, new AMTShiftStrategyOptimized(container)))
+				.AddComponent(new AMTGearbox(container, new AMTShiftStrategyOptimized(container)))
 				.AddComponent(runData.Retarder.Type == RetarderType.TransmissionInputRetarder ? new Retarder(container, 
 					runData.Retarder.LossMap, runData.Retarder.Ratio) : null)
 				.AddComponent(new SwitchableClutch(container, runData.EngineData))
 				.AddComponent(engine, engine.IdleController);
-			PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
+			//PowertrainBuilderBase.AddAuxiliaries(engine, container, runData);
 
             return container;
 		}
@@ -1865,20 +2011,6 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 
-				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
-				//StartAcceleration = DeclarationData.GearboxTCU.StartAcceleration,
-				GearResidenceTime = DeclarationData.GearboxTCU.GearResidenceTime,
-				DnT99L_highMin1 = DeclarationData.GearboxTCU.DnT99L_highMin1,
-				DnT99L_highMin2 = DeclarationData.GearboxTCU.DnT99L_highMin2,
-				AllowedGearRangeUp = gbx.Type.AutomaticTransmission() ? 1 : DeclarationData.GearboxTCU.AllowedGearRangeUp,
-				AllowedGearRangeDown = gbx.Type.AutomaticTransmission() ? 1: DeclarationData.GearboxTCU.AllowedGearRangeDown,
-				LookBackInterval = DeclarationData.GearboxTCU.LookBackInterval,
-				DriverAccelerationLookBackInterval = DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
-				DriverAccelerationThresholdLow = DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
-				AverageCardanPowerThresholdPropulsion = DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
-				CurrentCardanPowerThresholdPropulsion = DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
-				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
-				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
 				RatingFactorCurrentGear = gbx.Type.AutomaticTransmission()
 					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
 					: DeclarationData.GearboxTCU.RatingFactorCurrentGear,
@@ -2114,4 +2246,5 @@ namespace TUGraz.VectoCore.Tests.Integration.Hybrid
 			};
 		}
 	}
-}
+
+	}

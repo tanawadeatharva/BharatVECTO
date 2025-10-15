@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Moq;
-using NLog.LayoutRenderers;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
 
@@ -41,8 +36,7 @@ public class BatteryDataAdapterTest
 	[TestCase(0.40, 0.60, 0.4050, 0.5950, 0.1900, VectoSimulationJobType.SerialHybridVehicle, false)]
 	[TestCase(null, null, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
 	[TestCase(0.15, 0.85, 0.2625, 0.7375, 0.4750, VectoSimulationJobType.SerialHybridVehicle, false)]
-
-
+	[Category(Definitions.TESTCASE_MIGRATED)]
 	public void GenericSOCTest(
 		double inputMinSoc,
 		double inputMaxSoc,

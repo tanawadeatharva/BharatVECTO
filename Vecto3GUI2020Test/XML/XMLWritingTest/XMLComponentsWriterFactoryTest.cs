@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Security.RightsManagement;
 using System.Xml.Linq;
-using Castle.Components.DictionaryAdapter.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCore.Utils;

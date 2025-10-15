@@ -30,15 +30,14 @@
 */
 
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl.Gearbox;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public static class ProviderExtensions
+    public static class ProviderExtensions
 	{
 		
 		public static IDriver AddComponent(this IDrivingCycleInProvider prev, IDriver next)
@@ -75,7 +74,7 @@ namespace TUGraz.VectoCore.Utils
 			return next;
 		}
 
-		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next,
+		public static ICombustionEngine AddComponent(this IPowerTrainComponent prev, ICombustionEngine next,
 			IIdleController idleController = null)
 		{
 			prev.InPort().Connect(next.OutPort());
@@ -88,7 +87,7 @@ namespace TUGraz.VectoCore.Utils
 				clutch.IdleController = idleController;
 			}
 
-			if (prev is ATGearbox atGbx) {
+			if (prev is IAPTGearbox atGbx) {
 				atGbx.IdleController = idleController;
 			}
 

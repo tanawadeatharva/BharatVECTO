@@ -5,7 +5,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -218,6 +217,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IList<IAxlePowertrainEngineeringInputData> AxlePowertrainEngineeringInputData { get; }
 
 		IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> IVehicleDeclarationInputData.ElectricMotorTorqueLimits => throw new NotImplementedException();
+		public ElectricMachineEntry<IElectricMotorEngineeringInputData> GeneratorEngineering { get; }
+
 
 		#endregion
 	}

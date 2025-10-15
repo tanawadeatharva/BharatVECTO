@@ -1,6 +1,8 @@
-﻿using TUGraz.VectoCommon.InputData;
+﻿using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -9,7 +11,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     public class MeasuredSpeedGearHybridsElectricMotor : ElectricMotor
     {
         public MeasuredSpeedGearHybridsElectricMotor(IVehicleContainer container, ElectricMotorData data, IElectricMotorControl control, 
-            PowertrainPosition position) : base(container, data, control, position)
+            PowertrainPosition position) : base(container, data, control, position, false, Constants.NOT_IN_AXLE_POWERTRAIN)
         {}
 
         public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
@@ -18,9 +20,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun, 1.0);
 			}
 
-			var gear = DataBus.GearboxInfo.Gear;
+			var gearbox = DataBus.GearboxesInfo.First(x => x.AxleNumber == AxleNumber);
+			var gear = gearbox.Gear;
 			if (gear.Gear == 0) {
-				gear = DataBus.GearboxInfo.NextGear;
+				gear = gearbox.NextGear;
 			}
 
 			var ratio = (gear.Gear > 0) ? TransmissionRatioPerGear[gear.Gear - 1] : 1;

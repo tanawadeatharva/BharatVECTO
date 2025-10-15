@@ -5,12 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -20,7 +17,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -116,18 +113,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
         protected override void CheckVehicleBatteryData(IList<IElectricStorageDeclarationInputData> electricStorages)
         {
-            if (_vehicle.ArchitectureID.IsBatteryElectricVehicle() || _vehicle.ArchitectureID.IsFuelCellVehicle() || (_vehicle.HybridElectricHDV && _vehicle.OVC))
+            if (_vehicle.ArchitectureID.IsBatteryElectricVehicle() || 
+				(_vehicle.ArchitectureID.IsFuelCellVehicle() && _vehicle.OVC && _vehicle.BatteryOnlyMode) || 
+				(_vehicle.HybridElectricHDV && _vehicle.OVC && _vehicle.BatteryOnlyMode))
             {
                 var batteries = electricStorages.Where(x => x.REESSPack.StorageType == REESSType.Battery);
 
+				var requiredForVehicles = "It is required for the following vehicles: a) Pure electric, b) Hybrid with OVC: true and BatteryOnlyMode: true.";
+
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MinSOC == null))
                 {
-                    throw new VectoException("Battery SOCmin is undefined");
+                    throw new VectoException($"Battery SOCmin is undefined. {requiredForVehicles}");
                 }
 
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).MaxSOC == null))
                 {
-                    throw new VectoException("Battery SOCmax is undefined");
+                    throw new VectoException($"Battery SOCmax is undefined. {requiredForVehicles}");
                 }
 
                 if (batteries.Any(x => (x.REESSPack as IBatteryPackDeclarationInputData).DeteriorationPerformanceRatio == null))
@@ -353,6 +354,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         public XMLBatteryPackDeclarationInputDataMeasuredV26(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
     }
 
+    // ---------------------------------------------------------------------------------------
+
     public class XMLBatteryPackDeclarationInputDataStandardV26 : AbstractBatteryPackDeclarationInputDataProvider
 	{
         public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
@@ -441,7 +444,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	public class XMLBatteryPackDeclarationInputDataStandardV01 : AbstractBatteryPackDeclarationInputDataProvider
+    public class XMLBatteryPackDeclarationInputDataMeasuredV11 : XMLBatteryPackDeclarationInputDataMeasuredV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLBatteryPackDeclarationInputDataMeasuredV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
+
+    public class XMLBatteryPackDeclarationInputDataStandardV01 : AbstractBatteryPackDeclarationInputDataProvider
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
 		public const string XSD_TYPE = "BatterySystemStandardValuesDataType";
@@ -455,6 +467,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+    public class XMLBatteryPackDeclarationInputDataStandardV11 : XMLBatteryPackDeclarationInputDataStandardV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLBatteryPackDeclarationInputDataStandardV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
 
     // ---------------------------------------------------------------------------------------
 
@@ -536,14 +557,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
         public override Ohm InternalResistance => GetDouble(XMLNames.Capacitor_InternalResistance).SI(Unit.SI.Milli.Ohm).Cast<Ohm>();
     }
 
-	// ---------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
 	public class XMLSuperCapDeclarationInputDataV01 : XMLSuperCapDeclarationInputDataV23
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		public const string XSD_TYPE = "CapacitorSystemDataType";
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public new const string XSD_TYPE = "CapacitorSystemDataType";
 
-		public static readonly string QUALIFIED_XSD_TYPE =
+		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLSuperCapDeclarationInputDataV01(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile, false) { }
@@ -555,15 +576,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	public class XMLSuperCapDeclarationInputDataV11 : XMLSuperCapDeclarationInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLSuperCapDeclarationInputDataV11(XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile) { }
+    }
+
 	//===================
 
 	public class XMLElectricStorageSystemDeclarationInputDataV01 : XMLElectricStorageSystemDeclarationInputDataV24
 	{
-		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
-		public const string XSD_TYPE = "ElectricEnergyStorageType";
-		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
+		public new const string XSD_TYPE = "ElectricEnergyStorageType";
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLElectricStorageSystemDeclarationInputDataV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
 	}
+
+    public class XMLElectricStorageSystemDeclarationInputDataV11 : XMLElectricStorageSystemDeclarationInputDataV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLElectricStorageSystemDeclarationInputDataV11(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) 
+			: base(vehicle, componentNode, sourceFile) 
+		{ }
+    }
 }

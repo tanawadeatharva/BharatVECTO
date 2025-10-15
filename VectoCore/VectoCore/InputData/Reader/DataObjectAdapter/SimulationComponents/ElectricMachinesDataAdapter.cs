@@ -11,9 +11,8 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Utils.Ninject;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 {
@@ -46,7 +45,55 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 
 		}
 
-		private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
+        public Tuple<PowertrainPosition, ElectricMotorData> CreateElectricMachine(
+            ElectricMachineEntry<IElectricMotorDeclarationInputData> em,
+            IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
+            Volt averageVoltage,
+            int axleNumber)
+		{
+            CheckTorqueLimitVoltageLevels(em, torqueLimits, axleNumber);
+			
+			return Tuple.Create(
+				em.Position,
+				CreateElectricMachine(
+					powertrainPosition: em.Position,
+					motorData: em.ElectricMachine,
+					count: em.Count,
+					adcRatio: em.RatioADC,
+					ratioPerGear: em.RatioPerGear,
+					adcLossMap: em.MechanicalTransmissionLossMap,
+					torqueLimits: torqueLimits?.FirstOrDefault(t => (t.Key.Position == em.Position) && (t.Key.AxleNumber == axleNumber)).Value, averageVoltage, null));
+        }
+
+        private void CheckTorqueLimitVoltageLevels(
+			ElectricMachineEntry<IElectricMotorDeclarationInputData> em,
+            IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits,
+			int axleNumber)
+		{
+            if (torqueLimits == null)
+            {
+                return;
+            }
+
+            var torqueLimit = torqueLimits.FirstOrDefault(x => (x.Key.Position == em.Position) && (x.Key.AxleNumber == axleNumber));
+
+            if (torqueLimit.Equals(default(KeyValuePair<EMPlacement, IList<Tuple<Volt, TableData>>>)))
+            {
+				return;
+            }
+			
+            foreach (var torqueLimitVoltageLevel in torqueLimit.Value.Select(tl => tl.Item1))
+            {
+                if (em.ElectricMachine.VoltageLevels.All(vl => vl.VoltageLevel != torqueLimitVoltageLevel))
+                {
+                    throw new VectoException(
+                        $"EM Torque Limit: Voltage level {torqueLimitVoltageLevel} not found for EM at position {torqueLimit.Key.Position}" +
+						((axleNumber != Constants.NOT_IN_AXLE_POWERTRAIN) ? $", axle {torqueLimit.Key.AxleNumber}" : ""));
+                }
+            }
+        }
+
+        private void CheckTorqueLimitVoltageLevels(IElectricMachinesDeclarationInputData electricMachines,
 			IDictionary<EMPlacement, IList<Tuple<Volt, TableData>>> torqueLimits)
 		{
 			if (torqueLimits == null) {
@@ -440,14 +487,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
 			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
 
-            //ElectricMotorRatedSpeedHelper.GetRatedSpeed(voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First().FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullDriveTorque)
-            var FullLoadCurve = voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First().FullLoadCurve;
-            // FullLoadCurve express torque and speed at the rotor level, not the output shaft
-            // note: selection might be to change in case of Multiple Torque curves
+			//ElectricMotorRatedSpeedHelper.GetRatedSpeed(voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First().FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullDriveTorque)
+			var voltageLevelData = voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First();
+            var FullLoadCurve = (voltageLevelData is IEPCVoltageLevelData iepc) && (iepc.FullLoadCurves.Count() > 0)
+				? iepc.FullLoadCurves[gear.Gear]
+				: voltageLevelData.FullLoadCurve;
 
+            // FullLoadCurve express torque and speed at the rotor level, not the output shaft
+            
             //var FullLoadEntries = voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First().FullLoadCurve.FullLoadEntries; 
             var continuousPower = continuousTorque * continuousTorqueSpeed;
-
+			
             var continuousTorqueSpeedRef = VectoMath.Min(continuousTorqueSpeed, ElectricMotorRatedSpeedHelper.GetRatedSpeed(FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullDriveTorque)); 
             var continuousTorqueSpeedRefGen = VectoMath.Min(continuousTorqueSpeed, ElectricMotorRatedSpeedHelper.GetRatedSpeed(FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullGenerationTorque));
 
@@ -511,8 +561,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
 			//var overloadTorque = (voltageEntry.OverloadTorque ?? 0.SI<NewtonMeter>()) * count / gearRatioUsedForMeasurement;
 			var overloadTestSpeed = (voltageEntry.OverloadTestSpeed ?? 0.RPMtoRad()) * gearRatioUsedForMeasurement;
 
-            var FullLoadCurve = voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First().FullLoadCurve;
-            // note: selection might be to change in case of Multiple Torque curves
+            var voltageLevelData = voltageLevel.VoltageLevels.Where(x => x.Voltage == voltageEntry.VoltageLevel).First();
+            var FullLoadCurve = (voltageLevelData is IEPCVoltageLevelData iepc) && (iepc.FullLoadCurves.Count() > 0)
+                ? iepc.FullLoadCurves[gear.Gear]
+                : voltageLevelData.FullLoadCurve;
 
             var continuousTorqueSpeedRef = VectoMath.Min(continuousTorqueSpeed, ElectricMotorRatedSpeedHelper.GetRatedSpeed(FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullDriveTorque));
             var continuousTorqueSpeedRefGen = VectoMath.Min(continuousTorqueSpeed, ElectricMotorRatedSpeedHelper.GetRatedSpeed(FullLoadCurve.FullLoadEntries, row => row.MotorSpeed, row => row.FullGenerationTorque));

@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Xml;
 using System.Xml.XPath;
 using Ninject;
@@ -52,8 +51,6 @@ using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
 using TUGraz.VectoCore.Models.Declaration.Auxiliaries;
 using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
@@ -716,7 +713,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		public const string SampleTyreXML = @"TestData/XML/XMLReaderDeclaration/SchemaVersion2.5/TyreSample.xml";
 
-		[TestCase()]
+		[TestCase(),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWheelsSupportedInXML()
 		{
 			var tyreDimensions = DeclarationData.Wheels.GetWheelsDimensions();
@@ -751,6 +749,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		TestCase("9 R12x"), // invalid suffix
 		TestCase("9R12"), // invalid space
 		//TestCase("9  R12"), // allowed, as xs:token already combines multiple whitespaces
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
 		public void TestInvalidWheelsDimensionString(string dim)
 		{

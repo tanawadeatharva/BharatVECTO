@@ -1,25 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Xml.Xsl;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
-using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
-using TUGraz.VectoHashing.Util;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoHashing.Impl;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoHashingTest
@@ -42,13 +27,13 @@ namespace VectoHashingTest
          *  - Comment in the new code in the XSLT and run the code
          */
 		// EnergyConsumption, FC_ZEV_AuxHeater,CO2_ZEV_AuxHeater, Result
-		[TestCase(@"PEV_completedBus_2.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "6JIUDLbLsVMA5nAul/Nm7O2NQcS+DJJ0sJvCqMthh5o="),
+		[TestCase(@"PEV_completedBus_2.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "hokoWwm/3OOwwTyvEYVm9p5p3jpJ6P5fjsJaqomQCQQ="),
 		// Fuel (dual fuel), Fuel Consumption, CO2, Result
-		 TestCase(@"Conventional_heavyLorry_AMT.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "v4FQcM3lTvEv0HGAu9j6RQrhCcXYAU2C7WweFqecoA4="),
+		 TestCase(@"Conventional_heavyLorry_AMT.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "1lccsm0FBy28nmoZ3+svSSYNGVDObaHN9xmnrPKMbUE="),
 		//Fuel Consumption, CO2, Result, Summary
 		TestCase(@"HEV_completedBus_2.RSLT_CUSTOMER.xml", XmlDocumentType.CustomerReport, "/vQ5KuMptNzZfmJBDAToZOdPu6LqJI7n044Q+0sh9e8="),
 		//OVC Mode, Fuel Consumption, CO2, Result, EnergyConsumption
-		TestCase(@"HEV-S_heavyLorry_S3_ovc.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "YUgsMeTcQfLAjH/bqJ7RyHuz7HEXfAUlZzaI4PzZ/Yg="),
+		TestCase(@"HEV-S_heavyLorry_S3_ovc.RSLT_MANUFACTURER.xml", XmlDocumentType.ManufacturerReport, "GnoRUnF67vM+fX/L3olad4Ozs009B6muSw0j91rIo5U="),
 		//EnergyConsumption, FC_ZEV_AuxHeater, CO2_ZEV_AuxHeater, Result, Summary
 		TestCase(@"PEV_completedBus_2.RSLT_CUSTOMER.xml", XmlDocumentType.CustomerReport, "iebdqUqvC1bt0NyEe+/4kRf+YMA9SGSb+955nOeSBQM=")]
 		public void TestValidation(string filename, XmlDocumentType documentType, string sortedHash)

@@ -29,12 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Ninject.Planning.Bindings.Resolvers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils

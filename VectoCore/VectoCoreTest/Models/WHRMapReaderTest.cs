@@ -10,11 +10,9 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -34,6 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		private IKernel _kernel;
 		private IVectoRunDataFactoryFactory _runDataFactory;
 		private IPowertrainBuilder PowertrainBuilder;
+		private IEngineeringDataAdapter DataAdapter;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -44,9 +43,11 @@ namespace TUGraz.VectoCore.Tests.Models
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 			_runDataFactory = _kernel.Get<IVectoRunDataFactoryFactory>();
 			PowertrainBuilder = _kernel.Get<IPowertrainBuilder>();
-        }
+			DataAdapter = _kernel.Get<IEngineeringDataAdapter>();
+		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataElectric()
 		{
 
@@ -63,7 +64,8 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(400, result.GeneratedPower.Value());
 		}
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataMechanical()
 		{
 
@@ -81,7 +83,8 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 
-		[TestCase]
+		[TestCase,
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void TestWHRMapCSVDataElectricAndMechanical()
 		{
 
@@ -361,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		public void ReadEngineeringXMLDualFuel()
 		{
 			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
-			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, PowertrainBuilder);
+			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider, DataAdapter);
 
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);

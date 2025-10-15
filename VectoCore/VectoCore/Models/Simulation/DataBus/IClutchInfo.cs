@@ -41,5 +41,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool ClutchClosed(Second absTime);
 
 		Watt ClutchLosses { get; }
+
+		int AxleNumber { get; }
 	}
 }

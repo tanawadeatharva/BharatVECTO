@@ -38,16 +38,17 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverInfo
+    public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverInfo
 	{
 		private IDriverDemandOutPort _next;
 
 		public RequestData LastRequest;
 
-		public MockDriver(IVehicleContainer container) : base(container)
+		public MockDriver(IVehicleContainer container) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			DriverBehavior = DrivingBehavior.Accelerating;
 			DrivingAction = DrivingAction.Accelerate;

@@ -5,12 +5,11 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -18,14 +17,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     {
 
 		//private SwitchableClutch clutch;
-		private ElectricSystem ElectricSystem;
+		private IElectricSystem ElectricSystem;
 
 		protected readonly Dictionary<PowertrainPosition, ElectricMotorController> _electricMotorCtl = new Dictionary<PowertrainPosition, ElectricMotorController>();
 		public ITnOutPort NextComponent { get; protected set; }
 
 		private Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> _electricMotorTorque = new Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>>();
 
-		public SimpleHybridController(IVehicleContainer container, ElectricSystem es) : base(container)
+		public SimpleHybridController(IVehicleContainer container, IElectricSystem es) : base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			ElectricSystem = es;
 			//this.clutch = clutch;
@@ -71,12 +70,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public SimpleComponentState PreviousState => throw new NotImplementedException();
 
-		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos)
+		public IElectricMotorControl ElectricMotorControl(PowertrainPosition pos, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			return _electricMotorCtl[pos];
 		}
 
-		public void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData)
+		public void AddElectricMotor(PowertrainPosition pos, ElectricMotorData motorData, int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			if (_electricMotorCtl.ContainsKey(pos)) {
 				throw new VectoException("Electric motor already registered as position {0}", pos);

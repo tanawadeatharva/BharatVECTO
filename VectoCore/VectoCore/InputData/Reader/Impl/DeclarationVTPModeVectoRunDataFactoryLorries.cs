@@ -43,25 +43,26 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
     internal class DeclarationVTPModeVectoRunDataFactoryLorries : AbstractVTPModeVectoRunDataFactory
     {
-        private ILorryDeclarationDataAdapter _dao;
+		protected readonly IInputDataProvider InputDataProvider;
 
-        protected readonly IInputDataProvider InputDataProvider;
-
-        public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : base(
+        public DeclarationVTPModeVectoRunDataFactoryLorries(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report,
+			ILorryDeclarationDataAdapter declarationDataAdapter) : base(
             ivtpProvider.JobInputData, report)
-        {
+		{
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = ivtpProvider;
         }
 
-        protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report) : 
+        protected DeclarationVTPModeVectoRunDataFactoryLorries(IInputDataProvider inputProvider, IVTPReport report,
+			ILorryDeclarationDataAdapter declarationDataAdapter) :
             base((inputProvider as IVTPEngineeringInputDataProvider).JobInputData, report)
-        { 
+		{
+			DataAdapter = declarationDataAdapter;
             InputDataProvider = inputProvider;
         }
 
@@ -71,8 +72,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		}
 
 		protected override IDeclarationDataAdapter Dao => DataAdapter;
-		private ILorryDeclarationDataAdapter DataAdapter => _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional());
-        protected override void Initialize()
+
+		private ILorryDeclarationDataAdapter DataAdapter { get; } //return _dao ?? (_dao = new DeclarationDataAdapterHeavyLorry.Conventional()); }
+
+
+		protected override void Initialize()
         {
             var vehicle = JobInputData.Vehicle;
             try
@@ -135,14 +139,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
                 JobInputData.Vehicle.Components.BusAuxiliaries,
                 missionType,
                 Segment.VehicleClass, JobInputData.Vehicle.Length,
-                JobInputData.Vehicle.Components.AxleWheels.NumSteeredAxles, JobInputData.Vehicle.VehicleType);
+                JobInputData.Vehicle.Components.AxleWheels.NumSteeredAxles, JobInputData.Vehicle.VehicleType, false);
         }
 
         protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
         {
             var numSteered = vehicle.Components.AxleWheels.NumSteeredAxles;
             var auxRD = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType, false)
                             .ToList();
             foreach (var entry in auxRD)
             {
@@ -150,7 +154,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             }
 
             var auxLH = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType, false)
                             .ToList();
             foreach (var entry in auxLH)
             {
@@ -158,7 +162,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             }
 
             var auxUD = DataAdapter.CreateAuxiliaryData(
-                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType)
+                                vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length, numSteered, vehicle.VehicleType, false)
                             .ToList();
             foreach (var entry in auxUD)
             {
@@ -180,14 +184,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             return aux;
         }
 
-        public override IEnumerable<VectoRunData> NextRun()
+        protected override IEnumerable<VectoRunData> GetNextRun()
         {
-            if (InitException != null)
-            {
-                throw InitException;
-            }
-
-            // Loading is not relevant as we use P_wheel
+			// Loading is not relevant as we use P_wheel
             var vtpRunData = CreateVectoRunData(Segment, Segment.Missions.First(), Tuple.Create<Kilogram, double?>(0.SI<Kilogram>(), null));
             vtpRunData.Cycle = VTPCycle;
             vtpRunData.Aux = AuxVTP;
@@ -206,11 +205,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
             //var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
             var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
             var correctionFactors = JobInputData.FuelNCVs.ToDictionary(
-				keySelector: f => f.Type, 
+				keySelector: f => f.Type,
 				elementSelector: f => (f.NCV / DeclarationData.FuelData.Lookup(
-					f.Type, 
+					f.Type,
 					JobInputData.Vehicle.TankSystem).LowerHeatingValueVecto).Value() * mileageCorrection);
-            
+
             vtpRunData.VTPData = new VTPData() {
 				CorrectionFactors = correctionFactors,
 				FuelNCVs = JobInputData.FuelNCVs

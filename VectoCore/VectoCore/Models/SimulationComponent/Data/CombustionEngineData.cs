@@ -32,18 +32,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
+    [CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
 		[Required, SIRange(1, 5)] public Second EngineStartTime;
@@ -142,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
 		[Required, ValidateObject]
-		public FuelConsumptionMap ConsumptionMap { get; internal set; }
+		public IFuelConsumptionMap ConsumptionMap { get; internal set; }
 
 		public IFuelProperties FuelData { get; internal set; }
 	}

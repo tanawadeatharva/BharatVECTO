@@ -45,11 +45,10 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
-Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents
 Imports TUGraz.VectoCore.Models.Simulation
-Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
@@ -287,7 +286,7 @@ Public Class MainForm
         _genCheckAllLock = False
         _genChecked = 0
 
-        Dim logMessageTimer As New Windows.Forms.Timer(components)
+        Dim logMessageTimer As New System.Windows.Forms.Timer(components)
         logMessageTimer.Interval = 100
         AddHandler logMessageTimer.Tick, AddressOf TimerLogMessages_Tick
         logMessageTimer.Start()
@@ -821,13 +820,12 @@ lbFound:
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        OpenFileExternal("User Manual\Release Notes Vecto DEV.pdf")
+        OpenFileExternal("User Manual\Release Notes Vecto.pdf")
     End Sub
 
-    Private Sub OpenFileExternal(filename As String)
-        Dim filepath = Path.Combine(MyAppPath, filename)
+    Private Sub OpenFileExternal(filepath As String)
         If File.Exists(filepath) Then
-            Process.Start(new ProcessStartInfo(filepath) With {.UseShellExecute = true})
+            Process.Start(New ProcessStartInfo(filepath) With {.UseShellExecute = True})
         Else
             MsgBox("File not found!", MsgBoxStyle.Critical)
         End If

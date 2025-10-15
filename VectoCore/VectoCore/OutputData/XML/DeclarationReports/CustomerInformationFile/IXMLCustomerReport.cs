@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.CustomerInformationFile
 {

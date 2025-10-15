@@ -10,7 +10,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -18,26 +17,25 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 {
-    public class HybridStrategy : AbstractHybridStrategy<Gearbox>
+    public class HybridStrategy : AbstractHybridStrategy
 	{
-		public HybridStrategy(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
+		public HybridStrategy(VectoRunData runData, IVehicleContainer container) : base(runData, container)
 		{
-			// register pre-processors
-			vehicleContainer.AddPreprocessor(GetGearshiftPreprocessor(runData));
+            // register pre-processors
+			container.AddPreprocessor(GetGearshiftPreprocessor());
 		}
 
-		protected ISimulationPreprocessor GetGearshiftPreprocessor(VectoRunData runData)
+		protected ISimulationPreprocessor GetGearshiftPreprocessor()
 		{
+			var runData = ModelData;
 			var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
 			var grad = Convert.ToInt32(maxG / 2) * 2;
 			if (grad == 0) {
 				grad = 2;
 			}
-
-			var testContainer = PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
-
+			
 			return new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption,
-				testContainer, -grad, grad);
+				TestPowertrain, -grad, grad);
 		}
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque,
@@ -49,12 +47,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				useNextGear = NextGear;
 			}
 
-			TestPowertrain.Gearbox.Gear = useNextGear; // DataBus.VehicleInfo.VehicleStopped ? NextGear : PreviousState.GearboxEngaged ? CurrentGear : NextGear;
-			TestPowertrain.Gearbox.Disengaged = !useNextGear.Engaged;
-			TestPowertrain.Gearbox.DisengageGearbox = !useNextGear.Engaged;
-			TestPowertrain.Gearbox._nextGear = NextGear;
+			TestPowertrain.Gearbox.SetGear = useNextGear; // DataBus.VehicleInfo.VehicleStopped ? NextGear : PreviousState.GearboxEngaged ? CurrentGear : NextGear;
+			TestPowertrain.Gearbox.SetDisengaged = !useNextGear.Engaged;
+			TestPowertrain.Gearbox.SetDisengageGearbox = !useNextGear.Engaged;
+			TestPowertrain.Gearbox.SetNextGear = NextGear;
 			if (ModelData.GearboxData.TractionInterruption.IsGreater(0)) {
-				TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed,
+				TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed,
 					DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			}
 
@@ -80,27 +78,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					return null;
 				}
 
-				TestPowertrain.Gearbox.Gear = useNextGear;
-				var init = TestPowertrain.Container.VehiclePort.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+				TestPowertrain.Gearbox.SetGear = useNextGear;
+				var init = TestPowertrain.Vehicle.Initialize(estimatedVelocityPostShift, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 				if (!AllowEmergencyShift && init.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)) {
 					return null;
 				}
 			}
 
-			if ((!DataBus.GearboxInfo.GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC))) {
+			if ((!DataBus.GearboxesInfo.First().GearboxType.IsOneOf(GearboxType.APTN, GearboxType.IHPC))) {
 				TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque,
 					Controller.PreviousState.OutAngularVelocity);
 			}
 
 			if (!PreviousState.GearboxEngaged || (useNextGear.Engaged && useNextGear.Equals(CurrentGear)) || !nextGear.Engaged) {
 				TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
-				TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxInfo);
-				TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchInfo);
+				TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxesInfo.First());
+				TestPowertrain.Clutch.UpdateFrom(DataBus.ClutchesInfo.First());
 				TestPowertrain.Brakes.UpdateFrom(DataBus.Brakes);
 				var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-				TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorInfo(pos));
+				TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorsInfo.First(x => x.Position == pos));
+				// TODO: MQ 2025-02-05: is this really necessary? EM is updated in the line above anyways
 				foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-					TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
+					//TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorsInfo.First(x => x.Position == emPos).ElectricMotorSpeed;
+					TestPowertrain.ElectricMotorsUpstreamTransmission[pos].UpdateFrom(DataBus.ElectricMotorsInfo.First(x => x.Position == emPos));
 				}
 			}
 
@@ -129,19 +129,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		}
 	}
 
-	public class HybridStrategyAT : AbstractHybridStrategy<ATGearbox>
+	public class HybridStrategyAT : AbstractHybridStrategy
 	{
-		public HybridStrategyAT(VectoRunData runData, IVehicleContainer vehicleContainer) : base(runData, vehicleContainer)
+		public HybridStrategyAT(VectoRunData runData, IVehicleContainer container) : base(runData, container)
 		{ }
 
 		protected override IResponse RequestDryRun(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, GearshiftPosition nextGear, HybridStrategyResponse cfg)
 		{
 			TestPowertrain.UpdateComponents();
 			
-			TestPowertrain.Gearbox.Gear = PreviousState.GearboxEngaged ? CurrentGear : NextGear;
-			TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
-			TestPowertrain.Gearbox.DisengageGearbox = !nextGear.Engaged;
-			TestPowertrain.Container.VehiclePort.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
+			TestPowertrain.Gearbox.SetGear = PreviousState.GearboxEngaged ? CurrentGear : NextGear;
+			TestPowertrain.Gearbox.SetDisengaged = !nextGear.Engaged;
+			TestPowertrain.Gearbox.SetDisengageGearbox = !nextGear.Engaged;
+			TestPowertrain.Vehicle.Initialize(DataBus.VehicleInfo.VehicleSpeed, DataBus.DrivingCycleInfo.RoadGradient ?? 0.SI<Radian>());
 			TestPowertrain.HybridController.ApplyStrategySettings(cfg);
 			TestPowertrain.HybridController.Initialize(Controller.PreviousState.OutTorque, Controller.PreviousState.OutAngularVelocity);
 			
@@ -178,28 +178,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 
-				TestPowertrain.Gearbox.Gear = nextGear;
+				TestPowertrain.Gearbox.SetGear = nextGear;
 				TestPowertrain.Gearbox.RequestAfterGearshift = true;
 			} else {
-				TestPowertrain.Gearbox.RequestAfterGearshift = DataBus.GearboxInfo.RequestAfterGearshift;
+				TestPowertrain.Gearbox.RequestAfterGearshift = DataBus.GearboxesInfo.First().RequestAfterGearshift;
 			}
 			
 			if (!nextGear.Engaged) {
-				TestPowertrain.Gearbox.Disengaged = !nextGear.Engaged;
+				TestPowertrain.Gearbox.SetDisengaged = !nextGear.Engaged;
 			}
 
 			TestPowertrain.CombustionEngine.UpdateFrom(DataBus.EngineInfo);
-			TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxInfo);
+			TestPowertrain.Gearbox.UpdateFrom(DataBus.GearboxesInfo.First());
 			if (nextGear.TorqueConverterLocked.HasValue && !nextGear.TorqueConverterLocked.Value) {
 				TestPowertrain.TorqueConverter.UpdateFrom(DataBus.TorqueConverterInfo);
 			}
 
 			var pos = ModelData.ElectricMachinesData.FirstOrDefault().Item1;
-			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorInfo(pos));
+			TestPowertrain.ElectricMotor.UpdateFrom(DataBus.ElectricMotorsInfo.First(x => x.Position == pos));
+			// TODO: MQ 2025-02-05: is this really necessary? EM is updated in the line above anyways
 			foreach (var emPos in TestPowertrain.ElectricMotorsUpstreamTransmission.Keys) {
-				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorInfo(emPos).ElectricMotorSpeed;
+				//TestPowertrain.ElectricMotorsUpstreamTransmission[pos].PreviousState.EMSpeed = DataBus.ElectricMotorsInfo.First(x => x.Position == emPos).ElectricMotorSpeed;
+				TestPowertrain.ElectricMotorsUpstreamTransmission[pos].UpdateFrom(DataBus.ElectricMotorsInfo.First(x => x.Position == emPos));
 			}
-
+			
 			try {
 				var retVal = TestPowertrain.HybridController.NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, false);
 				retVal.HybridController.StrategySettings = cfg;
@@ -247,7 +249,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 	}
 
-	public abstract class AbstractHybridStrategy<T> : LoggingObject, IHybridControlStrategy where T : class, IHybridControlledGearbox, IGearbox
+	public abstract class AbstractHybridStrategy : LoggingObject, IHybridControlStrategy
 	{
 		public class StrategyState
 		{
@@ -281,7 +283,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		}
 
 		protected VectoRunData ModelData;
-		protected IDataBus DataBus;
+		protected IVehicleContainer DataBus;
 
 		protected Dictionary<PowertrainPosition, Tuple<PerSecond, NewtonMeter>> ElectricMotorsOff;
 
@@ -291,7 +293,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected ISimplePowertrainBuilder PowertrainBuilder { get; private set; }
 
-		protected ITestPowertrain<T> TestPowertrain;
+		protected ITestPowertrain TestPowertrain;
 
 		public VelocityRollingLookup VelocityDropData { get; } = new VelocityRollingLookup();
 
@@ -347,12 +349,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				x => (x.ConsumptionMap.GetFuelConsumptionValue(0.SI<NewtonMeter>(), ModelData.EngineData.IdleSpeed)
 					* x.FuelData.LowerHeatingValueVecto * StrategyParameters.MinICEOnTime).Value());
 
-			// create testcontainer
-			var testContainer = BuildSimplePowertrain(runData);
-
-			TestPowertrain = PowertrainBuilder.CreateTestPowertrain<T>(testContainer, DataBus);
-
-
+            // create testcontainer
+            TestPowertrain = PowertrainBuilder.CreateTestPowertrain(DataBus, true);
 
 			var shiftStrategyParameters = runData.GearshiftParameters;
 			if (shiftStrategyParameters == null) {
@@ -376,10 +374,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			AllowEmergencyShift = false;
 		}
 
-		protected virtual ISimpleVehicleContainer BuildSimplePowertrain(VectoRunData runData)
-		{
-			return PowertrainBuilder.BuildSimpleHybridPowertrain(runData);
-        }
 
 		protected virtual void WarnGearShiftRange()
 		{
@@ -400,7 +394,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (DataBus.VehicleInfo.VehicleStopped) {
 				nextGear = NextGear;
 			}
-			else if (!DataBus.GearboxInfo.GearEngaged(absTime)) {
+			else if (!DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 				nextGear = NextGear;
 			}
 			else if (PreviousState.GearboxEngaged) {
@@ -410,7 +404,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && (nextGear != null) 
-				&& StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear) != null && DataBus.GearboxInfo.TCLocked) {
+				&& StrategyParameters.MaxPropulsionTorque?.GetVECTOValueOrDefault(nextGear) != null && DataBus.GearboxesInfo.First().TCLocked) {
 				
 				var emOff = new HybridStrategyResponse {
 					CombustionEngineOn = DataBus.EngineInfo.EngineOn, // AllowICEOff(absTime), 
@@ -463,7 +457,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				LimitedGbxTorque = false;
 			}
 
-            if (dryRun && DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction && DataBus.GearboxInfo.TCLocked && !DryRunSolution.Solution.IgnoreReason.EngineSpeedBelowDownshift()) {
+            if (dryRun && DryRunSolution != null && DryRunSolution.DrivingAction == DataBus.DriverInfo.DrivingAction && DataBus.GearboxesInfo.First().TCLocked && !DryRunSolution.Solution.IgnoreReason.EngineSpeedBelowDownshift()) {
 				var tmp = CreateResponse(DryRunSolution.Solution, currentGear);
 				return tmp;
 			}
@@ -506,7 +500,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var retVal = CreateResponse(best, currentGear);
 
-			retVal.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime);
+			retVal.GearboxEngaged = DataBus.GearboxesInfo.First().GearEngaged(absTime);
 			//if (!DataBus.EngineInfo.EngineOn && !best.ICEOff && retVal.ShiftRequired) {
 			//	CurrentState.ICEStartTStmp = absTime + dt;
 			//} else {
@@ -517,7 +511,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				CurrentState.Solution = best;
 				CurrentState.AngularVelocity = outAngularVelocity;
 				CurrentState.Evaluations = eval;
-				CurrentState.GearboxEngaged = DataBus.GearboxInfo.GearEngaged(absTime) || DataBus.GearboxInfo.GearboxType.AutomaticTransmission();
+				CurrentState.GearboxEngaged = DataBus.GearboxesInfo.First().GearEngaged(absTime) || DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission();
 				//if (!DataBus.EngineCtl.CombustionEngineOn && !best.ICEOff && !retVal.ShiftRequired) {
 				//	CurrentState.ICEStartTStmp = absTime;
 				//} else {
@@ -544,7 +538,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			return retVal;
 		}
 
-		protected virtual GearshiftPosition CurrentGear => DataBus.GearboxInfo.Gear;
+		protected virtual GearshiftPosition CurrentGear => DataBus.GearboxesInfo.First().Gear;
 
 		protected virtual void DoEmergencyGearShift(GearshiftPosition currentGear, Second absTime, Second dt, NewtonMeter outTorque, 
 			PerSecond outAngularVelocity, HybridResultEntry best)
@@ -632,14 +626,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 				case PowertrainPosition.HybridP4 when dryRunResponse.Gearbox.Gear.Gear != 0: {
 					var emTq = dryRunResponse.ElectricMotor.ElectricMotorPowerMech /
-								dryRunResponse.ElectricMotor.AvgDrivetrainSpeed;
+									dryRunResponse.ElectricMotor.AvgDrivetrainSpeed;
+
+					var axlegear = DataBus.AxlegearsInfo.First();
 					var axlOutTorque = dryRunResponse.Axlegear.OutputTorque - emTq;
-					var prevAxlSpeed = (DataBus.AxlegearInfo as TransmissionComponent).PreviousState.OutAngularVelocity;
+					var prevAxlSpeed = (axlegear as TransmissionComponent).PreviousState.OutAngularVelocity;
 					var axleLoss = ModelData.AxleGearData.AxleGear.LossMap.GetTorqueLoss((dryRunResponse.Axlegear.OutputSpeed + prevAxlSpeed) / 2.0, axlOutTorque);
 					var axlInTorque = axlOutTorque / ModelData.AxleGearData.AxleGear.Ratio + axleLoss.Value;
 					var gbxInTorque = axlInTorque;
-					if (ModelData.AngledriveData != null && DataBus.AxlegearInfo != null) {
-						var prevAnglSpeed = (DataBus.AxlegearInfo as TransmissionComponent).PreviousState
+					if (ModelData.AngledriveData != null && DataBus.AxlegearsInfo.Count() > 0) {
+						var prevAnglSpeed = (axlegear as TransmissionComponent).PreviousState
 							.OutAngularVelocity;
 						var anglLoss =
 								ModelData.AngledriveData.Angledrive.LossMap.GetTorqueLoss(
@@ -667,11 +663,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		private PerSecond GetPrevGbxSpeed()
 		{
-			switch (DataBus.GearboxInfo) {
-				case Gearbox gbx:
-					return gbx.PreviousState.OutAngularVelocity;
-				case ATGearbox atGbx:
-					return atGbx.PreviousState.OutAngularVelocity;
+			switch (DataBus.GearboxesInfo.First()) {
+				case IAMTGearbox gbx:
+					return gbx.GetPreviousState.OutAngularVelocity;
+				case IAPTGearbox atGbx:
+					return atGbx.GetPreviousState.OutAngularVelocity;
 				default: throw new VectoException("Unsupported gearbox type!");
 			}
 		}
@@ -772,10 +768,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var deltaFullLoadTq = maxEmDriveResponse.Engine.TotalTorqueDemand -
 								maxEmDriveResponse.Engine.DynamicFullLoadTorque;
 			var maxEngineSpeed =
-				maxEmDriveResponse.Gearbox.Gear.Gear == 0 || !DataBus.ClutchInfo.ClutchClosed(absTime) ||
-				!DataBus.GearboxInfo.TCLocked
+				maxEmDriveResponse.Gearbox.Gear.Gear == 0 || !DataBus.ClutchesInfo.First().ClutchClosed(absTime) ||
+				!DataBus.GearboxesInfo.First().TCLocked
 					? ModelData.EngineData.FullLoadCurves[0].N95hSpeed :
-					VectoMath.Min(DataBus.GearboxInfo.GetGearData(CurrentGear.Gear).MaxSpeed, ModelData.EngineData.FullLoadCurves[0].N95hSpeed);
+					VectoMath.Min(DataBus.GearboxesInfo.First().GetGearData(CurrentGear.Gear).MaxSpeed, ModelData.EngineData.FullLoadCurves[0].N95hSpeed);
 
 
 			var gbxInTq = GetGearboxInTorqueLimitedVehiclePorpTorque(emOffResponse, emPos);
@@ -855,7 +851,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		{
 			//VECTO-1493 special case for P1: only allow turning ICE off if ESS is activated and PCC is currently active
 			var isPCC = DataBus.DriverInfo.PCCState.IsOneOf(PCCStates.UseCase1, PCCStates.UseCase2);
-			var isP1 = DataBus.PowertrainInfo.ElectricMotorPositions.Contains(PowertrainPosition.HybridP1);
+			var isP1 = DataBus.ElectricMotorsInfo.Count(x => x.Position == PowertrainPosition.HybridP1) > 0;
 			if (isP1 && (!ModelData.VehicleData.ADAS.EngineStopStart || !isPCC))
 				return false;
 
@@ -867,7 +863,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleBrakeAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
+			if (DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission() &&
 				CurrentGear.Equals(GearList.First())) {
 				eval.Add(ResponseEmOff);
 				return;
@@ -884,7 +880,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
             var vehiclespeedBelowThreshold = vehicleEndSpeed.IsSmaller(disengageSpeedThreshold)
 											&& (DataBus.DriverInfo.NextBrakeTriggerSpeed?.IsEqual(0) ?? false);
 
-			if (!ElectricMotorCanPropellDuringTractionInterruption && !DataBus.GearboxInfo.GearEngaged(absTime)) {
+			if (!ElectricMotorCanPropellDuringTractionInterruption && !DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 				var off = ResponseEmOff;
 				if (vehiclespeedBelowThreshold &&
 					emPos.IsOneOf(PowertrainPosition.HybridP2, PowertrainPosition.HybridP1, PowertrainPosition.IHPC, PowertrainPosition.HybridP2_5)) {
@@ -898,7 +894,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			GearshiftPosition nextGear;
-			if (!DataBus.GearboxInfo.GearEngaged(absTime)) {
+			if (!DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 				nextGear = new GearshiftPosition(0);
 			} else if (PreviousState.GearboxEngaged) {
 				nextGear = CurrentGear;
@@ -908,7 +904,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			if (vehiclespeedBelowThreshold && emPos.IsOneOf(PowertrainPosition.HybridP2,
 					PowertrainPosition.HybridP1, PowertrainPosition.IHPC, PowertrainPosition.HybridP2_5)) {
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+				if (DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission()) {
 					var firstgear = ResponseEmOff;
 					firstgear.Gear = GearList.First();
 					eval.Add(firstgear);
@@ -938,7 +934,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (!nextGear.IsLockedGear()) {
 				var off = ResponseEmOff;
 				var offResponse = RequestDryRun(absTime, dt, outTorque, outAngularVelocity, nextGear, off.Setting);
-				if (offResponse.Source is ATGearbox && offResponse is ResponseOverload && GearList.HasPredecessor(nextGear)) {
+				if (offResponse.Source is IAPTGearbox && offResponse is ResponseOverload && GearList.HasPredecessor(nextGear)) {
 					off.Gear = GearList.Predecessor(nextGear);
 				}
 				eval.Add(off);
@@ -967,18 +963,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			var endSpeed = DataBus.VehicleInfo.VehicleSpeed +
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 			if (EngineSpeedTooLow(response) && DataBus.EngineInfo.EngineOn
-				&& (DataBus.GearboxInfo.GearboxType.ManualTransmission() ||
-					DataBus.GearboxInfo.GearboxType == GearboxType.IHPC)
+				&& (DataBus.GearboxesInfo.First().GearboxType.ManualTransmission() ||
+					DataBus.GearboxesInfo.First().GearboxType == GearboxType.IHPC)
 				&& endSpeed.IsSmallerOrEqual(disengageSpeedThreshold, 0.1.KMPHtoMeterPerSecond())) {
 				var responseEmOff = ResponseEmOff;
 				// if the engine speed is too low but the gear is engaged in this timestep, use the gear as calculated before. 
 				// on re-engage the engine speed is checked and a lower gear is engaged. then the hybrid strategy is called again.
-				responseEmOff.Gear = (!PreviousState.GearboxEngaged && DataBus.GearboxInfo.GearEngaged(absTime))
+				responseEmOff.Gear = (!PreviousState.GearboxEngaged && DataBus.GearboxesInfo.First().GearEngaged(absTime))
 					? currentGear
 					: new GearshiftPosition(0);
 				responseEmOff.Setting.GearboxEngaged = false;
 				responseEmOff.Setting.GearboxInNeutral =
-					(!PreviousState.GearboxEngaged && DataBus.GearboxInfo.GearEngaged(absTime)) ? false : true;
+					(!PreviousState.GearboxEngaged && DataBus.GearboxesInfo.First().GearEngaged(absTime)) ? false : true;
 				eval.Add(responseEmOff);
 				return;
 			}
@@ -1016,7 +1012,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return;
 			}
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && response == null &&
+			if (DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission() && response == null &&
 				nextGear.Equals(GearList.First())) {
 				var downshift = ResponseEmOff;
 				downshift.Gear = nextGear;
@@ -1028,10 +1024,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				var firstEntry = new HybridResultEntry();
 				CalculateCosts(response, dt, firstEntry, AllowICEOff(absTime), dryRun);
 				var minimumShiftTimePassed =
-					(DataBus.GearboxInfo.LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts)
+					(DataBus.GearboxesInfo.First().LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts)
 					.IsSmallerOrEqual(absTime);
-				if (DataBus.GearboxInfo.GearEngaged(absTime) && !vehiclespeedBelowThreshold) {
-					var reEngaged = !PreviousState.GearboxEngaged && DataBus.GearboxInfo.GearEngaged(absTime);
+				if (DataBus.GearboxesInfo.First().GearEngaged(absTime) && !vehiclespeedBelowThreshold) {
+					var reEngaged = !PreviousState.GearboxEngaged && DataBus.GearboxesInfo.First().GearEngaged(absTime);
 					if ((firstEntry.IgnoreReason.EngineSpeedBelowDownshift() &&
 						!firstEntry.IgnoreReason.EngineTorqueDemandTooHigh() ||
 						firstEntry.IgnoreReason.EngineSpeedTooLow()) && !reEngaged) {
@@ -1068,21 +1064,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				? (response as ResponseDryRun).Gearbox.InputTorque ?? 0.SI<NewtonMeter>() //.DeltaDragLoadTorque
 				: response.Engine.TotalTorqueDemand - response.Engine.DragTorque;
 
-			if (!response.Engine.EngineOn && DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (!response.Engine.EngineOn && DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission()) {
 				deltaDragTqFirst = response.Gearbox.InputTorque;
 			}
 
 			if (deltaDragTqFirst.IsGreater(0)) {
 				// braking requested but engine operating point is not below drag curve.
 				if (ElectricMotorCanPropellDuringTractionInterruption) {
-					if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+					if (DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 						eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
 					} else {
 						EvaluateConfigsForGear(
 							absTime, dt, outTorque, outAngularVelocity, nextGear, AllowICEOff(absTime), eval, emPos,
 							dryRun);
 					}
-				} else if (DataBus.GearboxInfo.GearEngaged(absTime)) {
+				} else if (DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 					eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
 				} else {
 					eval.Add(ResponseEmOff);
@@ -1123,8 +1119,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				? (maxRecuperationResponse as ResponseDryRun).Gearbox.InputTorque ?? 0.SI<NewtonMeter>() //.DeltaDragLoadTorque
 				: maxRecuperationResponse.Engine.TotalTorqueDemand - maxRecuperationResponse.Engine.DragTorque;
 
-			var isAPTWithTorqueConverter = DataBus.GearboxInfo.GearboxType.AutomaticTransmission() &&
-											DataBus.GearboxInfo.GearboxType != GearboxType.IHPC;
+			var isAPTWithTorqueConverter = DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission() &&
+											DataBus.GearboxesInfo.First().GearboxType != GearboxType.IHPC;
 			if (!maxRecuperationResponse.Engine.EngineOn && isAPTWithTorqueConverter) {
 				deltaDragTqMaxRecuperation = maxRecuperationResponse.Gearbox.InputTorque;
 			}
@@ -1193,7 +1189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 						}
 					};
 					return RequestDryRun(absTime, dt, outTorque, outAngularVelocity,
-						DataBus.GearboxInfo.GearEngaged(absTime) ? nextGear : new GearshiftPosition(0), cfg);
+						DataBus.GearboxesInfo.First().GearEngaged(absTime) ? nextGear : new GearshiftPosition(0), cfg);
 				},
 				criterion: resp => {
 					var r = resp as IResponse;
@@ -1241,7 +1237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			} else {
 				if (emRecuperationTq.IsGreater(0)) {
 					var voltage = DataBus.BatteryInfo.InternalVoltage;
-					var maxbatDragTq = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage,
+					var maxbatDragTq = DataBus.ElectricMotorsInfo.First(x => x.Position == emPos).GetTorqueForElectricPower(voltage,
 						response.ElectricSystem.MaxPowerDrag, response.ElectricMotor.AngularVelocity, dt, nextGear,
 						false);
 					eval.Add(
@@ -1288,7 +1284,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				return false;
 			}
 
-			if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.GearboxInfo.GearboxType != GearboxType.IHPC) {
+			if (DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission() && DataBus.GearboxesInfo.First().GearboxType != GearboxType.IHPC) {
 				return firstResponse.Engine.EngineOn
 					? firstResponse.Engine.EngineSpeed.IsSmaller(ModelData.EngineData.IdleSpeed)
 					: (firstResponse.Gearbox.InputSpeed?.IsSmaller(ModelData.EngineData.IdleSpeed) ?? false);
@@ -1308,7 +1304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 							DataBus.DriverInfo.DriverAcceleration * ModelData.GearboxData.TractionInterruption;
 
 			// only disengage if we are actually braking for halting (meaning: next brake trigger speed is 0).
-			if (DataBus.GearboxInfo.GearboxType.ManualTransmission()
+			if (DataBus.GearboxesInfo.First().GearboxType.ManualTransmission()
 				&& (DataBus.DriverInfo.NextBrakeTriggerSpeed?.IsEqual(0) ?? false)
 				&& endSpeed.IsSmallerOrEqual(ModelData.GearboxData.DisengageWhenHaltingSpeed, 0.1.KMPHtoMeterPerSecond())) {
 				return new GearshiftPosition(0);
@@ -1337,7 +1333,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 		protected virtual void HandleCoastAction(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			var nextGear = !DataBus.GearboxInfo.GearEngaged(absTime)
+			var nextGear = !DataBus.GearboxesInfo.First().GearEngaged(absTime)
 				? new GearshiftPosition(0)
 				: PreviousState.GearboxEngaged
 					? CurrentGear
@@ -1382,7 +1378,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			if (DataBus.DriverInfo.PCCState.IsOneOf(PCCStates.UseCase1, PCCStates.UseCase2)) {
 				result.ICEOff = AllowICEOff(absTime);
 
-				if (DataBus.PowertrainInfo.ElectricMotorPositions.Contains(PowertrainPosition.HybridP1)) {
+				if (DataBus.ElectricMotorsInfo.Count(x => x.Position == PowertrainPosition.HybridP1) > 0) {
 					// special logic for HybridP1 (VECTO-1493)
 					result.Setting.GearboxInNeutral = true;
 					result.ICEOff &= ModelData.VehicleData.ADAS.EngineStopStart;
@@ -1447,8 +1443,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected virtual void HandleAccelerateAction(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity, bool dryRun, List<HybridResultEntry> eval)
 		{
-			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime) ||
-				DataBus.GearboxInfo.GearboxType.AutomaticTransmission()) {
+			if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxesInfo.First().GearEngaged(absTime) ||
+				DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission()) {
 				eval.AddRange(FindSolution(absTime, dt, outTorque, outAngularVelocity, dryRun));
 			} else {
 				eval.Add(ResponseEmOff);
@@ -1585,7 +1581,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 								.All(x => x.IgnoreReason.EngineTorqueDemandTooHigh());
 			var allUnderload = validResponses.All(x => x.IgnoreReason.EngineTorqueDemandTooLow());
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allOverload) {
-				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 					// overload, EM can support - use solution with max EM power
 					var filtered = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded() && !x.IgnoreReason.BatterySoCTooLow())
 										.OrderBy(x => Math.Abs(GearList.Distance(currentGear, x.Gear))).ToArray();
@@ -1611,13 +1607,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 			}
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && allUnderload) {
-				var emPos = DataBus.PowertrainInfo.ElectricMotorPositions.First(x => x != PowertrainPosition.GEN);
-				if (DataBus.GearboxInfo.GearboxType.AutomaticTransmission() && DataBus.VehicleInfo.VehicleStopped &&
+				var emPos = DataBus.ElectricMotorsInfo.First(x => x.Position != PowertrainPosition.GEN).Position;
+				if (DataBus.GearboxesInfo.First().GearboxType.AutomaticTransmission() && DataBus.VehicleInfo.VehicleStopped &&
 					emPos == PowertrainPosition.HybridP1) {
 					best = eval.First(x => double.IsNaN(x.U));
 					return best;
 				}
-				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxInfo.GearEngaged(absTime)) {
+				if (ElectricMotorCanPropellDuringTractionInterruption || DataBus.GearboxesInfo.First().GearEngaged(absTime)) {
 					var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed())
 										.OrderBy(x => Math.Abs(GearList.Distance(currentGear, x.Gear))).ToArray();
 					if (!filtered.Any()) {
@@ -1631,7 +1627,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 			}
 
 			var emEngaged = !ElectricMotorCanPropellDuringTractionInterruption ||
-							DataBus.GearboxInfo.GearEngaged(absTime) && (eval.First().Response?.Gearbox.Gear.Engaged ?? true);
+							DataBus.GearboxesInfo.First().GearEngaged(absTime) && (eval.First().Response?.Gearbox.Gear.Engaged ?? true);
 			if (DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate && emEngaged) {
 				//var filtered = eval.Where(x => !x.IgnoreReason.InvalidEngineSpeed()).ToArray();
 				var batOK = eval.Where(x => !x.IgnoreReason.BatteryDemandExceeded()).ToArray();
@@ -1738,7 +1734,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 
 			var emPos = ModelData.ElectricMachinesData.First().Item1;
 
-			var emTorque = !ElectricMotorCanPropellDuringTractionInterruption && (!firstResponse.Gearbox.Gear.Engaged || !DataBus.GearboxInfo.GearEngaged(absTime)) ? null : firstResponse.ElectricMotor.MaxRecuperationTorque;
+			var emTorque = !ElectricMotorCanPropellDuringTractionInterruption && (!firstResponse.Gearbox.Gear.Engaged || !DataBus.GearboxesInfo.First().GearEngaged(absTime)) ? null : firstResponse.ElectricMotor.MaxRecuperationTorque;
 			return TryConfiguration(absTime, dt, outTorque, outAngularVelocity, currentGear, emPos, Tuple.Create(firstResponse.ElectricMotor.AngularVelocity, emTorque), double.NaN, AllowICEOff(absTime), dryRun);
 		}
 
@@ -1796,12 +1792,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 		protected Tuple<uint, uint> GetGearRange(Second absTime, bool dryRun)
 		{
 			var minimumShiftTimePassed =
-				(DataBus.GearboxInfo.LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
+				(DataBus.GearboxesInfo.First().LastShift + ModelData.GearshiftParameters.TimeBetweenGearshifts).IsSmallerOrEqual(absTime);
 			var gearRangeUpshift = ModelData.GearshiftParameters.AllowedGearRangeFC;
 			var gearRangeDownshift = ModelData.GearshiftParameters.AllowedGearRangeFC;
 			if (!AllowEmergencyShift) {
 				if (dryRun || !minimumShiftTimePassed ||
-					(absTime - DataBus.GearboxInfo.LastUpshift).IsSmaller(
+					(absTime - DataBus.GearboxesInfo.First().LastUpshift).IsSmaller(
 						ModelData.GearshiftParameters.DownshiftAfterUpshiftDelay /*, 0.1*/)
 					|| DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate &&
 					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(5.KMPHtoMeterPerSecond())) {
@@ -1809,7 +1805,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 				}
 
 				if (dryRun || !minimumShiftTimePassed ||
-					(absTime - DataBus.GearboxInfo.LastDownshift).IsSmaller(
+					(absTime - DataBus.GearboxesInfo.First().LastDownshift).IsSmaller(
 						ModelData.GearshiftParameters.UpshiftAfterDownshiftDelay /*,0.1*/)
 					|| DataBus.DriverInfo.DrivingAction == DrivingAction.Accelerate &&
 					DataBus.VehicleInfo.VehicleSpeed.IsSmaller(5.KMPHtoMeterPerSecond())) {
@@ -1929,7 +1925,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					//var emDriveTorque = ModelData.ElectricMachinesData.Where(x => x.Item1 == emPos).First().Item2.EfficiencyMap
 					//							.LookupTorque(emDrivePower, firstResponse.ElectricMotor.AngularVelocity, maxEmTorque);
 
-					var emDriveTorque = DataBus.ElectricMotorInfo(emPos).GetTorqueForElectricPower(voltage, emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt, new GearshiftPosition(1), dryRun);
+					var emDriveTorque = DataBus.ElectricMotorsInfo.First(x => x.Position == emPos).GetTorqueForElectricPower(voltage, emDrivePower, firstResponse.ElectricMotor.AngularVelocity, dt, new GearshiftPosition(1), dryRun);
 					var emDragTorque = ModelData.ElectricMachinesData.First(x => x.Item1 == emPos).Item2
 												.DragCurveLookup(firstResponse.ElectricMotor.AngularVelocity, nextGear);
 					if (emDriveTorque != null &&
@@ -1943,7 +1939,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Strategies
 					}
 				}
 
-				if (ElectricMotorCanPropellDuringTractionInterruption && (allowIceOff || !DataBus.GearboxInfo.GearEngaged(absTime)) /*&& (DataBus.DriverInfo.DrivingAction != DrivingAction.Brake || !DataBus.EngineInfo.EngineOn)*/) {
+				if (ElectricMotorCanPropellDuringTractionInterruption && (allowIceOff || !DataBus.GearboxesInfo.First().GearEngaged(absTime)) /*&& (DataBus.DriverInfo.DrivingAction != DrivingAction.Brake || !DataBus.EngineInfo.EngineOn)*/) {
 					// this means that the EM is between wheels and transmission
 					// search EM Torque that results in 0 torque at ICE out
 					try {

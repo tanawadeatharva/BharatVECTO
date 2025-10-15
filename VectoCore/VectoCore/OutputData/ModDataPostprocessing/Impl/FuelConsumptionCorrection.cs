@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Models;
+using System.Diagnostics;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
@@ -105,6 +102,8 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 	{
 		#region Implementation of IFuelConsumptionCorrection
 
+		public NoFuelConsumptionCorrection() {}
+
 		public IFuelProperties Fuel { get; }
 		public KilogramPerWattSecond EngineLineCorrectionFactor { get; }
 		public KilogramPerWattSecond VehicleLine { get; }
@@ -138,7 +137,44 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 		#endregion
 	}
 
-	public class FuelCellFuelConsumptionCorrection : IFuelConsumptionCorrection
+	public class ZeroFuelConsumptionCorrection : FuelConsumptionCorrection
+    {
+		public ZeroFuelConsumptionCorrection(IFuelProperties fuel, Meter distance, Second duration)
+		{
+			Fuel = fuel;
+			Distance = distance;
+			Duration = duration;
+
+			EngineLineCorrectionFactor = 0.SI<KilogramPerWattSecond>();
+			VehicleLine = 0.SI<KilogramPerWattSecond>();
+			FcModSum = 0.SI<Kilogram>();
+
+			FcESS_EngineStart = 0.SI<Kilogram>();
+
+            FcESS_AuxStandstill_ICEOff = 0.SI<Kilogram>();
+            FcESS_AuxStandstill_ICEOn = 0.SI<Kilogram>();
+
+            FcESS_AuxDriving_ICEOff = 0.SI<Kilogram>();
+            FcESS_AuxDriving_ICEOn = 0.SI<Kilogram>();
+
+            FcESS_DCDCMissing = 0.SI<Kilogram>();
+            FcBusAuxPSAirDemand = 0.SI<Kilogram>();
+
+            FcBusAuxPSDragICEOffStandstill = 0.SI<Kilogram>();
+            FcBusAuxPSDragICEOffDriving = 0.SI<Kilogram>();
+            FcREESSSoc = 0.SI<Kilogram>();
+            FcBusAuxEs = 0.SI<Kilogram>();
+            FcHeatPumpHeatingEl = 0.SI<Kilogram>();
+            FcHeatPumpHeatingMech = 0.SI<Kilogram>();
+            FcBusAuxEletcricHeater = 0.SI<Kilogram>();
+            FcBusAuxElPS = 0.SI<Kilogram>();
+            FcWHR = 0.SI<Kilogram>();
+			FcAuxHtr = 0.SI<Kilogram>();
+
+		}
+	}
+
+    public class FuelCellFuelConsumptionCorrection : IFuelConsumptionCorrection
 	{
 		private Kilogram FC_Map;
 

@@ -1,27 +1,20 @@
 ﻿#define TRACE_FC
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Cryptography.X509Certificates;
-using NLog.LayoutRenderers;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.Battery;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 
@@ -131,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
 		private ElectricSystem GetElectricSystem(IElectricEnergyStorage batSystem, BatterySystemData batData)
 		{
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 			return es;
@@ -535,7 +528,7 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl.FuelCell
             batSystem.Initialize(SoC);
             var dummyContainer = new SimpleModDataContainer();
 
-			var es = new ElectricSystem(null, batData);
+			var es = new TestpowertrainElectricSystem(null, batData);
 			es.Connect(batSystem);
 
 

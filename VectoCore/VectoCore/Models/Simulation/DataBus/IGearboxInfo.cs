@@ -34,7 +34,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -75,6 +74,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Second TractionInterruption { get; }
 		uint NumGears { get; }
 
+		bool Disengaged { get; }
+
 		bool DisengageGearbox { get; }
 
 		bool GearEngaged(Second absTime);
@@ -82,6 +83,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		bool RequestAfterGearshift { get; set; }
 
 		IShiftStrategy Strategy { get; }
+
+		int AxleNumber {  get; }
 	}
 
 	public interface IGearboxControl

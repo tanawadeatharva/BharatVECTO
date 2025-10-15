@@ -11,7 +11,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -54,6 +53,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(CompletedFile32, BusHVACSystemConfiguration.Configuration8, false, TestName = "CompletedBus AirDistribution sanitycheck error, grp 34b cfg 8/false"),
 		TestCase(CompletedFile32, BusHVACSystemConfiguration.Configuration9, false, TestName = "CompletedBus AirDistribution sanitycheck error, grp 34b cfg 9/false"),
 		TestCase(CompletedFile32, BusHVACSystemConfiguration.Configuration10, false, TestName = "CompletedBus AirDistribution sanitycheck error, grp 34b cfg 10/false"),
+			Category(Definitions.TESTCASE_MIGRATED)
         ]
         public void TestSeparateAirDistributionDuctsError(string completedJob, BusHVACSystemConfiguration hvacConfig, bool separateDucts)
 		{
@@ -105,6 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		TestCase(CompletedFile33b1, BusHVACSystemConfiguration.Configuration5, true, TestName = "CompletedBus AirDistribution sanitycheck OK, grp 33b1 cfg 5/true"),
 		TestCase(CompletedFile33b1, BusHVACSystemConfiguration.Configuration6, true, TestName = "CompletedBus AirDistribution sanitycheck OK, grp 33b1 cfg 6/true"),
 		TestCase(CompletedFile33b1, BusHVACSystemConfiguration.Configuration7, true, TestName = "CompletedBus AirDistribution sanitycheck OK, grp 33b1 cfg 7/true"),
+		Category(Definitions.TESTCASE_MIGRATED)
 		]
         public void TestSeparateAirDistributionDuctsOk(string completedJob, BusHVACSystemConfiguration hvacConfig, bool separateDucts)
         {

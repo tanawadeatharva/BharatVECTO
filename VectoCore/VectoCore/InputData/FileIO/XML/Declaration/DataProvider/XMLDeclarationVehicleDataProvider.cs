@@ -1,6 +1,5 @@
 ﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
 #define PROHIBIT_OLD_XML
-#define PROHIBIT_V27_XML
 #endif
 
 //#define PROHIBIT_OLD_XML
@@ -41,7 +40,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -49,10 +47,10 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 
@@ -86,14 +84,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 #endif
         }
-
-        protected XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, int dummy)
-			: base(xmlNode, sourceFile)
-		{
-			Job = jobData;
-			SourceType = DataSourceType.XMLEmbedded;
-		}
-
 
         public virtual XmlElement ComponentNode
 		{
@@ -136,6 +126,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual bool ExemptedVehicle => ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle);
 
 		public virtual string VIN => GetString(XMLNames.Vehicle_VIN);
+
+		public string VerificationToolLicenseNumber => null;
 
 		public virtual LegislativeClass? LegislativeClass => GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>();
 			//get { return GetString("LegislativeCategory").ParseEnum<LegislativeClass>(); }
@@ -325,7 +317,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, 0)
+			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, true)
 		{
 #if PROHIBIT_OLD_XML
 			if (!allowDeprecated) {
@@ -333,10 +325,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 #endif
         }
-
-        protected XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, int dummy) :
-			base(jobData, xmlNode, sourceFile, dummy) {}
 
         protected override XNamespace SchemaNamespace => NAMESPACE_URI;
 
@@ -392,7 +380,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 
 		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode,
-			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, 0)
+			string sourceFile, bool allowDeprecated) : base(jobData, xmlNode, sourceFile, true)
 		{
 #if PROHIBIT_OLD_XML
 			if (!allowDeprecated) {
@@ -569,10 +557,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual string PowertrainPositionPrefix => "-";
 
+        #region IXMLDeclarationVehicleData interface
 
-		#region IXMLDeclarationVehicleData interface
+        public string VIN => GetString(XMLNames.Vehicle_VIN);
 
-		public string VIN => GetString(XMLNames.Vehicle_VIN);
+		public string VerificationToolLicenseNumber => ElementExists(XMLNames.Vehicle_SimulationToolLicenseNumber) 
+			? GetString(XMLNames.Vehicle_SimulationToolLicenseNumber) : null;
 
 		public string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") ? GetString("SimulationToolLicenseNumber") : null;
 
@@ -583,7 +573,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public HydrogenStorageTechnology? HydrogenStorageTechnology => HydrogenStorageTechnologyHelper.Parse(
 			ElementExists("HydrogenStorageTechnology") ? GetString("HydrogenStorageTechnology") : null);
 
-		public bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
+		public virtual bool BatteryOnlyMode => ElementExists("BatteryOnlyMode") ? GetBool("BatteryOnlyMode") : false;
 
 		public DynamicChargingTechnology DynamicChargingTechnology => DynamicChargingTechnologyHelper.Parse(
             ElementExists("DynamicChargingTechnology") ? GetString("DynamicChargingTechnology") : null);
@@ -726,6 +716,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
+	public class XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV11(
+			IXMLPrimaryVehicleBusJobInputData busJobData,
+			XmlNode xmlNode,
+			string sourceFile)
+			: base(busJobData, xmlNode, sourceFile)
+		{ }
+    }
+
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
@@ -749,9 +753,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	}
 
-	// ---------------------------------------------------------------------------------------
+	public class XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_HEV_Px_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) 
+		{ }
+
+        public override bool OVC => GetBool("OVC");
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -768,9 +785,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override string PowertrainPositionPrefix => "E";
 	}
 
-	// ---------------------------------------------------------------------------------------
+	public class XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_HEV_Sx_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) 
+		{ }
+
+        public override bool OVC => GetBool("OVC");
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -787,9 +817,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override string PowertrainPositionPrefix => "S";
 	}
 
-	// ---------------------------------------------------------------------------------------
+	public class XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_HEV_IEPC_S_PrimaryVehicleBusDataProviderV11(
+			IXMLPrimaryVehicleBusJobInputData busJobData, 
+			XmlNode xmlNode, 
+			string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) 
+		{ }
+
+        public override bool OVC => GetBool("OVC");
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -808,9 +854,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override string PowertrainPositionPrefix => "E";
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
 
-	public class XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_PEV_Ex_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) 
+		{ }
+
+		public override bool OVC => GetBool("OVC");
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -828,9 +887,161 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	}
 
+	public class XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_PEV_IEPC_PrimaryVehicleBusDataProviderV11(
+			IXMLPrimaryVehicleBusJobInputData busJobData, 
+			XmlNode xmlNode, 
+			string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) 
+		{ }
+
+        public override bool OVC => GetBool("OVC");
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistage_FCHV_Fx_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "FCHV_Fx_VehicleVIFType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_FCHV_Fx_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) { }
+
+		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV;
+
+        public override bool OVC => GetBool("OVC");
+
+        public override string PowertrainPositionPrefix => "F";
+    }
+
+    public class XMLDeclarationMultistage_FCHV_IEPC_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "FCHV_IEPC_VehicleVIFType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_FCHV_IEPC_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
+            : base(busJobData, xmlNode, sourceFile) { }
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.FCHV_IEPC;
+
+        public override bool OVC => GetBool("OVC");
+
+        public override string PowertrainPositionPrefix => "F";
+	}
+
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+	public abstract class XMLDeclarationMultistage_Multiple_PrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
+    {
+        public XMLDeclarationMultistage_Multiple_PrimaryVehicleBusDataProviderV01(IXMLPrimaryVehicleBusJobInputData jobData, XmlNode xmlNode, string sourceFile)
+            : base(jobData, xmlNode, sourceFile)
+        { }
+
+        public override string PowertrainPositionPrefix => null;
+
+        public override bool OVC => GetBool("OVC");
+
+        public override ArchitectureID ArchitectureIDPwt2 => ArchitectureIDHelper.Parse(GetString("ArchitectureIDPwt2"));
+
+        public override TableData BoostingLimitations => null;
+
+        public override IList<ITorqueLimitInputData> TorqueLimits => null;
+
+        public override RetarderType GetRetarderType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
+        {
+            var node = GetNodes(XMLNames.Vehicle_RetarderType).Cast<XmlNode>().FirstOrDefault(x => int.Parse(GetAttribute(x, "axleNumber")) == axleNumber);
+
+            if (node == null)
+            {
+                throw new VectoException($"No {XMLNames.Vehicle_RetarderType} found for axle number: {axleNumber}");
+            }
+
+            return RetarderTypeHelper.Parse(node.InnerText);
+        }
+
+        public override double GetRetarderRatio(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
+        {
+            var node = GetNodes(XMLNames.Vehicle_RetarderRatio).Cast<XmlNode>().FirstOrDefault(x => int.Parse(GetAttribute(x, "axleNumber")) == axleNumber);
+
+            return (node != null) ? double.Parse(node.InnerText) : 0;
+        }
+
+        public override AngledriveType GetAngledriveType(int axleNumber = Constants.NOT_IN_AXLE_POWERTRAIN)
+        {
+            var node = GetNodes(XMLNames.Vehicle_AngledriveType).Cast<XmlNode>().FirstOrDefault(x => int.Parse(GetAttribute(x, "axleNumber")) == axleNumber);
+
+            if (node == null)
+            {
+                throw new VectoException($"No {XMLNames.Vehicle_AngledriveType} found for axle number: {axleNumber}");
+            }
+
+            return node.InnerText.ParseEnum<AngledriveType>();
+        }
+    }
+
+    public class XMLDeclarationMultistage_Multiple_FCHV_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Multiple_PrimaryVehicleBusDataProviderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_FCHV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_Multiple_FCHV_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
+            : base(busJobData, xmlNode, sourceFile) { }
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_FCHV;
+
+        public override string PowertrainPositionPrefix => "F";
+    }
+
+	public class XMLDeclarationMultistage_Multiple_PEV_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Multiple_PrimaryVehicleBusDataProviderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_PEV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_Multiple_PEV_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
+            : base(busJobData, xmlNode, sourceFile) { }
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_PEV;
+
+        public override string PowertrainPositionPrefix => "E";
+    }
+
+	public class XMLDeclarationMultistage_Multiple_SHEV_PrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistage_Multiple_PrimaryVehicleBusDataProviderV01
+    {
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new const string XSD_TYPE = "Multiple_SHEV_VehicleType";
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistage_Multiple_SHEV_PrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile)
+            : base(busJobData, xmlNode, sourceFile) { }
+
+        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_SHEV;
+
+        public override string PowertrainPositionPrefix => "S";
+    }
+
+    // ---------------------------------------------------------------------------------------
+
+    public class XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01 : XMLDeclarationMultistage_Conventional_PrimaryVehicleBusDataProviderV01
 	{
 
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_VO1;
@@ -857,22 +1068,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override VectoSimulationJobType VehicleType { get => VectoSimulationJobType.ConventionalVehicle; }
 	}
 
-	// ---------------------------------------------------------------------------------------
+    public class XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV11 : XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV01
+	{
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+        public XMLDeclarationMultistageExemptedPrimaryVehicleBusDataProviderV11(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode xmlNode, string sourceFile) 
+			: base(busJobData, xmlNode, sourceFile) { }
+    }
+
+    // ---------------------------------------------------------------------------------------
 
 
-	public abstract class AbstractXMLVehicleDataProviderV24 : XMLDeclarationVehicleDataProviderV20
+    public abstract class AbstractXMLVehicleDataProviderV24 : XMLDeclarationVehicleDataProviderV20
 	{
 		public virtual string PowertrainPositionPrefix => "P";
 
 		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
-		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-			base(jobData, xmlNode, sourceFile, 0) { }
+		protected AbstractXMLVehicleDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) :
+			base(jobData, xmlNode, sourceFile, true) 
+		{
+#if PROHIBIT_OLD_XML
+            if (!allowDeprecated)
+            {
+                throw new VectoException("XML Jobs in version 2.4 are no longer supported!");
+            }
+#endif
+        }
 
 
-		#region Overrides of XMLDeclarationVehicleDataProviderV10
+        #region Overrides of XMLDeclarationVehicleDataProviderV10
 
-		public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
+        public override bool ZeroEmissionVehicle => GetBool(XMLNames.Vehicle_ZeroEmissionVehicle);
 
 		public override bool VocationalVehicle => GetBool(XMLNames.Vehicle_VocationalVehicle);
 
@@ -978,17 +1207,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationJobInputData jobData,
 			XmlNode xmlNode,
 			string sourceFile)
-			: base(jobData, xmlNode, sourceFile)
-		{
-			CheckVehicleAllowed();
-		}
-
-        protected virtual void CheckVehicleAllowed(string extraMessage = "")
-        {
-#if PROHIBIT_V27_XML
-            throw new VectoException($"This v2.7 vehicle is not supported yet. {extraMessage}");
-#endif
-        }
+			: base(jobData, xmlNode, sourceFile, true)
+		{}
 
         public override string PowertrainPositionPrefix => null;
 

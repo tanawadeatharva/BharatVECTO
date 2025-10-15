@@ -19,8 +19,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24;
 		
 		public AbstractXMLDeclarationCompletedBusDataProviderV24(
-			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-			: base(jobData, xmlNode, sourceFile) { }
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated = false)
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override string Model {
 			get {
@@ -191,7 +191,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationConventionalCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationConventionalCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
+
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.ConventionalVehicle;
 	}
 
@@ -204,7 +206,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationHevCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationHevCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		private VectoSimulationJobType? _vehicleType = null;
 		public override VectoSimulationJobType VehicleType
@@ -262,7 +265,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationPEVCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
+
 		public override VectoSimulationJobType VehicleType => VectoSimulationJobType.BatteryElectricVehicle;
 		public override bool OVC => true;
 
@@ -277,7 +282,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v24
 		public new static readonly string QUALIFIED_XSD_TYPE =
 			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+		public XMLDeclarationIepcCompletedBusDataProviderV24(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile, bool allowDeprecated) 
+			: base(jobData, xmlNode, sourceFile, allowDeprecated) { }
 
 		public override bool OVC => true;
 

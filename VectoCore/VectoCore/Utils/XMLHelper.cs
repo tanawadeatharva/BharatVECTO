@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -158,9 +157,13 @@ namespace TUGraz.VectoCore.Utils
 		public static object[] ValueAsUnit(this CubicMeter volume, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
-				case "ltr": return GetValueAsUnit(volume.ConvertToCubicDeziMeter(), unit, decimals);
-				case "ccm": return GetValueAsUnit(volume.ConvertToCubicCentiMeter(), unit, decimals);
-				case "m3": return GetValueAsUnit(volume.Value(), unit, decimals);
+				case "l": 
+				case "ltr": 
+					return GetValueAsUnit(volume.ConvertToCubicDeziMeter(), unit, decimals);
+				case "ccm":
+					return GetValueAsUnit(volume.ConvertToCubicCentiMeter(), unit, decimals);
+				case "m3":
+					return GetValueAsUnit(volume.Value(), unit, decimals);
 			}
 
 			throw new NotImplementedException($"unknown unit '{unit}'");

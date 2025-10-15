@@ -1,17 +1,10 @@
-﻿using NLog.Fluent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter.Components
@@ -135,7 +128,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 				steeringPumpData.Select(x => new XElement(_mrf + "SteeringPumpTechnology", x)),
 				_mrfFactory.GetPrimaryBusElectricSystemType_PEV().GetElement(auxData),
 				_mrfFactory.GetPrimaryBusPneumaticSystemType_PEV_IEPC().GetElement(auxData)
-				//_mrfFactory.GetPrimaryBusHVACSystemType_PEV().GetXmlType(auxData)
 			);
 		}
 
@@ -161,34 +153,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		#endregion
 	}
 
-	public class MRFPrimaryBusHVACSystemType_PEV : AbstractMrfXmlType, IMRFBusAuxiliariesType
-	{
-		public MRFPrimaryBusHVACSystemType_PEV(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		#region Implementation of IMRFBusAuxiliariesType
-
-		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
-		{
-			var hvac = auxData.HVACAux;
-			return new XElement(_mrf + "HVACSystem",
-				new XElement(_mrf + XMLNames.Bus_AdjustableCoolantThermostat, hvac.AdjustableCoolantThermostat));
-		}
-
-		#endregion
-	}
-
 	internal class MRFConventionalCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
 		public MRFConventionalCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
 
 		#region Implementation of IMRFBusAuxiliariesType
 
@@ -208,15 +175,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	{
 		public MRFHEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
-
 		#region Implementation of IMRFBusAuxiliariesType
 
 		public XElement GetElement(IBusAuxiliariesDeclarationData auxData)
@@ -234,15 +192,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 	internal class MRFPEVCompletedBusAuxType : AbstractMrfXmlType, IMRFBusAuxiliariesType
 	{
 		public MRFPEVCompletedBusAuxType(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
-
-		#region Overrides of AbstractMrfXmlType
-
-		public XElement GetXmlType(IDeclarationInputDataProvider inputData)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
 
 		#region Implementation of IMRFBusAuxiliariesType
 

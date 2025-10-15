@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using Moq;
 using Ninject;
 using NUnit.Framework;
@@ -10,18 +9,11 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.PrimaryBus;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponents.AuxiliaryDataAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
 using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.PrimaryBusRunDataFactory;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl.SimulatorFactory;
 using TUGraz.VectoCore.Tests.InputData.RunDataFactory;
-using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 {
@@ -71,7 +63,8 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			new[] { "Full electric steering gear" },
 			"Vacuum pump + elec. driven",
 			false,
-			TestName = "PHEVAuxPass")]
+			TestName = "PHEVAuxPass"),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void HeavyLorryPEVAuxiliaryDataAdapterFailTest(VectoSimulationJobType jobType, string[] spTechnologies,
 			string psTechnology, bool fail, int? steeredAxles = null)
 		{
@@ -101,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 			auxData.AddAuxiliaries(steeringSystem.Object, hvac.Object, pneumatic.Object, elSystem.Object);
 			try {
 				dataAdapter.CreateAuxiliaryData(auxData.Object, null, MissionType.LongHaul, VehicleClass.Class12,
-					4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle);
+					4.SI<Meter>(), steeredAxles ?? 1, VectoSimulationJobType.BatteryElectricVehicle, false);
 			} catch (Exception ex) {
 				if (fail) {
 					Assert.Pass($"Expected Exception {ex.Message}");
@@ -169,6 +162,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 				VehicleClass.ClassP33DD, 15041),
 			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 4,
 				VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED),
 		]
 		public void PrimaryBusCurbMassTest_HighTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
@@ -232,6 +226,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
 				VehicleClass.ClassP33DD, 15041),
 			TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 4,
 				VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED),
 		]
 		public void PrimaryBusCurbMassTest_LowTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
@@ -301,6 +296,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
                 VehicleClass.ClassP33DD, 15041),
             TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 25000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED)
         ]
 		public void CompletedGenericBusCurbMassTest_HighTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,
@@ -364,6 +360,7 @@ namespace TUGraz.VectoCore.Tests.InputData.DeclarationDataAdapterTest
                 VehicleClass.ClassP33DD, 15041),
             TestCase(VectoSimulationJobType.BatteryElectricVehicle, ArchitectureID.E2, Axl3, false, 13000, 4, VC_CF, RC_II, false,
                 VehicleClass.ClassP33DD, 14166),
+			Category(Definitions.TESTCASE_MIGRATED)
         ]
 		public void CompletedGenericBusCurbMassTest_LowTPMLM(VectoSimulationJobType jobType, ArchitectureID archId,
 			AxleConfiguration axleConfiguration, bool articulated, double TPMLM, int runIdx,

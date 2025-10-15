@@ -1,12 +1,4 @@
-﻿#if CERTIFICATION_RELEASE || RELEASE_CANDIDATE
-#define PROHIBIT_V27_XML
-#endif
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -25,17 +17,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27;
 
         public AbstractXMLDeclarationCompletedBusDataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
-            : base(jobData, xmlNode, sourceFile) 
-        {
-            CheckVehicleAllowed();
-        }
-
-        protected virtual void CheckVehicleAllowed()
-        {
-#if PROHIBIT_V27_XML
-            throw new VectoException("This v2.7 vehicle is not supported yet. Buses not supported yet.");
-#endif
-        }
+            : base(jobData, xmlNode, sourceFile, true) 
+        {}
 
         public override string SimulationToolLicenseNumber => ElementExists("SimulationToolLicenseNumber") 
             ? GetString("SimulationToolLicenseNumber")
@@ -56,9 +39,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override HydrogenStorageTechnology? HydrogenStorageTechnology => ElementExists(XMLNames.Vehicle_H2StorageTechnology)
             ? EnumHelper.ParseEnum<HydrogenStorageTechnology>(GetString(XMLNames.Vehicle_H2StorageTechnology))
             : (HydrogenStorageTechnology?)null;
-    }
+		protected override XNamespace SchemaNamespace => NAMESPACE_URI;
+	}
 
-    public class XMLDeclaration_Conventional_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
+	public class XMLDeclaration_Conventional_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
     {
         public new const string XSD_TYPE = "Vehicle_Conventional_CompletedBusDeclarationType";
         public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
@@ -149,43 +133,4 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider.v27
         public override bool HybridElectricHDV => true;
     }
 
-    public class XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
-    {
-        public new const string XSD_TYPE = "Vehicle_Multiple_SHEV_CompletedBusDeclarationType";
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-        public XMLDeclaration_Multiple_SHEV_CompletedBus_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-            base(jobData, xmlNode, sourceFile)
-        { }
-
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_SHEV;
-
-        public override bool HybridElectricHDV => true;
-    }
-
-    public class XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
-    {
-        public new const string XSD_TYPE = "Vehicle_Multiple_PEV_CompletedBusDeclarationType";
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-        public XMLDeclaration_Multiple_PEV_CompletedBus_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-            base(jobData, xmlNode, sourceFile)
-        { }
-
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_PEV;
-    }
-
-    public class XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27 : AbstractXMLDeclarationCompletedBusDataProviderV27
-    {
-        public new const string XSD_TYPE = "Vehicle_Multiple_FCHV_CompletedBusDeclarationType";
-        public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-        public XMLDeclaration_Multiple_FCHV_CompletedBus_DataProviderV27(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
-            base(jobData, xmlNode, sourceFile)
-        { }
-
-        public override VectoSimulationJobType VehicleType => VectoSimulationJobType.Multiple_FCHV;
-
-        public override bool HybridElectricHDV => true;
-    }
 }

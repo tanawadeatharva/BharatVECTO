@@ -1,5 +1,4 @@
 ﻿using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 
@@ -7,7 +6,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class PWheelBatteryElectricMotorController : BatteryElectricMotorController
     {
-        public PWheelBatteryElectricMotorController(IVehicleContainer container, ElectricSystem es) : base(container, es)
+        public PWheelBatteryElectricMotorController(IVehicleContainer container, IElectricSystem es) : base(container, es)
         {}
 
         protected override bool CannotProvideRecuperationAtLowSpeed(NewtonMeter outTorque)

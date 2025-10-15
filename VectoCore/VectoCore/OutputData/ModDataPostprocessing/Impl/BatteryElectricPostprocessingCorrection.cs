@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.Impl.DeclarationMode.CompletedBusRunDataFactory;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.OutputData.ModDataPostprocessing;
 
 namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 {
@@ -17,6 +12,11 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 
         public override ICorrectedModalData ApplyCorrection(IModalDataContainer modData, VectoRunData runData)
         {
+			return DoApplyCorrection(modData, runData);
+		}
+
+		protected virtual ICorrectedModalData DoApplyCorrection(IModalDataContainer modData, VectoRunData runData)
+		{
             var chgEfficiency = DeclarationData.CalculateChargingEfficiencyPEV(runData);
 
             var deltaEPSel = 0.SI<WattSecond>();
@@ -36,16 +36,16 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
                             runData.DCDCData.DCDCEfficiency;
 
             }
-			var corrected = new PEVCorrectedModalData(modData)
-			{
-				CorrectedAirDemand = airDemandCorr,
-				DeltaAir = deltaAir,
-				WorkBusAux_elPS_SoC_ElRange = deltaEPSel,
-				ElectricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int),
-				ElectricEnergyConsumption_Final = (-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) + deltaEPSel) / chgEfficiency,
-			};
 
-            SetAuxHeaterDemand(modData, runData, corrected);
+			var corrected = GetModalDataCorrection(modData);
+
+			corrected.CorrectedAirDemand = airDemandCorr;
+			corrected.DeltaAir = deltaAir;
+			corrected.WorkBusAux_elPS_SoC_ElRange = deltaEPSel;
+			corrected.ElectricEnergyConsumption_SoC = -modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int);
+			corrected.ElectricEnergyConsumption_Final = (-modData.TimeIntegral<WattSecond>(ModalResultField.P_reess_int) + deltaEPSel) / chgEfficiency;
+
+				SetAuxHeaterDemand(modData, runData, corrected);
 			if (corrected.AuxHeaterDemand?.IsGreater(0) ?? false) {
                
 				var f = FuelData.Diesel;
@@ -60,11 +60,14 @@ namespace TUGraz.VectoCore.OutputData.ModDataPostprocessing.Impl
 				corrected.FuelCorrection[f.FuelType] = fc;
 			}
 
-
-
 			return corrected;
 		}
 
-        #endregion
+		protected virtual AbstractCorrectedModalData GetModalDataCorrection(IModalDataContainer modData)
+		{
+			return new PEVCorrectedModalData(modData);
+		}
+
+		#endregion
     }
 }

@@ -9,13 +9,14 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	/// Represents a cycle which is directly connected to the electric system
-	/// </summary>
-	public class ElectricSystemDrivingCycle : StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, IElectricSystem>, 
+    /// <summary>
+    /// Represents a cycle which is directly connected to the electric system
+    /// </summary>
+    public class ElectricSystemDrivingCycle : StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, IElectricSystem>, 
 		ITnInProvider,
 		ISimulationOutPort, IDrivingCycleInfo
 	{
@@ -24,7 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Second AbsTime { get; set; }
 
-		public ElectricSystemDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
+		public ElectricSystemDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Data = cycle;
 			CycleIterator = new DrivingCycleEnumerator(Data);

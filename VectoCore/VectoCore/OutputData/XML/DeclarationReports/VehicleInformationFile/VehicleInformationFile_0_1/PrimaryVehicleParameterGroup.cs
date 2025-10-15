@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -64,11 +65,15 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 	{
 		public PrimaryBusRetarderParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of AbstractVIFGroupWriter
-
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
+
+			if (vehicle.Components.AxlePowertrainInputData?.Count > 0)
+			{
+				return GetMultipleRetarders(vehicle);
+            }
+			
 			var result = new List<XElement>
 			{
 				new XElement(_vif + XMLNames.Vehicle_RetarderType, vehicle.Components.RetarderInputData.Type.ToXMLFormat()),
@@ -79,29 +84,43 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return result;
 		}
 
-		#endregion
-	}
+		private IList<XElement> GetMultipleRetarders(IVehicleDeclarationInputData vehicle)
+		{
+			var result = new List<XElement>();
+
+			foreach(var axlePt in vehicle.Components.AxlePowertrainInputData.Where(x => x.RetarderInputData != null))
+			{
+				result.Add(new XElement(_vif + XMLNames.Vehicle_RetarderType, 
+					new XAttribute("axleNumber", axlePt.AxleNumber),
+					axlePt.RetarderInputData.Type.ToXMLFormat()));
+			}
+
+            foreach (var axlePt in vehicle.Components.AxlePowertrainInputData.Where(x => x.RetarderInputData?.Type.IsDedicatedComponent() ?? false))
+            {
+				result.Add(new XElement(_vif + XMLNames.Vehicle_RetarderRatio,
+                    new XAttribute("axleNumber", axlePt.AxleNumber),
+                    axlePt.RetarderInputData.Ratio.ToXMLFormat(3)));
+            }
+
+            return result;
+        }
+    }
 
 	public class PrimaryBusXeVParameterGroup : AbstractVIFGroupWriter
 	{
 		public PrimaryBusXeVParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of AbstractVIFGroupWriter
-
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			var vehicle = inputData.JobInputData.Vehicle;
 
-			var result = new List<XElement> {
-				new XElement(_vif + XMLNames.Vehicle_OvcHev, vehicle.OVC),
+            return new List<XElement> 
+			{
+				new XElement(_vif + "OVC", vehicle.OVC),
+				new XElement(_vif + "BatteryOnlyMode", vehicle.BatteryOnlyMode),
+				new XElement(_vif + "DynamicChargingTechnology", vehicle.DynamicChargingTechnology.ToXMLFormat())
 			};
-			if (vehicle.ArchitectureID.IsHybridVehicle() && vehicle.OVC) {
-				result.Add(new XElement(_vif + XMLNames.Vehicle_MaxChargingPower, vehicle.MaxChargingPower.Value()));
-			}
-			return result;
 		}
-
-		#endregion
 	}
 
 	
@@ -128,7 +147,12 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(_vifReportFactory.GetConventionalADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
 			result.Add(_vifReportFactory.GetTorqueLimitsType().GetElement(inputData));
-			
+			if (vehicle.H2StorageUsableCapacity != null)
+			{
+				result.Add(new XElement(_vif + "H2StorageUsableCapacity", vehicle.H2StorageUsableCapacity.ToXMLFormat(1)));
+				result.Add(new XElement(_vif + "HydrogenStorageTechnology", vehicle.HydrogenStorageTechnology));
+			}
+
 			return result;
 		}
 
@@ -196,31 +220,181 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 		#endregion
 	}
 
-	public class IepcVehicleParameterGroup : AbstractVIFGroupWriter
+	public class FCHV_Fx_VehicleParameterGroup : AbstractVIFGroupWriter
 	{
-		public IepcVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+        public FCHV_Fx_VehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
 
-		#region Overrides of AbstractVIFGroupWriter
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = inputData.JobInputData.Vehicle;
 
-		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
-		{
-			var vehicle = inputData.JobInputData.Vehicle;
-
-			var result = new List<XElement>();
+            var result = new List<XElement>();
+            
 			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
-			result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
-			result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, vehicle.Components.AngledriveInputData.Type.ToXMLFormat()));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
-			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
-			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+            result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+            result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+            result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+            
+			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
+            if (motorTorqueLimits != null)
+                result.Add(motorTorqueLimits);
+            
+			result.Add(new XElement(_vif + "H2StorageUsableCapacity", vehicle.H2StorageUsableCapacity.ToXMLFormat(1)));
+            result.Add(new XElement(_vif + "HydrogenStorageTechnology", vehicle.HydrogenStorageTechnology));
+
+            return result;
+		}
+	}
+
+	public class FCHV_IEPC_VehicleParameterGroup : AbstractVIFGroupWriter
+	{
+        public FCHV_IEPC_VehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = inputData.JobInputData.Vehicle;
+
+            var result = new List<XElement>();
+            
+			result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_AngledriveType, (vehicle.Components.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat()));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+            result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+            result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+            result.Add(new XElement(_vif + "H2StorageUsableCapacity", vehicle.H2StorageUsableCapacity.ToXMLFormat(1)));
+            result.Add(new XElement(_vif + "HydrogenStorageTechnology", vehicle.HydrogenStorageTechnology));
+
+            return result;
+		}
+	}
+
+	public abstract class AbstractMultipleVehicleParameterGroup : AbstractVIFGroupWriter
+	{
+        public AbstractMultipleVehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+		protected IList<XElement> GetMultipleAngledrives(IVehicleDeclarationInputData vehicle)
+		{
+            var result = new List<XElement>();
+
+			foreach (var axlePt in vehicle.Components.AxlePowertrainInputData)
+			{
+                result.Add(new XElement(
+					_vif + XMLNames.Vehicle_AngledriveType,
+					new XAttribute("axleNumber", axlePt.AxleNumber),
+					(axlePt.AngledriveInputData?.Type ?? AngledriveType.None).ToXMLFormat())
+				);
+            }
 
 			return result;
-		}
+        }
+    }
 
-		#endregion
-	}
+    public class Multiple_FCHV_VehicleParameterGroup : AbstractMultipleVehicleParameterGroup
+	{
+        public Multiple_FCHV_VehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = inputData.JobInputData.Vehicle;
+
+            var result = new List<XElement>();
+
+            result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+            result.AddRange(GetMultipleAngledrives(vehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+            result.Add(new XElement(_vif + "ArchitectureIDPwt2", vehicle.ArchitectureIDPwt2.GetLabel()));
+            result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+            result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+
+            var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
+            if (motorTorqueLimits != null)
+            {
+                result.Add(motorTorqueLimits);
+            }
+
+            result.Add(new XElement(_vif + "H2StorageUsableCapacity", vehicle.H2StorageUsableCapacity.ToXMLFormat(1)));
+            result.Add(new XElement(_vif + "HydrogenStorageTechnology", vehicle.HydrogenStorageTechnology));
+
+            return result;
+        }
+    }
+
+	public class Multiple_SHEV_VehicleParameterGroup : AbstractMultipleVehicleParameterGroup
+	{
+        public Multiple_SHEV_VehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = inputData.JobInputData.Vehicle;
+
+            var result = new List<XElement>();
+
+            result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_IdlingSpeed, vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)));
+            result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+            result.AddRange(GetMultipleAngledrives(vehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+            result.Add(new XElement(_vif + "ArchitectureIDPwt2", vehicle.ArchitectureIDPwt2.GetLabel()));
+            result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+            result.Add(_vifReportFactory.GetHEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+
+            var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
+            if (motorTorqueLimits != null)
+            {
+                result.Add(motorTorqueLimits);
+            }
+
+            if (vehicle.H2StorageUsableCapacity != null)
+            {
+                result.Add(new XElement(_vif + "H2StorageUsableCapacity", vehicle.H2StorageUsableCapacity.ToXMLFormat(1)));
+                result.Add(new XElement(_vif + "HydrogenStorageTechnology", vehicle.HydrogenStorageTechnology));
+            }
+
+            return result;
+        }
+    }
+
+    public class Multiple_PEV_VehicleParameterGroup : AbstractMultipleVehicleParameterGroup
+    {
+        public Multiple_PEV_VehicleParameterGroup(IVIFReportFactory vifReportFactory) : base(vifReportFactory) { }
+
+        public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
+        {
+            var vehicle = inputData.JobInputData.Vehicle;
+
+            var result = new List<XElement>();
+
+            result.AddRange(_vifReportFactory.GetPrimaryBusGeneralParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusChassisParameterGroup().GetElements(inputData));
+            result.AddRange(_vifReportFactory.GetPrimaryBusRetarderParameterGroup().GetElements(inputData));
+			result.AddRange(GetMultipleAngledrives(vehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
+            result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
+            result.Add(new XElement(_vif + "ArchitectureIDPwt2", vehicle.ArchitectureIDPwt2.GetLabel()));
+            result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
+            result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+            
+			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
+			if (motorTorqueLimits != null)
+			{
+				result.Add(motorTorqueLimits);
+			}
+
+            return result;
+        }
+    }
 
 	public class PevExVehicleParameterGroup : AbstractVIFGroupWriter
 	{
@@ -269,11 +443,8 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ZeroEmissionVehicle, vehicle.ZeroEmissionVehicle));
 			result.Add(new XElement(_vif + XMLNames.Vehicle_ArchitectureID, vehicle.ArchitectureID.GetLabel()));
 			result.AddRange(_vifReportFactory.GetPrimaryBusXevParameterGroup().GetElements(inputData));
-			result.Add(_vifReportFactory.GetIEPCADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
-			var motorTorqueLimits = _vifReportFactory.GetElectricMotorTorqueLimitsType().GetElement(inputData);
-			if (motorTorqueLimits != null)
-				result.Add(motorTorqueLimits);
-
+			result.Add(_vifReportFactory.GetPEVADASType().GetXmlType(inputData.JobInputData.Vehicle.ADAS));
+			
 			return result;
 		}
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Moq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -30,6 +29,7 @@ public class DriverDataTest
 	TestCase(VehicleClass.Class16),
 	TestCase(VehicleClass.Class53),
 	TestCase(VehicleClass.Class54),
+		Category(Definitions.TESTCASE_MIGRATED)
     ]
 	public void TestLorryDeclarationDriverData(VehicleClass group)
 	{

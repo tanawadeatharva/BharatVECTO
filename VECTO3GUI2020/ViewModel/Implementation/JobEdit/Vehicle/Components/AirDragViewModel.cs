@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection.Emit;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using VECTO3GUI2020.ViewModel.Implementation.Common;
 using VECTO3GUI2020.ViewModel.Interfaces.JobEdit.Vehicle.Components;
 
@@ -235,4 +233,21 @@ namespace VECTO3GUI2020.ViewModel.Implementation.JobEdit.Vehicle.Components
 
 		}
 	}
+
+    public class AirDragViewModel_v2_7 : AirDragViewModel_v2_0
+    {
+        public new static readonly string VERSION = typeof(XMLDeclarationAirdragDataProviderV27).FullName;
+
+        public AirDragViewModel_v2_7(IAirdragDeclarationInputData inputData, IComponentViewModelFactory vmFactory) : base(inputData, vmFactory)
+        {
+            LabelVisible = false;
+            IsReadOnly = true;
+        }
+
+        public override void SetProperties()
+        {
+            base.SetProperties();
+
+        }
+    }
 }

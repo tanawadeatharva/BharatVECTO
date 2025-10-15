@@ -1,37 +1,46 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFElectricMachineType : VIFElectricMachineGENType
-	{
+	public class VIFElectricMachineType : VIFElectricMachineGENType, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFElectricMachineType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.ElectricMotor);
+        }
 
-		public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        public override XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            var electricMachine = GetElectricMachine(inputData);
+            return GetElement(electricMachine);
+        }
+
+        protected virtual ElectricMachineEntry<IElectricMotorDeclarationInputData> GetElectricMachine(IDeclarationInputDataProvider inputData)
+        {
+            var electricMachines = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries;
+
+            return electricMachines.FirstOrDefault(x => x.Position != PowertrainPosition.GEN);
+        }
+
+		protected virtual string ElementLocalName => XMLNames.Component_ElectricMachine;
+
+        private XElement GetElement(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachine)
 		{
-			var electricMachineEntries = inputData.JobInputData.Vehicle.Components.ElectricMachines.Entries;
-			if (electricMachineEntries == null || electricMachineEntries.Count == 0)
-				return null;
-
-			foreach (var electricMachine in electricMachineEntries) {
-				if (electricMachine.Position != PowertrainPosition.GEN)
-					return GetElectricMachineType(electricMachine);
-			}
-
-			return null;
+			return (electricMachine != null) ? GetElectricMachineType(electricMachine) : null;
 		}
-
-		#endregion
 		
 		private XElement GetElectricMachineType(ElectricMachineEntry<IElectricMotorDeclarationInputData> electricMachineData)
 		{
-			return new XElement(_vif + XMLNames.Component_ElectricMachine,
+			return new XElement(_vif + ElementLocalName,
 				new XElement(_vif + XMLNames.ElectricMachine_PowertrainPosition,
 					electricMachineData.Position.ToXmlFormat()),
 				new XElement(_vif + XMLNames.ElectricMachine_Count, electricMachineData.Count),
@@ -55,4 +64,16 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationF
 			return new XElement(_vif + XMLNames.ElectricMachine_P2_5GearRatios, results);
 		}
 	}
+
+    public class VIFGeneratorType : VIFElectricMachineType
+    {
+        public VIFGeneratorType(IVIFReportFactory vifFactory) : base(vifFactory) { }
+
+        protected override ElectricMachineEntry<IElectricMotorDeclarationInputData> GetElectricMachine(IDeclarationInputDataProvider inputData)
+        {
+            return inputData.JobInputData.Vehicle.Components.Generator;
+        }
+
+        protected override string ElementLocalName => XMLNames.Component_ElectricMachineGEN;
+    }
 }

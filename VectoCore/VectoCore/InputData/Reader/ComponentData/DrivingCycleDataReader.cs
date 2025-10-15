@@ -379,6 +379,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string THCMassFlow = "THC";
 			public const string PMNumberFlow = "PN";
 			public const string CO2MassFlow = "CO2";
+			public const string OBFCMMileage = "ml_obfcm";
+			public const string OBFCMMass = "m_obfcm";
+			public const string OBFCMFuelConsumptionFlowMass = "fcm_obfcm";
+			public const string OBFCMFuelConsumptionFlowVolume = "fcv_obfcm";
 		}
 
 		#region DataParser
@@ -918,17 +922,35 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var fuels = table.Columns.Cast<DataColumn>().Where(x => x.ColumnName.StartsWith("fc_"))
 					.Select(x => x.ColumnName.Replace("fc_", "").ParseEnum<FuelType>()).ToArray();
 				var entries = table.Rows.Cast<DataRow>().Select(
-					row => {
-
+					row =>
+					{
 						var tqLeft = row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>();
 						var tqRight = row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>();
 						var speedLeft = row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad();
 						var speedRight = row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad();
+
 						var fc = new Dictionary<FuelType, KilogramPerSecond>();
-						foreach (var fuelType in fuels) {
+						var fcMassFlow = new Dictionary<FuelType, KilogramPerSecond>();
+						var fcVolumetricFlow = new Dictionary<FuelType, LiterPerSecond>();
+						foreach (var fuelType in fuels)
+						{
 							fc[fuelType] = row.ParseDoubleOrGetDefault("fc_" + fuelType.ToXMLFormat())
 								.SI(Unit.SI.Gramm.Per.Hour)
 								.Cast<KilogramPerSecond>();
+
+							// If fcm_obfcm is not present parse fcm_obfcm_$FUELTYPE$ else is null.
+							fcMassFlow[fuelType] = row.TryParseDouble(Fields.OBFCMFuelConsumptionFlowMass, out double fcm) 
+								? fcm.SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>()
+								: row.TryParseDouble($"{Fields.OBFCMFuelConsumptionFlowMass}_{fuelType.ToXMLFormat()}", out fcm)
+									? fcm.SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>()
+									: null;
+
+							// If fcv_obfcm is not present parse fcv_obfcm_$FUELTYPE$ else is null.
+							fcVolumetricFlow[fuelType] = row.TryParseDouble(Fields.OBFCMFuelConsumptionFlowVolume, out double fcv)
+								? fcv.SI(Unit.SI.Liter.Per.Second).Cast<LiterPerSecond>() 
+								: row.TryParseDouble($"{Fields.OBFCMFuelConsumptionFlowVolume}_{fuelType.ToXMLFormat()}", out fcv)
+									? fcv.SI(Unit.SI.Liter.Per.Second).Cast<LiterPerSecond>()
+									: null;
 						}
 
 						return new DrivingCycleData.DrivingCycleEntry {
@@ -967,7 +989,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 								? row.ParseDouble(Fields.THCMassFlow).SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>()
 								: null,
 							PMNumberFlow = row.ParseDouble(Fields.PMNumberFlow).SI<PerSecond>(),
-							CO2MassFlow = row.ParseDouble(Fields.CO2MassFlow).SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>()
+							CO2MassFlow = row.ParseDouble(Fields.CO2MassFlow).SI(Unit.SI.Gramm.Per.Second).Cast<KilogramPerSecond>(),
+							OBFCMMileage = table.Columns.Contains(Fields.OBFCMMileage)
+								? row.ParseDouble(Fields.OBFCMMileage).SI(Unit.SI.Meter.Kilo).Cast<Meter>() : null,
+							OBFCMMass = table.Columns.Contains(Fields.OBFCMMass)
+								? row.ParseDouble(Fields.OBFCMMass).SI(Unit.SI.Gramm.Kilo).Cast<Kilogram>() : null,
+							OBFCMFuelConsumptionMassFlow = fcMassFlow,
+							OBFCMFuelConsumptionVolumeFlow = fcVolumetricFlow,
 						};
 					}).ToArray();
 
@@ -1012,8 +1040,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.NOxMassFlow,
 					Fields.THCMassFlow,
 					Fields.PMNumberFlow,
-					Fields.CO2MassFlow
-				}.Concat(EnumHelper.GetValues<FuelType>().Select(x => "fc_" + x.ToXMLFormat()));
+					Fields.CO2MassFlow,
+					Fields.OBFCMMileage,
+					Fields.OBFCMMass,
+				}
+				.Concat(EnumHelper.GetValues<FuelType>().Select(f => $"fc_{f.ToXMLFormat()}"))
+				.Concat(EnumHelper.GetValues<FuelType>().Select(f => $"{Fields.OBFCMFuelConsumptionFlowMass}"))
+				.Concat(EnumHelper.GetValues<FuelType>().Select(f => $"{Fields.OBFCMFuelConsumptionFlowVolume}"))
+				.Concat(EnumHelper.GetValues<FuelType>().Select(f => $"{Fields.OBFCMFuelConsumptionFlowMass}_{f.ToXMLFormat()}"))
+				.Concat(EnumHelper.GetValues<FuelType>().Select(f => $"{Fields.OBFCMFuelConsumptionFlowVolume}_{f.ToXMLFormat()}"));
 
 				const bool allowAux = true;
 

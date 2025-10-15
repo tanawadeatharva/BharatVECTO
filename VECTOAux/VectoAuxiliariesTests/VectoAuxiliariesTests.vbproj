@@ -7,8 +7,8 @@
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>On</OptionStrict>
     <OptionInfer>On</OptionInfer>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-     
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,12 +17,10 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Ninject" Version="3.3.6" />
-    <PackageReference Include="NLog" Version="4.7.13" />
     <PackageReference Include="Moq" Version="4.18.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj" />
     <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj" />
   </ItemGroup>
 

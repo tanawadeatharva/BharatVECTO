@@ -13,7 +13,6 @@
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Windows.Forms.DataVisualization.Charting
-Imports System.Xml
 Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
@@ -28,7 +27,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Declaration.Auxiliaries
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.InputData.Impl
-Imports Castle.Components.DictionaryAdapter.Xml
+Imports TUGraz.VectoCore.InputData
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -170,9 +169,12 @@ Public Class VectoVTPJobForm
 
     Private Sub UpdateCompletedVIFElements()
         Dim VIFinputData As ICompletedVIF = Nothing
+        Dim PrimaryVIFInputData As IReportFile = Nothing
+        Dim CustomerInfoFileInputData As IReportFile = Nothing
         Dim foundOutIfPrimary = False
         Dim isVehiclePrimaryBus = False
         Dim canAccessVIFSource = False
+        Dim canAccessPrimaryVIFSource = False
         Dim vehicleFile As String =
             If _
             (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
@@ -196,6 +198,8 @@ Public Class VectoVTPJobForm
                     IVTPEngineeringInputDataProvider)
 
                 VIFinputData = inputData.JobInputData.CompletedVIFInputData
+                PrimaryVIFInputData = inputData.JobInputData.PrimaryVIFInputData
+                CustomerInfoFileInputData = inputData.JobInputData.CIFInputData
 
                 If Not foundOutIfPrimary Then
                     isVehiclePrimaryBus = inputData.JobInputData.Vehicle.VehicleCategory.GetVehicleType() Is VehicleCategoryHelper.PrimaryBus
@@ -205,6 +209,7 @@ Public Class VectoVTPJobForm
         End If
 
         completedVIFTxtbox.Enabled = isVehiclePrimaryBus
+        primaryVIFTb.Enabled = isVehiclePrimaryBus
 
         If VIFinputData IsNot Nothing Then
             If VIFinputData.Source IsNot Nothing Then
@@ -212,8 +217,19 @@ Public Class VectoVTPJobForm
             End If
         End If
 
+        If PrimaryVIFInputData IsNot Nothing Then
+            If PrimaryVIFInputData.Source IsNot Nothing Then
+                canAccessPrimaryVIFSource = True
+            End If
+        End If
+
+        mrfLbl.Text = If(isVehiclePrimaryBus, "MRF (primary):", "MRF:")
         completedVIFTxtbox.Text = If(canAccessVIFSource And isVehiclePrimaryBus, VIFinputData.Source, "")
+        primaryVIFTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, PrimaryVIFInputData.Source, "")
+        cifTb.Text = If(canAccessPrimaryVIFSource And isVehiclePrimaryBus, CustomerInfoFileInputData.Source, "")
+
         completedVIFButton.Enabled = completedVIFTxtbox.Enabled
+        primaryVIFBtn.Enabled = primaryVIFTb.Enabled
     End Sub
 
     'Open file
@@ -269,16 +285,26 @@ Public Class VectoVTPJobForm
 
         tbMileage.Text = inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat()
 
+        Dim obfcmData = inputData.JobInputData.OBFCMDeclarationInputData
+        If (obfcmData.OdometerReading IsNot Nothing) Then
+            tbOdometerReading.Text = obfcmData.OdometerReading.ConvertToKiloMeter().Value.ToGUIFormat()
+        End If
+
+        If (obfcmData.LifetimeFuelConsumptionMass IsNot Nothing) Then
+            tbLifetimeFCMassStart.Text = obfcmData.LifetimeFuelConsumptionMass.Item("LifetimeFuelConsumptionMassStart").Value().ToGUIFormat()
+            tbLifetimeFCMassEnd.Text = obfcmData.LifetimeFuelConsumptionMass.Item("LifetimeFuelConsumptionMassEnd").Value().ToGUIFormat()
+        End If
+
+        If (obfcmData.LifetimeFuelConsumptionVolume IsNot Nothing) Then
+            tbLifetimeFCVolumeStart.Text = obfcmData.LifetimeFuelConsumptionVolume.Item("LifetimeFuelConsumptionVolStart").Value().ToGUIFormat()
+            tbLifetimeFCVolumeEnd.Text = obfcmData.LifetimeFuelConsumptionVolume.Item("LifetimeFuelConsumptionVolEnd").Value().ToGUIFormat()
+        End If
+
         If Cfg.DeclMode Then
             tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
             tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
             tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
-            Dim coefficientsD As Double() = vectoJob.FanPowerCoefficents.ToArray()
-            If (coefficientsD.Length >= 4) Then
-                tbC4.Text = coefficientsD(3).ToGUIFormat()
-            Else
-                tbC4.Text = "1"
-            End If
+            tbC4.Text = vectoJob.ManufacturerReportInputData.CoolingFanTechCoefficient.ToString()
         Else
             Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
             If (coefficients.Length >= 1) Then
@@ -410,6 +436,8 @@ Public Class VectoVTPJobForm
         vectoJob.PathVeh = TbVEH.Text
         vectoJob.ManufacturerRecord = tbManufacturerRecord.Text
         vectoJob.CompletedVIF = completedVIFTxtbox.Text
+        vectoJob.PrimaryVIF = primaryVIFTb.Text
+        vectoJob.VehicleCIF = cifTb.Text
 
         For Each lv0 As ListViewItem In LvCycles.Items
             Dim sb As SubPath = New SubPath
@@ -426,6 +454,17 @@ Public Class VectoVTPJobForm
                                                      tbC4.Text.ToDouble(0)
                                                  }
         vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0) / 1000).SI(Of Meter)
+
+        Dim odometerReadingValue = tbOdometerReading.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast(Of Meter)
+        Dim lifecycleFC = New Dictionary(Of String, Double) From
+        {
+            {"LifetimeFuelConsumptionMassStart", Val(tbLifetimeFCMassStart.Text)},
+            {"LifetimeFuelConsumptionMassEnd", Val(tbLifetimeFCMassEnd.Text)},
+            {"LifetimeFuelConsumptionVolStart", Val(tbLifetimeFCVolumeStart.Text)},
+            {"LifetimeFuelConsumptionVolEnd", Val(tbLifetimeFCVolumeEnd.Text)}
+        }
+
+        vectoJob.OBFCMDeclarationInputData = New VTPOBFCMDeclarationData(lifecycleFC, odometerReadingValue)
 
         ReadFuelNCVFromGUIComponents(_ncvFuel1Lbl, _ncvFuel1Txtbox, vectoJob)
         ReadFuelNCVFromGUIComponents(_ncvFuel2Lbl, _ncvFuel2Txtbox, vectoJob)
@@ -1009,7 +1048,7 @@ Public Class VectoVTPJobForm
 
         _contextMenuFiles = files
         OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
-        CmOpenFile.Show(Windows.Forms.Cursor.Position)
+        CmOpenFile.Show(System.Windows.Forms.Cursor.Position)
     End Sub
 
     Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -1053,6 +1092,19 @@ Public Class VectoVTPJobForm
             completedVIFTxtbox.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
+
+    Private Sub cifBtn_Click(sender As Object, e As EventArgs) Handles cifBtn.Click
+        If CompletedVIFFileBrowser.OpenDialog(FileRepl(cifTb.Text, GetPath(VectoFile))) Then
+            cifTb.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
+    Private Sub primaryVIFBtn_Click(sender As Object, e As EventArgs) Handles primaryVIFBtn.Click
+        If CompletedVIFFileBrowser.OpenDialog(FileRepl(primaryVIFTb.Text, GetPath(VectoFile))) Then
+            primaryVIFTb.Text = GetFilenameWithoutDirectory(CompletedVIFFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
+
 End Class
 
 

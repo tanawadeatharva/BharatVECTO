@@ -29,6 +29,7 @@ Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
+Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
 Imports DeclarationDataAdapterHeavyLorry = TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.HeavyLorry.DeclarationDataAdapterHeavyLorry
 
@@ -293,7 +294,7 @@ Public Class Gearbox
                                                        .VehicleData =
                                                        New VehicleData() _
                                                        With { .DynamicTyreRadius = rdyn,
-                                                       .VehicleCategory = vehiclecategory}}, Nothing)
+                                                       .VehicleCategory = vehiclecategory}})
                 'gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn,
                 '                                vehiclecategory, gearbox, Nothing, Nothing)
             End If
@@ -880,6 +881,8 @@ Public Class MockEngineeringVehicle
         Implements IVehicleDeclarationInputData.ADAS
 
     Public ReadOnly Property AxlePowertrainEngineeringInputData As IList(Of IAxlePowertrainEngineeringInputData) Implements IVehicleComponentsEngineering.AxlePowertrainEngineeringInputData
+
+    Public ReadOnly Property GeneratorEngineering As ElectricMachineEntry(Of IElectricMotorEngineeringInputData) Implements IVehicleComponentsEngineering.GeneratorEngineering
 
     Public ReadOnly Property IVehicleDeclarationInputData_InMotionCharging As IVehicleInMotionChargingDeclaration Implements IVehicleDeclarationInputData.InMotionCharging
 

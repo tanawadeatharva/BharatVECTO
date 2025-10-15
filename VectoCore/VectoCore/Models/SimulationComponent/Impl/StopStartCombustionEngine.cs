@@ -1,17 +1,84 @@
-﻿using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Models;
+﻿using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public class TestpowertrainCombustionEngine : StopStartCombustionEngine, ITestpowertrainCombustionEngine
+	{
+		public TestpowertrainCombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(container, modelData, pt1Disabled) { }
+
+		#region Implementation of ITestpowertrainCombustionEngine
+
+		public IAuxPort GetEngineAux => EngineAux;
+
+		#endregion
+	}
+
+	public class AlwaysOffCombustionEngine : StopStartCombustionEngine
+	{
+		public AlwaysOffCombustionEngine(IVehicleContainer container, CombustionEngineData modelData,
+			bool pt1Disabled = false) : base(container, modelData, pt1Disabled)
+		{
+			CombustionEngineOn = false;
+			PreviousState.EngineTorque = 0.SI<NewtonMeter>();
+			PreviousState.EngineOn = false;
+			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineSpeed = 0.RPMtoRad();
+			CurrentState.EngineOn = false;
+		
+
+		}
+
+        public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, bool dryRun)
+		{
+			var retVal = HandleEngineOffRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			retVal.Engine.EngineOn = false;
+			return retVal;
+		}
+
+		public override Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return 0.SI<Watt>();
+		}
+
+		#region Overrides of StopStartCombustionEngine
+
+		public override bool CombustionEngineOn
+		{
+			get => false; set {}
+		}
+
+		#region Overrides of CombustionEngine
+
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
+		{
+			EngineAux?.TorqueDemand(time, simulationInterval, CurrentState.EngineTorque, CurrentState.EngineSpeed,
+				false);
+			base.DoWriteModalResults(time, simulationInterval, container);
+		}
+
+		protected override void DoCommitSimulationStep(Second time, Second simulationInterval)
+		{
+			
+			base.DoCommitSimulationStep(time, simulationInterval);
+			CurrentState.EngineTorque = 0.SI<NewtonMeter>();
+			CurrentState.EngineSpeed = 0.RPMtoRad();
+			CurrentState.EngineOn = false;
+		}
+
+		#endregion
+
+		#endregion
+	}
+
 	public class StopStartCombustionEngine : CombustionEngine
 	{
 		protected WattSecond EngineStartEnergy;
@@ -240,7 +307,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (other is CombustionEngine e) {
 				PreviousState = e.PreviousState;
-				return EngineAux.UpdateFrom(e.EngineAux);
+				EngineAux?.UpdateFrom(e.EngineAux);
+				return true;
 			}
 			return false;
 		}
@@ -248,13 +316,4 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 	}
 
-	public class SimplePowerrtrainCombustionEngine : StopStartCombustionEngine
-	{
-		public SimplePowerrtrainCombustionEngine(
-			IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(
-			container, modelData, pt1Disabled)
-		{ }
-
-		public EngineState EnginePreviousState => PreviousState;
-	}
 }

@@ -965,20 +965,20 @@ Public Class frmHVACTool
 
 		'If UserHitCancel then bail
 		If UserHitCancel Then
-			DialogResult = Windows.Forms.DialogResult.Cancel
-			UserHitCancel = False
+            DialogResult = System.Windows.Forms.DialogResult.Cancel
+            UserHitCancel = False
 			Return
 		End If
 
 		'UserHitSave
 		If UserHitSave Then
-			DialogResult = Windows.Forms.DialogResult.Cancel
-			If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
+            DialogResult = System.Windows.Forms.DialogResult.Cancel
+            If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
 				MessageBox.Show("Unable to save file, aborting.")
 				e.Cancel = True
 			End If
-			DialogResult = Windows.Forms.DialogResult.OK
-			UserHitSave = False
+            DialogResult = System.Windows.Forms.DialogResult.OK
+            UserHitSave = False
 			Return
 		End If
 
@@ -1061,14 +1061,14 @@ Public Class frmHVACTool
 				Case "Delete"
 					Dim dr As DialogResult = MessageBox.Show($"Do you want to delete benefit '{benefit}' ?", "",
 															MessageBoxButtons.YesNo)
-					If dr = Windows.Forms.DialogResult.Yes Then
-						'If ssmTOOL.TechList.Delete(New TechListBenefitLine With {.BenefitName = benefit, .Category = category}, feedback) _
-						'	Then
-						'	BindGrid()
-						'End If
-					End If
+                    If dr = System.Windows.Forms.DialogResult.Yes Then
+                        'If ssmTOOL.TechList.Delete(New TechListBenefitLine With {.BenefitName = benefit, .Category = category}, feedback) _
+                        '	Then
+                        '	BindGrid()
+                        'End If
+                    End If
 
-				Case "OnVehicle"
+                Case "OnVehicle"
 					Dim onVehicle As Boolean = Not CType(gvTechBenefitLines.Rows(e.RowIndex).Cells(e.ColumnIndex).Value, Boolean)
 
 					'Dim fi As ITechListBenefitLine = ssmTOOL.TechList.Find(category, benefit)
@@ -1146,8 +1146,8 @@ Public Class frmHVACTool
 
 		UserHitSave = True
 
-		Me.DialogResult = Windows.Forms.DialogResult.OK
-		Me.Close()
+        Me.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.Close()
 	End Sub
 
 	Private Sub btnClearForm_Click(sender As Object, e As EventArgs) Handles btnClearForm.Click

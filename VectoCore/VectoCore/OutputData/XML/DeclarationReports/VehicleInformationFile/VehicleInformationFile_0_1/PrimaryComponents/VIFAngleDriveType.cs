@@ -8,36 +8,42 @@ using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.Manu
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.VehicleInformationFile.VehicleInformationFile_0_1.Components
 {
-	public class VIFAngleDriveType : AbstractVIFXmlType, IXmlTypeWriter
-	{
+	public class VIFAngleDriveType : AbstractVIFXmlType, IXmlTypeWriter, IXmlAxlePowertrainTypeWriter
+    {
 		public VIFAngleDriveType(IVIFReportFactory vifFactory) : base(vifFactory) { }
 
-		#region Implementation of IXmlTypeWriter
+        public XElement GetElement(IAxlePowertrainDeclarationInputData axlePt)
+        {
+            return GetElement(axlePt.AngledriveInputData);
+        }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
+        {
+            return GetElement(inputData.JobInputData.Vehicle.Components.AngledriveInputData);
+        }
+
+        private XElement GetElement(IAngledriveInputData angleDrive)
 		{
-			var angelDrive = inputData.JobInputData.Vehicle.Components.AngledriveInputData;
-			if (angelDrive == null || angelDrive.Type != AngledriveType.SeparateAngledrive) {
+			if (angleDrive == null || angleDrive.Type != AngledriveType.SeparateAngledrive) {
 				return null;
 			}
 
 			return new XElement(_vif + XMLNames.Component_Angledrive,
 					new XElement(_vif + XMLNames.ComponentDataWrapper,
 					new XAttribute(_xsi + XMLNames.XSIType, "AngledriveDataVIFType"),
-					new XElement(_vif + XMLNames.Component_Manufacturer, angelDrive.Manufacturer),
-					new XElement(_vif + XMLNames.Component_Model, angelDrive.Model),
-					new XElement(_vif + XMLNames.Component_CertificationMethod, angelDrive.CertificationMethod.ToXMLFormat()),
-					angelDrive.CertificationMethod == CertificationMethod.StandardValues
+					new XElement(_vif + XMLNames.Component_Manufacturer, angleDrive.Manufacturer),
+					new XElement(_vif + XMLNames.Component_Model, angleDrive.Model),
+					new XElement(_vif + XMLNames.Component_CertificationMethod, angleDrive.CertificationMethod.ToXMLFormat()),
+					angleDrive.CertificationMethod == CertificationMethod.StandardValues
 						? null
 						: new XElement(_vif + XMLNames.Report_Component_CertificationNumber,
-							angelDrive.CertificationNumber),
+							angleDrive.CertificationNumber),
 					new XElement(_vif + XMLNames.Component_Date,
-						XmlConvert.ToString(angelDrive.Date, XmlDateTimeSerializationMode.Utc)),
-					new XElement(_vif + XMLNames.Component_AppVersion, angelDrive.AppVersion),
-					new XElement(_vif + XMLNames.AngleDrive_Ratio, angelDrive.Ratio.ToXMLFormat(3))
+						XmlConvert.ToString(angleDrive.Date, XmlDateTimeSerializationMode.Utc)),
+					new XElement(_vif + XMLNames.Component_AppVersion, angleDrive.AppVersion),
+					new XElement(_vif + XMLNames.AngleDrive_Ratio, angleDrive.Ratio.ToXMLFormat(3))
 				));
 		}
 
-		#endregion
 	}
 }

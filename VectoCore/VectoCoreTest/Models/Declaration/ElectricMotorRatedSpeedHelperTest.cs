@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricComponents.ElectricMotor;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.ElectricMotor;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
@@ -18,11 +13,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	internal class ElectricMotorRatedSpeedHelperTest
 	{
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedPass(double expectedSpeedRpm)
 		{
-
-
 
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
 				("0.00	  ", "4027.80"),
@@ -61,7 +55,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedDivisionByZero(double expectedSpeedRpm)
 		{
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
@@ -103,7 +98,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		}
 
-		[TestCase(755.11f)]
+		[TestCase(755.11f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void GetRatedSpeedMissingZeroRPM(double expectedSpeedRpm)
 		{
 			(string speed, string torque)[] entries = new (string speedd, string torque)[] {
@@ -145,7 +141,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		}
 
-		[TestCase(1850f, 1f)]
+		[TestCase(1850f, 1f),
+		Category(Definitions.TESTCASE_MIGRATED)]
 		public void IEPCFld(double expectedSpeedRpm, double ratio)
 		{
 			var fldCruveData = VectoCSVFile.Read(@"TestData/BatteryElectric/IEPC/GenericFld.viepcp");

@@ -31,8 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -48,18 +46,17 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	///     Class representing one Distance Based Driving Cycle
-	/// </summary>
-	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
+    /// <summary>
+    ///     Class representing one Distance Based Driving Cycle
+    /// </summary>
+    public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
 		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
-		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
+		IDistanceBasedDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable, IUpdateable, IResetableVectoSimulationComponent
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		internal readonly IDrivingCycleData Data;
 		internal DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
-		internal IIdleControllerSwitcher IdleController;
 		private Meter CycleEndDistance;
 
 		
@@ -70,7 +67,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private DrivingCycleData.DrivingCycleEntry Right => CycleIntervalIterator.RightSample;
 
-		public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
+		public IIdleControllerSwitcher IdleController { get; set; }
+
+        public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : 
+			base(container, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
@@ -110,6 +110,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			StartSpeed = container.RunData.GearshiftParameters?.StartSpeed;
 			StartAcceleration = container.RunData.GearshiftParameters?.StartAcceleration;
+
+			if (container.RunData.AxlePowertrainsData.Count() > 0)
+			{
+				var gearParams = container.RunData.AxlePowertrainsData.First(x => x.GearshiftParameters != null).GearshiftParameters;
+				
+				StartSpeed = gearParams.StartSpeed;
+				StartAcceleration = gearParams.StartAcceleration;
+			}
 		}
 
 		public IResponse Initialize()

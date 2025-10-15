@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter
@@ -13,8 +7,9 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
     internal class TorqueLimitationsTypeWriter : AbstractMrfXmlType, IXmlTypeWriter
     {
 
+		public TorqueLimitationsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 
-		public XElement GetElement(IDeclarationInputDataProvider inputData)
+        public XElement GetElement(IDeclarationInputDataProvider inputData)
 		{
 			if (inputData.JobInputData.Vehicle.TorqueLimits == null || inputData.JobInputData.Vehicle.TorqueLimits.Count == 0) {
 
@@ -33,8 +28,5 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			return torqueLimitsElement;
 		}
 
-
-
-		public TorqueLimitationsTypeWriter(IManufacturerReportFactory mrfFactory) : base(mrfFactory) { }
 	}
 }

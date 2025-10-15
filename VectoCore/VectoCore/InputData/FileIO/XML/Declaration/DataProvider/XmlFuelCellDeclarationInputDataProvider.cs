@@ -1,17 +1,16 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.GenericModelData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -31,9 +30,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual int Count => Convert.ToInt32(GetDouble(XMLNames.FuelCell_Count));
 
-		public virtual Watt MinPower => GetDouble(XMLNames.FuelCell_MinPower).SI(Unit.SI.Watt).Cast<Watt>();
+		public virtual Watt MinPower => ElementExists(XMLNames.FuelCell_MinPower) ? GetDouble(XMLNames.FuelCell_MinPower).SI(Unit.SI.Watt).Cast<Watt>() : null;
 
-		public virtual Watt MaxPower => GetDouble(XMLNames.FuelCell_MaxPower).SI(Unit.SI.Watt).Cast<Watt>();
+		public virtual Watt MaxPower => ElementExists(XMLNames.FuelCell_MaxPower) ? GetDouble(XMLNames.FuelCell_MaxPower).SI(Unit.SI.Watt).Cast<Watt>() : null;
 
 		public virtual List<IFuelCellModuleDeclarationInputData> FuelCellModules => CreateFuelCellModule();
 
@@ -152,6 +151,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			NAMESPACE_URI.NamespaceName,
 			"FuelCellSystemDeclarationType");
 	}
+
+	public class XMLDeclarationMultistagePrimaryVehicleBusFuelCellDataProviderV11 : XMLFuelCellSystemDeclarationInputDataProviderV27
+	{
+        public XMLDeclarationMultistagePrimaryVehicleBusFuelCellDataProviderV11(XmlNode componentNode, string sourceFile)
+            : base(componentNode, sourceFile)
+        {}
+
+        public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_MULTISTAGE_BUS_VEHICLE_NAMESPACE_V11;
+
+        public static new string QUALIFIED_XSD_TYPE => XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, "FuelCellSystemType");
+
+        public override List<IFuelCellModuleDeclarationInputData> CreateFuelCellModule()
+        {
+            var modules = new List<IFuelCellModuleDeclarationInputData>();
+
+            var xmlFuelCellModules = GetNodes(XMLNames.FuelCell_Module);
+            foreach (XmlNode moduleNode in xmlFuelCellModules)
+            {
+                var componentNode = GetNode("Data", moduleNode);
+
+                var fuelCellData = new FuelCellInputData();
+
+				fuelCellData.Manufacturer = GetString("Manufacturer");
+				fuelCellData.Model = GetString("Model");
+				fuelCellData.CertificationMethod = GetString("CertificationMethod").ParseEnum<CertificationMethod>();
+				fuelCellData.CertificationNumber = ElementExists("CertificationNumber") ? GetString("CertificationNumber") : null;
+				fuelCellData.AppVersion = GetString("AppVersion");
+				fuelCellData.FCSRatedPower = GetDouble("FCSRatedPower").SI<Watt>();
+				fuelCellData.FuelCellPowerOutputConsumptionMap = GenericBusFuelCellData.CreateFuelCellPowerOutputMap(fuelCellData.FCSRatedPower);
+
+                var cellModule = new FuelCellModule()
+                {
+                    Count = Count,
+                    FuelCell = fuelCellData,
+                    MinPower = MinPower,
+                    MaxPower = MaxPower,
+                };
+
+                modules.Add(cellModule);
+            }
+
+            return modules;
+        }
+    }
 
 	public interface IXMLFuelCellSystemDeclarationInputData : IFuelCellSystemDeclarationInputData, IXMLResource
 	{

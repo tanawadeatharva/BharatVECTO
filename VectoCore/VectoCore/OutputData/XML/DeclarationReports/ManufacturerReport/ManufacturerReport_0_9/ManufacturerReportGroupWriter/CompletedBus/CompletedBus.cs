@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
             var tankSystem = vehicle.TankSystem.HasValue
                 ? vehicle.TankSystem.Value.ToString()
                 : (vehicle.HydrogenStorageTechnology.HasValue
-                    ? vehicle.HydrogenStorageTechnology.Value.ToString()
+                    ? vehicle.HydrogenStorageTechnology?.ToXMLFormat()
                     : null);
 
             if (tankSystem == null) {
@@ -112,6 +112,7 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 
 		#region Overrides of AbstractMrfXmlGroup
 
+		[ExcludeFromCodeCoverage] // never called for completed bus
 		public override IList<XElement> GetElements(IDeclarationInputDataProvider inputData)
 		{
 			throw new NotImplementedException();

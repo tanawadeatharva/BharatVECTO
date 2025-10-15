@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.InputData;
@@ -41,8 +38,6 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 		protected IResultsWriter Results { get; set; }
 
 		protected XElement InputDataIntegrity { get; set; }
-
-		protected XElement Signature { get; set; }
 
 		public abstract string OutputDataType { get; } //also used as name for the mockup result element
 
@@ -113,10 +108,14 @@ namespace TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.
 			var RDGroupEntry = _results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 			double? LHOperationalRange = RDGroupEntry != null ? RDGroupEntry.ActualChargeDepletingRange?.Value() : null;
 
+			VehicleClass actualVehicleClass = _results.All(e => e.VehicleClass.IsCompletedBus()) && (_results.Count() > 0)
+				? _results.First().VehicleClass 
+				: VehicleClass.Unknown;
+			
 			if(Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']") != null)
 			{
 				Vehicle.XPathSelectElement($"//*[local-name()='{XMLNames.VehicleGroupCO2}']").Value =
-					DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, LHOperationalRange).ToXMLFormat();
+					DeclarationData.GetVehicleGroupCO2StandardsGroup(Input, LHOperationalRange, actualVehicleClass).ToXMLFormat();
 			}
 
 			var stream = new MemoryStream();

@@ -12,8 +12,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter.SimulationComponen
     public interface IAuxiliaryDataAdapter
     {
         IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
-            IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
-            int? numSteeredAxles, VectoSimulationJobType jobType);
+			IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength,
+			int? numSteeredAxles, VectoSimulationJobType jobType, bool batteryOnlyHybridMode);
     }
 	public interface ICompletedBusAuxiliaryDataAdapter : IAuxiliaryDataAdapter
     {

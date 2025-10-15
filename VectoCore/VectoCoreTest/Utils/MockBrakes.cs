@@ -30,15 +30,18 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
+    public class MockBrakes : VectoSimulationComponent, IBrakes, IUpdateable
 	{
-		public MockBrakes(IVehicleContainer vehicle) : base(vehicle)
+		public MockBrakes(IVehicleContainer vehicle) : base(vehicle, Constants.NOT_IN_AXLE_POWERTRAIN)
 		{
 			BrakePower = 0.SI<Watt>();
 		}
@@ -59,6 +62,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 
 			return false;
+		}
+
+		#endregion
+
+		#region Implementation of ITnInProvider
+
+		public ITnInPort InPort()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+
+		#region Implementation of ITnOutProvider
+
+		public ITnOutPort OutPort()
+		{
+			throw new System.NotImplementedException();
 		}
 
 		#endregion

@@ -100,7 +100,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 	public interface ISimpleVehicleContainer : IVehicleContainer
 	{
-		IDriverDemandOutPort VehiclePort { get; }
+		//IDriverDemandOutPort VehiclePort { get; }
+		int AxleNumber { get; }
 
 		ITnOutPort GearboxOutPort { get; }
 
@@ -108,15 +109,13 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoSimulationJobType VehicleArchitecutre { get; }
 
-		PowertrainPosition[] ElectricMotorPositions { get; }
-
-        Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors { get; }
+		Dictionary<PowertrainPosition, IElectricMotorInfo> ElectricMotors { get; }
 		
 		IHybridController HybridController { get; }
 
 		IReadOnlyCollection<VectoSimulationComponent> SimulationComponents();
 
-		void UpdateComponents(IDataBus realContainer);
+        void UpdateComponents(IDataBus realContainer);
 
 	}
 }

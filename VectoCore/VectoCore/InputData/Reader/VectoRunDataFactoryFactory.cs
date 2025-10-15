@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Linq;
-using Ninject;
-using Ninject.Extensions.Factory;
-using Ninject.Modules;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.Impl;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.XML.DeclarationReports.ManufacturerReport.ManufacturerReport_0_9.ManufacturerReportXMLTypeWriter;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.Reader
@@ -29,6 +22,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 			IMultistageVIFInputData dataProvider,
 			IDeclarationReport report);
 
+		IVectoRunDataFactory CreateDeclarationVTPRunDataFactory(VehicleCategory vehicleCategory, IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report);
+		
+		IVectoRunDataFactory CreateEngineOnlyRunDataFactory(string name, IEngineeringInputDataProvider dataProvider);
+
+		IVectoRunDataFactory CreateEngineeringRunDataFactory(string name, IEngineeringInputDataProvider dataProvider);
+
+		IVectoRunDataFactory CreateEngineeringVTPRunDataFactory(VehicleCategory vehicleCategory, IVTPEngineeringInputDataProvider ivtpProvider);
 	}
 
 
@@ -109,19 +109,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			var vtpReport = CastReport<IVTPReport>(report);
 
-			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry())
-			{
-				return new DeclarationVTPModeVectoRunDataFactoryLorries(vtpProvider, vtpReport);
+			try {
+				return _internalFactory.CreateDeclarationVTPRunDataFactory(vtpProvider.JobInputData.Vehicle.VehicleCategory
+                    , vtpProvider, vtpReport);
+			} catch (Exception ex) {
+				throw new Exception(
+					$"Could not create RunDataFactory for Vehicle Category {vtpProvider.JobInputData.Vehicle.VehicleCategory}", ex);
 			}
 
-			if (vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus())
-			{
-				return new DeclarationVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider, vtpReport);
-			}
-			
-
-			throw new Exception(
-				$"Could not create RunDataFactory for Vehicle Category{vtpProvider.JobInputData.Vehicle.VehicleCategory}");
 		}
 
 		private IVectoRunDataFactory CreateRunDataReader(ISingleBusInputDataProvider singleBusProvider, IDeclarationReport report)
@@ -133,10 +128,28 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 
 
-		public IVectoRunDataFactory CreateEngineeringRunDataFactory(IEngineeringInputDataProvider inputDataProvider)
+		public IVectoRunDataFactory CreateEngineeringRunDataFactory(IInputDataProvider inputDataProvider)
 		{
-			throw new NotImplementedException();
-		}
+			if (inputDataProvider == null)
+				throw new ArgumentNullException(nameof(inputDataProvider));
+
+			switch (inputDataProvider) {
+				case IVTPEngineeringInputDataProvider vtpProvider:
+					return _internalFactory.CreateEngineeringVTPRunDataFactory(
+						vtpProvider.JobInputData.Vehicle.VehicleCategory, vtpProvider);
+                //case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsLorry():
+                //	return new EngineeringVTPModeVectoRunDataFactoryLorries(vtpProvider);
+                //case IVTPEngineeringInputDataProvider vtpProvider when vtpProvider.JobInputData.Vehicle.VehicleCategory.IsBus():
+                //	return new EngineeringVTPModeVectoRunDataFactoryHeavyBusPrimary(vtpProvider);
+                case IEngineeringInputDataProvider engDataProvider when engDataProvider.JobInputData.JobType == VectoSimulationJobType.EngineOnlySimulation:
+					return _internalFactory.CreateEngineOnlyRunDataFactory(EngineOnlyVectoRunDataFactory.Name, engDataProvider);
+				case IEngineeringInputDataProvider engDataProvider:
+					return _internalFactory.CreateEngineeringRunDataFactory(EngineeringModeVectoRunDataFactory.Name, engDataProvider);
+				default:
+					throw new VectoException("Unknown InputData for Engineering Mode!");
+			}
+
+        }
 
 		private T CastReport<T>(object report)
 		{

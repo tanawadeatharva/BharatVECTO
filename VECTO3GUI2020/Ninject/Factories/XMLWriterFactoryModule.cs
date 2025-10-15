@@ -6,7 +6,6 @@ using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Utils.Ninject;
-using VECTO3GUI2020.Ninject.Util;
 using VECTO3GUI2020.Resources.XML;
 using VECTO3GUI2020.Util.XML;
 using VECTO3GUI2020.Util.XML.Components;
@@ -48,12 +47,14 @@ namespace VECTO3GUI2020.Ninject.Factories
             AddVehicleWriterBinding<XMLCompletedBusVehicleWriterHEV>(XMLCompletedBusVehicleWriterHEV.VERSION);
 			AddVehicleWriterBinding<XMLCompletedBusVehicleWriterPEV>(XMLCompletedBusVehicleWriterPEV.VERSION);
 			AddVehicleWriterBinding<XMLCompletedBusVehicleWriterIEPC>(XMLCompletedBusVehicleWriterIEPC.VERSION);
+			AddVehicleWriterBinding<XMLCompletedBusVehicleWriterFCHV>(XMLCompletedBusVehicleWriterFCHV.VERSION);
 
             #endregion Vehicle
 
             #region Components
             AddComponentsWriterBinding<XMLCompletedBusComponentWriter_Conventional>(XMLCompletedBusComponentWriter_Conventional.VERSION);
             AddComponentsWriterBinding<XMLCompletedBusComponentsWriter_xEV>(XMLCompletedBusComponentsWriter_xEV.VERSION);
+            //AddComponentsWriterBinding<XMLCompletedBusComponentsWriter_xEV_v27>(XMLCompletedBusComponentsWriter_xEV_v27.VERSION);
 
 
             #endregion
@@ -66,8 +67,9 @@ namespace VECTO3GUI2020.Ninject.Factories
             #endregion
 
             #region BusAux
-            AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriterConventional>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AUX_Conventional_CompletedBusType);
-            AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriter_xEV>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V24, XMLTypes.AUX_xEV_CompletedBusType);
+            AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriterConventional>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, XMLTypes.AUX_Conventional_CompletedBusType);
+            AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriter_xEV>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, XMLTypes.AUX_xEV_CompletedBusType);
+            //AddBusAuxWriterBinding<XMLCompletedBusAuxiliariesWriter_xEV_v27>(XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V27, XMLTypes.AUX_xEV_CompletedBusType);
 			#endregion
 
 

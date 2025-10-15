@@ -32,7 +32,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -154,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData
 		
 		void SetResultWeightingFactor(double weightingFactor);
 
-		IResultEntry Clone(OvcHevMode ovcMode);
+		IResultEntry SetFuelCellCDProperties(IResultEntry csResult);
 	}
 
 	public interface IWeightedResult
@@ -193,7 +192,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter HydrogenRange { get; }
 
-		double UtilityFactor { get; }
+        DeclarationData.ElectricRangesPEV BeginOfLifeRanges { get; }
+
+        DeclarationData.ElectricRangesPEV EndOfLifeRanges { get; }
+
+        double UtilityFactor { get; }
 
 		IFuelProperties AuxHeaterFuel { get; set; }
 		KilogramPerMeter ZEV_FuelConsumption_AuxHtr { get; set; }
@@ -268,23 +271,29 @@ namespace TUGraz.VectoCore.OutputData
 			WriteResults();
 		}
 
-		protected virtual IEnumerable<T> Results {
+		protected virtual IEnumerable<T> Results
+		{
 			get
 			{
-				lock (ResultsInternal) {
-					return ResultsInternal.GroupBy(
+				lock (ResultsInternal)
+				{
+					var bestResults = ResultsInternal.GroupBy(
 							r => (r.missionType, r.loading, vehicleClass: r.entry.VehicleClass, ovcMode: r.entry.OVCMode, r.simulationType),
 							r => r.entry,
 							(group, results) => {
 								var simResults = results.ToList();
 								var bestResult = DeclarationData.GetDeclarationReportFinalResultEntryIndex(simResults, group.simulationType);
-								if (bestResult < 0 || bestResult >= simResults.Count) {
+								if (bestResult < 0 || bestResult >= simResults.Count)
+								{
 									throw new VectoException($"Invalid index for best result entry. got {bestResult}, max. {simResults.Count}");
 								}
+
 								return simResults[bestResult];
 							});
+					
+					return bestResults;
 				}
-            }
+			}
 		}
 
 		protected virtual IEnumerable<T> OrderedResults
@@ -311,7 +320,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected internal virtual void DoWriteReport()
 		{
-			/// Check if LH does not meet LH requierements, i.e. ReferenceLoad and OperationalRange > 350km.
+			/// Check if LH does not meet LH requirements, i.e. ReferenceLoad and OperationalRange > 350km.
 			var RDGroupEntry = Results.SingleOrDefault(e => DeclarationData.EvaluateLHSubgroupConditions(e));
 
 			foreach (var resultEntry in OrderedResults)
