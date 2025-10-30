@@ -48,13 +48,12 @@ Partial Class MainForm
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btStartV3 = New System.Windows.Forms.Button()
         Me.LbDecl = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtGENdown = New System.Windows.Forms.Button()
         Me.BtGENup = New System.Windows.Forms.Button()
         Me.ChBoxAllGEN = New System.Windows.Forms.CheckBox()
         Me.LvGEN = New System.Windows.Forms.ListView()
-        Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ButtonGENremove = New System.Windows.Forms.Button()
         Me.ButtonGENadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
@@ -80,9 +79,9 @@ Partial Class MainForm
         Me.ClearListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.LvMsg = New System.Windows.Forms.ListView()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripBtNew = New System.Windows.Forms.ToolStripButton()
@@ -120,10 +119,10 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPgOptions.SuspendLayout()
         Me.PanelOptAllg.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -137,6 +136,7 @@ Partial Class MainForm
         Me.SplitContainer1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.CmOpenFile.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'StatusBAR
@@ -162,7 +162,7 @@ Partial Class MainForm
         Me.ToolStripProgBarJob.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripProgBarJob.AutoSize = False
         Me.ToolStripProgBarJob.Name = "ToolStripProgBarJob"
-        Me.ToolStripProgBarJob.Size = New System.Drawing.Size(100, 20)
+        Me.ToolStripProgBarJob.Size = New System.Drawing.Size(100, 16)
         Me.ToolStripProgBarJob.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarJob.ToolTipText = "overall progress"
         Me.ToolStripProgBarJob.Visible = False
@@ -172,7 +172,7 @@ Partial Class MainForm
         Me.ToolStripProgBarOverall.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.ToolStripProgBarOverall.AutoSize = False
         Me.ToolStripProgBarOverall.Name = "ToolStripProgBarOverall"
-        Me.ToolStripProgBarOverall.Size = New System.Drawing.Size(100, 20)
+        Me.ToolStripProgBarOverall.Size = New System.Drawing.Size(100, 16)
         Me.ToolStripProgBarOverall.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         Me.ToolStripProgBarOverall.ToolTipText = "job progress"
         Me.ToolStripProgBarOverall.Visible = False
@@ -192,12 +192,12 @@ Partial Class MainForm
         '
         'TabPageGEN
         '
+        Me.TabPageGEN.Controls.Add(Me.PictureBox1)
         Me.TabPageGEN.Controls.Add(Me.btnImportXML)
         Me.TabPageGEN.Controls.Add(Me.btnExportXML)
         Me.TabPageGEN.Controls.Add(Me.Label6)
         Me.TabPageGEN.Controls.Add(Me.btStartV3)
         Me.TabPageGEN.Controls.Add(Me.LbDecl)
-        Me.TabPageGEN.Controls.Add(Me.PictureBox1)
         Me.TabPageGEN.Controls.Add(Me.BtGENdown)
         Me.TabPageGEN.Controls.Add(Me.BtGENup)
         Me.TabPageGEN.Controls.Add(Me.ChBoxAllGEN)
@@ -251,7 +251,7 @@ Partial Class MainForm
         'btStartV3
         '
         Me.btStartV3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.btStartV3.Image = Global.TUGraz.VECTO.My.Resources.Resources.Play_icon
+        Me.btStartV3.Image = CType(resources.GetObject("btStartV3.Image"), System.Drawing.Image)
         Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btStartV3.Location = New System.Drawing.Point(4, 56)
         Me.btStartV3.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
@@ -275,20 +275,10 @@ Partial Class MainForm
         Me.LbDecl.Text = "Declaration Mode"
         Me.LbDecl.Visible = False
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(4, 2)
-        Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(108, 47)
-        Me.PictureBox1.TabIndex = 18
-        Me.PictureBox1.TabStop = False
-        '
         'BtGENdown
         '
         Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtGENdown.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_arrow_down_icon
+        Me.BtGENdown.Image = CType(resources.GetObject("BtGENdown.Image"), System.Drawing.Image)
         Me.BtGENdown.Location = New System.Drawing.Point(307, 259)
         Me.BtGENdown.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.BtGENdown.Name = "BtGENdown"
@@ -300,7 +290,7 @@ Partial Class MainForm
         'BtGENup
         '
         Me.BtGENup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtGENup.Image = Global.TUGraz.VECTO.My.Resources.Resources.Actions_arrow_up_icon
+        Me.BtGENup.Image = CType(resources.GetObject("BtGENup.Image"), System.Drawing.Image)
         Me.BtGENup.Location = New System.Drawing.Point(276, 259)
         Me.BtGENup.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.BtGENup.Name = "BtGENup"
@@ -357,7 +347,7 @@ Partial Class MainForm
         '
         Me.ButtonGENremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButtonGENremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold)
-        Me.ButtonGENremove.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.ButtonGENremove.Image = CType(resources.GetObject("ButtonGENremove.Image"), System.Drawing.Image)
         Me.ButtonGENremove.Location = New System.Drawing.Point(148, 259)
         Me.ButtonGENremove.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.ButtonGENremove.Name = "ButtonGENremove"
@@ -370,7 +360,7 @@ Partial Class MainForm
         '
         Me.ButtonGENadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButtonGENadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold)
-        Me.ButtonGENadd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.ButtonGENadd.Image = CType(resources.GetObject("ButtonGENadd.Image"), System.Drawing.Image)
         Me.ButtonGENadd.Location = New System.Drawing.Point(113, 259)
         Me.ButtonGENadd.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.ButtonGENadd.Name = "ButtonGENadd"
@@ -418,7 +408,7 @@ Partial Class MainForm
         '
         'BtTCfileBrowse
         '
-        Me.BtTCfileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.BtTCfileBrowse.Image = CType(resources.GetObject("BtTCfileBrowse.Image"), System.Drawing.Image)
         Me.BtTCfileBrowse.Location = New System.Drawing.Point(227, 14)
         Me.BtTCfileBrowse.Margin = New System.Windows.Forms.Padding(4, 2, 4, 2)
         Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
@@ -668,7 +658,7 @@ Partial Class MainForm
         'ToolStripBtNew
         '
         Me.ToolStripBtNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
+        Me.ToolStripBtNew.Image = CType(resources.GetObject("ToolStripBtNew.Image"), System.Drawing.Image)
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
         Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
@@ -678,7 +668,7 @@ Partial Class MainForm
         'ToolStripBtOpen
         '
         Me.ToolStripBtOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.ToolStripBtOpen.Image = CType(resources.GetObject("ToolStripBtOpen.Image"), System.Drawing.Image)
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
         Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
@@ -693,7 +683,7 @@ Partial Class MainForm
         'ToolStripDrDnBtTools
         '
         Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.JobEditorSerialHybridVehicleToolStripMenuItem, Me.JobEditorParallelHybridVehicleToolStripMenuItem, Me.JobEditorBatteryElectricVehicleToolStripMenuItem, Me.JobEditorIEPC_E_VehicleToolStripMenuItem, Me.JobEditorIEPC_S_VehicleToolStripMenuItem, Me.JobEditorIHPCVehicleToolStripMenuItem, Me.JobEditorFCHVehicle, Me.JobEditorFCHV_IEPC_Vehicle, Me.JobEditorEngineOnlyModeToolStripMenuItem, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
-        Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
+        Me.ToolStripDrDnBtTools.Image = CType(resources.GetObject("ToolStripDrDnBtTools.Image"), System.Drawing.Image)
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
         Me.ToolStripDrDnBtTools.Size = New System.Drawing.Size(71, 28)
@@ -701,105 +691,105 @@ Partial Class MainForm
         '
         'GENEditorToolStripMenuItem1
         '
-        Me.GENEditorToolStripMenuItem1.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.GENEditorToolStripMenuItem1.Image = CType(resources.GetObject("GENEditorToolStripMenuItem1.Image"), System.Drawing.Image)
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
         Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(255, 22)
         Me.GENEditorToolStripMenuItem1.Text = "Job Editor - Conventional Vehicle"
         '
         'JobEditorSerialHybridVehicleToolStripMenuItem
         '
-        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorSerialHybridVehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorSerialHybridVehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Name = "JobEditorSerialHybridVehicleToolStripMenuItem"
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorSerialHybridVehicleToolStripMenuItem.Text = "Job Editor - Serial Hybrid Vehicle"
         '
         'JobEditorParallelHybridVehicleToolStripMenuItem
         '
-        Me.JobEditorParallelHybridVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorParallelHybridVehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorParallelHybridVehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Name = "JobEditorParallelHybridVehicleToolStripMenuItem"
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorParallelHybridVehicleToolStripMenuItem.Text = "Job Editor - Parallel Hybrid Vehicle"
         '
         'JobEditorBatteryElectricVehicleToolStripMenuItem
         '
-        Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorBatteryElectricVehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Name = "JobEditorBatteryElectricVehicleToolStripMenuItem"
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorBatteryElectricVehicleToolStripMenuItem.Text = "Job Editor - Battery Electric Vehicle"
         '
         'JobEditorIEPC_E_VehicleToolStripMenuItem
         '
-        Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorIEPC_E_VehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Name = "JobEditorIEPC_E_VehicleToolStripMenuItem"
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIEPC_E_VehicleToolStripMenuItem.Text = "Job Editor - IEPC-E Vehicle"
         '
         'JobEditorIEPC_S_VehicleToolStripMenuItem
         '
-        Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorIEPC_S_VehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Name = "JobEditorIEPC_S_VehicleToolStripMenuItem"
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIEPC_S_VehicleToolStripMenuItem.Text = "Job Editor - IEPC-S Vehicle"
         '
         'JobEditorIHPCVehicleToolStripMenuItem
         '
-        Me.JobEditorIHPCVehicleToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorIHPCVehicleToolStripMenuItem.Image = CType(resources.GetObject("JobEditorIHPCVehicleToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorIHPCVehicleToolStripMenuItem.Name = "JobEditorIHPCVehicleToolStripMenuItem"
         Me.JobEditorIHPCVehicleToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorIHPCVehicleToolStripMenuItem.Text = "Job Editor - IHPC Vehicle"
         '
         'JobEditorFCHVehicle
         '
-        Me.JobEditorFCHVehicle.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorFCHVehicle.Image = CType(resources.GetObject("JobEditorFCHVehicle.Image"), System.Drawing.Image)
         Me.JobEditorFCHVehicle.Name = "JobEditorFCHVehicle"
         Me.JobEditorFCHVehicle.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorFCHVehicle.Text = "Job Editor - Fuel Cell Vehicle"
         '
         'JobEditorFCHV_IEPC_Vehicle
         '
-        Me.JobEditorFCHV_IEPC_Vehicle.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorFCHV_IEPC_Vehicle.Image = CType(resources.GetObject("JobEditorFCHV_IEPC_Vehicle.Image"), System.Drawing.Image)
         Me.JobEditorFCHV_IEPC_Vehicle.Name = "JobEditorFCHV_IEPC_Vehicle"
         Me.JobEditorFCHV_IEPC_Vehicle.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorFCHV_IEPC_Vehicle.Text = "Job Editor - Fuel Cell IEPC Vehicle"
         '
         'JobEditorEngineOnlyModeToolStripMenuItem
         '
-        Me.JobEditorEngineOnlyModeToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.JobEditorEngineOnlyModeToolStripMenuItem.Image = CType(resources.GetObject("JobEditorEngineOnlyModeToolStripMenuItem.Image"), System.Drawing.Image)
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Name = "JobEditorEngineOnlyModeToolStripMenuItem"
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.JobEditorEngineOnlyModeToolStripMenuItem.Text = "Job Editor - Engine Only Mode"
         '
         'EPTPJobEditorToolStripMenuItem
         '
-        Me.EPTPJobEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+        Me.EPTPJobEditorToolStripMenuItem.Image = CType(resources.GetObject("EPTPJobEditorToolStripMenuItem.Image"), System.Drawing.Image)
         Me.EPTPJobEditorToolStripMenuItem.Name = "EPTPJobEditorToolStripMenuItem"
         Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.EPTPJobEditorToolStripMenuItem.Text = "VTP Job Editor"
         '
         'VEHEditorToolStripMenuItem
         '
-        Me.VEHEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VEH
+        Me.VEHEditorToolStripMenuItem.Image = CType(resources.GetObject("VEHEditorToolStripMenuItem.Image"), System.Drawing.Image)
         Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
         Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
         '
         'EngineEditorToolStripMenuItem
         '
-        Me.EngineEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_ENG
+        Me.EngineEditorToolStripMenuItem.Image = CType(resources.GetObject("EngineEditorToolStripMenuItem.Image"), System.Drawing.Image)
         Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
         Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
         '
         'GearboxEditorToolStripMenuItem
         '
-        Me.GearboxEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_GBX
+        Me.GearboxEditorToolStripMenuItem.Image = CType(resources.GetObject("GearboxEditorToolStripMenuItem.Image"), System.Drawing.Image)
         Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
         Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
         '
         'GraphToolStripMenuItem
         '
-        Me.GraphToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_Graph
+        Me.GraphToolStripMenuItem.Image = CType(resources.GetObject("GraphToolStripMenuItem.Image"), System.Drawing.Image)
         Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
         Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(255, 22)
         Me.GraphToolStripMenuItem.Text = "Graph"
@@ -824,7 +814,7 @@ Partial Class MainForm
         'ToolStripDrDnBtInfo
         '
         Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.AboutVECTOToolStripMenuItem1})
-        Me.ToolStripDrDnBtInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
+        Me.ToolStripDrDnBtInfo.Image = CType(resources.GetObject("ToolStripDrDnBtInfo.Image"), System.Drawing.Image)
         Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
         Me.ToolStripDrDnBtInfo.Size = New System.Drawing.Size(69, 28)
@@ -896,6 +886,16 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_About
+        Me.PictureBox1.Location = New System.Drawing.Point(4, 3)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(108, 49)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PictureBox1.TabIndex = 24
+        Me.PictureBox1.TabStop = False
+        '
         'MainForm
         '
         Me.AcceptButton = Me.btStartV3
@@ -916,7 +916,6 @@ Partial Class MainForm
         Me.TabControl1.ResumeLayout(False)
         Me.TabPageGEN.ResumeLayout(False)
         Me.TabPageGEN.PerformLayout()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPgOptions.ResumeLayout(False)
         Me.PanelOptAllg.ResumeLayout(False)
         Me.GroupBox4.ResumeLayout(False)
@@ -935,6 +934,7 @@ Partial Class MainForm
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.CmOpenFile.ResumeLayout(False)
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -980,7 +980,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolStripProgBarJob As ToolStripProgressBar
     Friend WithEvents TmProgSec As Timer
-    Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents EngineEditorToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GearboxEditorToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents UserManualToolStripMenuItem As ToolStripMenuItem
@@ -1033,4 +1032,5 @@ Partial Class MainForm
     Friend WithEvents JobEditorIHPCVehicleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents JobEditorFCHVehicle As ToolStripMenuItem
     Friend WithEvents JobEditorFCHV_IEPC_Vehicle As ToolStripMenuItem
+    Friend WithEvents PictureBox1 As PictureBox
 End Class

@@ -646,5 +646,9 @@ Public Class IHPCForm
         pnThermalOverloadRecovery.Enabled = not Cfg.DeclMode
     End Sub
 
+    Private Sub lblTitle_Click(sender As Object, e As EventArgs) Handles lblTitle.Click
+
+    End Sub
+
 #End Region
 End Class

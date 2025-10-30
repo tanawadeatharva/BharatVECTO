@@ -324,8 +324,8 @@ Partial Class FuelCellComponentForm
         Me.Controls.Add(Me.btnSaveFuelCellComponent)
         Me.Controls.Add(Me.btnCancel)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
-        Me.MinimizeBox = false
-        Me.Name = "FuelCellSystemForm"
+        Me.MinimizeBox = False
+        Me.Name = "FuelCellComponentForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Fuel Cell System"
         CType(Me.pcBoxMassFlowMap,System.ComponentModel.ISupportInitialize).EndInit

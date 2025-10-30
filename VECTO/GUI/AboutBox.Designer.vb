@@ -73,9 +73,10 @@ Partial Class AboutBox
         'PictureBox1
         '
         Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_About
-        Me.PictureBox1.Location = New System.Drawing.Point(23, 12)
+        Me.PictureBox1.Location = New System.Drawing.Point(15, 12)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(447, 182)
+        Me.PictureBox1.Size = New System.Drawing.Size(244, 94)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.PictureBox1.TabIndex = 14
         Me.PictureBox1.TabStop = false
         '

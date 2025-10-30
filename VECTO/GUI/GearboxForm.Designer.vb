@@ -139,22 +139,23 @@ Partial Class GearboxForm
         Me.lblGbxInfo = New System.Windows.Forms.Label()
         Me.btnExportXML = New System.Windows.Forms.Button()
         Me.btnExportAxlGearXML = New System.Windows.Forms.Button()
-        Me.ToolStrip1.SuspendLayout
-        Me.StatusStrip1.SuspendLayout
-        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.GrGearShift.SuspendLayout
-        Me.GroupBox1.SuspendLayout
-        Me.PnTorqRes.SuspendLayout
-        Me.GroupBox2.SuspendLayout
-        Me.CmOpenFile.SuspendLayout
-        Me.gbTC.SuspendLayout
-        Me.pnTcEngineering.SuspendLayout
-        Me.GroupBox4.SuspendLayout
-        Me.PnInertiaTI.SuspendLayout
-        CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.gbPowershiftLosses.SuspendLayout
-        Me.gbTCAccMin.SuspendLayout
-        Me.SuspendLayout
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.ToolStrip1.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GrGearShift.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.PnTorqRes.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        Me.CmOpenFile.SuspendLayout()
+        Me.gbTC.SuspendLayout()
+        Me.pnTcEngineering.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
+        Me.PnInertiaTI.SuspendLayout()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.gbPowershiftLosses.SuspendLayout()
+        Me.gbTCAccMin.SuspendLayout()
+        Me.SuspendLayout()
         '
         'ToolStrip1
         '
@@ -170,7 +171,7 @@ Partial Class GearboxForm
         'ToolStripBtNew
         '
         Me.ToolStripBtNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtNew.Image = Global.TUGraz.VECTO.My.Resources.Resources.blue_document_icon
+        Me.ToolStripBtNew.Image = CType(resources.GetObject("ToolStripBtNew.Image"), System.Drawing.Image)
         Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtNew.Name = "ToolStripBtNew"
         Me.ToolStripBtNew.Size = New System.Drawing.Size(28, 28)
@@ -180,7 +181,7 @@ Partial Class GearboxForm
         'ToolStripBtOpen
         '
         Me.ToolStripBtOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.ToolStripBtOpen.Image = CType(resources.GetObject("ToolStripBtOpen.Image"), System.Drawing.Image)
         Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
         Me.ToolStripBtOpen.Size = New System.Drawing.Size(28, 28)
@@ -230,7 +231,7 @@ Partial Class GearboxForm
         'ToolStripButton1
         '
         Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton1.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
+        Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
         Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(28, 28)
@@ -243,7 +244,7 @@ Partial Class GearboxForm
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 674)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(877, 22)
-        Me.StatusStrip1.SizingGrip = false
+        Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 37
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -255,24 +256,24 @@ Partial Class GearboxForm
         '
         'ButCancel
         '
-        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.ButCancel.Location = New System.Drawing.Point(798, 648)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 8
         Me.ButCancel.Text = "Cancel"
-        Me.ButCancel.UseVisualStyleBackColor = true
+        Me.ButCancel.UseVisualStyleBackColor = True
         '
         'ButOK
         '
-        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButOK.Location = New System.Drawing.Point(717, 648)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 7
         Me.ButOK.Text = "Save"
-        Me.ButOK.UseVisualStyleBackColor = true
+        Me.ButOK.UseVisualStyleBackColor = True
         '
         'TbTracInt
         '
@@ -284,16 +285,16 @@ Partial Class GearboxForm
         'LvGears
         '
         Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
-        Me.LvGears.FullRowSelect = true
-        Me.LvGears.GridLines = true
-        Me.LvGears.HideSelection = false
+        Me.LvGears.FullRowSelect = True
+        Me.LvGears.GridLines = True
+        Me.LvGears.HideSelection = False
         Me.LvGears.Location = New System.Drawing.Point(6, 18)
-        Me.LvGears.MultiSelect = false
+        Me.LvGears.MultiSelect = False
         Me.LvGears.Name = "LvGears"
         Me.LvGears.Size = New System.Drawing.Size(429, 183)
         Me.LvGears.TabIndex = 0
-        Me.LvGears.TabStop = false
-        Me.LvGears.UseCompatibleStateImageBehavior = false
+        Me.LvGears.TabStop = False
+        Me.LvGears.UseCompatibleStateImageBehavior = False
         Me.LvGears.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader1
@@ -335,7 +336,7 @@ Partial Class GearboxForm
         '
         'Label49
         '
-        Me.Label49.AutoSize = true
+        Me.Label49.AutoSize = True
         Me.Label49.Location = New System.Drawing.Point(362, 6)
         Me.Label49.Name = "Label49"
         Me.Label49.Size = New System.Drawing.Size(18, 13)
@@ -344,7 +345,7 @@ Partial Class GearboxForm
         '
         'Label33
         '
-        Me.Label33.AutoSize = true
+        Me.Label33.AutoSize = True
         Me.Label33.Location = New System.Drawing.Point(141, 6)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(36, 13)
@@ -353,7 +354,7 @@ Partial Class GearboxForm
         '
         'Label48
         '
-        Me.Label48.AutoSize = true
+        Me.Label48.AutoSize = True
         Me.Label48.Location = New System.Drawing.Point(191, 6)
         Me.Label48.Name = "Label48"
         Me.Label48.Size = New System.Drawing.Size(102, 13)
@@ -362,7 +363,7 @@ Partial Class GearboxForm
         '
         'Label6
         '
-        Me.Label6.AutoSize = true
+        Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(6, 6)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(36, 13)
@@ -371,7 +372,7 @@ Partial Class GearboxForm
         '
         'Label3
         '
-        Me.Label3.AutoSize = true
+        Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(26, 79)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(87, 13)
@@ -388,21 +389,22 @@ Partial Class GearboxForm
         'PictureBox1
         '
         Me.PictureBox1.BackColor = System.Drawing.Color.White
-        Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_GBX
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
+        Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_About
+        Me.PictureBox1.Location = New System.Drawing.Point(18, 28)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(453, 40)
+        Me.PictureBox1.Size = New System.Drawing.Size(99, 39)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBox1.TabIndex = 43
-        Me.PictureBox1.TabStop = false
+        Me.PictureBox1.TabStop = False
         '
         'BtRemGear
         '
-        Me.BtRemGear.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.BtRemGear.Image = CType(resources.GetObject("BtRemGear.Image"), System.Drawing.Image)
         Me.BtRemGear.Location = New System.Drawing.Point(30, 202)
         Me.BtRemGear.Name = "BtRemGear"
         Me.BtRemGear.Size = New System.Drawing.Size(24, 24)
         Me.BtRemGear.TabIndex = 2
-        Me.BtRemGear.UseVisualStyleBackColor = true
+        Me.BtRemGear.UseVisualStyleBackColor = True
         '
         'GrGearShift
         '
@@ -416,7 +418,7 @@ Partial Class GearboxForm
         Me.GrGearShift.Name = "GrGearShift"
         Me.GrGearShift.Size = New System.Drawing.Size(441, 291)
         Me.GrGearShift.TabIndex = 3
-        Me.GrGearShift.TabStop = false
+        Me.GrGearShift.TabStop = False
         Me.GrGearShift.Text = "Gear shift parameters"
         '
         'GroupBox1
@@ -434,7 +436,7 @@ Partial Class GearboxForm
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(429, 100)
         Me.GroupBox1.TabIndex = 2
-        Me.GroupBox1.TabStop = false
+        Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Shift Strategy Parameters"
         '
         'tbUpshiftMinAcceleration
@@ -460,7 +462,7 @@ Partial Class GearboxForm
         '
         'Label24
         '
-        Me.Label24.AutoSize = true
+        Me.Label24.AutoSize = True
         Me.Label24.Location = New System.Drawing.Point(275, 74)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(34, 13)
@@ -469,7 +471,7 @@ Partial Class GearboxForm
         '
         'Label23
         '
-        Me.Label23.AutoSize = true
+        Me.Label23.AutoSize = True
         Me.Label23.Location = New System.Drawing.Point(275, 48)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(18, 13)
@@ -478,7 +480,7 @@ Partial Class GearboxForm
         '
         'Label22
         '
-        Me.Label22.AutoSize = true
+        Me.Label22.AutoSize = True
         Me.Label22.Location = New System.Drawing.Point(275, 25)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(18, 13)
@@ -487,7 +489,7 @@ Partial Class GearboxForm
         '
         'Label21
         '
-        Me.Label21.AutoSize = true
+        Me.Label21.AutoSize = True
         Me.Label21.Location = New System.Drawing.Point(20, 74)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(146, 13)
@@ -496,7 +498,7 @@ Partial Class GearboxForm
         '
         'Label20
         '
-        Me.Label20.AutoSize = true
+        Me.Label20.AutoSize = True
         Me.Label20.Location = New System.Drawing.Point(20, 48)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(140, 13)
@@ -505,7 +507,7 @@ Partial Class GearboxForm
         '
         'Label19
         '
-        Me.Label19.AutoSize = true
+        Me.Label19.AutoSize = True
         Me.Label19.Location = New System.Drawing.Point(20, 25)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(140, 13)
@@ -525,8 +527,8 @@ Partial Class GearboxForm
         '
         'Label25
         '
-        Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label25.AutoSize = true
+        Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label25.AutoSize = True
         Me.Label25.Location = New System.Drawing.Point(294, 9)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(129, 13)
@@ -535,8 +537,8 @@ Partial Class GearboxForm
         '
         'Label2
         '
-        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label2.AutoSize = true
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(18, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(79, 13)
@@ -545,8 +547,8 @@ Partial Class GearboxForm
         '
         'Label4
         '
-        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label4.AutoSize = true
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(272, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(21, 13)
@@ -555,7 +557,7 @@ Partial Class GearboxForm
         '
         'TbTqResv
         '
-        Me.TbTqResv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TbTqResv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbTqResv.Location = New System.Drawing.Point(206, 6)
         Me.TbTqResv.Name = "TbTqResv"
         Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
@@ -570,7 +572,7 @@ Partial Class GearboxForm
         '
         'Label12
         '
-        Me.Label12.AutoSize = true
+        Me.Label12.AutoSize = True
         Me.Label12.Location = New System.Drawing.Point(281, 55)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(18, 13)
@@ -579,7 +581,7 @@ Partial Class GearboxForm
         '
         'Label13
         '
-        Me.Label13.AutoSize = true
+        Me.Label13.AutoSize = True
         Me.Label13.Location = New System.Drawing.Point(27, 55)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(162, 13)
@@ -601,7 +603,7 @@ Partial Class GearboxForm
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(429, 99)
         Me.GroupBox2.TabIndex = 3
-        Me.GroupBox2.TabStop = false
+        Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Start Gear"
         '
         'TbStartAcc
@@ -610,17 +612,17 @@ Partial Class GearboxForm
         Me.TbStartAcc.Name = "TbStartAcc"
         Me.TbStartAcc.Size = New System.Drawing.Size(57, 20)
         Me.TbStartAcc.TabIndex = 2
-        Me.TbStartAcc.Visible = false
+        Me.TbStartAcc.Visible = False
         '
         'Label11
         '
-        Me.Label11.AutoSize = true
+        Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(20, 74)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(173, 13)
         Me.Label11.TabIndex = 0
         Me.Label11.Text = "Reference acceleration at clutch-in"
-        Me.Label11.Visible = false
+        Me.Label11.Visible = False
         '
         'TbStartSpeed
         '
@@ -631,7 +633,7 @@ Partial Class GearboxForm
         '
         'Label9
         '
-        Me.Label9.AutoSize = true
+        Me.Label9.AutoSize = True
         Me.Label9.Location = New System.Drawing.Point(20, 48)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(181, 13)
@@ -640,13 +642,13 @@ Partial Class GearboxForm
         '
         'Label10
         '
-        Me.Label10.AutoSize = true
+        Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(272, 74)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(34, 13)
         Me.Label10.TabIndex = 0
         Me.Label10.Text = "[m/s²]"
-        Me.Label10.Visible = false
+        Me.Label10.Visible = False
         '
         'TbTqResvStart
         '
@@ -657,7 +659,7 @@ Partial Class GearboxForm
         '
         'Label8
         '
-        Me.Label8.AutoSize = true
+        Me.Label8.AutoSize = True
         Me.Label8.Location = New System.Drawing.Point(272, 48)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(31, 13)
@@ -666,7 +668,7 @@ Partial Class GearboxForm
         '
         'Label5
         '
-        Me.Label5.AutoSize = true
+        Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(20, 22)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(79, 13)
@@ -675,7 +677,7 @@ Partial Class GearboxForm
         '
         'Label7
         '
-        Me.Label7.AutoSize = true
+        Me.Label7.AutoSize = True
         Me.Label7.Location = New System.Drawing.Point(272, 22)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(21, 13)
@@ -712,7 +714,7 @@ Partial Class GearboxForm
         Me.gbTC.Name = "gbTC"
         Me.gbTC.Size = New System.Drawing.Size(414, 162)
         Me.gbTC.TabIndex = 5
-        Me.gbTC.TabStop = false
+        Me.gbTC.TabStop = False
         Me.gbTC.Text = "Torque Converter"
         '
         'pnTcEngineering
@@ -736,7 +738,7 @@ Partial Class GearboxForm
         '
         'Label26
         '
-        Me.Label26.AutoSize = true
+        Me.Label26.AutoSize = True
         Me.Label26.Location = New System.Drawing.Point(1, 29)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(64, 13)
@@ -745,8 +747,8 @@ Partial Class GearboxForm
         '
         'TBTCShiftPolygon
         '
-        Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 70)
         Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
         Me.TBTCShiftPolygon.Size = New System.Drawing.Size(349, 20)
@@ -761,7 +763,7 @@ Partial Class GearboxForm
         '
         'TbTCrefrpm
         '
-        Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbTCrefrpm.Location = New System.Drawing.Point(296, 0)
         Me.TbTCrefrpm.Name = "TbTCrefrpm"
         Me.TbTCrefrpm.Size = New System.Drawing.Size(57, 20)
@@ -769,7 +771,7 @@ Partial Class GearboxForm
         '
         'Label27
         '
-        Me.Label27.AutoSize = true
+        Me.Label27.AutoSize = True
         Me.Label27.Location = New System.Drawing.Point(138, 29)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(30, 13)
@@ -778,8 +780,8 @@ Partial Class GearboxForm
         '
         'Label14
         '
-        Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label14.AutoSize = true
+        Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label14.AutoSize = True
         Me.Label14.Location = New System.Drawing.Point(357, 3)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(30, 13)
@@ -788,17 +790,17 @@ Partial Class GearboxForm
         '
         'BtTCShiftFileBrowse
         '
-        Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtTCShiftFileBrowse.Image = CType(resources.GetObject("BtTCShiftFileBrowse.Image"), System.Drawing.Image)
         Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(354, 68)
         Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
         Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
         Me.BtTCShiftFileBrowse.TabIndex = 4
-        Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = true
+        Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
         '
         'Label1
         '
-        Me.Label1.AutoSize = true
+        Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(138, 3)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(36, 13)
@@ -814,8 +816,8 @@ Partial Class GearboxForm
         '
         'Label15
         '
-        Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label15.AutoSize = true
+        Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label15.AutoSize = True
         Me.Label15.Location = New System.Drawing.Point(213, 3)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(77, 13)
@@ -824,7 +826,7 @@ Partial Class GearboxForm
         '
         'Label18
         '
-        Me.Label18.AutoSize = true
+        Me.Label18.AutoSize = True
         Me.Label18.Location = New System.Drawing.Point(1, 3)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(36, 13)
@@ -833,7 +835,7 @@ Partial Class GearboxForm
         '
         'LblTCShiftFile
         '
-        Me.LblTCShiftFile.AutoSize = true
+        Me.LblTCShiftFile.AutoSize = True
         Me.LblTCShiftFile.Location = New System.Drawing.Point(1, 55)
         Me.LblTCShiftFile.Name = "LblTCShiftFile"
         Me.LblTCShiftFile.Size = New System.Drawing.Size(207, 13)
@@ -842,18 +844,18 @@ Partial Class GearboxForm
         '
         'BtTCfileOpen
         '
-        Me.BtTCfileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.BtTCfileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtTCfileOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
         Me.BtTCfileOpen.Location = New System.Drawing.Point(383, 35)
         Me.BtTCfileOpen.Name = "BtTCfileOpen"
         Me.BtTCfileOpen.Size = New System.Drawing.Size(24, 24)
         Me.BtTCfileOpen.TabIndex = 2
-        Me.BtTCfileOpen.UseVisualStyleBackColor = true
+        Me.BtTCfileOpen.UseVisualStyleBackColor = True
         '
         'TbTCfile
         '
-        Me.TbTCfile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TbTCfile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbTCfile.Location = New System.Drawing.Point(9, 37)
         Me.TbTCfile.Name = "TbTCfile"
         Me.TbTCfile.Size = New System.Drawing.Size(349, 20)
@@ -861,17 +863,17 @@ Partial Class GearboxForm
         '
         'BtTCfileBrowse
         '
-        Me.BtTCfileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.BtTCfileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.BtTCfileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtTCfileBrowse.Image = CType(resources.GetObject("BtTCfileBrowse.Image"), System.Drawing.Image)
         Me.BtTCfileBrowse.Location = New System.Drawing.Point(359, 35)
         Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
         Me.BtTCfileBrowse.Size = New System.Drawing.Size(24, 24)
         Me.BtTCfileBrowse.TabIndex = 1
-        Me.BtTCfileBrowse.UseVisualStyleBackColor = true
+        Me.BtTCfileBrowse.UseVisualStyleBackColor = True
         '
         'Label17
         '
-        Me.Label17.AutoSize = true
+        Me.Label17.AutoSize = True
         Me.Label17.Location = New System.Drawing.Point(6, 21)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(209, 13)
@@ -887,7 +889,7 @@ Partial Class GearboxForm
         '
         'Label30
         '
-        Me.Label30.AutoSize = true
+        Me.Label30.AutoSize = True
         Me.Label30.Location = New System.Drawing.Point(141, 22)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(34, 13)
@@ -896,7 +898,7 @@ Partial Class GearboxForm
         '
         'Label31
         '
-        Me.Label31.AutoSize = true
+        Me.Label31.AutoSize = True
         Me.Label31.Location = New System.Drawing.Point(6, 22)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(69, 13)
@@ -905,7 +907,7 @@ Partial Class GearboxForm
         '
         'Label16
         '
-        Me.Label16.AutoSize = true
+        Me.Label16.AutoSize = True
         Me.Label16.Location = New System.Drawing.Point(18, 105)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(95, 13)
@@ -915,7 +917,7 @@ Partial Class GearboxForm
         'CbGStype
         '
         Me.CbGStype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.CbGStype.FormattingEnabled = true
+        Me.CbGStype.FormattingEnabled = True
         Me.CbGStype.Location = New System.Drawing.Point(119, 102)
         Me.CbGStype.Name = "CbGStype"
         Me.CbGStype.Size = New System.Drawing.Size(334, 21)
@@ -923,12 +925,12 @@ Partial Class GearboxForm
         '
         'BtAddGear
         '
-        Me.BtAddGear.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.BtAddGear.Image = CType(resources.GetObject("BtAddGear.Image"), System.Drawing.Image)
         Me.BtAddGear.Location = New System.Drawing.Point(6, 202)
         Me.BtAddGear.Name = "BtAddGear"
         Me.BtAddGear.Size = New System.Drawing.Size(24, 24)
         Me.BtAddGear.TabIndex = 1
-        Me.BtAddGear.UseVisualStyleBackColor = true
+        Me.BtAddGear.UseVisualStyleBackColor = True
         '
         'GroupBox4
         '
@@ -941,22 +943,22 @@ Partial Class GearboxForm
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(441, 232)
         Me.GroupBox4.TabIndex = 2
-        Me.GroupBox4.TabStop = false
+        Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Gears"
         '
         'btExportVGBS
         '
-        Me.btExportVGBS.Enabled = false
+        Me.btExportVGBS.Enabled = False
         Me.btExportVGBS.Location = New System.Drawing.Point(55, 202)
         Me.btExportVGBS.Name = "btExportVGBS"
         Me.btExportVGBS.Size = New System.Drawing.Size(153, 24)
         Me.btExportVGBS.TabIndex = 4
         Me.btExportVGBS.Text = "Export Shiftcurve as VGBS"
-        Me.btExportVGBS.UseVisualStyleBackColor = true
+        Me.btExportVGBS.UseVisualStyleBackColor = True
         '
         'Label32
         '
-        Me.Label32.AutoSize = true
+        Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(331, 202)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(106, 13)
@@ -984,7 +986,7 @@ Partial Class GearboxForm
         Me.PicBox.Name = "PicBox"
         Me.PicBox.Size = New System.Drawing.Size(414, 308)
         Me.PicBox.TabIndex = 48
-        Me.PicBox.TabStop = false
+        Me.PicBox.TabStop = False
         '
         'gbPowershiftLosses
         '
@@ -995,12 +997,12 @@ Partial Class GearboxForm
         Me.gbPowershiftLosses.Name = "gbPowershiftLosses"
         Me.gbPowershiftLosses.Size = New System.Drawing.Size(414, 47)
         Me.gbPowershiftLosses.TabIndex = 6
-        Me.gbPowershiftLosses.TabStop = false
+        Me.gbPowershiftLosses.TabStop = False
         Me.gbPowershiftLosses.Text = "Power shift losses"
         '
         'lbAtShiftTime
         '
-        Me.lbAtShiftTime.AutoSize = true
+        Me.lbAtShiftTime.AutoSize = True
         Me.lbAtShiftTime.Location = New System.Drawing.Point(6, 22)
         Me.lbAtShiftTime.Name = "lbAtShiftTime"
         Me.lbAtShiftTime.Size = New System.Drawing.Size(50, 13)
@@ -1016,7 +1018,7 @@ Partial Class GearboxForm
         '
         'Label28
         '
-        Me.Label28.AutoSize = true
+        Me.Label28.AutoSize = True
         Me.Label28.Location = New System.Drawing.Point(141, 22)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(18, 13)
@@ -1032,7 +1034,7 @@ Partial Class GearboxForm
         '
         'Label34
         '
-        Me.Label34.AutoSize = true
+        Me.Label34.AutoSize = True
         Me.Label34.Location = New System.Drawing.Point(362, 22)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(34, 13)
@@ -1041,7 +1043,7 @@ Partial Class GearboxForm
         '
         'Label35
         '
-        Me.Label35.AutoSize = true
+        Me.Label35.AutoSize = True
         Me.Label35.Location = New System.Drawing.Point(211, 22)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(70, 13)
@@ -1060,12 +1062,12 @@ Partial Class GearboxForm
         Me.gbTCAccMin.Name = "gbTCAccMin"
         Me.gbTCAccMin.Size = New System.Drawing.Size(414, 47)
         Me.gbTCAccMin.TabIndex = 6
-        Me.gbTCAccMin.TabStop = false
+        Me.gbTCAccMin.TabStop = False
         Me.gbTCAccMin.Text = "Torque Converter: Min. acceleration after upshift"
         '
         'lblGbxInfo
         '
-        Me.lblGbxInfo.AutoSize = true
+        Me.lblGbxInfo.AutoSize = True
         Me.lblGbxInfo.Location = New System.Drawing.Point(121, 126)
         Me.lblGbxInfo.Name = "lblGbxInfo"
         Me.lblGbxInfo.Size = New System.Drawing.Size(0, 13)
@@ -1078,8 +1080,8 @@ Partial Class GearboxForm
         Me.btnExportXML.Size = New System.Drawing.Size(119, 23)
         Me.btnExportXML.TabIndex = 9
         Me.btnExportXML.Text = "Exp. Gearbox as XML"
-        Me.btnExportXML.UseVisualStyleBackColor = true
-        Me.btnExportXML.Visible = false
+        Me.btnExportXML.UseVisualStyleBackColor = True
+        Me.btnExportXML.Visible = False
         '
         'btnExportAxlGearXML
         '
@@ -1088,16 +1090,28 @@ Partial Class GearboxForm
         Me.btnExportAxlGearXML.Size = New System.Drawing.Size(118, 23)
         Me.btnExportAxlGearXML.TabIndex = 10
         Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
-        Me.btnExportAxlGearXML.UseVisualStyleBackColor = true
-        Me.btnExportAxlGearXML.Visible = false
+        Me.btnExportAxlGearXML.UseVisualStyleBackColor = True
+        Me.btnExportAxlGearXML.Visible = False
+        '
+        'TextBox1
+        '
+        Me.TextBox1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox1.Location = New System.Drawing.Point(119, 34)
+        Me.TextBox1.Multiline = True
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(128, 33)
+        Me.TextBox1.TabIndex = 52
+        Me.TextBox1.Text = "GEARBOX"
         '
         'GearboxForm
         '
         Me.AcceptButton = Me.ButOK
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(877, 696)
+        Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.btnExportAxlGearXML)
         Me.Controls.Add(Me.btnExportXML)
         Me.Controls.Add(Me.lblGbxInfo)
@@ -1256,5 +1270,6 @@ End Sub
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents LblTCShiftFile As System.Windows.Forms.Label
-	Friend WithEvents btExportVGBS As System.Windows.Forms.Button
+    Friend WithEvents btExportVGBS As System.Windows.Forms.Button
+    Friend WithEvents TextBox1 As TextBox
 End Class

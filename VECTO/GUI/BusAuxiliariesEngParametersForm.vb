@@ -412,6 +412,14 @@ Public Class BusAuxiliariesEngParametersForm
 
     End Sub
 
+    Private Sub PictureBox1_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub lblTitle_Click(sender As Object, e As EventArgs) Handles lblTitle.Click
+
+    End Sub
+
 #End Region
 
 
