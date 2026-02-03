@@ -2342,6 +2342,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			switch (missionType) {
 				case MissionType.LongHaul:
 				case MissionType.LongHaulEMS:
+				case MissionType.LongHaul1:
 				case MissionType.RegionalDelivery:
 				case MissionType.RegionalDeliveryEMS:
 				case MissionType.UrbanDelivery:

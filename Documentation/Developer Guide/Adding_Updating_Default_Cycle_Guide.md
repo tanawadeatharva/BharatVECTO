@@ -53,6 +53,7 @@ Mission types define the operational profile of vehicles (from `MissionType.cs`)
 
 **Truck Missions:**
 - `LongHaul` - Long-distance freight transport
+- `LongHaul1` - Long-distance freight transport for Rigid truck 4x2 (same as LongHaul)
 - `RegionalDelivery` - Regional distribution
 - `UrbanDelivery` - City delivery operations
 - `MunicipalUtility` - Municipal services
