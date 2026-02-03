@@ -36,6 +36,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		LongHaul,
 		LongHaulEMS,
+		LongHaul1,
 		RegionalDelivery,
 		RegionalDeliveryEMS,
 		UrbanDelivery,

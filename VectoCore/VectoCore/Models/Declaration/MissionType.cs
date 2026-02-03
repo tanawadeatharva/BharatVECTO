@@ -76,6 +76,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return "Long Haul";
 				case MissionType.LongHaulEMS:
 					return "Long Haul EMS";
+				case MissionType.LongHaul1:
+					return "Long Haul1";
 				case MissionType.RegionalDelivery:
 					return "Regional Delivery";
 				case MissionType.RegionalDeliveryEMS:
@@ -110,6 +112,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			switch (self) {
 				case MissionType.LongHaul:
 				case MissionType.LongHaulEMS: 
+				case MissionType.LongHaul1:
 				case MissionType.RegionalDelivery: 
 				case MissionType.RegionalDeliveryEMS: 
 				case MissionType.UrbanDelivery: 
